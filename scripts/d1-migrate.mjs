@@ -5,6 +5,7 @@ import { loadEnvFile, requireEnv } from './load-env.mjs';
 const remote = process.argv.includes('--remote');
 const { env } = loadEnvFile({ production: remote });
 const databaseName = requireEnv(env, 'D1_DATABASE_NAME');
+const accountId = requireEnv(env, 'CLOUDFLARE_ACCOUNT_ID');
 
 const wranglerBin = path.join(
   process.cwd(),
@@ -23,4 +24,20 @@ const args = [
   remote ? '--remote' : '--local',
 ];
 
-execFileSync(process.execPath, args, { stdio: 'inherit', cwd: process.cwd() });
+const childEnv = {
+  ...process.env,
+  CLOUDFLARE_ACCOUNT_ID: accountId,
+};
+
+if (!childEnv.CLOUDFLARE_API_TOKEN?.trim()) {
+  console.error(
+    'CLOUDFLARE_API_TOKEN is missing. Add it as a GitHub Actions secret.',
+  );
+  process.exit(1);
+}
+
+execFileSync(process.execPath, args, {
+  stdio: 'inherit',
+  cwd: process.cwd(),
+  env: childEnv,
+});

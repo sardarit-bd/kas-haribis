@@ -18,8 +18,16 @@ const required = [
 
 const optional = ['CARDKNOX_SETTINGS_KEY'];
 
+function normalizeValue(key, raw) {
+  let value = raw?.trim() || defaults[key] || '';
+  if (key === 'APP_URL' && value.startsWith('APP_URL=')) {
+    value = value.slice('APP_URL='.length).trim();
+  }
+  return value;
+}
+
 function envValue(key) {
-  return process.env[key]?.trim() || defaults[key] || '';
+  return normalizeValue(key, process.env[key]);
 }
 
 const missing = required.filter((key) => !envValue(key));
