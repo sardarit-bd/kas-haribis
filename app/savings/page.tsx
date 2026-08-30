@@ -12,6 +12,7 @@ export default async function SavingsPage() {
       title="Kosher High-Yield Savings Accounts"
       intro="Compare savings opportunities together with the practical information Kav Haribis has reviewed. Rates and terms can change, so verify the current details before opening an account."
     >
+      
       <section className="savingsHero">
         <div>
           <p className="eyebrow gold">SAVE WITH CLARITY</p>
