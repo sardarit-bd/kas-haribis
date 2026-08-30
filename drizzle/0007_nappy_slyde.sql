@@ -1,0 +1,23 @@
+CREATE TABLE `savings_accounts` (
+	`id` text PRIMARY KEY NOT NULL,
+	`institution_name` text NOT NULL,
+	`account_name` text DEFAULT '' NOT NULL,
+	`description` text DEFAULT '' NOT NULL,
+	`apy` text DEFAULT '' NOT NULL,
+	`minimum_deposit` text DEFAULT '' NOT NULL,
+	`monthly_fee` text DEFAULT '' NOT NULL,
+	`fdic_status` text DEFAULT '' NOT NULL,
+	`kosher_status` text DEFAULT 'Reviewed' NOT NULL,
+	`kosher_details` text DEFAULT '' NOT NULL,
+	`last_reviewed` text DEFAULT '' NOT NULL,
+	`open_account_url` text DEFAULT '' NOT NULL,
+	`website` text DEFAULT '' NOT NULL,
+	`logo_url` text DEFAULT '' NOT NULL,
+	`public_notes` text DEFAULT '' NOT NULL,
+	`internal_notes` text DEFAULT '' NOT NULL,
+	`published` integer DEFAULT true NOT NULL,
+	`featured` integer DEFAULT false NOT NULL,
+	`sort_order` integer DEFAULT 0 NOT NULL,
+	`created_at` text NOT NULL,
+	`updated_at` text NOT NULL
+);

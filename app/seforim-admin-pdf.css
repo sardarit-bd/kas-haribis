@@ -1,0 +1,51 @@
+.pdfAdminHeading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 15px;
+}
+.pdfAdminHeading h2 {
+  margin: 0;
+}
+.pdfAdminHeading > span {
+  padding: 8px 10px;
+  border-radius: 99px;
+  background: #e5f3e8;
+  color: #2d6e3b;
+  font-size: 10px;
+  font-weight: 900;
+}
+.mainPdfUpload {
+  padding: 20px !important;
+  border: 2px dashed #b5944f !important;
+  border-radius: 8px !important;
+  background: #faf6ed !important;
+}
+.mainPdfUpload > b {
+  display: block;
+  color: #102a43;
+  font: 22px Georgia;
+}
+.mainPdfUpload input {
+  padding: 12px !important;
+  background: #fff !important;
+}
+.mainPdfUpload small,
+.mainPdfUpload em {
+  display: block;
+  margin-top: 8px;
+  color: #647680;
+  font-weight: 400;
+  line-height: 1.5;
+}
+.mainPdfUpload em {
+  padding: 9px;
+  background: #e6f3e8;
+  color: #2f6f3c;
+  font-style: normal;
+  font-weight: 800;
+}
+.adminSaveMessage {
+  padding: 11px;
+  color: #31586b;
+}

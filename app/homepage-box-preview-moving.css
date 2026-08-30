@@ -1,0 +1,72 @@
+.movingOfferings {
+  padding-left: 0;
+  padding-right: 0;
+}
+.movingOfferings > header {
+  padding-left: 6vw;
+  padding-right: 6vw;
+}
+.movingOfferingWindow {
+  width: 100%;
+  overflow: hidden;
+  padding: 16px 0 42px;
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 5%,
+    #000 95%,
+    transparent
+  );
+}
+.boxFlashPreview .movingOfferingWindow .flashOfferingGrid {
+  width: max-content;
+  max-width: none;
+  display: flex;
+  gap: 16px;
+  animation: offeringMarquee 78s linear infinite;
+}
+.boxFlashPreview .movingOfferingWindow .flashOffering {
+  width: 310px;
+  min-height: 175px;
+  padding: 20px;
+  flex: 0 0 310px;
+  grid-template-columns: 52px 1fr 32px;
+  gap: 12px 14px;
+  border-radius: 15px;
+}
+.boxFlashPreview .movingOfferingWindow .flashOffering > i {
+  width: 52px;
+  height: 52px;
+}
+.movingOfferingWindow:hover .flashOfferingGrid,
+.movingOfferingWindow:focus-within .flashOfferingGrid {
+  animation-play-state: paused;
+}
+@keyframes offeringMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 8px));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .boxFlashPreview .movingOfferingWindow .flashOfferingGrid {
+    animation: none;
+  }
+  .movingOfferingWindow {
+    overflow-x: auto;
+    mask-image: none;
+  }
+}
+@media (max-width: 600px) {
+  .movingOfferings > header {
+    padding-left: 5vw;
+    padding-right: 5vw;
+  }
+  .boxFlashPreview .movingOfferingWindow .flashOffering {
+    width: 285px;
+    flex-basis: 285px;
+    min-height: 165px;
+  }
+}

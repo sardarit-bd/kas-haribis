@@ -1,0 +1,94 @@
+.allOfferingCards .offerCard {
+  background-position: center right !important;
+  background-size: 58% 100% !important;
+  background-repeat: no-repeat !important;
+}
+.allOfferingCards .offerCard:before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    #fff 0%,
+    #fff 46%,
+    #fffffff2 57%,
+    #ffffff4d 100%
+  );
+  z-index: 0;
+}
+.allOfferingCards .offerCard > * {
+  position: relative;
+  z-index: 1;
+}
+.allOfferingCards .offerCard:nth-child(1) {
+  background-image: url('/kav-brand/bank-research.png') !important;
+}
+.allOfferingCards .offerCard:nth-child(2) {
+  background-image: url('/business-logos/katz-furniture.png') !important;
+  background-size: 48% auto !important;
+}
+.allOfferingCards .offerCard:nth-child(3) {
+  background-image: url('/kav-impact/financial-outreach.jpg') !important;
+}
+.allOfferingCards .offerCard:nth-child(4) {
+  background-image: url('/kav-brand/investments-hero.png') !important;
+}
+.allOfferingCards .offerCard:nth-child(5) {
+  background-image: url('/kav-impact/business-visit.jpg') !important;
+}
+.allOfferingCards .offerCard:nth-child(6) {
+  background-image: url('/kav-brand/audio-hero.png') !important;
+}
+.allOfferingCards .offerCard:nth-child(7) {
+  background-image: url('/kav-brand/articles-hero.png') !important;
+}
+.allOfferingCards .offerCard:nth-child(8) {
+  background-image: url('/article-covers/2449.jpg') !important;
+  background-size: 46% auto !important;
+}
+.allOfferingCards .offerCard:nth-child(9) {
+  background-image: url('/kav-brand/seforim-hero.png') !important;
+}
+.allOfferingCards .offerCard:nth-child(10) {
+  background-image: url('/kav-brand/heter-iska.png') !important;
+}
+.allOfferingCards .offerCard:nth-child(11) {
+  background-image: url('/kav-impact/heter-iska-presentation.jpg') !important;
+}
+.allOfferingCards .offerCard:nth-child(12) {
+  background-image: url('/kav-brand/bais-horaah.png') !important;
+}
+.allOfferingCards .offerCard:nth-child(13) {
+  background-image: url('/kav-impact/student-shiur.jpg') !important;
+}
+.allOfferingCards .offerCard:nth-child(14) {
+  background-image: url('/genealogy-hero.png') !important;
+}
+.allOfferingCards .offerCard:nth-child(15) {
+  background-image: url('/kav-impact/community-event.jpg') !important;
+}
+.allOfferingCards .offerCard:nth-child(16) {
+  background-image: url('/kav-impact/recognition-event.jpg') !important;
+}
+.allOfferingCards .offerCard:nth-child(17) {
+  background-image: url('/kav-impact/heter-iska-presentation-2.jpg') !important;
+}
+.allOfferingCards .offerCard:hover {
+  background-size: 63% 108% !important;
+}
+@media (max-width: 650px) {
+  .allOfferingCards .offerCard {
+    background-size: 100% 54% !important;
+    background-position: center top !important;
+    padding-top: 180px !important;
+  }
+  .allOfferingCards .offerCard:before {
+    background: linear-gradient(
+      180deg,
+      #ffffff05 0,
+      #ffffff25 34%,
+      #fff 52%,
+      #fff 100%
+    );
+  }
+}

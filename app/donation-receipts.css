@@ -1,0 +1,58 @@
+.documentTypeTabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 22px;
+  padding: 5px;
+  background: #eef2f4;
+  border-radius: 10px;
+}
+.documentTypeTabs button {
+  padding: 12px 10px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: #536978;
+  font-weight: 800;
+  cursor: pointer;
+}
+.documentTypeTabs button.active {
+  background: #102a43;
+  color: #fff;
+  box-shadow: 0 4px 12px #102a4324;
+}
+.receiptIntro {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 18px 0 4px;
+  padding: 14px 16px;
+  border: 1px solid #e4d1a7;
+  border-radius: 8px;
+  background: #fbf7ee;
+  color: #566977;
+}
+.receiptIntro b {
+  color: #8b6828;
+  font-family: Georgia, serif;
+  font-size: 16px;
+}
+.receiptIntro span {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.invoiceEditor select {
+  display: block;
+  width: 100%;
+  margin-top: 7px;
+  padding: 12px;
+  border: 1px solid #cbd5dc;
+  border-radius: 7px;
+  background: #fbfcfc;
+  color: #344c5e;
+}
+@media (max-width: 600px) {
+  .documentTypeTabs {
+    grid-template-columns: 1fr;
+  }
+}

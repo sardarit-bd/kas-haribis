@@ -1,0 +1,263 @@
+.invoiceManager {
+  display: grid;
+  grid-template-columns: minmax(390px, 0.85fr) minmax(0, 1.15fr);
+  gap: 25px;
+  align-items: start;
+}
+.invoiceEditor,
+.invoiceRecords {
+  background: #fff;
+  border: 1px solid #dce3e7;
+  border-radius: 16px;
+  box-shadow: 0 14px 40px #102a430d;
+}
+.invoiceEditor {
+  position: sticky;
+  top: 20px;
+  padding: 28px;
+}
+.invoiceEditorHead {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e2e7e9;
+}
+.invoiceEditorHead > span {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #c69b46;
+  border-radius: 50%;
+  color: #a47727;
+  font: 22px Georgia;
+}
+.invoiceEditorHead small {
+  color: #9a742d;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+.invoiceEditor h2,
+.invoiceRecords h2 {
+  margin: 5px 0;
+  color: #102a43;
+  font: 32px Georgia;
+}
+.invoiceEditor label {
+  display: block;
+  margin: 16px 0;
+  color: #344c5e;
+  font-size: 12px;
+  font-weight: 800;
+}
+.invoiceEditor label em {
+  color: #87949c;
+  font-style: normal;
+  font-weight: 400;
+}
+.invoiceEditor input,
+.invoiceEditor textarea {
+  display: block;
+  width: 100%;
+  margin-top: 7px;
+  padding: 12px;
+  border: 1px solid #cbd5dc;
+  border-radius: 7px;
+  background: #fbfcfc;
+}
+.invoiceFormRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.invoicePaymentPreview {
+  margin: 20px 0;
+  padding: 16px;
+  border-left: 4px solid #c69b46;
+  background: #f7f3ea;
+}
+.invoicePaymentPreview > small {
+  color: #8c6825;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+.invoicePaymentPreview > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 11px;
+}
+.invoicePaymentPreview span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #657482;
+  font-size: 11px;
+}
+.invoicePaymentPreview b {
+  color: #102a43;
+}
+.invoiceEditorActions {
+  display: flex;
+  gap: 11px;
+}
+.invoiceEditorActions button {
+  padding: 12px 16px;
+  border: 1px solid #c69b46;
+  border-radius: 5px;
+  background: #fff;
+  color: #7d6024;
+  cursor: pointer;
+}
+.invoiceEditorActions .primary {
+  color: #fff;
+}
+.invoiceNotice {
+  padding: 11px;
+  background: #edf7ef;
+  border-left: 3px solid #559163;
+  color: #336641;
+}
+.invoiceRecords {
+  padding: 27px;
+}
+.invoiceRecordsHead {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+}
+.invoiceRecordsHead input {
+  width: 230px;
+  padding: 11px;
+  border: 1px solid #ccd6dc;
+  border-radius: 7px;
+}
+.invoiceList {
+  display: grid;
+  gap: 13px;
+  margin-top: 23px;
+}
+.invoiceList article {
+  padding: 20px;
+  border: 1px solid #dfe5e7;
+  border-radius: 11px;
+  background: #fff;
+  box-shadow: 0 8px 24px #102a4308;
+}
+.invoiceCardHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+.invoiceCardHead > span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.invoiceCardHead small {
+  color: #9b742c;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+.invoiceCardHead b {
+  color: #102a43;
+  font: 23px Georgia;
+}
+.invoiceCardHead em {
+  color: #6d7c87;
+  font-size: 12px;
+  font-style: normal;
+}
+.invoiceCardHead > strong {
+  color: #102a43;
+  font: 28px Georgia;
+}
+.invoiceList article > p {
+  color: #5e6f7d;
+  line-height: 1.6;
+}
+.invoiceDates {
+  display: flex;
+  gap: 25px;
+  padding: 12px 0;
+  border-top: 1px solid #edf0f1;
+  color: #7b8992;
+  font-size: 11px;
+}
+.invoiceDates b {
+  color: #435968;
+}
+.invoiceCardActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 9px;
+}
+.invoiceCardActions > * {
+  padding: 8px 10px;
+  border: 1px solid #d0d9de;
+  border-radius: 5px;
+  background: #fff;
+  color: #526776;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.invoiceCardActions select {
+  color: #76591f;
+  border-color: #d1b778;
+}
+.invoiceCardActions .invoicePdf {
+  background: #102a43;
+  color: #fff;
+  border-color: #102a43;
+}
+.invoiceCardActions .deleteButton {
+  margin-left: auto;
+  color: #9a4141;
+  border-color: #dfbcbc;
+}
+@media (max-width: 1050px) {
+  .invoiceManager {
+    grid-template-columns: 1fr;
+  }
+  .invoiceEditor {
+    position: static;
+  }
+  .invoiceRecordsHead {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .invoiceRecordsHead input {
+    width: 100%;
+  }
+}
+@media (max-width: 600px) {
+  .invoiceEditor,
+  .invoiceRecords {
+    padding: 20px 16px;
+  }
+  .invoiceFormRow,
+  .invoicePaymentPreview > div {
+    grid-template-columns: 1fr;
+  }
+  .invoiceCardHead {
+    flex-direction: column;
+  }
+  .invoiceCardActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .invoiceCardActions > * {
+    text-align: center;
+  }
+  .invoiceCardActions .deleteButton {
+    margin-left: 0;
+  }
+}

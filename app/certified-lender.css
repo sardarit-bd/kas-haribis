@@ -1,0 +1,100 @@
+.certifiedPartnerFeature {
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 25px 7vw 95px;
+  display: grid;
+  grid-template-columns: 0.72fr 1.28fr;
+  gap: 5vw;
+  align-items: center;
+}
+.certifiedPartnerFeature h2 {
+  font: 500 clamp(32px, 4vw, 50px)/1.14 Georgia;
+  color: var(--navy);
+  margin: 8px 0 18px;
+}
+.certifiedPartnerFeature > div > p:not(.eyebrow) {
+  color: var(--muted);
+  line-height: 1.75;
+}
+.certifiedPartnerFeature figure {
+  margin: 0;
+  background: #fff;
+  border: 1px solid #dfd7c8;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 22px 55px #102a4318;
+}
+.certifiedPartnerFeature img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.certifiedPartnerFeature figcaption {
+  padding: 11px 16px;
+  color: #687986;
+  font-size: 12px;
+  background: #faf8f3;
+}
+.compactHero:has(+ .loanServiceIntro) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 330px);
+  grid-template-areas: 'eyebrow ad' 'title ad' 'intro ad';
+  column-gap: clamp(28px, 5vw, 76px);
+  align-items: center;
+}
+.compactHero:has(+ .loanServiceIntro) > .eyebrow {
+  grid-area: eyebrow;
+  align-self: end;
+}
+.compactHero:has(+ .loanServiceIntro) > h1 {
+  grid-area: title;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.compactHero:has(+ .loanServiceIntro) > p:last-child {
+  grid-area: intro;
+  align-self: start;
+}
+.compactHero:has(+ .loanServiceIntro):after {
+  content: '';
+  grid-area: ad;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1/1;
+  max-width: 330px;
+  justify-self: end;
+  background: #f5efe3 url('/kav-brand/rate-certified.png') center/contain
+    no-repeat;
+  border: 1px solid #d4c7ae;
+  border-radius: 10px;
+  box-shadow: 0 15px 42px #07192b35;
+}
+@media (max-width: 950px) {
+  .certifiedPartnerFeature {
+    grid-template-columns: 1fr;
+    padding-top: 0;
+  }
+  .compactHero:has(+ .loanServiceIntro) {
+    grid-template-columns: minmax(0, 1fr) minmax(180px, 250px);
+  }
+  .compactHero:has(+ .loanServiceIntro):after {
+    max-width: 250px;
+  }
+}
+@media (max-width: 700px) {
+  .compactHero:has(+ .loanServiceIntro) {
+    grid-template-columns: 1fr;
+    grid-template-areas: 'eyebrow' 'title' 'intro' 'ad';
+  }
+  .compactHero:has(+ .loanServiceIntro):after {
+    max-width: 220px;
+    justify-self: start;
+    margin-top: 18px;
+  }
+  .certifiedPartnerFeature {
+    padding: 20px 6vw 65px;
+  }
+  .certifiedPartnerFeature figure {
+    border-radius: 8px;
+  }
+}

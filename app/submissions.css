@@ -1,0 +1,218 @@
+.contactSubmissionSuccess {
+  background: #fff;
+  border: 1px solid #dce5df;
+  border-top: 4px solid #5b9867;
+  border-radius: 10px;
+  padding: 48px 38px;
+  text-align: center;
+  box-shadow: 0 22px 65px #17364c16;
+}
+.contactSubmissionSuccess > span {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 17px;
+  border-radius: 50%;
+  background: #e3f3e6;
+  color: #357746;
+  font-size: 29px;
+}
+.contactSubmissionSuccess small {
+  color: #6f8b77;
+  letter-spacing: 0.16em;
+  font-weight: 800;
+}
+.contactSubmissionSuccess h2 {
+  font: 35px Georgia;
+  color: var(--navy);
+  margin: 12px;
+}
+.contactSubmissionSuccess strong {
+  display: inline-block;
+  background: #f4efe4;
+  color: #8c6824;
+  padding: 12px 20px;
+  border-radius: 5px;
+  font: 22px Georgia;
+  letter-spacing: 0.06em;
+}
+.contactSubmissionSuccess p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+.contactSubmissionSuccess button {
+  border: 1px solid var(--navy);
+  background: white;
+  color: var(--navy);
+  padding: 12px 18px;
+  border-radius: 5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.contactFormNotice.error {
+  background: #fff0f0;
+  border-left-color: #b64d4d;
+  color: #873333;
+}
+.submissionToolbar {
+  display: grid;
+  grid-template-columns: 1fr 190px auto;
+  gap: 12px;
+  align-items: center;
+  background: #f6f2e9;
+  padding: 18px;
+  margin: 25px 0;
+}
+.submissionToolbar input,
+.submissionToolbar select,
+.submissionDetail select,
+.submissionDetail textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccd6dc;
+  background: white;
+  border-radius: 5px;
+}
+.submissionToolbar b {
+  color: #8a6724;
+  font-size: 13px;
+}
+.submissionLayout {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.85fr) minmax(420px, 1.15fr);
+  gap: 20px;
+  align-items: start;
+}
+.submissionList {
+  display: grid;
+  gap: 9px;
+  max-height: 760px;
+  overflow: auto;
+}
+.submissionList > button {
+  text-align: left;
+  border: 1px solid #dce3e7;
+  background: white;
+  border-radius: 8px;
+  padding: 17px;
+  cursor: pointer;
+}
+.submissionList > button:hover,
+.submissionList > button.active {
+  border-color: var(--gold);
+  box-shadow: 0 7px 22px #17364c12;
+}
+.submissionList span {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.submissionList b {
+  color: var(--navy);
+}
+.submissionList em {
+  font-style: normal;
+  font-size: 10px;
+  background: #edf2f5;
+  color: #496476;
+  padding: 5px 8px;
+  border-radius: 20px;
+}
+.submissionList strong {
+  display: block;
+  margin: 8px 0 3px;
+  font-size: 13px;
+}
+.submissionList small {
+  color: #89969e;
+}
+.submissionList p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--muted);
+  margin: 8px 0 0;
+}
+.submissionDetail {
+  position: sticky;
+  top: 25px;
+  background: white;
+  border: 1px solid #dce3e7;
+  border-radius: 9px;
+  padding: 27px;
+  min-height: 360px;
+}
+.submissionDetailHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+.submissionDetailHead small {
+  color: var(--gold);
+  font-weight: 800;
+}
+.submissionDetail h2 {
+  font: 30px Georgia;
+  color: var(--navy);
+  margin: 6px 0;
+}
+.submissionMessage {
+  white-space: pre-wrap;
+  background: #f7f4ed;
+  padding: 18px;
+  line-height: 1.7;
+  border-left: 3px solid var(--gold);
+}
+.submissionDetail dl {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 8px 15px;
+  font-size: 13px;
+}
+.submissionDetail dt {
+  font-weight: 800;
+  color: #6f7f89;
+}
+.submissionDetail dd {
+  margin: 0;
+}
+.submissionDetail label {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  color: #425b6d;
+  margin: 17px 0;
+}
+.submissionDetail label > * {
+  display: block;
+  margin-top: 7px;
+}
+.submissionDetail > .primary {
+  padding: 13px 18px;
+  border: 0;
+}
+.submissionDetail .deleteButton {
+  border: 0;
+  background: #fff0f0;
+  color: #9a3e3e;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+.submissionAdmin .emptyState {
+  padding: 45px 20px;
+}
+@media (max-width: 900px) {
+  .submissionLayout {
+    grid-template-columns: 1fr;
+  }
+  .submissionDetail {
+    position: static;
+  }
+  .submissionToolbar {
+    grid-template-columns: 1fr;
+  }
+  .submissionList {
+    max-height: none;
+  }
+}

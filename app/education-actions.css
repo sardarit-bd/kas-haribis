@@ -1,0 +1,42 @@
+.educationGrid .educationActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  padding-top: 17px;
+  border-top: 1px solid #e6ebe7;
+}
+
+.educationGrid .educationActions a {
+  min-height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #cbd9d8;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.educationGrid .educationActions .educationView {
+  background: #fff;
+  color: #17465b;
+}
+
+.educationGrid .educationActions .educationDownload {
+  background: #175c68;
+  border-color: #175c68;
+  color: #fff;
+}
+
+.educationGrid .educationActions a:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 17px #14334a18;
+}
+
+@media (max-width: 420px) {
+  .educationGrid .educationActions {
+    grid-template-columns: 1fr;
+  }
+}

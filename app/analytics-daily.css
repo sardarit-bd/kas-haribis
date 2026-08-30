@@ -1,0 +1,88 @@
+.analyticsChartHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 30px;
+}
+.analyticsChartHead nav {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.analyticsChartHead nav a {
+  padding: 8px 11px;
+  border: 1px solid #ffffff2e;
+  border-radius: 4px;
+  color: #cbd8df;
+  font-size: 10px;
+  font-weight: 800;
+}
+.analyticsChartHead nav a.active {
+  background: #c69b46;
+  border-color: #c69b46;
+  color: #fff;
+}
+.dailyHistory {
+  display: grid;
+  grid-template-columns: 0.65fr 1.35fr;
+  gap: 45px;
+  margin: 28px 0;
+  padding: 30px;
+  border: 1px solid #dfe5e7;
+  border-radius: 9px;
+  background: #fff;
+}
+.dailyHistory h2 {
+  margin: 6px 0;
+  font: 28px Georgia;
+  color: #102a43;
+}
+.dailyHistory > div > p:not(.eyebrow) {
+  color: #72818c;
+  line-height: 1.6;
+  font-size: 12px;
+}
+.dailyHistoryTable header,
+.dailyHistoryTable > div {
+  display: grid;
+  grid-template-columns: 1.5fr repeat(3, 0.7fr);
+  gap: 12px;
+  padding: 12px;
+  border-bottom: 1px solid #e7ebed;
+}
+.dailyHistoryTable header {
+  background: #102a43;
+  color: #fff;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+.dailyHistoryTable > div strong {
+  font-size: 12px;
+  color: #29455a;
+}
+.dailyHistoryTable > div span {
+  text-align: center;
+  color: #9b742d;
+  font-weight: 800;
+}
+@media (max-width: 900px) {
+  .dailyHistory {
+    grid-template-columns: 1fr;
+  }
+  .analyticsChartHead {
+    display: block;
+  }
+  .analyticsChartHead nav {
+    margin-bottom: 20px;
+  }
+}
+@media (max-width: 550px) {
+  .dailyHistory {
+    padding: 18px;
+  }
+  .dailyHistoryTable header,
+  .dailyHistoryTable > div {
+    grid-template-columns: 1.3fr repeat(3, 0.7fr);
+    font-size: 10px;
+  }
+}

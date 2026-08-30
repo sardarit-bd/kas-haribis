@@ -1,0 +1,356 @@
+.readingCircleHero {
+  position: relative;
+  min-height: 690px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(310px, 0.55fr);
+  align-items: center;
+  gap: 7vw;
+  padding: 100px 8vw;
+  background: linear-gradient(125deg, #081f33 0%, #10334e 64%, #204f67 100%);
+  color: white;
+}
+.readingCircleHero:before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, #ffffff08 1px, transparent 1px),
+    linear-gradient(#ffffff08 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to right, transparent, #000);
+}
+.readingCircleGlow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(2px);
+}
+.readingCircleGlow.one {
+  width: 520px;
+  height: 520px;
+  right: -170px;
+  top: -170px;
+  background: #d0a84a29;
+}
+.readingCircleGlow.two {
+  width: 330px;
+  height: 330px;
+  left: 35%;
+  bottom: -240px;
+  background: #63aac525;
+}
+.readingCircleHeroCopy,
+.readingCircleCard {
+  position: relative;
+  z-index: 2;
+}
+.readingCircleHeroCopy {
+  max-width: 760px;
+}
+.readingCircleHeroCopy h1 {
+  font:
+    500 clamp(50px, 6.4vw, 88px)/1.03 Georgia,
+    serif;
+  margin: 0;
+}
+.readingCircleHeroCopy h1 em {
+  font-weight: 400;
+  color: #e7c672;
+}
+.readingCircleHeroCopy > p:not(.eyebrow) {
+  max-width: 720px;
+  color: #d5e1e7;
+  font-size: 18px;
+  line-height: 1.8;
+}
+.readingCircleHeroCopy > div {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin: 30px 0 18px;
+}
+.readingCircleHeroCopy > div > a:not(.primary) {
+  color: #f0d483;
+  font-weight: 700;
+}
+.readingCircleHeroCopy > small {
+  color: #aebfc9;
+}
+.readingCircleCard {
+  justify-self: end;
+  width: min(100%, 360px);
+  min-height: 440px;
+  padding: 42px 35px;
+  border: 1px solid #ddb75c78;
+  border-radius: 18px;
+  background: #ffffff0c;
+  backdrop-filter: blur(13px);
+  box-shadow: 0 35px 70px #0005;
+  transform: rotate(2deg);
+}
+.readingCircleSeal {
+  width: 175px;
+  height: 175px;
+  margin: 0 auto 40px;
+  border: 1px solid #dbbd73;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  align-content: center;
+}
+.readingCircleSeal span {
+  font: 52px Georgia;
+  color: #e6c776;
+}
+.readingCircleSeal i {
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: #dce5ea;
+}
+.readingCircleCard > p {
+  margin: 0;
+  color: #9eb1be;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+}
+.readingCircleCard > strong {
+  display: block;
+  font: 54px Georgia;
+  color: white;
+  letter-spacing: 0.08em;
+  margin: 6px 0 35px;
+}
+.readingCircleCard > div:last-child {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 18px;
+  border-top: 1px solid #ffffff24;
+  color: #e1bf6b;
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 0.12em;
+}
+.readingCircleIntro {
+  max-width: 1300px;
+  margin: auto;
+  padding: 95px 7vw;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8vw;
+}
+.readingCircleIntro h2,
+.readingCircleSectionHead h2,
+.readingCircleOrders h2,
+.readingCircleCta h2 {
+  font: 500 clamp(36px, 4vw, 54px)/1.13 Georgia;
+  color: var(--navy);
+  margin: 0;
+}
+.readingCircleIntro > p,
+.readingCircleSectionHead > p {
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.85;
+  margin: 0;
+}
+.readingCircleBenefits {
+  padding: 95px 7vw;
+  background: #f7f3ea;
+}
+.readingCircleSectionHead {
+  max-width: 1300px;
+  margin: 0 auto 48px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 60px;
+}
+.readingCircleSectionHead > p {
+  max-width: 460px;
+}
+.readingCircleGrid {
+  max-width: 1300px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.readingCircleGrid article {
+  min-height: 245px;
+  padding: 30px;
+  background: white;
+  border: 1px solid #e1ddd4;
+  border-radius: 12px;
+  box-shadow: 0 12px 34px #102a4309;
+  transition: 0.2s;
+}
+.readingCircleGrid article:hover {
+  transform: translateY(-4px);
+  border-color: #cfaf67;
+  box-shadow: 0 20px 45px #102a4314;
+}
+.readingCircleGrid article > span {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #102a43;
+  color: #e4c474;
+  font: 17px Georgia;
+}
+.readingCircleGrid h3 {
+  font: 25px Georgia;
+  color: var(--navy);
+  margin: 22px 0 10px;
+}
+.readingCircleGrid p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+.readingCircleOrders {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 9vw;
+  align-items: center;
+  padding: 100px 9vw;
+  background: #fff;
+}
+.readingCircleOrders > div > p:not(.eyebrow) {
+  max-width: 690px;
+  color: var(--muted);
+  line-height: 1.8;
+  font-size: 17px;
+}
+.readingCircleOrders aside {
+  position: relative;
+  min-height: 360px;
+  padding: 38px;
+  background: linear-gradient(145deg, #102a43, #173f5f);
+  border-radius: 16px;
+  box-shadow: 20px 25px 55px #102a4328;
+  overflow: hidden;
+}
+.readingCircleOrders aside > span {
+  color: #dfbf70;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 0.18em;
+}
+.bookSpine {
+  position: absolute;
+  left: 55px;
+  right: 55px;
+  height: 62px;
+  border-radius: 4px;
+  box-shadow: 0 8px 18px #0003;
+}
+.bookSpine:after {
+  content: 'KAV HARIBIS';
+  position: absolute;
+  left: 25px;
+  top: 22px;
+  color: #f0dcac;
+  font: 12px Georgia;
+  letter-spacing: 0.15em;
+}
+.bookSpine.one {
+  top: 100px;
+  background: #8d3e39;
+}
+.bookSpine.two {
+  top: 168px;
+  left: 72px;
+  background: #496b57;
+}
+.bookSpine.three {
+  top: 236px;
+  right: 74px;
+  background: #8a6b37;
+}
+.readingCircleOrders aside > small {
+  position: absolute;
+  bottom: 24px;
+  left: 38px;
+  color: #c8d5dc;
+}
+.readingCircleCta {
+  padding: 82px 9vw;
+  background: #ece4d2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 55px;
+}
+.readingCircleCta > div {
+  max-width: 780px;
+}
+.readingCircleCta p:not(.eyebrow) {
+  color: var(--muted);
+  line-height: 1.7;
+}
+.readingCircleCta > a {
+  white-space: nowrap;
+}
+@media (max-width: 900px) {
+  .readingCircleHero,
+  .readingCircleIntro,
+  .readingCircleOrders {
+    grid-template-columns: 1fr;
+  }
+  .readingCircleCard {
+    justify-self: start;
+    max-width: 340px;
+  }
+  .readingCircleGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .readingCircleSectionHead,
+  .readingCircleCta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .readingCircleOrders aside {
+    width: min(100%, 440px);
+  }
+}
+@media (max-width: 600px) {
+  .readingCircleHero {
+    padding: 75px 6vw;
+  }
+  .readingCircleHeroCopy > div {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .readingCircleHeroCopy > div > a {
+    text-align: center;
+  }
+  .readingCircleIntro,
+  .readingCircleBenefits,
+  .readingCircleOrders,
+  .readingCircleCta {
+    padding: 65px 6vw;
+  }
+  .readingCircleGrid {
+    grid-template-columns: 1fr;
+  }
+  .readingCircleSectionHead {
+    gap: 24px;
+  }
+  .readingCircleCard {
+    min-height: 390px;
+    padding: 32px 27px;
+  }
+  .readingCircleSeal {
+    width: 150px;
+    height: 150px;
+  }
+  .readingCircleOrders aside {
+    min-height: 330px;
+  }
+  .readingCircleCta > a {
+    width: 100%;
+    text-align: center;
+  }
+}

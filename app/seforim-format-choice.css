@@ -1,0 +1,22 @@
+.saleFormatChoice {
+  padding: 18px !important;
+  background: #eef3f6;
+  border-left: 5px solid #102a43;
+}
+.saleFormatChoice > b {
+  display: block;
+  color: #102a43;
+  font: 21px Georgia;
+}
+.saleFormatChoice select {
+  border: 2px solid #b79043 !important;
+  background: #fff !important;
+  font-weight: 800;
+}
+.saleFormatChoice small {
+  display: block;
+  margin-top: 8px;
+  color: #5f707b;
+  font-weight: 400;
+  line-height: 1.5;
+}

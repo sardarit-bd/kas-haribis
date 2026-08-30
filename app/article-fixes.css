@@ -1,0 +1,69 @@
+/* Preserve the complete article page instead of cropping it into a card. */
+.articleCover {
+  height: auto;
+  aspect-ratio: 696 / 900;
+  background: #f3f1ec;
+}
+
+.articleCover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+  object-fit: contain;
+  object-position: center;
+}
+
+.articlePageStack {
+  display: grid;
+  gap: 28px;
+  padding: 30px;
+  background: #e7eaec;
+  border: 1px solid #d8dee1;
+  border-top: 0;
+}
+
+.articleSourceNotice {
+  margin: 0;
+  padding: 15px 18px;
+  border: 1px solid #e1c980;
+  border-top: 0;
+  background: #fff8e6;
+  color: #644d1e;
+  line-height: 1.6;
+}
+
+.articlePageStack figure {
+  width: 100%;
+  max-width: 930px;
+  margin: 0 auto;
+  background: #fff;
+  box-shadow: 0 10px 35px #102a4329;
+}
+
+.articlePageStack img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.articlePageStack figcaption {
+  padding: 9px 14px;
+  background: #102a43;
+  color: #fff;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 600px) {
+  .articleCover {
+    height: auto;
+  }
+  .articlePageStack {
+    padding: 10px;
+    gap: 14px;
+  }
+}

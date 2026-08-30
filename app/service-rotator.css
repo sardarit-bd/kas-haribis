@@ -1,0 +1,114 @@
+.serviceRotator {
+  width: min(100%, 470px);
+  margin-top: 25px;
+  padding: 13px 15px 0;
+  border: 1px solid #d8b86d66;
+  border-radius: 9px;
+  background: #061a2f9c;
+  box-shadow: 0 12px 32px #020d1840;
+  backdrop-filter: blur(8px);
+}
+.homeHeroPanel .serviceRotator {
+  width: 100%;
+  margin-top: 22px;
+  text-align: left;
+  background: #061a2f72;
+  box-shadow: none;
+}
+.homeHeroPanel .serviceRotator a {
+  color: #fff;
+}
+.homeHeroPanel .serviceRotator a small {
+  margin: 0;
+  color: #bfcfd8;
+  font-size: 10px;
+}
+.serviceRotator > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.serviceRotator > span small {
+  color: #e2c375;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+.serviceRotator > span b {
+  color: #92a8b6;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+}
+.serviceRotator > a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 10px 0 12px;
+  color: #fff;
+  animation: serviceFade 0.35s ease;
+}
+.serviceRotator > a > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.serviceRotator strong {
+  font: 18px Georgia;
+}
+.serviceRotator a small {
+  color: #bfcfd8;
+  font-size: 10px;
+}
+.serviceRotator em {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  border-radius: 50%;
+  background: #ffffff10;
+  color: #e5c679;
+  font-style: normal;
+}
+.serviceRotator > a:hover em {
+  background: #c69b46;
+  color: #fff;
+}
+.serviceRotator > i {
+  display: block;
+  height: 2px;
+  margin: 0 -15px;
+  background: #ffffff10;
+  overflow: hidden;
+  border-radius: 0 0 9px 9px;
+}
+.serviceRotator > i span {
+  display: block;
+  height: 100%;
+  background: #c69b46;
+  transition: width 0.35s ease;
+}
+@keyframes serviceFade {
+  from {
+    opacity: 0.25;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (max-width: 650px) {
+  .serviceRotator {
+    margin-top: 22px;
+  }
+  .serviceRotator strong {
+    font-size: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .serviceRotator > a {
+    animation: none;
+  }
+}

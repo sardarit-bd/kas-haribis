@@ -1,0 +1,126 @@
+.directoryTools {
+  grid-template-columns: minmax(260px, 1fr) 240px auto auto;
+}
+.bankViewToggle {
+  display: inline-flex;
+  align-self: end;
+  border: 1px solid #cbd5da;
+  border-radius: 6px;
+  overflow: hidden;
+  background: white;
+}
+.bankViewToggle button {
+  height: 43px;
+  padding: 0 13px;
+  border: 0;
+  border-right: 1px solid #dce3e7;
+  background: white;
+  color: #60717d;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.bankViewToggle button:last-child {
+  border-right: 0;
+}
+.bankViewToggle button.active {
+  background: var(--navy);
+  color: white;
+}
+.bankViewToggle span {
+  font-size: 17px;
+  margin-right: 4px;
+  vertical-align: -1px;
+}
+.bankGridView {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+.bankGridView > article {
+  border-radius: 9px;
+  overflow: hidden;
+  box-shadow: 0 7px 22px #17364c0b;
+}
+.bankGridView .bankCardTop {
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+}
+.bankGridView .bankSummary {
+  flex: 1;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: 'identity expander' 'status status';
+  gap: 12px;
+  padding: 20px;
+}
+.bankGridView .bankSummary > span {
+  grid-area: identity;
+}
+.bankGridView .bankSummary > i {
+  grid-area: status;
+  justify-self: start;
+}
+.bankGridView .bankSummary > strong {
+  grid-area: expander;
+  font-size: 22px;
+}
+.bankGridView .bankSummary span b {
+  font-size: 20px;
+  line-height: 1.25;
+}
+.bankGridView .bankSummary span small {
+  font-size: 10px;
+}
+.bankGridView .bankReportCardButton {
+  margin: 0 14px 14px;
+  padding: 11px;
+  font-size: 11px;
+}
+.bankGridView .bankDetails {
+  padding: 18px;
+  border-top: 1px solid #e7ecee;
+}
+.bankGridView .bankDetails > p {
+  font-size: 12px;
+  line-height: 1.65;
+}
+.bankGridView .bankPublicComment {
+  font-size: 12px;
+}
+.bankGridView .directoryWarning {
+  font-size: 11px;
+}
+.bankListView {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+@media (max-width: 1050px) {
+  .directoryTools {
+    grid-template-columns: 1fr 220px;
+  }
+  .bankViewToggle {
+    justify-self: start;
+  }
+  .bankGridView {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 680px) {
+  .directoryTools {
+    grid-template-columns: 1fr;
+  }
+  .bankViewToggle {
+    width: 100%;
+  }
+  .bankViewToggle button {
+    flex: 1;
+  }
+  .bankGridView {
+    grid-template-columns: 1fr;
+  }
+  .bankGridView .bankCardTop {
+    min-height: 0;
+  }
+}

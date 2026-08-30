@@ -1,0 +1,349 @@
+.genealogyHero {
+  position: relative;
+  min-height: 650px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: #0b263d;
+  color: #fff;
+}
+.genealogyHero > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.genealogyHeroShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    #071e34f7 0%,
+    #0b2945dc 42%,
+    #0b29456e 72%,
+    #071e3438 100%
+  );
+}
+.genealogyHeroCopy {
+  position: relative;
+  z-index: 1;
+  width: min(760px, 88%);
+  margin-left: 7vw;
+}
+.genealogyHero h1 {
+  margin: 0 0 24px;
+  font: 500 clamp(48px, 6vw, 78px)/1.06 Georgia;
+  color: #fff;
+}
+.genealogyHeroCopy > p:not(.eyebrow) {
+  max-width: 670px;
+  color: #dbe5ea;
+  font-size: 19px;
+  line-height: 1.75;
+}
+.genealogyHero .primary {
+  margin-top: 16px;
+}
+.genealogyIntroduction {
+  max-width: 1300px;
+  margin: auto;
+  padding: 95px 7vw;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 8vw;
+  align-items: center;
+}
+.genealogyIntroduction h2,
+.genealogyUses h2,
+.genealogyProcess h2,
+.genealogyRequest h2 {
+  margin: 0 0 20px;
+  font: 500 clamp(35px, 4vw, 52px)/1.14 Georgia;
+  color: var(--navy);
+}
+.genealogyIntroduction > div > p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.8;
+}
+.genealogyIntroduction aside {
+  padding: 38px;
+  border: 1px solid #d8c49a;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #f8f3e9, #fff);
+  box-shadow: 0 20px 50px #102a4312;
+}
+.genealogyIntroduction aside > span {
+  display: grid;
+  place-items: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #e4c678;
+  font: 25px Georgia;
+}
+.genealogyIntroduction aside p {
+  margin: 22px 0 0;
+  color: #526475;
+  line-height: 1.75;
+}
+.genealogyUses {
+  padding: 90px 7vw;
+  background: #f5f1e8;
+}
+.genealogyUses > .sectionHead {
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.genealogyUseGrid {
+  max-width: 1300px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+.genealogyUseGrid article {
+  padding: 32px;
+  border: 1px solid #ded8cc;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 35px #102a430a;
+}
+.genealogyUseGrid span {
+  color: #b2873c;
+  font: 700 12px Georgia;
+  letter-spacing: 0.14em;
+}
+.genealogyUseGrid h3 {
+  margin: 18px 0 12px;
+  font: 27px Georgia;
+  color: var(--navy);
+}
+.genealogyUseGrid p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+.genealogyProcess {
+  padding: 82px 8vw;
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 7vw;
+  background: linear-gradient(135deg, #0c2b45, #164a6b);
+  color: #fff;
+}
+.genealogyProcess h2 {
+  color: #fff;
+}
+.genealogyProcess ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 18px;
+}
+.genealogyProcess li {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid #ffffff24;
+}
+.genealogyProcess li b {
+  font: 23px Georgia;
+  color: #e2c172;
+}
+.genealogyProcess li span {
+  color: #d4e0e6;
+  line-height: 1.65;
+}
+.genealogyRequest {
+  max-width: 1320px;
+  margin: auto;
+  padding: 95px 7vw;
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 7vw;
+  align-items: start;
+}
+.genealogyRequestCopy {
+  position: sticky;
+  top: 120px;
+}
+.genealogyRequestCopy > p:not(.eyebrow) {
+  color: var(--muted);
+  line-height: 1.75;
+}
+.genealogyContactNote {
+  margin-top: 28px;
+  padding: 20px;
+  border-left: 4px solid var(--gold);
+  background: #f7f3ea;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.genealogyContactNote b {
+  color: var(--navy);
+}
+.genealogyContactNote span {
+  color: var(--muted);
+  font-size: 13px;
+}
+.genealogyForm {
+  padding: 36px;
+  border: 1px solid #dbe2e6;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 20px 55px #102a4310;
+}
+.genealogyForm label {
+  display: block;
+  margin-bottom: 18px;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 700;
+}
+.genealogyForm label em {
+  color: #7f8c94;
+  font-style: normal;
+  font-weight: 400;
+}
+.genealogyForm input,
+.genealogyForm select,
+.genealogyForm textarea {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 13px;
+  border: 1px solid #cad5db;
+  border-radius: 7px;
+  background: #fbfcfc;
+}
+.genealogyForm textarea {
+  resize: vertical;
+}
+.genealogyFormRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.genealogyUpload {
+  padding: 16px;
+  background: #f7f4ed;
+  border: 1px dashed #c9b989;
+  border-radius: 8px;
+}
+.genealogyUpload small {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.genealogyForm > .primary {
+  width: 100%;
+}
+.genealogyPrivacy {
+  display: block;
+  margin-top: 15px;
+  color: #73808a;
+  line-height: 1.5;
+}
+.genealogySuccess {
+  padding: 60px 35px;
+  text-align: center;
+  border: 1px solid #bcdcc3;
+  border-radius: 14px;
+  background: #f0f8f2;
+}
+.genealogySuccess > span {
+  display: grid;
+  place-items: center;
+  width: 55px;
+  height: 55px;
+  margin: auto;
+  border-radius: 50%;
+  background: #3f874e;
+  color: #fff;
+  font-size: 26px;
+}
+.genealogySuccess small {
+  display: block;
+  margin: 18px 0 7px;
+  color: #4a7a55;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+.genealogySuccess h2 {
+  margin: 0;
+}
+.genealogySuccess p {
+  color: var(--muted);
+  line-height: 1.65;
+}
+.genealogySuccess strong {
+  display: block;
+  margin: 20px;
+  color: var(--navy);
+  font: 24px monospace;
+}
+.genealogySuccess button {
+  border: 0;
+  background: none;
+  color: #8a6724;
+  text-decoration: underline;
+  cursor: pointer;
+}
+@media (max-width: 900px) {
+  .genealogyHero {
+    min-height: 580px;
+  }
+  .genealogyIntroduction,
+  .genealogyProcess,
+  .genealogyRequest {
+    grid-template-columns: 1fr;
+  }
+  .genealogyUseGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .genealogyRequestCopy {
+    position: static;
+  }
+  .genealogyProcess li {
+    grid-template-columns: 160px 1fr;
+  }
+}
+@media (max-width: 620px) {
+  .genealogyHero {
+    min-height: 620px;
+  }
+  .genealogyHeroCopy {
+    margin-left: 6vw;
+  }
+  .genealogyHero h1 {
+    font-size: 48px;
+  }
+  .genealogyIntroduction,
+  .genealogyUses,
+  .genealogyProcess,
+  .genealogyRequest {
+    padding: 68px 6vw;
+  }
+  .genealogyUseGrid,
+  .genealogyFormRow {
+    grid-template-columns: 1fr;
+  }
+  .genealogyProcess li {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .genealogyUses > .sectionHead {
+    display: block;
+  }
+  .genealogyForm {
+    padding: 24px;
+  }
+}

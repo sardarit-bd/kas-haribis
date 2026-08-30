@@ -1,0 +1,171 @@
+.quickPreviewPage {
+  background: #f7f3ea;
+  min-height: 100vh;
+}
+.quickPreviewContext {
+  min-height: 410px;
+  padding: 80px 7vw 110px;
+  color: white;
+  background:
+    linear-gradient(90deg, #061a2ff5, #071d31c9),
+    url('/kav-brand/home-hero.png') center/cover;
+}
+.quickPreviewContext h1 {
+  max-width: 850px;
+  margin: 0;
+  font: 500 clamp(46px, 6vw, 76px)/1.05 Georgia;
+}
+.quickPreviewContext > p:not(.eyebrow) {
+  max-width: 690px;
+  color: #d4e0e7;
+  font-size: 17px;
+  line-height: 1.7;
+}
+.quickPreviewStrip {
+  position: relative;
+  z-index: 3;
+  max-width: 1440px;
+  margin: -55px auto 0;
+  padding: 0 28px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.quickPreviewCard {
+  --accent: #28789d;
+  position: relative;
+  isolation: isolate;
+  min-height: 175px;
+  padding: 23px 22px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 58px 1fr 34px;
+  grid-template-rows: auto 1fr;
+  gap: 13px 16px;
+  align-items: center;
+  border: 1px solid #d7dee1;
+  border-radius: 15px;
+  background: #fff;
+  color: #102a43;
+  box-shadow: 0 18px 48px #102a4317;
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
+}
+.quickPreviewCard:before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: 150px;
+  height: 150px;
+  right: -80px;
+  top: -85px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 12%, white);
+}
+.quickPreviewCard:hover {
+  transform: translateY(-8px);
+  border-color: var(--accent);
+  box-shadow: 0 28px 55px #102a4325;
+}
+.quickPreviewCard.bank {
+  --accent: #28789d;
+}
+.quickPreviewCard.heter {
+  --accent: #ad812c;
+}
+.quickPreviewCard.question {
+  --accent: #4f7d6f;
+}
+.quickPreviewCard.alerts {
+  --accent: #99536a;
+}
+.quickPreviewNumber {
+  grid-column: 1/-1;
+  color: var(--accent);
+  font: 13px Georgia;
+  letter-spacing: 0.12em;
+}
+.quickPreviewCard > i {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--accent) 13%, white);
+  color: var(--accent);
+  font: normal 24px Georgia;
+}
+.quickPreviewCard > div b,
+.quickPreviewCard > div small {
+  display: block;
+}
+.quickPreviewCard > div b {
+  font: 23px Georgia;
+}
+.quickPreviewCard > div small {
+  margin-top: 7px;
+  color: #687987;
+  font-size: 12px;
+}
+.quickPreviewCard > strong {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #f3f5f5;
+  color: var(--accent);
+  transition: 0.25s;
+}
+.quickPreviewCard:hover > strong {
+  background: var(--accent);
+  color: white;
+  transform: translateX(3px);
+}
+.quickPreviewCard > em {
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: 0;
+  height: 4px;
+  background: var(--accent);
+  transition: right 0.4s ease;
+}
+.quickPreviewCard:hover > em {
+  right: 0;
+}
+.quickPreviewNote {
+  max-width: 900px;
+  margin: 70px auto;
+  padding: 30px;
+  text-align: center;
+}
+.quickPreviewNote small {
+  color: #a07930;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+.quickPreviewNote p {
+  color: #697986;
+  line-height: 1.7;
+}
+@media (max-width: 1050px) {
+  .quickPreviewStrip {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 620px) {
+  .quickPreviewContext {
+    padding: 65px 6vw 90px;
+  }
+  .quickPreviewStrip {
+    grid-template-columns: 1fr;
+    margin-top: -38px;
+    padding: 0 5vw;
+  }
+  .quickPreviewCard {
+    min-height: 145px;
+  }
+}

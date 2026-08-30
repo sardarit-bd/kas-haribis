@@ -1,0 +1,184 @@
+.certAdminTools {
+  display: grid;
+  grid-template-columns: 1fr 230px auto;
+  gap: 12px;
+  align-items: center;
+  padding: 18px;
+  background: #eee8dc;
+}
+.certAdminTools input,
+.certAdminTools select,
+.certAdminDecision select,
+.certAdminDecision textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd5da;
+  background: #fff;
+}
+.certAdminTools b {
+  color: #8c6824;
+  font-size: 12px;
+}
+.certAdminLayout {
+  display: grid;
+  grid-template-columns: 0.75fr 1.25fr;
+  gap: 18px;
+  margin-top: 18px;
+  align-items: start;
+}
+.certAdminList {
+  display: grid;
+  gap: 8px;
+  max-height: 850px;
+  overflow: auto;
+}
+.certAdminList > button {
+  text-align: left;
+  padding: 16px;
+  border: 1px solid #dce3e6;
+  border-radius: 7px;
+  background: white;
+}
+.certAdminList > button.active {
+  border-color: var(--gold);
+  box-shadow: 0 7px 20px #17364c10;
+}
+.certAdminList span {
+  display: flex;
+  justify-content: space-between;
+  gap: 9px;
+}
+.certAdminList b {
+  color: var(--navy);
+}
+.certAdminList em {
+  font-style: normal;
+  font-size: 9px;
+  background: #edf2f5;
+  padding: 5px 7px;
+  border-radius: 15px;
+}
+.certAdminList strong {
+  display: block;
+  margin: 8px 0;
+  color: #536979;
+  font-size: 12px;
+}
+.certAdminList small {
+  color: #8a969e;
+}
+.certAdminDetail {
+  position: sticky;
+  top: 20px;
+  background: white;
+  border: 1px solid #dce3e6;
+  border-radius: 8px;
+  padding: 27px;
+}
+.certAdminHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+.certAdminHead small {
+  color: var(--gold);
+}
+.certAdminHead h2 {
+  font: 32px Georgia;
+  color: var(--navy);
+  margin: 7px 0;
+}
+.certAdminHead p {
+  color: var(--muted);
+}
+.certAdminHead > button {
+  height: 35px;
+  border: 0;
+  background: #fff0f0;
+  color: #913838;
+}
+.certAdminFacts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+  margin: 20px 0;
+}
+.certAdminFacts span {
+  padding: 14px;
+  background: #f5f2eb;
+}
+.certAdminFacts small,
+.certAdminFacts b,
+.certAdminFacts a {
+  display: block;
+}
+.certAdminFacts small {
+  color: #9a742d;
+  font-size: 8px;
+  font-weight: 800;
+}
+.certAdminFacts b {
+  color: var(--navy);
+  margin: 7px 0;
+}
+.certAdminFacts p,
+.certAdminFacts a {
+  font-size: 11px;
+  color: #60717d;
+  margin: 3px 0;
+}
+.certAdminDetail > h3 {
+  font: 20px Georgia;
+  color: var(--navy);
+}
+.certStructure {
+  white-space: pre-wrap;
+  color: #536979;
+  line-height: 1.7;
+  background: #f7f5ef;
+  padding: 15px;
+}
+.certAdminLink,
+.certAdminDocument {
+  display: block;
+  padding: 12px 14px;
+  margin: 12px 0;
+  background: #edf3f7;
+  color: var(--navy);
+  font-weight: 800;
+  font-size: 12px;
+}
+.certAdminDecision {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #e2e6e8;
+}
+.certAdminDecision label {
+  display: block;
+  margin: 13px 0;
+  color: #42586a;
+  font-size: 12px;
+  font-weight: 800;
+}
+.certAdminDecision label > * {
+  display: block;
+  margin-top: 7px;
+}
+.certAdminDecision > button {
+  border: 0;
+  padding: 12px 18px;
+}
+@media (max-width: 950px) {
+  .certAdminLayout {
+    grid-template-columns: 1fr;
+  }
+  .certAdminDetail {
+    position: static;
+  }
+  .certAdminFacts {
+    grid-template-columns: 1fr;
+  }
+  .certAdminTools {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,1 @@
+ALTER TABLE `banks` ADD `last_updated` text DEFAULT '' NOT NULL;

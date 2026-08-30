@@ -1,0 +1,197 @@
+.homeServices {
+  background: linear-gradient(180deg, #f7f3ea 0%, #f2ede3 100%);
+}
+.homeServiceGrid {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+}
+.homeServiceGrid > a {
+  position: relative;
+  isolation: isolate;
+  grid-column: span 4;
+  min-height: 255px;
+  padding: 27px;
+  display: flex;
+  align-items: flex-start;
+  overflow: hidden;
+  border: 1px solid #dcd7cc;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 12px 34px #102a430b;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+.homeServiceGrid > a:first-child {
+  grid-column: span 7;
+  grid-row: span 2;
+  min-height: 526px;
+  padding: 42px;
+  background: linear-gradient(145deg, #0b263f 0%, #164d6e 72%, #1c5d7d 100%);
+  border-color: #c9a65a;
+  color: #fff;
+  box-shadow: 0 22px 55px #102a4330;
+}
+.homeServiceGrid > a:nth-child(2),
+.homeServiceGrid > a:nth-child(3) {
+  grid-column: span 5;
+  min-height: 255px;
+}
+.homeServiceGrid > a:after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: 175px;
+  height: 175px;
+  right: -80px;
+  bottom: -90px;
+  border: 1px solid #c69b4638;
+  border-radius: 50%;
+}
+.homeServiceGrid > a:first-child:after {
+  width: 390px;
+  height: 390px;
+  right: -155px;
+  bottom: -185px;
+  border-color: #e5c57035;
+  box-shadow: inset 0 0 0 35px #ffffff06;
+}
+.homeServiceGrid > a:hover {
+  transform: translateY(-5px);
+  border-color: #c69b46;
+  box-shadow: 0 22px 48px #102a4318;
+}
+.homeServiceGrid .serviceNumber {
+  position: absolute;
+  right: 20px;
+  top: 13px;
+  color: #102a430d;
+  font: 66px Georgia;
+}
+.homeServiceGrid > a:first-child .serviceNumber {
+  right: 28px;
+  top: 18px;
+  color: #ffffff12;
+  font-size: 100px;
+}
+.homeServiceGrid > a > i {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 54px;
+  margin-bottom: 25px;
+  border-radius: 14px;
+  background: #f2ead9;
+  color: #936c25;
+  font: normal 23px Georgia;
+}
+.homeServiceGrid > a:first-child > i {
+  width: 76px;
+  height: 76px;
+  flex-basis: 76px;
+  margin-bottom: auto;
+  background: #ffffff10;
+  border: 1px solid #d7b76d77;
+  color: #efd18b;
+  font-size: 32px;
+}
+.homeServiceGrid small {
+  color: #9b742d;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+.homeServiceGrid > a:first-child small {
+  margin-top: 38px;
+  color: #e9c978;
+}
+.homeServiceGrid h3 {
+  font: 500 27px/1.2 Georgia;
+  color: #102a43;
+  margin: 14px 0 10px;
+}
+.homeServiceGrid > a:first-child h3 {
+  max-width: 520px;
+  color: #fff;
+  font-size: clamp(37px, 4vw, 54px);
+  margin: 15px 0;
+}
+.homeServiceGrid p {
+  color: #637282;
+  line-height: 1.65;
+  font-size: 14px;
+}
+.homeServiceGrid > a:first-child p {
+  max-width: 540px;
+  color: #d3e0e7;
+  font-size: 16px;
+}
+.homeServiceGrid b {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  color: #8b6723;
+  font-size: 12px;
+}
+.homeServiceGrid b em {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #f1e7d1;
+  font-style: normal;
+  transition: transform 0.2s;
+}
+.homeServiceGrid > a:first-child b {
+  color: #f0d28e;
+  font-size: 13px;
+}
+.homeServiceGrid > a:first-child b em {
+  background: #ffffff12;
+}
+.homeServiceGrid > a:hover b em {
+  transform: translateX(4px);
+}
+@media (max-width: 1000px) {
+  .homeServiceGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .homeServiceGrid > a,
+  .homeServiceGrid > a:first-child,
+  .homeServiceGrid > a:nth-child(2),
+  .homeServiceGrid > a:nth-child(3) {
+    grid-column: span 1;
+    grid-row: auto;
+    min-height: 280px;
+  }
+  .homeServiceGrid > a:first-child {
+    grid-column: 1/-1;
+    min-height: 430px;
+  }
+}
+@media (max-width: 650px) {
+  .homeServiceGrid {
+    grid-template-columns: 1fr;
+  }
+  .homeServiceGrid > a,
+  .homeServiceGrid > a:first-child {
+    grid-column: auto;
+    min-height: 265px;
+    padding: 25px;
+  }
+  .homeServiceGrid > a:first-child {
+    min-height: 390px;
+  }
+  .homeServiceGrid > a:first-child > i {
+    width: 62px;
+    height: 62px;
+    flex-basis: 62px;
+  }
+  .homeServiceGrid > a:first-child h3 {
+    font-size: 38px;
+  }
+}

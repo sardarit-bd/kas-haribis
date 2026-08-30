@@ -1,0 +1,342 @@
+.investHero {
+  max-width: 1300px;
+  margin: auto;
+  padding: 88px 7vw;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 8vw;
+  align-items: center;
+}
+.investHero h2,
+.investDirectory h2,
+.investDisclaimer h2 {
+  font: 500 clamp(35px, 4vw, 53px)/1.13 Georgia;
+  color: var(--navy);
+  margin: 0 0 20px;
+}
+.investHero > div > p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.8;
+}
+.investHero aside {
+  padding: 38px;
+  background: linear-gradient(145deg, #102a43, #194e6f);
+  color: #fff;
+  border: 1px solid var(--gold);
+  border-radius: 14px;
+  box-shadow: 18px 24px 55px #102a4328;
+}
+.investHero aside > span {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #c49a48;
+  color: #fff;
+  font-size: 24px;
+}
+.investHero aside h3 {
+  font: 28px Georgia;
+  margin: 20px 0 10px;
+}
+.investHero aside p {
+  color: #d3dfe5;
+  line-height: 1.7;
+}
+.investDirectory {
+  padding: 90px 7vw;
+  background: #f7f3ea;
+}
+.investHead {
+  max-width: 1280px;
+  margin: 0 auto 42px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 35px;
+}
+.investHead > strong {
+  min-width: 145px;
+  text-align: center;
+  padding: 17px;
+  background: #fff;
+  border: 1px solid #ded7c9;
+  color: var(--gold);
+  font: 42px Georgia;
+}
+.investHead > strong small {
+  display: block;
+  color: var(--muted);
+  font: 10px Arial;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.investGrid {
+  max-width: 1280px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.investGrid article {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  background: #fff;
+  border: 1px solid #dedfdc;
+  border-radius: 15px;
+  box-shadow: 0 14px 42px #102a430c;
+}
+.investGrid article.featured {
+  border-top: 4px solid var(--gold);
+}
+.investCardTop {
+  display: grid;
+  grid-template-columns: 82px 1fr auto;
+  gap: 17px;
+  align-items: center;
+  padding-bottom: 21px;
+  border-bottom: 1px solid #e3e7e8;
+}
+.investCardTop > img,
+.investCardTop > span {
+  width: 82px;
+  height: 72px;
+  object-fit: contain;
+  border-radius: 11px;
+  padding: 7px;
+  background: #f3f5f3;
+  box-sizing: border-box;
+}
+.investCardTop > span {
+  display: grid;
+  place-items: center;
+  background: var(--navy);
+  color: #e4c373;
+  font: 28px Georgia;
+}
+.investCardTop small {
+  color: #a0772d;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+}
+.investCardTop h3 {
+  margin: 5px 0;
+  color: var(--navy);
+  font: 29px/1.13 Georgia;
+}
+.investCardTop b {
+  color: #657383;
+  font-size: 12px;
+}
+.investCardTop em {
+  padding: 7px 10px;
+  border-radius: 20px;
+  background: #e9f4eb;
+  color: #367448;
+  font-size: 10px;
+  font-weight: 800;
+  font-style: normal;
+  text-transform: uppercase;
+}
+.investGrid article > p {
+  color: var(--muted);
+  line-height: 1.72;
+}
+.investFacts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 12px 0 18px;
+}
+.investFacts > div {
+  padding: 13px;
+  background: #f5f3ed;
+  border-radius: 7px;
+}
+.investFacts small {
+  display: block;
+  color: #9a742d;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+.investFacts strong {
+  display: block;
+  margin-top: 5px;
+  color: var(--navy);
+  font-size: 14px;
+}
+.investKosher {
+  padding: 16px 18px;
+  background: #f0f5f1;
+  border-left: 4px solid #4c895d;
+}
+.investKosher > div {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.investKosher > div > span {
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #4d895e;
+  color: #fff;
+}
+.investKosher > div p {
+  display: grid;
+  margin: 0;
+  flex: 1;
+}
+.investKosher small {
+  color: #39734a;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+.investKosher b {
+  color: #294b34;
+  font-size: 13px;
+}
+.investKosher time {
+  font-size: 10px;
+  color: #63736a;
+}
+.investKosher > p {
+  margin: 12px 0 0;
+  color: #405d48;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.investPublicNote {
+  padding: 12px;
+  background: #fff7e5;
+  border-left: 3px solid var(--gold);
+  font-size: 13px;
+}
+.investGrid details {
+  margin-top: 14px;
+  border: 1px solid #e0e3e4;
+  border-radius: 7px;
+}
+.investGrid summary {
+  cursor: pointer;
+  padding: 12px;
+  color: #7f6024;
+  font-size: 12px;
+  font-weight: 800;
+}
+.investGrid details p {
+  padding: 0 13px 12px;
+  color: #626d78;
+  line-height: 1.6;
+  font-size: 12px;
+}
+.investActions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 21px;
+}
+.investActions .primary {
+  padding: 12px 16px;
+}
+.investActions > a:not(.primary) {
+  color: #876622;
+  font-size: 12px;
+  font-weight: 800;
+}
+.investActions > span {
+  color: #7c8790;
+  font-size: 12px;
+  font-weight: 700;
+}
+.investEmpty {
+  max-width: 800px;
+  margin: auto;
+  padding: 65px;
+  text-align: center;
+  background: #fff;
+  border: 1px dashed #cfc6b5;
+}
+.investEmpty > span {
+  font-size: 45px;
+  color: var(--gold);
+}
+.investEmpty p {
+  color: var(--muted);
+}
+.investDisclaimer {
+  padding: 76px 8vw;
+  background: var(--navy);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+}
+.investDisclaimer > div {
+  max-width: 900px;
+}
+.investDisclaimer h2 {
+  color: #fff;
+}
+.investDisclaimer p:not(.eyebrow) {
+  color: #d0dce3;
+  line-height: 1.75;
+}
+.investDisclaimer > a {
+  padding: 14px 18px;
+  background: var(--gold);
+  border-radius: 5px;
+  font-weight: 800;
+  text-align: center;
+}
+@media (max-width: 900px) {
+  .investHero,
+  .investGrid {
+    grid-template-columns: 1fr;
+  }
+  .investDisclaimer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+@media (max-width: 560px) {
+  .investHero,
+  .investDirectory,
+  .investDisclaimer {
+    padding: 62px 6vw;
+  }
+  .investCardTop {
+    grid-template-columns: 66px 1fr;
+  }
+  .investCardTop > img,
+  .investCardTop > span {
+    width: 66px;
+    height: 60px;
+  }
+  .investCardTop em {
+    grid-column: 1/-1;
+    width: max-content;
+  }
+  .investFacts {
+    grid-template-columns: 1fr;
+  }
+  .investActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .investActions a {
+    text-align: center;
+  }
+}

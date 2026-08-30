@@ -1,0 +1,83 @@
+.invoiceAdminPage .invoiceEditor {
+  position: static;
+}
+.receiptTopSubmit {
+  display: block;
+  width: 100%;
+  margin: 14px 0 4px;
+  padding: 14px 18px;
+  border: 0;
+  border-radius: 7px;
+  background: #a7782b;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 7px 18px #a7782b36;
+}
+.receiptTopSubmit:hover {
+  background: #8f6521;
+}
+.receiptTopSubmit:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+.receiptButtonHint {
+  margin: 5px 0 14px;
+  color: #71818c;
+  font-size: 10px;
+  text-align: center;
+}
+.invoiceAdminPage .invoiceEditorActions {
+  position: sticky;
+  bottom: 10px;
+  z-index: 4;
+  margin: 18px -8px -8px;
+  padding: 10px 8px;
+  background: #fffffff2;
+  border-top: 1px solid #e0e6e9;
+  backdrop-filter: blur(8px);
+}
+.invoiceAdminPage .invoiceEditorActions .primary {
+  flex: 1;
+  background: #102a43;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+}
+.receiptReadyActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+.receiptPreviewReady,
+.receiptDownloadReady {
+  display: block;
+  margin: 0;
+  padding: 12px 10px;
+  border-radius: 7px;
+  font-weight: 800;
+  text-align: center;
+}
+.receiptPreviewReady {
+  border: 1px solid #a7782b;
+  background: #fbf7ee;
+  color: #76551e;
+}
+.receiptDownloadReady {
+  border: 1px solid #559163;
+  background: #edf7ef;
+  color: #285d35;
+}
+.receiptPreviewReady:hover {
+  background: #f3e9d4;
+}
+.receiptDownloadReady:hover {
+  background: #e1f1e5;
+}
+@media (max-width: 600px) {
+  .receiptReadyActions {
+    grid-template-columns: 1fr;
+  }
+}

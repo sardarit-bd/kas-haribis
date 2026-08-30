@@ -1,0 +1,84 @@
+.topSponsorConveyor {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 3%,
+    #000 97%,
+    transparent
+  );
+}
+
+.topSponsorTrack {
+  display: flex;
+  width: max-content;
+  animation: sponsorConveyor 60s linear infinite;
+  will-change: transform;
+}
+
+.topSponsorGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-right: 12px;
+}
+
+.topSponsorCard.conveyorSponsor {
+  width: 230px;
+  min-width: 230px;
+  max-width: 230px;
+  flex: 0 0 230px;
+}
+
+.topSponsorConveyor:hover .topSponsorTrack,
+.topSponsorConveyor:focus-within .topSponsorTrack {
+  animation-play-state: paused;
+}
+
+@keyframes sponsorConveyor {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topSponsorTrack {
+    animation: none;
+  }
+  .topSponsorConveyor {
+    overflow-x: auto;
+    mask-image: none;
+  }
+  .topSponsorGroup:last-child {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .topSponsorConveyor {
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 5%,
+      #000 95%,
+      transparent
+    );
+  }
+  .topSponsorTrack {
+    animation-duration: 48s;
+  }
+  .topSponsorCard.conveyorSponsor {
+    width: 190px;
+    min-width: 190px;
+    max-width: 190px;
+  }
+  .topSponsorGroup {
+    gap: 8px;
+    padding-right: 8px;
+  }
+}

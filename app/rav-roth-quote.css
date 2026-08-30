@@ -1,0 +1,121 @@
+.ravRothBankQuote {
+  position: relative;
+  max-width: 1400px;
+  margin: 55px auto 0;
+  padding: 52px 7vw 48px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 32px;
+  align-items: start;
+  border-radius: 14px;
+  background: linear-gradient(130deg, #081f38 0%, #103a5c 64%, #88621e 160%);
+  color: white;
+  box-shadow: 0 24px 65px #0a2a4526;
+}
+.ravRothBankQuote:before,
+.ravRothBankQuote:after {
+  content: '';
+  position: absolute;
+  border: 1px solid #d3ad6340;
+  border-radius: 50%;
+}
+.ravRothBankQuote:before {
+  width: 280px;
+  height: 280px;
+  left: -140px;
+  top: -150px;
+}
+.ravRothBankQuote:after {
+  width: 190px;
+  height: 190px;
+  right: -95px;
+  bottom: -115px;
+}
+.ravQuoteOrnament {
+  position: relative;
+  z-index: 1;
+  width: 100px;
+  height: 100px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid #d9b66e70;
+  background: #ffffff0a;
+  box-shadow: inset 0 0 0 7px #ffffff05;
+}
+.ravQuoteOrnament span {
+  font: 78px/1 Georgia;
+  color: #d9b66e;
+  transform: translateY(12px);
+}
+.ravQuoteContent {
+  position: relative;
+  z-index: 1;
+}
+.ravQuoteKicker {
+  margin: 0 0 15px;
+  color: #dcb96f;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+.ravQuoteContent blockquote {
+  margin: 0;
+  max-width: 1050px;
+  font:
+    clamp(24px, 2.6vw, 38px)/1.75 Georgia,
+    'Times New Roman',
+    serif;
+  color: #fff;
+  text-wrap: balance;
+}
+.ravQuoteAttribution {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 23px;
+}
+.ravQuoteAttribution > span {
+  width: 55px;
+  height: 2px;
+  background: #d9b66e;
+}
+.ravQuoteAttribution div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ravQuoteAttribution strong {
+  font-size: 17px;
+  color: #f2d99e;
+}
+.ravQuoteAttribution small {
+  direction: ltr;
+  text-align: right;
+  color: #b9cbd8;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+.ravRothBankQuote + .bankAuthorityIntro {
+  padding-top: 44px;
+}
+@media (max-width: 750px) {
+  .ravRothBankQuote {
+    margin: 35px 5vw 0;
+    padding: 34px 23px;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .ravQuoteOrnament {
+    width: 65px;
+    height: 65px;
+  }
+  .ravQuoteOrnament span {
+    font-size: 53px;
+  }
+  .ravQuoteContent blockquote {
+    font-size: 23px;
+    line-height: 1.7;
+  }
+}

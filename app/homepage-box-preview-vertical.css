@@ -1,0 +1,103 @@
+.verticalOfferings {
+  padding-left: 6vw;
+  padding-right: 6vw;
+}
+.verticalOfferingList {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.verticalOfferingRow {
+  display: grid;
+  grid-template-columns: 310px 1fr;
+  gap: 34px;
+  align-items: center;
+  position: relative;
+}
+.boxFlashPreview .verticalOfferingList .flashOffering {
+  width: 310px;
+  min-height: 150px;
+  padding: 20px;
+  grid-template-columns: 52px 1fr 32px;
+  gap: 12px 14px;
+  border-radius: 15px;
+  z-index: 1;
+}
+.verticalOfferingList .flashOffering.active {
+  animation: verticalCardGlow 1.9s ease both;
+}
+.boxFlashPreview .verticalOfferingList .flashOffering > i {
+  width: 52px;
+  height: 52px;
+}
+.verticalOfferingExplanation {
+  min-height: 112px;
+  padding: 23px 28px;
+  border-left: 2px solid #d8bd83;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(90deg, #fff9, transparent);
+  border-radius: 0 12px 12px 0;
+  transition: 0.3s;
+}
+.verticalOfferingExplanation span {
+  color: #b48635;
+  font: 11px Georgia;
+  letter-spacing: 0.15em;
+}
+.verticalOfferingExplanation p {
+  margin: 7px 0 9px;
+  color: #526773;
+  font: 18px/1.45 Georgia;
+}
+.verticalOfferingExplanation a {
+  color: var(--navy);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.verticalOfferingRow.active .verticalOfferingExplanation {
+  transform: translateX(7px);
+  border-left-color: #b9872e;
+  background: linear-gradient(90deg, #fff, #fff7);
+}
+@keyframes verticalCardGlow {
+  0% {
+    filter: brightness(1);
+    transform: translateY(0);
+  }
+  35% {
+    filter: brightness(1.07);
+    transform: translateY(-7px);
+  }
+  100% {
+    filter: brightness(1);
+    transform: translateY(-7px);
+  }
+}
+@media (max-width: 700px) {
+  .verticalOfferings {
+    padding-left: 5vw;
+    padding-right: 5vw;
+  }
+  .verticalOfferingRow {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .boxFlashPreview .verticalOfferingList .flashOffering {
+    width: 285px;
+    min-height: 145px;
+  }
+  .verticalOfferingExplanation {
+    margin-left: 18px;
+    padding: 16px 20px;
+    min-height: auto;
+  }
+  .verticalOfferingExplanation p {
+    font-size: 16px;
+  }
+}

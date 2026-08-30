@@ -1,0 +1,253 @@
+.memberAccountHero {
+  padding: 75px 8vw;
+  background: linear-gradient(125deg, #0a2438, #174862);
+  color: white;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 35px;
+}
+.memberAccountHero h1 {
+  font: 500 clamp(40px, 5vw, 66px) Georgia;
+  margin: 0;
+}
+.memberAccountHero p:not(.eyebrow) {
+  color: #d0dfe6;
+}
+.memberAccountHero > a {
+  color: #e5c575;
+  font-weight: bold;
+}
+.memberDashboard {
+  max-width: 1250px;
+  margin: auto;
+  padding: 75px 6vw 95px;
+}
+.memberDashboardGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 28px;
+  align-items: start;
+}
+.memberProfileCard,
+.memberIdentityCard,
+.memberOrders {
+  background: white;
+  border: 1px solid #dfe4e7;
+  border-radius: 15px;
+  box-shadow: 0 14px 40px #102a430d;
+}
+.memberProfileCard {
+  padding: 34px;
+  display: grid;
+  gap: 17px;
+}
+.memberProfileCard h2,
+.memberOrders h2 {
+  font: 36px Georgia;
+  color: var(--navy);
+  margin: 0;
+}
+.memberProfileCard > label {
+  display: grid;
+  gap: 7px;
+  font-weight: bold;
+  color: var(--navy);
+}
+.memberProfileCard input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd5dc;
+  border-radius: 7px;
+}
+.memberProfileCard input:disabled {
+  background: #f1f3f4;
+  color: #6f7e88;
+}
+.memberProfileCard label small {
+  font-weight: normal;
+  color: var(--muted);
+}
+.memberProfileCard fieldset {
+  border: 1px solid #dce3e6;
+  border-radius: 10px;
+  padding: 20px;
+  display: grid;
+  gap: 17px;
+}
+.memberProfileCard legend {
+  padding: 0 8px;
+  color: #9a7225;
+  font-weight: bold;
+}
+.memberProfileCard fieldset label {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+.memberProfileCard fieldset input {
+  width: 20px;
+  height: 20px;
+}
+.memberProfileCard fieldset span > * {
+  display: block;
+}
+.memberProfileCard fieldset small {
+  margin-top: 4px;
+}
+.memberSaved {
+  padding: 12px;
+  background: #e8f4eb;
+  color: #2f7042;
+  border-left: 3px solid #4e9560;
+}
+.memberIdentityCard {
+  padding: 34px;
+  background: linear-gradient(145deg, #102a43, #1a4a67);
+  color: white;
+  transform: rotate(1deg);
+}
+.memberIdentityCard > div {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.memberIdentityCard > div span {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #dbba68;
+  border-radius: 50%;
+  font: 24px Georgia;
+  color: #e3c274;
+}
+.memberIdentityCard > div small {
+  color: #e3c274;
+  font-weight: bold;
+  letter-spacing: 0.12em;
+}
+.memberIdentityCard > p {
+  font: 29px Georgia;
+  margin: 42px 0 8px;
+}
+.memberIdentityCard > b {
+  display: block;
+  color: #d6e1e6;
+  overflow-wrap: anywhere;
+}
+.memberIdentityCard > small {
+  display: block;
+  margin-top: 55px;
+  padding-top: 18px;
+  border-top: 1px solid #ffffff27;
+  color: #aebfc8;
+}
+.memberOrders {
+  margin-top: 30px;
+  padding: 34px;
+}
+.memberOrdersHead {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+}
+.memberOrdersHead > span {
+  padding: 9px 14px;
+  border-radius: 50px;
+  background: #f0e7d6;
+  color: #85631f;
+  font-weight: bold;
+}
+.memberOrderList {
+  display: grid;
+  gap: 10px;
+  margin-top: 25px;
+}
+.memberOrderList article {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 18px;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid #e1e6e8;
+  border-radius: 8px;
+}
+.memberOrderList small {
+  display: block;
+  color: var(--muted);
+  margin-top: 5px;
+}
+.memberOrderList em {
+  font-style: normal;
+  padding: 6px 9px;
+  border-radius: 20px;
+  background: #edf2f5;
+  color: #466176;
+}
+.memberOrderEmpty {
+  text-align: center;
+  padding: 65px 20px;
+  background: #f8f5ee;
+  border: 1px dashed #d2c4a8;
+  margin-top: 25px;
+}
+.memberOrderEmpty > span {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  margin: auto;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #e5c574;
+  font-size: 30px;
+}
+.memberOrderEmpty h3 {
+  font: 28px Georgia;
+  color: var(--navy);
+  margin: 18px 0 8px;
+}
+.memberOrderEmpty p {
+  color: var(--muted);
+}
+.memberOrderEmpty a {
+  display: inline-block;
+  margin-top: 12px;
+  color: #876521;
+  font-weight: bold;
+}
+@media (max-width: 850px) {
+  .memberDashboardGrid {
+    grid-template-columns: 1fr;
+  }
+  .memberIdentityCard {
+    max-width: 440px;
+  }
+  .memberAccountHero {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+@media (max-width: 560px) {
+  .memberAccountHero {
+    padding: 58px 6vw;
+  }
+  .memberDashboard {
+    padding: 45px 4vw 70px;
+  }
+  .memberProfileCard,
+  .memberIdentityCard,
+  .memberOrders {
+    padding: 22px;
+  }
+  .memberOrderList article {
+    grid-template-columns: 1fr;
+  }
+  .memberOrdersHead {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+  }
+}

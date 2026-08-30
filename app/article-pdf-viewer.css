@@ -1,0 +1,82 @@
+.articlePdfViewer {
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  background: #33434d;
+}
+.articlePdfViewer header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+  padding: 13px 20px;
+  background: #102a43;
+  color: #fff;
+  border-bottom: 3px solid #c49a46;
+}
+.articlePdfViewer header > div {
+  min-width: 0;
+  text-align: center;
+}
+.articlePdfViewer small,
+.articlePdfViewer strong {
+  display: block;
+}
+.articlePdfViewer small {
+  color: #d8b96f;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+}
+.articlePdfViewer strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font:
+    20px Georgia,
+    serif;
+}
+.articlePdfBack,
+.articlePdfDownload {
+  padding: 10px 13px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 800;
+}
+.articlePdfBack {
+  border: 1px solid #72879a;
+  color: #fff;
+}
+.articlePdfDownload {
+  background: #c49a46;
+  color: #102a43;
+}
+.articlePdfViewer iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #59666e;
+}
+@media (max-width: 650px) {
+  .articlePdfViewer header {
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    padding: 10px;
+  }
+  .articlePdfViewer header > div {
+    grid-column: 1/-1;
+    grid-row: 1;
+    text-align: left;
+  }
+  .articlePdfBack {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .articlePdfDownload {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .articlePdfViewer strong {
+    font-size: 16px;
+  }
+}

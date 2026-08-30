@@ -1,0 +1,49 @@
+.bankResearchPrompt {
+  max-width: 1230px;
+  margin: 35px auto 0;
+  padding: 18px 22px;
+  border-radius: 9px;
+  background: var(--navy);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+}
+.bankResearchPrompt div {
+  display: grid;
+  gap: 4px;
+}
+.bankResearchPrompt small {
+  color: #d7b66f;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+.bankResearchPrompt b {
+  font: 22px Georgia;
+}
+.bankResearchPrompt span {
+  color: #c8d5dd;
+  font-size: 13px;
+}
+.bankResearchPrompt a {
+  flex: 0 0 auto;
+  background: var(--gold);
+  color: white;
+  padding: 13px 17px;
+  border-radius: 5px;
+  font-weight: 800;
+  font-size: 12px;
+}
+@media (max-width: 700px) {
+  .bankResearchPrompt {
+    margin: 25px 5vw 0;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .bankResearchPrompt a {
+    width: 100%;
+    text-align: center;
+  }
+}

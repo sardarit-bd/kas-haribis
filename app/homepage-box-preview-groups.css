@@ -1,0 +1,132 @@
+.groupedOfferings {
+  padding-left: 6vw;
+  padding-right: 6vw;
+}
+.offeringGroups {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 54px;
+}
+.offeringGroup {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 0.76fr);
+  gap: 28px;
+  align-items: stretch;
+}
+.offeringGroup:nth-child(even) {
+  grid-template-columns: minmax(340px, 0.76fr) minmax(0, 1fr);
+}
+.offeringGroup:nth-child(even) figure {
+  grid-column: 1;
+  grid-row: 1;
+}
+.offeringGroup:nth-child(even) .offeringGroupGrid {
+  grid-column: 2;
+}
+.offeringGroupGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.boxFlashPreview .offeringGroupGrid .flashOffering {
+  min-width: 0;
+  min-height: 164px;
+  padding: 19px;
+  grid-template-columns: 48px 1fr 28px;
+  gap: 10px 12px;
+  border-radius: 15px;
+}
+.boxFlashPreview .offeringGroupGrid .flashOffering > i {
+  width: 48px;
+  height: 48px;
+}
+.offeringGroup figure {
+  position: relative;
+  min-height: 344px;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #102a43;
+  box-shadow: 0 20px 50px #102a4320;
+}
+.offeringGroup figure:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 42%, #071b2de6);
+}
+.offeringGroup figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s;
+}
+.offeringGroup figure:hover img {
+  transform: scale(1.035);
+}
+.offeringGroup figcaption {
+  position: absolute;
+  z-index: 1;
+  left: 25px;
+  right: 25px;
+  bottom: 24px;
+  color: #fff;
+}
+.offeringGroup figcaption span {
+  display: block;
+  margin-bottom: 7px;
+  color: #d8b66f;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+}
+.offeringGroup figcaption b {
+  font: 24px/1.2 Georgia;
+}
+.offeringGroup:last-child .offeringGroupGrid {
+  grid-template-columns: minmax(250px, 1fr);
+  max-width: 350px;
+}
+.offeringGroup:last-child {
+  grid-template-columns: minmax(280px, 0.55fr) minmax(390px, 1fr);
+}
+@media (max-width: 950px) {
+  .offeringGroup,
+  .offeringGroup:nth-child(even),
+  .offeringGroup:last-child {
+    grid-template-columns: 1fr;
+  }
+  .offeringGroup:nth-child(even) figure,
+  .offeringGroup:nth-child(even) .offeringGroupGrid {
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .offeringGroup figure {
+    min-height: 300px;
+  }
+  .offeringGroup:last-child .offeringGroupGrid {
+    max-width: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .groupedOfferings {
+    padding-left: 5vw;
+    padding-right: 5vw;
+  }
+  .offeringGroupGrid,
+  .offeringGroup:last-child .offeringGroupGrid {
+    grid-template-columns: 1fr;
+  }
+  .boxFlashPreview .offeringGroupGrid .flashOffering {
+    min-height: 150px;
+  }
+  .offeringGroup figure {
+    min-height: 240px;
+  }
+  .offeringGroups {
+    gap: 38px;
+  }
+}

@@ -1,0 +1,104 @@
+.bankAuthorityIntro {
+  max-width: 1400px;
+  margin: auto;
+  padding: 65px 6vw 25px;
+  display: grid;
+  grid-template-columns: 1.35fr 0.65fr;
+  gap: 38px;
+  align-items: start;
+}
+.bankIntroStatement h2 {
+  max-width: 850px;
+  font: clamp(34px, 4vw, 52px)/1.08 Georgia;
+  color: var(--navy);
+  margin: 10px 0 17px;
+}
+.bankIntroLead {
+  max-width: 850px;
+  font-size: 18px;
+  line-height: 1.75;
+  color: #526979;
+}
+.bankLeadershipStatement {
+  position: relative;
+  margin-top: 28px;
+  padding: 28px 30px 28px 64px;
+  border: 1px solid #ded5c2;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #fff, #faf7ef);
+  box-shadow: 0 12px 35px #17364c0c;
+}
+.bankLeadershipStatement > span {
+  position: absolute;
+  left: 22px;
+  top: 13px;
+  font: 58px Georgia;
+  color: var(--gold);
+}
+.bankLeadershipStatement p {
+  margin: 0;
+  color: #40596a;
+  line-height: 1.85;
+  font-size: 15px;
+}
+.bankLeadershipStatement strong {
+  color: var(--navy);
+}
+.bankIntroDisclaimers {
+  display: grid;
+  gap: 13px;
+}
+.bankIntroDisclaimers > div {
+  padding: 24px;
+  border-radius: 10px;
+  background: #0d2b48;
+  color: white;
+  box-shadow: 0 12px 35px #17364c15;
+}
+.bankIntroDisclaimers > div:nth-child(2) {
+  background: #f4efe4;
+  color: var(--navy);
+  border: 1px solid #ded5c2;
+}
+.bankIntroDisclaimers small {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: #d7b66f;
+}
+.bankIntroDisclaimers h3 {
+  font: 23px Georgia;
+  margin: 9px 0;
+}
+.bankIntroDisclaimers p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #ced9e0;
+  margin: 0;
+}
+.bankIntroDisclaimers > div:nth-child(2) p {
+  color: #596d7b;
+}
+@media (max-width: 980px) {
+  .bankAuthorityIntro {
+    grid-template-columns: 1fr;
+  }
+  .bankIntroDisclaimers {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 650px) {
+  .bankAuthorityIntro {
+    padding: 45px 5vw 20px;
+  }
+  .bankIntroDisclaimers {
+    grid-template-columns: 1fr;
+  }
+  .bankLeadershipStatement {
+    padding: 45px 20px 22px;
+  }
+  .bankLeadershipStatement > span {
+    left: 18px;
+    top: 4px;
+  }
+}

@@ -1,0 +1,279 @@
+.savingsHero {
+  max-width: 1300px;
+  margin: auto;
+  padding: 85px 7vw;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 8vw;
+  align-items: center;
+}
+.savingsHero h2,
+.savingsDirectory h2,
+.savingsDisclaimer h2 {
+  font: 500 clamp(35px, 4vw, 52px)/1.14 Georgia;
+  color: var(--navy);
+  margin: 0 0 20px;
+}
+.savingsHero > div > p:not(.eyebrow) {
+  max-width: 760px;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.8;
+}
+.savingsHero aside {
+  text-align: center;
+  padding: 30px;
+  background: linear-gradient(145deg, #102a43, #184c6c);
+  color: #fff;
+  border: 1px solid var(--gold);
+  border-radius: 14px;
+  box-shadow: 16px 22px 48px #102a4322;
+}
+.savingsHero aside > * {
+  display: block;
+}
+.savingsHero aside strong {
+  font: 60px Georgia;
+  color: #e3c474;
+}
+.savingsHero aside span {
+  font-weight: 800;
+}
+.savingsHero aside small {
+  margin-top: 10px;
+  color: #d2dee4;
+  line-height: 1.5;
+}
+.savingsDirectory {
+  padding: 90px 7vw;
+  background: #f7f3ea;
+}
+.savingsDirectoryHead {
+  max-width: 1280px;
+  margin: 0 auto 42px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 40px;
+}
+.savingsDirectoryHead > p {
+  max-width: 470px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.savingsGrid {
+  max-width: 1280px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.savingsGrid article {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  background: #fff;
+  border: 1px solid #dedfdc;
+  border-radius: 15px;
+  box-shadow: 0 14px 42px #102a430c;
+}
+.savingsGrid article.featured {
+  border-top: 4px solid var(--gold);
+}
+.savingsCardTop {
+  display: grid;
+  grid-template-columns: 88px 1fr auto;
+  gap: 18px;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e5e8e9;
+}
+.savingsCardTop > img,
+.savingsCardTop > span {
+  width: 88px;
+  height: 72px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #f4f5f3;
+  padding: 8px;
+  box-sizing: border-box;
+}
+.savingsCardTop > span {
+  display: grid;
+  place-items: center;
+  background: var(--navy);
+  color: #e4c473;
+  font: 30px Georgia;
+}
+.savingsCardTop small {
+  display: block;
+  color: #3f7a50;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.savingsCardTop h3 {
+  margin: 4px 0;
+  color: var(--navy);
+  font: 30px/1.15 Georgia;
+}
+.savingsCardTop b {
+  color: #9a742d;
+  font-size: 13px;
+}
+.savingsCardTop em {
+  min-width: 82px;
+  text-align: center;
+  padding: 11px;
+  background: #f5f1e7;
+  border-radius: 10px;
+  font-style: normal;
+}
+.savingsCardTop em strong {
+  display: block;
+  color: var(--navy);
+  font: 25px Georgia;
+}
+.savingsCardTop em small {
+  color: #9a742d;
+}
+.savingsGrid article > p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+.savingsGrid dl {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 9px;
+  margin: 16px 0;
+}
+.savingsGrid dt {
+  font-size: 10px;
+  font-weight: 800;
+  color: #9b762e;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.savingsGrid dd {
+  margin: 0;
+  color: #405469;
+  font-size: 14px;
+}
+.savingsKosherNote {
+  padding: 15px 17px;
+  margin: 8px 0 14px;
+  background: #f1f5f2;
+  border-left: 4px solid #4f8a60;
+}
+.savingsKosherNote small {
+  color: #39734a;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+.savingsKosherNote p {
+  margin: 7px 0 0;
+  color: #425d4a;
+  line-height: 1.65;
+  font-size: 14px;
+}
+.savingsPublicNote {
+  padding: 12px;
+  background: #fff7e6;
+  border-left: 3px solid var(--gold);
+  font-size: 14px;
+}
+.savingsActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 21px;
+  border-top: 1px solid #e5e8e9;
+}
+.savingsActions .primary {
+  padding: 12px 16px;
+}
+.savingsActions > a:not(.primary) {
+  color: #876622;
+  font-size: 13px;
+  font-weight: 800;
+}
+.savingsActions > span {
+  color: #7b8790;
+  font-size: 13px;
+  font-weight: 700;
+}
+.savingsDisclaimer {
+  padding: 76px 8vw;
+  background: var(--navy);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+}
+.savingsDisclaimer > div {
+  max-width: 880px;
+}
+.savingsDisclaimer h2 {
+  color: #fff;
+}
+.savingsDisclaimer p:not(.eyebrow) {
+  color: #d0dce3;
+  line-height: 1.75;
+}
+.savingsDisclaimer > a {
+  padding: 14px 18px;
+  background: var(--gold);
+  border-radius: 5px;
+  font-weight: 800;
+  text-align: center;
+}
+@media (max-width: 900px) {
+  .savingsHero {
+    grid-template-columns: 1fr;
+  }
+  .savingsHero aside {
+    max-width: 300px;
+  }
+  .savingsDirectoryHead,
+  .savingsDisclaimer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .savingsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 560px) {
+  .savingsHero,
+  .savingsDirectory,
+  .savingsDisclaimer {
+    padding: 62px 6vw;
+  }
+  .savingsCardTop {
+    grid-template-columns: 70px 1fr;
+  }
+  .savingsCardTop > img,
+  .savingsCardTop > span {
+    width: 70px;
+    height: 62px;
+  }
+  .savingsCardTop em {
+    grid-column: 1/-1;
+    text-align: left;
+  }
+  .savingsGrid dl {
+    grid-template-columns: 1fr;
+  }
+  .savingsActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .savingsActions a {
+    text-align: center;
+  }
+}

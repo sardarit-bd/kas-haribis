@@ -1,0 +1,401 @@
+.boxFlashPreview {
+  background: #f7f3ea;
+  overflow: hidden;
+}
+.boxFlashPreview .homeHero {
+  min-height: 610px;
+}
+.flashOfferings {
+  padding: 95px 6vw 110px;
+  background:
+    radial-gradient(circle at 90% 5%, #c69b461c, transparent 28%),
+    linear-gradient(180deg, #fbfaf7, #f2ecdf);
+}
+.flashOfferings > header {
+  max-width: 1420px;
+  margin: 0 auto 42px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 60px;
+}
+.flashOfferings h2 {
+  max-width: 850px;
+  margin: 6px 0 0;
+  font: 500 clamp(36px, 4.5vw, 58px)/1.12 Georgia;
+  color: var(--navy);
+}
+.flashLive {
+  min-width: 270px;
+  padding: 17px 19px;
+  display: grid;
+  grid-template-columns: 12px 1fr;
+  gap: 3px 10px;
+  border: 1px solid #d9d1c2;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 35px #102a430c;
+}
+.flashLive i {
+  grid-row: 1/3;
+  width: 10px;
+  height: 10px;
+  margin-top: 3px;
+  border-radius: 50%;
+  background: #4ab56a;
+  box-shadow: 0 0 0 0 #4ab56a99;
+  animation: flashPulse 1.4s infinite;
+}
+.flashLive span {
+  color: #7a8993;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.flashLive b {
+  color: var(--navy);
+  font: 17px Georgia;
+}
+.flashOfferingGrid {
+  max-width: 1420px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 13px;
+}
+.flashOffering {
+  --accent: #28789d;
+  position: relative;
+  isolation: isolate;
+  min-height: 175px;
+  padding: 20px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 52px 1fr 32px;
+  grid-template-rows: auto 1fr;
+  gap: 12px 14px;
+  align-items: center;
+  border: 1px solid #d9dfe2;
+  border-radius: 15px;
+  background: #fff;
+  color: var(--navy);
+  box-shadow: 0 12px 36px #102a430c;
+  transition:
+    transform 0.32s,
+    box-shadow 0.32s,
+    border-color 0.32s;
+}
+.flashOffering:before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: 150px;
+  height: 150px;
+  right: -95px;
+  top: -95px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.1;
+  transition: 0.35s;
+}
+.flashOffering:hover,
+.flashOffering.active {
+  transform: translateY(-7px);
+  border-color: var(--accent);
+  box-shadow: 0 24px 50px #102a4320;
+}
+.flashOffering.active {
+  animation: activeCardGlow 1.9s ease both;
+}
+.flashOffering.active:before {
+  width: 250px;
+  height: 250px;
+  right: -135px;
+  top: -145px;
+  opacity: 0.18;
+}
+.flashNumber {
+  grid-column: 1/-1;
+  color: var(--accent);
+  font: 13px Georgia;
+  letter-spacing: 0.13em;
+}
+.flashOffering > i {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background: color-mix(in srgb, var(--accent) 13%, white);
+  color: var(--accent);
+  font: normal 21px Georgia;
+  transition: 0.35s;
+}
+.flashOffering.active > i {
+  background: var(--accent);
+  color: white;
+  transform: rotate(-5deg) scale(1.08);
+}
+.flashOffering > div b,
+.flashOffering > div small {
+  display: block;
+}
+.flashOffering > div b {
+  font: 21px/1.2 Georgia;
+}
+.flashOffering > div small {
+  margin-top: 7px;
+  color: #6d7d89;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.flashOffering > strong {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #f2f4f4;
+  color: var(--accent);
+  transition: 0.3s;
+}
+.flashOffering.active > strong,
+.flashOffering:hover > strong {
+  background: var(--accent);
+  color: white;
+  transform: translateX(3px);
+}
+.flashOffering > em {
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: 0;
+  height: 4px;
+  background: var(--accent);
+}
+.flashOffering.active > em {
+  animation: flashProgress 1.9s linear forwards;
+}
+.flashOffering.green {
+  --accent: #4d826d;
+}
+.flashOffering.gold {
+  --accent: #b9872e;
+}
+.flashOffering.purple {
+  --accent: #7b5a8d;
+}
+.flashOffering.aqua {
+  --accent: #318895;
+}
+.flashOffering.red {
+  --accent: #a64c58;
+}
+.flashOffering.blue {
+  --accent: #28789d;
+}
+@keyframes flashPulse {
+  70% {
+    box-shadow: 0 0 0 10px #4ab56a00;
+  }
+}
+@keyframes activeCardGlow {
+  0% {
+    filter: brightness(1);
+  }
+  35% {
+    filter: brightness(1.06);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+@keyframes flashProgress {
+  from {
+    right: 100%;
+  }
+  to {
+    right: 0;
+  }
+}
+@media (max-width: 1100px) {
+  .flashOfferingGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 820px) {
+  .flashOfferings > header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .flashOfferingGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .flashLive {
+    width: 100%;
+  }
+}
+@media (max-width: 560px) {
+  .flashOfferings {
+    padding: 70px 5vw 85px;
+  }
+  .flashOfferingGrid {
+    grid-template-columns: 1fr;
+  }
+  .flashOffering {
+    min-height: 145px;
+  }
+}
+.cardsPreviewNotice {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 11px 6vw;
+  background: #e5c474;
+  color: #102a43;
+  font-size: 11px;
+}
+.cardsPreviewNotice b {
+  letter-spacing: 0.12em;
+}
+.cardsPreviewNotice a {
+  margin-left: auto;
+  font-weight: 800;
+}
+.cardsPreviewCounters {
+  max-width: 1320px;
+  margin: 40px auto -30px;
+  padding: 0 6vw;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.cardsPreviewCounters > div {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 14px 16px;
+  border: 1px solid #ded9cf;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 8px 24px #102a4308;
+}
+.cardsPreviewCounters strong {
+  color: #b38835;
+  font: 30px Georgia;
+}
+.cardsPreviewCounters span {
+  color: #536878;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.35;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.cardsPreviewMode .flashOffering {
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+.cardsPreviewMode .flashOffering.active {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 34px #102a4320;
+}
+.cardsPreviewMode .flashOffering.active > i {
+  animation: cardsPreviewPulse 1.9s ease-in-out infinite;
+}
+.cardsPreviewMode .flashOffering:hover {
+  transform: translateY(-6px);
+}
+@keyframes cardsPreviewPulse {
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 7px #c69b4619;
+  }
+}
+@media (max-width: 800px) {
+  .cardsPreviewCounters {
+    grid-template-columns: 1fr 1fr;
+  }
+  .cardsPreviewNotice {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .cardsPreviewNotice a {
+    margin-left: 0;
+  }
+}
+@media (max-width: 480px) {
+  .cardsPreviewCounters {
+    grid-template-columns: 1fr;
+    margin-bottom: -10px;
+  }
+}
+.cardsPreviewMode .flashOffering:after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -60% auto -60% -55%;
+  width: 34%;
+  background: linear-gradient(90deg, transparent, #ffffffb8, transparent);
+  transform: skewX(-18deg);
+  opacity: 0;
+}
+.cardsPreviewMode .flashOffering.active:after {
+  animation: cardsPreviewShine 1.9s ease-in-out;
+}
+.cardsPreviewMode .flashOffering.active .flashNumber {
+  letter-spacing: 0.2em;
+}
+.cardsPreviewMode .flashOffering.active > strong {
+  animation: cardsArrowNudge 0.9s ease-in-out infinite alternate;
+}
+.cardsPreviewMode .flashOffering:hover > i {
+  transform: rotate(4deg) scale(1.08);
+}
+.cardsPreviewMode .flashOffering:hover:before {
+  transform: scale(1.18);
+}
+.cardsPreviewMode .flashLive {
+  background: linear-gradient(105deg, #fff, #fff9e8, #fff);
+  background-size: 220% 100%;
+  animation: cardsPreviewLive 4.5s linear infinite;
+}
+@keyframes cardsPreviewShine {
+  0% {
+    left: -55%;
+    opacity: 0;
+  }
+  22% {
+    opacity: 0.8;
+  }
+  65% {
+    left: 125%;
+    opacity: 0.4;
+  }
+  100% {
+    left: 125%;
+    opacity: 0;
+  }
+}
+@keyframes cardsArrowNudge {
+  to {
+    transform: translateX(6px);
+  }
+}
+@keyframes cardsPreviewLive {
+  to {
+    background-position: -220% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cardsPreviewMode .flashOffering.active > i,
+  .cardsPreviewMode .flashOffering.active:after,
+  .cardsPreviewMode .flashOffering.active > strong,
+  .cardsPreviewMode .flashLive {
+    animation: none;
+  }
+}

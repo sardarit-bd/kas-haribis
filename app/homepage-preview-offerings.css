@@ -1,0 +1,43 @@
+.offeringGroups {
+  max-width: 1400px;
+  margin: 0 auto 18px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.offeringGroups button {
+  padding: 17px 12px;
+  border: 1px solid #d8d2c6;
+  background: #fff;
+  color: #536676;
+  font-weight: 800;
+  cursor: pointer;
+}
+.offeringGroups button.active {
+  background: #102a43;
+  border-color: #102a43;
+  color: #fff;
+}
+.motionLearning > div.allOfferingCards {
+  grid-template-columns: repeat(2, 1fr);
+}
+.allOfferingCards > a {
+  min-height: 245px;
+}
+.allOfferingCards small {
+  color: #9b742d;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+@media (max-width: 1000px) {
+  .offeringGroups {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 650px) {
+  .offeringGroups,
+  .motionLearning > div.allOfferingCards {
+    grid-template-columns: 1fr;
+  }
+}

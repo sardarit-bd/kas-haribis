@@ -1,0 +1,218 @@
+.alertTipSubmission {
+  padding: 90px 7vw;
+  background: #102a43;
+}
+.tipIntro {
+  max-width: 900px;
+  margin: 0 auto 36px;
+  text-align: center;
+}
+.tipIntro h2 {
+  margin: 0 0 18px;
+  color: #fff;
+  font: 500 clamp(35px, 4vw, 52px)/1.14 Georgia;
+}
+.tipIntro > p:not(.eyebrow) {
+  color: #d2dce3;
+  line-height: 1.75;
+}
+.alertTipForm,
+.tipSuccess {
+  max-width: 980px;
+  margin: auto;
+  padding: 34px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 20px 55px #0003;
+}
+.tipFormGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+.tipFormGrid label {
+  display: grid;
+  gap: 7px;
+  color: var(--navy);
+  font-weight: 800;
+}
+.tipFormGrid label small {
+  font-weight: 400;
+  color: #73808c;
+}
+.tipFormGrid .wide {
+  grid-column: 1/-1;
+}
+.tipFormGrid input,
+.tipFormGrid select,
+.tipFormGrid textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #cbd4dc;
+  border-radius: 8px;
+  background: #fff;
+  color: #1c2d3e;
+  font: inherit;
+}
+.tipFormGrid textarea {
+  resize: vertical;
+}
+.tipPrivacy {
+  padding: 12px 15px;
+  background: #f5f2ea;
+  border-left: 3px solid var(--gold);
+  color: #596775;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.tipError {
+  color: #9a3333;
+  font-weight: 800;
+}
+.tipSuccess {
+  text-align: center;
+}
+.tipSuccess > span {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin: auto;
+  border-radius: 50%;
+  background: #e7f3ea;
+  color: #39764a;
+  font-size: 28px;
+}
+.tipSuccess h3 {
+  color: var(--navy);
+  font: 30px Georgia;
+}
+.tipSuccess p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+.tipSuccess button {
+  padding: 10px 14px;
+  border: 1px solid var(--navy);
+  background: #fff;
+  color: var(--navy);
+  border-radius: 5px;
+  font-weight: 800;
+}
+.tipInbox {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.tipInbox > section {
+  padding: 25px;
+  background: #fff;
+  border: 1px solid #dfe4e8;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px #102a430b;
+}
+.tipInboxList {
+  display: grid;
+  gap: 9px;
+  max-height: 760px;
+  overflow: auto;
+}
+.tipInboxList button {
+  display: grid;
+  gap: 5px;
+  padding: 13px;
+  text-align: left;
+  border: 1px solid #dde3e8;
+  border-radius: 9px;
+  background: #fff;
+}
+.tipInboxList button.active {
+  border-color: #b48a3b;
+  background: #faf6ed;
+}
+.tipInboxList span {
+  color: #9b742a;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.tipInboxList b {
+  color: var(--navy);
+}
+.tipInboxList small {
+  color: #6c7985;
+}
+.tipReview {
+  display: grid;
+  gap: 18px;
+}
+.tipReview dl {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 9px;
+}
+.tipReview dt {
+  color: #9b742a;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.tipReview dd {
+  margin: 0;
+  color: #43566a;
+}
+.tipFullText {
+  padding: 18px;
+  background: #f4f6f7;
+  border-left: 4px solid var(--gold);
+}
+.tipFullText small {
+  color: #8e6a26;
+  font-size: 9px;
+  font-weight: 800;
+}
+.tipFullText p {
+  white-space: pre-wrap;
+  color: #3e5265;
+  line-height: 1.7;
+}
+.tipReview > label {
+  display: grid;
+  gap: 7px;
+  color: var(--navy);
+  font-weight: 800;
+}
+.tipReview select,
+.tipReview textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px;
+  border: 1px solid #cbd4dc;
+  border-radius: 8px;
+  font: inherit;
+}
+@media (max-width: 850px) {
+  .tipInbox {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .alertTipSubmission {
+    padding: 62px 5vw;
+  }
+  .alertTipForm,
+  .tipSuccess {
+    padding: 22px;
+  }
+  .tipFormGrid {
+    grid-template-columns: 1fr;
+  }
+  .tipFormGrid .wide {
+    grid-column: auto;
+  }
+  .tipReview dl {
+    grid-template-columns: 1fr;
+  }
+}
