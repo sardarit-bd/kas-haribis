@@ -11,9 +11,11 @@ export default async function AudioPage() {
       title="Kav Haribis Audio Library"
       intro="Listen to short, practical shiurim and discussions about Ribbis and kosher financial conduct. Search by topic or select a language series."
     >
+      
       <AudioLibrary
         audios={audios.map((item, index) => ({ ...item, id: index }))}
       />
+
     </InteriorPage>
   );
 }
