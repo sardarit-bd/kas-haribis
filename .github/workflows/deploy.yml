@@ -60,11 +60,11 @@ jobs:
       - name: Apply remote database migrations
         run: node scripts/d1-migrate.mjs --remote
 
-      - name: Sync Cloudflare secrets
-        run: node scripts/push-wrangler-secrets.mjs
-
       - name: Build
         run: npm run build
 
       - name: Deploy to Cloudflare Workers
         run: npx wrangler deploy
+
+      - name: Sync Cloudflare secrets
+        run: node scripts/push-wrangler-secrets.mjs

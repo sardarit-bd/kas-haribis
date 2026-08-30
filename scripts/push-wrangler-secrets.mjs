@@ -31,16 +31,37 @@ if (!Object.keys(secrets).length) {
 }
 
 const wranglerBin = path.join(root, 'node_modules', 'wrangler', 'bin', 'wrangler.js');
-const tempFile = path.join(root, '.wrangler', 'secrets-bulk.json');
+const childEnv = {
+  ...process.env,
+  CLOUDFLARE_ACCOUNT_ID:
+    parsed.CLOUDFLARE_ACCOUNT_ID?.trim() || process.env.CLOUDFLARE_ACCOUNT_ID,
+};
 
-fs.mkdirSync(path.dirname(tempFile), { recursive: true });
-fs.writeFileSync(tempFile, JSON.stringify(secrets, null, 2));
+let updated = 0;
+let skipped = 0;
 
 console.log(`Pushing ${Object.keys(secrets).length} secret(s) to Cloudflare...`);
-execFileSync(process.execPath, [wranglerBin, 'secret', 'bulk', tempFile], {
-  stdio: 'inherit',
-  cwd: root,
-});
 
-fs.rmSync(tempFile, { force: true });
-console.log('Wrangler secrets updated.');
+for (const [key, value] of Object.entries(secrets)) {
+  try {
+    execFileSync(process.execPath, [wranglerBin, 'secret', 'put', key], {
+      cwd: root,
+      env: childEnv,
+      input: value,
+      stdio: ['pipe', 'inherit', 'pipe'],
+      encoding: 'utf8',
+    });
+    console.log(`  ✓ ${key}`);
+    updated += 1;
+  } catch (error) {
+    const message = `${error?.stderr || ''}${error?.message || ''}`;
+    if (message.includes('10053') || message.includes('already in use')) {
+      console.log(`  ~ ${key} (already configured, skipped)`);
+      skipped += 1;
+      continue;
+    }
+    throw error;
+  }
+}
+
+console.log(`Wrangler secrets updated (${updated} set, ${skipped} skipped).`);

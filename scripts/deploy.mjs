@@ -55,8 +55,6 @@ function run(command, args, cwd) {
 
 const deployCwd = resolveDeployCwd();
 
-run(process.execPath, ['scripts/push-wrangler-secrets.mjs'], projectPath);
-
 console.log('Building for production...\n');
 
 const vinextCli = path.join(deployCwd, 'node_modules', 'vinext', 'dist', 'cli.js');
@@ -64,6 +62,8 @@ run(process.execPath, [vinextCli, 'build'], deployCwd);
 
 console.log('\nDeploying to production...\n');
 
-// Call wrangler through Node instead of wrangler.CMD to avoid Windows path-space bugs.
 const wranglerJs = path.join(deployCwd, 'node_modules', 'wrangler', 'bin', 'wrangler.js');
 run(process.execPath, [wranglerJs, 'deploy'], deployCwd);
+
+console.log('\nSyncing Cloudflare secrets...\n');
+run(process.execPath, ['scripts/push-wrangler-secrets.mjs'], projectPath);

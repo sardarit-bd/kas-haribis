@@ -1,19 +1,23 @@
 import vinext from 'vinext';
 import { defineConfig, loadEnv } from 'vite';
 
-function workerVarsFromEnv(env: Record<string, string>) {
+function workerVarsFromEnv(env: Record<string, string>, mode: string) {
   const entries: Record<string, string> = {
     APP_URL: env.APP_URL || 'http://localhost:5173',
   };
 
-  for (const key of [
-    'AUTH_SECRET',
-    'GOOGLE_CLIENT_ID',
-    'GOOGLE_CLIENT_SECRET',
-    'CARDKNOX_SETTINGS_KEY',
-  ]) {
-    const value = env[key]?.trim();
-    if (value) entries[key] = value;
+  // Local dev only: inject secrets as vars for Miniflare.
+  // Production deploy uses wrangler secrets instead (avoids binding name conflicts).
+  if (mode !== 'production') {
+    for (const key of [
+      'AUTH_SECRET',
+      'GOOGLE_CLIENT_ID',
+      'GOOGLE_CLIENT_SECRET',
+      'CARDKNOX_SETTINGS_KEY',
+    ]) {
+      const value = env[key]?.trim();
+      if (value) entries[key] = value;
+    }
   }
 
   return entries;
@@ -39,7 +43,7 @@ export default defineConfig(async ({ mode }) => {
         viteEnvironment: { name: 'rsc', childEnvironments: ['ssr'] },
         inspectorPort: false,
         config: {
-          vars: workerVarsFromEnv(env),
+          vars: workerVarsFromEnv(env, mode),
         },
       }),
     ],
