@@ -32,14 +32,14 @@ jobs:
       - name: Create production env file
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          WORKER_NAME: kav-haribis-site
+          WORKER_NAME: ${{ secrets.WORKER_NAME }}
           APP_URL: ${{ secrets.APP_URL }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          D1_DATABASE_NAME: kav-haribis-db
+          D1_DATABASE_NAME: ${{ secrets.D1_DATABASE_NAME }}
           D1_DATABASE_ID: ${{ secrets.D1_DATABASE_ID }}
-          R2_BUCKET_NAME: kav-haribis-files
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
           CARDKNOX_SETTINGS_KEY: ${{ secrets.CARDKNOX_SETTINGS_KEY }}
         run: node scripts/write-env-from-ci.mjs
 
