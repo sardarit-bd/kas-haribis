@@ -1,5 +1,5 @@
-import { getCurrentUser, signOutPath } from '../lib/auth';
 import { ADMIN_OWNER } from '../lib/admin-access';
+import { getCurrentUser, signOutPath } from '../lib/auth';
 
 export default async function AdminNav() {
   const user = await getCurrentUser();
@@ -23,17 +23,7 @@ export default async function AdminNav() {
     <header className="w-full bg-white border-b border-slate-200 text-slate-800 px-4 lg:px-6 py-3 flex items-center justify-between sticky top-0 z-30 shadow-xs">
       {/* Brand Logo */}
       <a className="flex items-center gap-3 group" href="/admin">
-        <span className="w-10 h-10 border-2 border-amber-600 rounded-full flex items-center justify-center text-amber-700 font-serif font-bold text-base bg-amber-50 group-hover:bg-amber-100 transition-colors">
-          KH
-        </span>
-        <span className="flex flex-col">
-          <b className="text-lg font-serif text-slate-900 leading-tight group-hover:text-amber-700 transition-colors">
-            Kav Haribis
-          </b>
-          <small className="text-xs text-amber-800 leading-tight font-sans tracking-wide font-medium">
-            Financial & Halachic Administration
-          </small>
-        </span>
+        <img src={'../../public/logo.png'} alt="logo" className='w-[140px] h-[40px] scale-125 pl-2' />
       </a>
 
       {/* Right Side: View Site + Logged-in User Profile Header */}

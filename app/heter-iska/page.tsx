@@ -1,18 +1,10 @@
+import { SiteFooter, SiteHeader } from "../shared/site-shell";
 import HeterLibrary from './heter-library';
 
 export default function HeterIska() {
   return (
     <main className="heterPage">
-      <header className="innerHeader">
-        <a className="brand" href="/">
-          <span className="brandMark">KH</span>
-          <span>
-            <b>Kav Haribis</b>
-            <small>קו הריבית</small>
-          </span>
-        </a>
-        <a href="/">← Return home</a>
-      </header>
+      <SiteHeader/>
       <section className="innerHero heterHero">
         <img
           className="heterHeroImage"
@@ -77,16 +69,7 @@ export default function HeterIska() {
         </div>
       </section>
       <HeterLibrary />
-      <footer>
-        <div className="brand light">
-          <span className="brandMark">KH</span>
-          <span>
-            <b>Kav Haribis</b>
-            <small>קו הריבית</small>
-          </span>
-        </div>
-        <a href="/">Return home</a>
-      </footer>
+      <SiteFooter/>
     </main>
   );
 }

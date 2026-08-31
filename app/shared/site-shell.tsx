@@ -1,3 +1,4 @@
+
 import type { ReactNode } from 'react';
 import NavigationMenu from './navigation-menu';
 
@@ -11,11 +12,7 @@ export function SiteHeader() {
       </div>
       <header className="siteHeader migrationHeader">
         <a className="brand" href="/">
-          <span className="brandMark">KH</span>
-          <span>
-            <b>Kav Haribis</b>
-            <small>קו הריבית</small>
-          </span>
+          <img src={'../../public/logo.png'} alt="logo" className='w-[220px] h-auto' />
         </a>
         <NavigationMenu />
       </header>
@@ -31,12 +28,8 @@ export function SiteFooter({
     <footer className="siteFooterBig">
       <div className="footerMainGrid">
         <div className="footerBrandCol">
-          <div className="brand light">
-            <span className="brandMark">KH</span>
-            <span>
-              <b>Kav Haribis</b>
-              <small>קו הריבית</small>
-            </span>
+          <div className="brand light mb-3">
+               <img src={'../../public/logo.png'} alt="logo" className='w-[300px] h-auto bg-white p-3' />
           </div>
           <p className="footerTagline">Torah guidance for responsible commerce.</p>
           <p className="footerDesc">

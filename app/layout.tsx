@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Roboto } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './about-modern.css';
 import './admin-empty-message.css';
 import './alerts.css';
@@ -56,10 +56,9 @@ import './analytics-daily.css';
 import AnalyticsTracker from './shared/analytics-tracker';
 import ArticlePdfLinks from './shared/article-pdf-links';
 
-const roboto = Roboto({
-  weight: ['300', '400', '500', '700', '900'],
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-roboto',
+  variable: '--font-inter',
   display: 'swap',
 });
 
@@ -82,8 +81,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={roboto.variable}>
-      <body className={`${roboto.className} antialiased`}>
+    <html lang="en" className={inter.variable}>
+      <body className={`${inter.className} antialiased`}>
         {/* <SponsorBanner /> */}
         <AnalyticsTracker />
         <ArticlePdfLinks />
