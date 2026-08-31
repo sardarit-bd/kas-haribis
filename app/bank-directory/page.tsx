@@ -1,9 +1,9 @@
+import { listBanks } from '../lib/directories';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
 import BankDirectoryClient from './bank-directory-client';
 import BankResearchForm from './bank-research-form';
 import BankResearchPopup from './bank-research-popup';
 import ResearchAccessGate from './research-access-gate';
-import { listBanks } from '../lib/directories';
 export const dynamic = 'force-dynamic';
 
 export default async function BankDirectory() {

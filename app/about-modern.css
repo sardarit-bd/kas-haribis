@@ -3,6 +3,7 @@
 }
 .aboutHero {
   min-height: 650px;
+  max-height: 750px;
   display: grid;
   grid-template-columns: 1.06fr 0.94fr;
   background: linear-gradient(135deg, #071b2d, #103b59);
@@ -10,7 +11,7 @@
   overflow: hidden;
 }
 .aboutHeroCopy {
-  padding: 100px 7vw;
+  padding: 100px 5vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -140,7 +141,7 @@
 }
 .aboutSectionHead {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   column-gap: 8vw;
   align-items: end;
   margin-bottom: 48px;

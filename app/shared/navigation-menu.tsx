@@ -43,7 +43,7 @@ export default function NavigationMenu() {
         ☰
       </button>
       <nav className={open ? 'nav completeNav open' : 'nav completeNav'}>
-        <a href="/">Home</a>
+        <a className='' href="/">Home</a>
         <a href="/about-us">About</a>
         {Object.entries(groups).map(([name, links]) => (
           <div

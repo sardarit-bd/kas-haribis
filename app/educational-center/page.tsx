@@ -1,5 +1,5 @@
-import { SiteFooter, SiteHeader } from '../shared/site-shell';
 import { listEducationalResources } from '../lib/directories';
+import { SiteFooter, SiteHeader } from '../shared/site-shell';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,6 +9,7 @@ export default async function EducationalCenter() {
   return (
     <main className="educationPage">
       <SiteHeader />
+      <div className='hidden'>
       <section className="educationHero">
         <div>
           <p className="eyebrow">LEARN • CREATE • GROW</p>
@@ -58,6 +59,8 @@ export default async function EducationalCenter() {
           <b>Torah-centered</b>
         </div>
       </section>
+      </div>
+
       <section id="resources" className="educationLibrary">
         <header>
           <div>

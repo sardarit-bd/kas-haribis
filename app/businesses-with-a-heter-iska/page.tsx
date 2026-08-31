@@ -1,5 +1,5 @@
-import { InteriorPage } from '../shared/site-shell';
 import { listBusinesses } from '../lib/directories';
+import { InteriorPage } from '../shared/site-shell';
 
 export const dynamic = 'force-dynamic';
 export default async function BusinessesPage() {
@@ -137,6 +137,7 @@ export default async function BusinessesPage() {
         </div>
         <a href="/bais-horaah">Ask the Bais Horaah →</a>
       </section>
+      <div className='hidden'>
       <section className="businessSubmissionCallout">
         <div>
           <p className="eyebrow gold">GROW THE DIRECTORY</p>
@@ -150,6 +151,7 @@ export default async function BusinessesPage() {
           Submit or update a business →
         </a>
       </section>
+      </div>
     </InteriorPage>
   );
 }

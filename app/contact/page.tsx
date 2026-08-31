@@ -8,7 +8,7 @@ export default function ContactPage() {
       title="We’re here to help"
       intro="Reach out about programs, research, sponsorship opportunities, publications, or ways to support the work of Kav Haribis."
     >
-      <section className="contactServiceHub">
+      <section className="contactServiceHub hidden">
         <div>
           <p className="eyebrow gold">ONE PLACE FOR EVERY REQUEST</p>
           <h2>How would you like to connect?</h2>

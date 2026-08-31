@@ -1,5 +1,22 @@
 'use client';
 import { useMemo, useState } from 'react';
+import {
+  FiCalendar,
+  FiClock,
+  FiEye,
+  FiFileText,
+  FiGlobe,
+  FiMail,
+  FiMapPin,
+  FiMessageSquare,
+  FiPaperclip,
+  FiPhone,
+  FiSave,
+  FiTrash2,
+  FiUser,
+  FiX
+} from 'react-icons/fi';
+
 type Item = {
   id: string;
   reference: string;
@@ -21,6 +38,7 @@ type Item = {
   audience: string;
   attachment_name: string;
 };
+
 export default function SubmissionInbox({
   initialItems,
   mode = 'general',
@@ -32,6 +50,7 @@ export default function SubmissionInbox({
     [active, setActive] = useState<Item | null>(null),
     [query, setQuery] = useState(''),
     [status, setStatus] = useState('All');
+
   const filtered = useMemo(
     () =>
       items.filter(
@@ -50,6 +69,7 @@ export default function SubmissionInbox({
       ),
     [items, query, status],
   );
+
   async function save() {
     if (!active) return;
     const response = await fetch('/api/contact-submissions', {
@@ -62,14 +82,19 @@ export default function SubmissionInbox({
         current.map((x) => (x.id === active.id ? active : x)),
       );
   }
-  async function remove(item: Item) {
+
+  async function remove(item: Item, e?: React.MouseEvent) {
+    if (e) e.stopPropagation();
     if (!confirm(`Remove submission ${item.reference}?`)) return;
     await fetch(`/api/contact-submissions?id=${encodeURIComponent(item.id)}`, {
       method: 'DELETE',
     });
     setItems((current) => current.filter((x) => x.id !== item.id));
-    setActive(null);
+    if (active?.id === item.id) {
+      setActive(null);
+    }
   }
+
   return (
     <div className="submissionAdmin">
       <section className="submissionToolbar">
@@ -93,168 +118,264 @@ export default function SubmissionInbox({
           {filtered.length} {mode === 'genealogy' ? 'requests' : 'submissions'}
         </b>
       </section>
-      <div className="submissionLayout">
-        <section className="submissionList">
-          {filtered.length ? (
-            filtered.map((x) => (
-              <button
-                key={x.id}
-                className={active?.id === x.id ? 'active' : ''}
-                onClick={() => setActive(x)}
-              >
-                <span>
-                  <b>{x.topic}</b>
-                  <em>{x.status}</em>
-                </span>
-                <strong>{x.name}</strong>
-                <small>
-                  {x.reference} · {new Date(x.created_at).toLocaleDateString()}
-                </small>
-                <p>{x.message}</p>
-              </button>
-            ))
-          ) : (
-            <div className="emptyState">
-              <b>No matching submissions</b>
-            </div>
-          )}
-        </section>
-        <section className="submissionDetail">
-          {active ? (
-            <>
-              <div className="submissionDetailHead">
-                <div>
-                  <small>{active.reference}</small>
-                  <h2>{active.topic}</h2>
+
+      <div className="submissionTableContainer">
+        {filtered.length ? (
+          <table className="submissionTable">
+            <thead>
+              <tr>
+                <th>Ref ID</th>
+                <th>Topic / Subject</th>
+                <th>Sender</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th className="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((x) => (
+                <tr
+                  key={x.id}
+                  className={`submissionRow ${active?.id === x.id ? 'active' : ''}`}
+                  onClick={() => setActive(x)}
+                >
+                  <td className="refCell">
+                    <code>{x.reference}</code>
+                  </td>
+                  <td className="topicCell">
+                    <strong>{x.topic}</strong>
+                    <p>{x.message}</p>
+                  </td>
+                  <td className="senderCell">
+                    <span className="senderName">{x.name}</span>
+                    <small>{x.email}</small>
+                  </td>
+                  <td className="dateCell">
+                    {new Date(x.created_at).toLocaleDateString()}
+                  </td>
+                  <td className="statusCell">
+                    <span className={`statusBadge status-${x.status.toLowerCase()}`}>
+                      {x.status}
+                    </span>
+                  </td>
+                  <td className="actionsCell" onClick={(e) => e.stopPropagation()}>
+                    <button
+                      type="button"
+                      className="viewRowButton"
+                      title="View details"
+                      onClick={() => setActive(x)}
+                    >
+                      <FiEye />
+                    </button>
+                    <button
+                      type="button"
+                      className="deleteRowButton"
+                      title="Delete submission"
+                      onClick={(e) => remove(x, e)}
+                    >
+                      <FiTrash2 />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div className="emptyState">
+            <b>No matching submissions</b>
+          </div>
+        )}
+      </div>
+
+      {active && (
+        <div className="submissionModalOverlay" onClick={() => setActive(null)}>
+          <div className="submissionModal" onClick={(e) => e.stopPropagation()}>
+            <div className="submissionModalHeader">
+              <div className="modalHeaderMain">
+                <div className="modalBadgeRow">
+                  <span className="modalRefBadge">{active.reference}</span>
+                  <span className={`statusBadge status-${active.status.toLowerCase()}`}>
+                    {active.status}
+                  </span>
                 </div>
-                <button className="deleteButton" onClick={() => remove(active)}>
-                  Remove
+                <h2>{active.topic}</h2>
+              </div>
+              <div className="modalHeaderActions">
+                <button
+                  type="button"
+                  className="modalDeleteButton"
+                  title="Delete submission"
+                  onClick={(e) => remove(active, e)}
+                >
+                  <FiTrash2 />
+                  <span>Delete</span>
+                </button>
+                <button
+                  type="button"
+                  className="modalCloseButton"
+                  title="Close modal"
+                  onClick={() => setActive(null)}
+                >
+                  <FiX />
                 </button>
               </div>
-              <p className="submissionMessage">{active.message}</p>
-              <dl>
-                <dt>Name</dt>
-                <dd>{active.name}</dd>
-                <dt>Email</dt>
-                <dd>
-                  <a href={`mailto:${active.email}`}>{active.email}</a>
-                </dd>
-                {active.phone && (
-                  <>
-                    <dt>Phone</dt>
-                    <dd>
-                      <a href={`tel:${active.phone}`}>{active.phone}</a>
-                    </dd>
-                  </>
-                )}
-                {active.organization && (
-                  <>
-                    <dt>Organization</dt>
-                    <dd>{active.organization}</dd>
-                  </>
-                )}
-                {active.related_name && (
-                  <>
-                    <dt>
-                      {mode === 'genealogy'
-                        ? 'Research subject'
-                        : 'Related bank / business'}
-                    </dt>
-                    <dd>{active.related_name}</dd>
-                  </>
-                )}
-                {active.related_url && (
-                  <>
-                    <dt>Website</dt>
-                    <dd>
-                      <a
-                        href={active.related_url}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Open website ↗
-                      </a>
-                    </dd>
-                  </>
-                )}
-                {active.request_subtype && (
-                  <>
-                    <dt>Research purpose</dt>
-                    <dd>{active.request_subtype}</dd>
-                  </>
-                )}
-                {active.preferred_date && (
-                  <>
-                    <dt>Preferred date</dt>
-                    <dd>{active.preferred_date}</dd>
-                  </>
-                )}
-                {active.location && (
-                  <>
-                    <dt>Relevant locations</dt>
-                    <dd>{active.location}</dd>
-                  </>
-                )}
-                {active.audience && (
-                  <>
-                    <dt>
-                      {mode === 'genealogy'
-                        ? 'Years / generations'
-                        : 'Audience'}
-                    </dt>
-                    <dd>{active.audience}</dd>
-                  </>
-                )}
-                <dt>Preferred response</dt>
-                <dd>{active.response_method}</dd>
-                <dt>Received</dt>
-                <dd>{new Date(active.created_at).toLocaleString()}</dd>
-              </dl>
-              {active.attachment_name && (
-                <a
-                  className="submissionAttachment"
-                  href={`/api/contact-attachment?id=${encodeURIComponent(active.id)}`}
-                  target="_blank"
-                >
-                  View supporting document: {active.attachment_name} ↗
-                </a>
-              )}
-              <label>
-                Status
-                <select
-                  value={active.status}
-                  onChange={(e) =>
-                    setActive({ ...active, status: e.target.value })
-                  }
-                >
-                  <option>New</option>
-                  <option>Reviewing</option>
-                  <option>Responded</option>
-                  <option>Closed</option>
-                </select>
-              </label>
-              <label>
-                Private administrator notes
-                <textarea
-                  rows={7}
-                  value={active.notes || ''}
-                  onChange={(e) =>
-                    setActive({ ...active, notes: e.target.value })
-                  }
-                />
-              </label>
-              <button className="primary" onClick={save}>
-                Save status and notes
-              </button>
-            </>
-          ) : (
-            <div className="emptyState">
-              <b>Select a submission</b>
-              <p>Choose a message from the inbox to read all details.</p>
             </div>
-          )}
-        </section>
-      </div>
+
+            <div className="submissionModalBody">
+              <div className="submissionMessageCard">
+                <div className="cardLabel">
+                  <FiMessageSquare /> Submission Message
+                </div>
+                <p>{active.message}</p>
+              </div>
+
+              <div className="submissionDetailsSection">
+                <h3 className="sectionTitle">Contact & Request Details</h3>
+                <div className="detailsGrid">
+                  <div className="detailItem">
+                    <span className="detailLabel"><FiUser /> Name</span>
+                    <span className="detailValue">{active.name}</span>
+                  </div>
+                  <div className="detailItem">
+                    <span className="detailLabel"><FiMail /> Email</span>
+                    <span className="detailValue">
+                      <a href={`mailto:${active.email}`}>{active.email}</a>
+                    </span>
+                  </div>
+                  {active.phone && (
+                    <div className="detailItem">
+                      <span className="detailLabel"><FiPhone /> Phone</span>
+                      <span className="detailValue">
+                        <a href={`tel:${active.phone}`}>{active.phone}</a>
+                      </span>
+                    </div>
+                  )}
+                  {active.organization && (
+                    <div className="detailItem">
+                      <span className="detailLabel"><FiPhone/> Organization</span>
+                      <span className="detailValue">{active.organization}</span>
+                    </div>
+                  )}
+                  {active.related_name && (
+                    <div className="detailItem">
+                      <span className="detailLabel">
+                        <FiFileText /> {mode === 'genealogy' ? 'Research subject' : 'Related bank / business'}
+                      </span>
+                      <span className="detailValue">{active.related_name}</span>
+                    </div>
+                  )}
+                  {active.related_url && (
+                    <div className="detailItem">
+                      <span className="detailLabel"><FiGlobe /> Website</span>
+                      <span className="detailValue">
+                        <a href={active.related_url} target="_blank" rel="noreferrer">
+                          Open website ↗
+                        </a>
+                      </span>
+                    </div>
+                  )}
+                  {active.request_subtype && (
+                    <div className="detailItem">
+                      <span className="detailLabel"><FiFileText /> Research purpose</span>
+                      <span className="detailValue">{active.request_subtype}</span>
+                    </div>
+                  )}
+                  {active.preferred_date && (
+                    <div className="detailItem">
+                      <span className="detailLabel"><FiCalendar /> Preferred date</span>
+                      <span className="detailValue">{active.preferred_date}</span>
+                    </div>
+                  )}
+                  {active.location && (
+                    <div className="detailItem">
+                      <span className="detailLabel"><FiMapPin /> Relevant locations</span>
+                      <span className="detailValue">{active.location}</span>
+                    </div>
+                  )}
+                  {active.audience && (
+                    <div className="detailItem">
+                      <span className="detailLabel">
+                        <FiUser /> {mode === 'genealogy' ? 'Years / generations' : 'Audience'}
+                      </span>
+                      <span className="detailValue">{active.audience}</span>
+                    </div>
+                  )}
+                  <div className="detailItem">
+                    <span className="detailLabel"><FiMessageSquare /> Preferred response</span>
+                    <span className="detailValue">{active.response_method}</span>
+                  </div>
+                  <div className="detailItem">
+                    <span className="detailLabel"><FiClock /> Received</span>
+                    <span className="detailValue">{new Date(active.created_at).toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+
+              {active.attachment_name && (
+                <div className="attachmentSection">
+                  <a
+                    className="submissionAttachmentCard"
+                    href={`/api/contact-attachment?id=${encodeURIComponent(active.id)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <FiPaperclip className="attachIcon" />
+                    <div className="attachMeta">
+                      <span className="attachTitle">Supporting Document</span>
+                      <span className="attachName">{active.attachment_name}</span>
+                    </div>
+                    <span className="attachAction">View File ↗</span>
+                  </a>
+                </div>
+              )}
+
+              <div className="adminControlSection">
+                <h3 className="sectionTitle"><FiSave /> Administrator Status & Notes</h3>
+                <div className="adminControlsGrid">
+                  <div className="inputGroup">
+                    <label htmlFor="modal-status-select">Update Status</label>
+                    <select
+                      id="modal-status-select"
+                      value={active.status}
+                      onChange={(e) => setActive({ ...active, status: e.target.value })}
+                    >
+                      <option>New</option>
+                      <option>Reviewing</option>
+                      <option>Responded</option>
+                      <option>Closed</option>
+                    </select>
+                  </div>
+                  <div className="inputGroup fullWidth">
+                    <label htmlFor="modal-notes-area">Private Administrator Notes</label>
+                    <textarea
+                      id="modal-notes-area"
+                      rows={4}
+                      placeholder="Add internal administrator notes or processing comments..."
+                      value={active.notes || ''}
+                      onChange={(e) => setActive({ ...active, notes: e.target.value })}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="submissionModalFooter">
+              <button
+                type="button"
+                className="secondary"
+                onClick={() => setActive(null)}
+              >
+                Close
+              </button>
+              <button type="button" className="primary" onClick={save}>
+                <FiSave /> Save Status & Notes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
+

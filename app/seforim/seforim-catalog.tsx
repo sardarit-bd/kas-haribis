@@ -79,10 +79,11 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
               </select>
             </label>
             <b>{filtered.length} titles</b>
-          </div>
-          <button className="cartButton" onClick={() => setCartOpen(true)}>
+            <button className="cartButton" onClick={() => setCartOpen(true)}>
             Cart <span>{count}</span>
           </button>
+          </div>
+          
         </div>
         {notice && (
           <p className="cartNotice">

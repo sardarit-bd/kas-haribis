@@ -201,7 +201,568 @@
 }
 .submissionAdmin .emptyState {
   padding: 45px 20px;
+  text-align: center;
 }
+
+/* Submission Table Styles */
+.submissionTableContainer {
+  background: white;
+  border: 1px solid #dce3e7;
+  border-radius: 9px;
+  overflow-x: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.submissionTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+
+.submissionTable th {
+  background: #f8f6f0;
+  color: var(--navy, #17364c);
+  font-weight: 700;
+  padding: 14px 16px;
+  border-bottom: 1px solid #dce3e7;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+.submissionTable th.text-right {
+  text-align: right;
+}
+
+.submissionRow {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  border-bottom: 1px solid #edf2f5;
+}
+
+.submissionRow:hover {
+  background-color: #faf8f3;
+}
+
+.submissionRow.active {
+  background-color: #f4efe4;
+}
+
+.submissionTable td {
+  padding: 14px 16px;
+  vertical-align: top;
+}
+
+.refCell code {
+  font-family: monospace;
+  background: #edf2f5;
+  color: #496476;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.topicCell strong {
+  display: block;
+  color: var(--navy, #17364c);
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.topicCell p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted, #64748b);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 320px;
+}
+
+.senderCell .senderName {
+  display: block;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.senderCell small {
+  color: #7f8c8d;
+  font-size: 12px;
+}
+
+.dateCell {
+  white-space: nowrap;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.statusBadge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: capitalize;
+}
+
+.statusBadge.status-new {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.statusBadge.status-reviewing {
+  background: #fff8e1;
+  color: #f57f17;
+}
+
+.statusBadge.status-responded {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.statusBadge.status-closed {
+  background: #f5f5f5;
+  color: #616161;
+}
+
+.actionsCell {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  align-items: center;
+}
+
+.viewRowButton,
+.deleteRowButton {
+  border: none;
+  background: transparent;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.viewRowButton {
+  color: #3b82f6;
+}
+
+.viewRowButton:hover {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.deleteRowButton {
+  color: #ef4444;
+}
+
+.deleteRowButton:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* Submission Popup Modal Styles */
+.submissionModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.submissionModal {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 740px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  animation: modalPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalPopIn {
+  from { transform: scale(0.95) translateY(12px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.submissionModalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 22px 28px;
+  border-bottom: 1px solid #e2e8f0;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  gap: 16px;
+}
+
+.modalHeaderMain {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modalBadgeRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modalRefBadge {
+  font-family: monospace;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.submissionModalHeader h2 {
+  font: 700 22px/1.3 Georgia, serif;
+  color: var(--navy, #17364c);
+  margin: 2px 0 0;
+}
+
+.modalHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modalDeleteButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modalDeleteButton:hover {
+  background: #fee2e2;
+  border-color: #ef4444;
+  color: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.modalCloseButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #64748b;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modalCloseButton:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+
+.submissionModalBody {
+  padding: 28px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Submission Message Card */
+.submissionMessageCard {
+  background: linear-gradient(135deg, #fdfbf7 0%, #f7f3eb 100%);
+  border: 1px solid #e8dfd1;
+  border-left: 4px solid var(--gold, #8c6824);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+
+.submissionMessageCard .cardLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #8c6824;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.submissionMessageCard p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #334155;
+  white-space: pre-wrap;
+}
+
+/* Section Title */
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 14px 0;
+}
+
+/* Details Grid */
+.detailsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.detailItem {
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.detailItem:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.detailLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.detailLabel svg {
+  color: var(--gold, #8c6824);
+  font-size: 13px;
+}
+
+.detailValue {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+  word-break: break-word;
+}
+
+.detailValue a {
+  color: #2563eb;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.detailValue a:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+/* Attachment Card */
+.attachmentSection {
+  margin-top: 4px;
+}
+
+.submissionAttachmentCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  padding: 14px 18px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.submissionAttachmentCard:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+}
+
+.attachIcon {
+  font-size: 24px;
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+.attachMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.attachTitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: #1e40af;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.attachName {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.attachAction {
+  font-size: 12px;
+  font-weight: 700;
+  color: #2563eb;
+  background: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #bfdbfe;
+}
+
+/* Admin Control Section */
+.adminControlSection {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+
+.adminControlsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inputGroup label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.inputGroup select,
+.inputGroup textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 13px;
+  color: #0f172a;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.inputGroup select:focus,
+.inputGroup textarea:focus {
+  border-color: var(--navy, #17364c);
+  box-shadow: 0 0 0 3px rgba(23, 54, 76, 0.1);
+}
+
+/* Modal Footer */
+.submissionModalFooter {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 28px;
+  border-top: 1px solid #e2e8f0;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.submissionModalFooter .primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--navy, #17364c);
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(23, 54, 76, 0.2);
+  transition: all 0.2s ease;
+}
+
+.submissionModalFooter .primary:hover {
+  background: #0f2433;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(23, 54, 76, 0.3);
+}
+
+.submissionModalFooter .secondary {
+  background: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submissionModalFooter .secondary:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+
 @media (max-width: 900px) {
   .submissionLayout {
     grid-template-columns: 1fr;
@@ -216,3 +777,5 @@
     max-height: none;
   }
 }
+
+

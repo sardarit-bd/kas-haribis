@@ -155,6 +155,7 @@ export default async function Page() {
         </div>
         <a href="/bais-horaah">Review your loan with the Bais Horaah →</a>
       </section>
+      <div className='hidden'>
       <section className="loanServiceSubmit">
         <div>
           <p className="eyebrow gold">EXPAND THE DIRECTORY</p>
@@ -168,6 +169,7 @@ export default async function Page() {
           Recommend a loan professional →
         </a>
       </section>
+      </div>
     </InteriorPage>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 import { FormEvent, useEffect, useState } from 'react';
-import { SiteFooter, SiteHeader } from '../shared/site-shell';
 import ServiceRotator from '../shared/service-rotator';
+import { SiteFooter, SiteHeader } from '../shared/site-shell';
 
 const offerings = [
   [

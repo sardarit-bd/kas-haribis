@@ -90,12 +90,10 @@ export default function AboutPage() {
 
       <section className="aboutMission">
         <div className="aboutSectionHead">
-          <p className="eyebrow gold">OUR MISSION</p>
-          <h2>Helping Klal Yisroel navigate financial life responsibly</h2>
-          <p>
-            Our work connects timeless halacha with the realities of modern
-            commerce.
-          </p>
+          <p className="eyebrow gold text-center">OUR MISSION</p>
+          <div className='w-full'>
+            <h2 className='text-center w-full'>Helping Klal Yisroel navigate financial life responsibly</h2>
+          </div>
         </div>
         <div className="aboutPillars">
           <article>
@@ -171,7 +169,7 @@ export default function AboutPage() {
           <a className="primary" href="/contact">
             Contact Kav Haribis
           </a>
-          <a href="/bais-horaah">Submit a Ribbis question →</a>
+          <a className='hidden' href="/bais-horaah">Submit a Ribbis question →</a>
         </div>
       </section>
       <SiteFooter />
