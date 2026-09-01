@@ -49,7 +49,9 @@ export default function SubmissionInbox({
   const [items, setItems] = useState(initialItems),
     [active, setActive] = useState<Item | null>(null),
     [query, setQuery] = useState(''),
-    [status, setStatus] = useState('All');
+    [status, setStatus] = useState('All'),
+    [toast, setToast] = useState<string | null>(null),
+    [saving, setSaving] = useState(false);
 
   const filtered = useMemo(
     () =>
@@ -57,6 +59,7 @@ export default function SubmissionInbox({
         (x) =>
           (status === 'All' || x.status === status) &&
           (
+            (x.reference || '') +
             x.name +
             x.email +
             x.topic +
@@ -71,16 +74,30 @@ export default function SubmissionInbox({
   );
 
   async function save() {
-    if (!active) return;
-    const response = await fetch('/api/contact-submissions', {
-      method: 'PUT',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(active),
-    });
-    if (response.ok)
-      setItems((current) =>
-        current.map((x) => (x.id === active.id ? active : x)),
-      );
+    if (!active || saving) return;
+    setSaving(true);
+    try {
+      const response = await fetch('/api/contact-submissions', {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(active),
+      });
+      if (response.ok) {
+        const updatedItem = active;
+        setItems((current) =>
+          current.map((x) => (x.id === updatedItem.id ? updatedItem : x)),
+        );
+        setToast(`Submission ${updatedItem.reference} status updated to "${updatedItem.status}"`);
+        setTimeout(() => setToast(null), 4000);
+        setActive(null);
+      } else {
+        alert('Failed to save status update. Please try again.');
+      }
+    } catch {
+      alert('An error occurred while saving.');
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function remove(item: Item, e?: React.MouseEvent) {
@@ -103,8 +120,8 @@ export default function SubmissionInbox({
           onChange={(e) => setQuery(e.target.value)}
           placeholder={
             mode === 'genealogy'
-              ? 'Search a name, entity, location, or request…'
-              : 'Search name, email, organization, topic, or message…'
+              ? 'Search Ref ID, name, entity, location, or request…'
+              : 'Search Ref ID, name, email, organization, topic, or message…'
           }
         />
         <select value={status} onChange={(e) => setStatus(e.target.value)}>
@@ -364,14 +381,80 @@ export default function SubmissionInbox({
                 type="button"
                 className="secondary"
                 onClick={() => setActive(null)}
+                disabled={saving}
               >
                 Close
               </button>
-              <button type="button" className="primary" onClick={save}>
-                <FiSave /> Save Status & Notes
+              <button
+                type="button"
+                className="primary"
+                onClick={save}
+                disabled={saving}
+              >
+                {saving ? (
+                  'Saving...'
+                ) : (
+                  <>
+                    <FiSave /> Save Status & Notes
+                  </>
+                )}
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {toast && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: '24px',
+            right: '24px',
+            zIndex: 9999,
+            backgroundColor: '#0c2340',
+            color: '#ffffff',
+            padding: '14px 20px',
+            borderRadius: '8px',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.25)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            border: '1px solid #1e3a8a',
+            fontSize: '14px',
+            fontWeight: 500,
+          }}
+        >
+          <span
+            style={{
+              backgroundColor: '#10b981',
+              color: '#ffffff',
+              borderRadius: '50%',
+              width: '22px',
+              height: '22px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '12px',
+              fontWeight: 'bold',
+            }}
+          >
+            ✓
+          </span>
+          <span>{toast}</span>
+          <button
+            type="button"
+            onClick={() => setToast(null)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#94a3b8',
+              cursor: 'pointer',
+              marginLeft: '8px',
+              fontSize: '16px',
+            }}
+          >
+            ✕
+          </button>
         </div>
       )}
     </div>

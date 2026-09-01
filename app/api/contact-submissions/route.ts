@@ -1,6 +1,8 @@
-import { isOwnerEmail } from '../../lib/admin-access';
+import { ADMIN_OWNER } from "../../lib/admin-access";
 import { ensureContactSubmissions } from '../../lib/contact-submissions';
 import { isOwnerRequest } from '../../lib/request-auth';
+import sendEmail from "../../lib/sendEmail";
+
 
 const clean = (v: unknown, n = 5000) =>
     String(v ?? '')
@@ -87,8 +89,33 @@ export async function POST(request: Request) {
     )
     .run();
 
+    
+    const emailData={
+      id:id,
+      reference:reference,
+      name:name,
+      email:email,
+      phone:clean(form.get('phone'), 100),
+      organization:clean(form.get('organization'), 300),
+      topic:clean(form.get('topic'), 200) || 'General message',
+      message:message,
+      response_method:clean(form.get('response_method'), 100) || 'Email',
+      status:"New",
+      notes:"",
+      created_at:now,
+      updated_at:now,
+      related_name:clean(form.get('related_name'), 300),
+      related_url:clean(form.get('related_url'), 1000),
+      request_subtype:clean(form.get('request_subtype'), 300),
+      preferred_date:clean(form.get('preferred_date'), 30),
+      location:clean(form.get('location'), 300),
+      audience:clean(form.get('audience'), 300),
+      attachment_key:attachmentKey,
+      attachment_name:attachmentName,
+    }
 
-  await sendEmail({ recipient: env.CONTACT_EMAIL,subject: `New Contact Form Submission: ${reference}`,body: `Name: ${name}\nEmail: ${email}\nMessage: ${message}` });  
+
+  await sendEmail( ADMIN_OWNER,"New Contact Submission From Kav Haribis Website",emailData, "contact-submission");  
 
   return Response.json({ reference });
 }
@@ -124,6 +151,32 @@ export async function PUT(request: Request) {
       clean(b.id, 100),
     )
     .run();
+
+
+     // 2. Get the updated submission
+  const updateData = await env.DB.prepare(
+    `SELECT * FROM contact_submissions 
+     WHERE id=?`
+  )
+    .bind(b.id)
+    .first();
+
+  if (!updateData) {
+    return Response.json(
+      { error: 'Contact submission not found' },
+      { status: 404 }
+    );
+  }
+
+
+    const clientemail= [updateData?.email,"mdemong87@gmail.com"];
+    
+
+
+    await sendEmail( clientemail,"New Contact Submission From Kav Haribis Website",updateData, "contact-submission-update-status");  
+
+
+
   return Response.json({ saved: true });
 }
 
