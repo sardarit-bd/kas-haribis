@@ -1,18 +1,22 @@
-import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
+import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
+import { isOwnerEmail } from "../../lib/admin-access";
 import { ensureAnalytics } from '../../lib/analytics';
 export const dynamic = 'force-dynamic';
 const label = (p: string) =>
   p === '/'
-    ? 'Homepage'
-    : p
-        .split('?')[0]
-        .split('/')
-        .filter(Boolean)
-        .map((x) =>
-          x.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
-        )
-        .join(' › ');
+    ? 'Home'
+    : p === '/bank-directory'
+      ? 'Bank Directory'
+      : p === '/audio'
+        ? 'Shiurim & Audio'
+        : p === '/bais-horaah'
+          ? 'Ask Bais Horaah'
+          : p === '/heter-iska'
+            ? 'Heter Iska'
+            : p === '/ribis-alerts'
+              ? 'Ribbis Alerts'
+              : p;
 const ranges: Record<string, string> = {
   '14': '-13 days',
   '30': '-29 days',
@@ -23,13 +27,13 @@ const breadcrumbs = [
   { label: 'Dashboard', href: '/admin' },
   { label: 'Visitor Analytics', href: '/admin/analytics' },
 ];
-export default async function Page({
+export default async function AnalyticsAdmin({
   searchParams,
 }: {
   searchParams: Promise<{ range?: string }>;
 }) {
   const u = await requireChatGPTUser('/admin/analytics');
-  if (u.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(u.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

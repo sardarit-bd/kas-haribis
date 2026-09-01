@@ -1,8 +1,8 @@
 import { getRequestEmail } from '../../lib/request-auth';
-import { ADMIN_OWNER } from '../../lib/admin-access';
+import { isOwnerEmail } from '../../lib/admin-access';
 import { ensureBankResearch } from '../../lib/directories';
 import { researchIdentity } from '../../lib/research-access';
-const OWNER = ADMIN_OWNER;
+
 const emailOf = async (r: Request) => await getRequestEmail(r);
 export async function POST(request: Request) {
   const { env } = await import('cloudflare:workers');
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     )
       .bind(id)
       .first()) as any;
-  if (!row || (email !== OWNER && row.researcher_email !== email))
+  if (!row || (!isOwnerEmail(email) && row.researcher_email !== email))
     return Response.json(
       { error: 'Research record not found.' },
       { status: 404 },

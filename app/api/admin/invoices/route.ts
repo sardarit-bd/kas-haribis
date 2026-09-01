@@ -1,7 +1,7 @@
 import { isOwnerRequest } from '../../../lib/request-auth';
-import { ADMIN_OWNER } from '../../../lib/admin-access';
+import { isOwnerEmail } from '../../../lib/admin-access';
 import { ensureInvoices } from '../../../lib/invoices';
-const owner = ADMIN_OWNER;
+
 const clean = (value: unknown, max = 5000) =>
   String(value ?? '')
     .trim()

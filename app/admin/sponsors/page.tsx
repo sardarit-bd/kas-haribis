@@ -1,16 +1,17 @@
-import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
+import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
+import { isOwnerEmail } from "../../lib/admin-access";
 import SponsorManager from './sponsor-manager';
 export const dynamic = 'force-dynamic';
 
 const breadcrumbs = [
   { label: 'Dashboard', href: '/admin' },
-  { label: 'Sponsor Manager', href: '/admin/sponsors' },
+  { label: 'Sponsors & Advertisements', href: '/admin/sponsors' },
 ];
 
 export default async function Sponsors() {
   const user = await requireChatGPTUser('/admin/sponsors');
-  if (user.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(user.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

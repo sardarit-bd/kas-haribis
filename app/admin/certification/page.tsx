@@ -1,17 +1,18 @@
-import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
+import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { ensureCertificationApplications } from '../../lib/certification-applications';
 import CertificationAdmin from './certification-admin';
+import { isOwnerEmail } from "../../lib/admin-access";
 export const dynamic = 'force-dynamic';
 
 const breadcrumbs = [
   { label: 'Dashboard', href: '/admin' },
-  { label: 'Certification Applications', href: '/admin/certification' },
+  { label: 'Investment Certification', href: '/admin/certification' },
 ];
 
 export default async function Page() {
   const user = await requireChatGPTUser('/admin/certification');
-  if (user.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(user.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

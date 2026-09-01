@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { ADMIN_OWNER, staffPermissions } from './app/lib/admin-access';
+import { NextResponse } from 'next/server';
+import { ADMIN_OWNER, isOwnerEmail, staffPermissions } from './app/lib/admin-access';
 import { getUserFromCookieHeader } from './app/lib/auth';
 import { ADMIN_ELEVATED_HEADER } from './app/lib/request-auth';
 
@@ -66,7 +66,7 @@ export async function proxy(request: NextRequest) {
   const email = String(user?.email || '')
     .trim()
     .toLowerCase();
-  if (!email || email === ADMIN_OWNER.toLowerCase()) return NextResponse.next();
+  if (!email || isOwnerEmail(email)) return NextResponse.next();
   const section = sectionFor(request.nextUrl.pathname);
   if (!section) return NextResponse.next();
   const { env } = await import('cloudflare:workers');

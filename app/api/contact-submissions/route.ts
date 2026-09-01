@@ -1,7 +1,7 @@
-import { ADMIN_OWNER } from '../../lib/admin-access';
+import { isOwnerEmail } from '../../lib/admin-access';
 import { ensureContactSubmissions } from '../../lib/contact-submissions';
 import { isOwnerRequest } from '../../lib/request-auth';
-const owner = ADMIN_OWNER;
+
 const clean = (v: unknown, n = 5000) =>
     String(v ?? '')
       .trim()
@@ -86,6 +86,10 @@ export async function POST(request: Request) {
       attachmentName,
     )
     .run();
+
+
+  await sendEmail({ recipient: env.CONTACT_EMAIL,subject: `New Contact Form Submission: ${reference}`,body: `Name: ${name}\nEmail: ${email}\nMessage: ${message}` });  
+
   return Response.json({ reference });
 }
 

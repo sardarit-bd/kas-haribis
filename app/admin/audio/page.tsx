@@ -2,16 +2,17 @@ import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import { listAudio } from '../../lib/directories';
 import AudioManager from './audio-manager';
+import { isOwnerEmail } from "../../lib/admin-access";
 export const dynamic = 'force-dynamic';
 
 const breadcrumbs = [
   { label: 'Dashboard', href: '/admin' },
-  { label: 'Audio Manager', href: '/admin/audio' },
+  { label: 'Audio & Shiurim', href: '/admin/audio' },
 ];
 
 export default async function AudioAdmin() {
   const user = await requireChatGPTUser('/admin/audio');
-  if (user.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(user.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

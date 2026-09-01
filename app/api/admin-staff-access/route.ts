@@ -37,7 +37,7 @@ export async function POST(request: Request) {
       { error: 'Enter a valid staff email address.' },
       { status: 400 },
     );
-  if (email === ADMIN_OWNER)
+  if (isOwnerEmail(email))
     return Response.json(
       { error: 'The owner already has full access.' },
       { status: 400 },

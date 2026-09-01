@@ -1,8 +1,8 @@
-import { ADMIN_OWNER } from '../../lib/admin-access';
+import { isOwnerEmail } from '../../lib/admin-access';
 import { getRequestEmail } from '../../lib/request-auth';
 import { ensureBankResearch, ensureBanks } from '../../lib/directories';
 import { researchIdentity } from '../../lib/research-access';
-const OWNER = ADMIN_OWNER.toLowerCase();
+
 const clean = (v: unknown, n = 10000) =>
   String(v ?? '')
     .trim()
@@ -14,7 +14,7 @@ async function runtime() {
   return env;
 }
 async function permitted(db: any, email: string) {
-  if (email === OWNER) return true;
+  if (isOwnerEmail(email)) return true;
   return Boolean(
     await db
       .prepare('SELECT email FROM bank_researchers WHERE email=? AND active=1')

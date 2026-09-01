@@ -2,6 +2,7 @@ import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import { ensureBankResearch } from '../../lib/directories';
 import { ensureResearchAccess } from '../../lib/research-access';
+import { ADMIN_OWNER } from "../../lib/admin-access";
 import BankResearchReview from './review-manager';
 export const dynamic = 'force-dynamic';
 

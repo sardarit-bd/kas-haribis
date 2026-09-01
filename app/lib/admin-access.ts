@@ -1,5 +1,12 @@
-// export const ADMIN_OWNER = 'kavharibis@gmail.com';
-export const ADMIN_OWNER = 'mdemong87@gmail.com';
+export const ADMIN_OWNER = ['mdemong87@gmail.com',"kavharibis@gmail.com","sardarit.bd.official@gmail.com"];
+
+export function isOwnerEmail(email: string | null | undefined): boolean {
+  if (!email) return false;
+  const cleanEmail = String(email).trim().toLowerCase();
+  return ADMIN_OWNER.some(
+    (owner) => String(owner).trim().toLowerCase() === cleanEmail,
+  );
+}
 
 export const ADMIN_SECTIONS = [
   {

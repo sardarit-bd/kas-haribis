@@ -1,6 +1,7 @@
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import { listArticles } from '../../lib/directories';
+import { isOwnerEmail } from "../../lib/admin-access";
 import ArticleManager from './article-manager';
 export const dynamic = 'force-dynamic';
 
@@ -11,7 +12,7 @@ const breadcrumbs = [
 
 export default async function Page() {
   const u = await requireChatGPTUser('/admin/articles');
-  if (u.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(u.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

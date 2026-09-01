@@ -7,18 +7,21 @@ type AuthEnv = {
 
 export async function getAuthEnv(): Promise<Required<AuthEnv>> {
   const { env } = await import('cloudflare:workers');
-  const runtimeEnv = env as AuthEnv;
-  const authSecret =
-    runtimeEnv.AUTH_SECRET || process.env.AUTH_SECRET || '';
-  const googleClientId =
-    runtimeEnv.GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID || '';
-  const googleClientSecret =
-    runtimeEnv.GOOGLE_CLIENT_SECRET || process.env.GOOGLE_CLIENT_SECRET || '';
-  const appUrl = (
-    runtimeEnv.APP_URL ||
-    process.env.APP_URL ||
-    'http://localhost:5173'
-  ).replace(/\/+$/g, '');
+  const runtimeEnv = (env || {}) as AuthEnv;
+  const authSecret = String(
+    runtimeEnv.AUTH_SECRET || process.env.AUTH_SECRET || '',
+  ).trim();
+  const googleClientId = String(
+    runtimeEnv.GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID || '',
+  ).trim();
+  const googleClientSecret = String(
+    runtimeEnv.GOOGLE_CLIENT_SECRET || process.env.GOOGLE_CLIENT_SECRET || '',
+  ).trim();
+  const appUrl = String(
+    runtimeEnv.APP_URL || process.env.APP_URL || 'http://localhost:5173',
+  )
+    .trim()
+    .replace(/\/+$/g, '');
 
   return {
     AUTH_SECRET: authSecret,

@@ -1,19 +1,20 @@
-import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
+import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { ensureHeterTables } from '../../lib/heter-documents';
 import AccessCodeManager from './access-code-manager';
 import HeterManager from './heter-manager';
+import { isOwnerEmail } from "../../lib/admin-access";
 
 export const dynamic = 'force-dynamic';
 
 const breadcrumbs = [
   { label: 'Dashboard', href: '/admin' },
-  { label: 'Heter Iska Manager', href: '/admin/heter-iska' },
+  { label: 'Heter Iska Documents', href: '/admin/heter-iska' },
 ];
 
 export default async function HeterAdmin() {
   const user = await requireChatGPTUser('/admin/heter-iska');
-  if (user.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(user.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

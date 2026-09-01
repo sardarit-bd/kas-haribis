@@ -2,16 +2,17 @@ import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import { listBusinesses } from '../../lib/directories';
 import BusinessManager from './business-manager';
+import { isOwnerEmail } from "../../lib/admin-access";
 export const dynamic = 'force-dynamic';
 
 const breadcrumbs = [
   { label: 'Dashboard', href: '/admin' },
-  { label: 'Businesses Directory', href: '/admin/businesses' },
+  { label: 'Heter Iska Businesses', href: '/admin/businesses' },
 ];
 
 export default async function Page() {
   const user = await requireChatGPTUser('/admin/businesses');
-  if (user.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(user.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

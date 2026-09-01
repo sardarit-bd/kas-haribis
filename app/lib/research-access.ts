@@ -1,7 +1,7 @@
 import { ADMIN_OWNER } from './admin-access';
 import { getUserFromCookieHeader } from './auth';
 
-const OWNER = ADMIN_OWNER.toLowerCase();
+const OWNER = ADMIN_OWNER;
 const SESSION_COOKIE = 'kh_research_session';
 const SESSION_SECONDS = 60 * 60 * 12;
 
@@ -201,8 +201,8 @@ export async function researchIdentityFromHeaders(
   const headerEmail = String(sessionUser?.email || '')
     .trim()
     .toLowerCase();
-  if (headerEmail === OWNER)
-    return { email: OWNER, name: 'Kav Haribis Administrator', owner: true };
+  if (OWNER?.includes(headerEmail))
+    return { email: OWNER[0].toLowerCase(), name: 'Kav Haribis Administrator', owner: true };
   const token = parseCookie(
     String(requestHeaders.get('cookie') || ''),
     SESSION_COOKIE,

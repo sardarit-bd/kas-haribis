@@ -1,7 +1,7 @@
 import { getRequestEmail, isOwnerRequest } from '../../lib/request-auth';
-import { ADMIN_OWNER } from '../../lib/admin-access';
+import { isOwnerEmail } from '../../lib/admin-access';
 import { ensureBankResearch } from '../../lib/directories';
-const OWNER = ADMIN_OWNER;
+
 const clean = (v: unknown, n = 300) =>
   String(v ?? '')
     .trim()

@@ -1,9 +1,9 @@
 import { getRequestEmail, isOwnerRequest } from '../../../lib/request-auth';
-import { ADMIN_OWNER } from '../../../lib/admin-access';
+import { isOwnerEmail } from '../../../lib/admin-access';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { ensureInvoices } from '../../../lib/invoices';
-const owner = ADMIN_OWNER,
-  cardUrl = 'https://secure.cardknox.com/congregationkavharibis';
+
+const cardUrl = 'https://secure.cardknox.com/congregationkavharibis';
 const heterIskaUrl = 'https://kavharibis.com/heter-iska/',
   brisPinchasUrl =
     'https://heter-iska.com/wp-content/uploads/2025/05/Heter-iska-Jared.pdf';

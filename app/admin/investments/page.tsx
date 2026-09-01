@@ -1,17 +1,18 @@
-import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
+import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { listInvestments } from '../../lib/directories';
 import Manager from './investment-manager';
 export const dynamic = 'force-dynamic';
+import { isOwnerEmail } from "../../lib/admin-access";
 
 const breadcrumbs = [
   { label: 'Dashboard', href: '/admin' },
-  { label: 'Investment Opportunities', href: '/admin/investments' },
+  { label: 'Kosher Investments', href: '/admin/investments' },
 ];
 
 export default async function Page() {
   const u = await requireChatGPTUser('/admin/investments');
-  if (u.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(u.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

@@ -1,5 +1,6 @@
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
+import { isOwnerEmail } from "../../lib/admin-access";
 import PaymentSettingsForm from './settings-form';
 export const dynamic = 'force-dynamic';
 
@@ -10,7 +11,7 @@ const breadcrumbs = [
 
 export default async function Settings() {
   const user = await requireChatGPTUser('/admin/settings');
-  if (user.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(user.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

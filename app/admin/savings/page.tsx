@@ -2,6 +2,7 @@ import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import { listSavingsAccounts } from '../../lib/directories';
 import SavingsManager from './savings-manager';
+import { isOwnerEmail } from "../../lib/admin-access";
 export const dynamic = 'force-dynamic';
 
 const breadcrumbs = [
@@ -11,7 +12,7 @@ const breadcrumbs = [
 
 export default async function Page() {
   const u = await requireChatGPTUser('/admin/savings');
-  if (u.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(u.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

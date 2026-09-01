@@ -1,16 +1,17 @@
-import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
+import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { ensureSeforimOrders } from '../../lib/seforim';
+import { isOwnerEmail } from "../../lib/admin-access";
 export const dynamic = 'force-dynamic';
 
 const breadcrumbs = [
   { label: 'Dashboard', href: '/admin' },
-  { label: 'Paid Seforim Orders', href: '/admin/orders' },
+  { label: 'Seforim Orders', href: '/admin/orders' },
 ];
 
 export default async function OrdersPage() {
   const user = await requireChatGPTUser('/admin/orders');
-  if (user.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(user.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

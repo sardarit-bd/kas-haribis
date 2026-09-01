@@ -2,6 +2,7 @@ import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import { ensureInvoices } from '../../lib/invoices';
 import InvoiceManager from './invoice-manager';
+import { isOwnerEmail } from "../../lib/admin-access";
 export const dynamic = 'force-dynamic';
 
 const breadcrumbs = [
@@ -11,7 +12,7 @@ const breadcrumbs = [
 
 export default async function InvoiceAdmin() {
   const user = await requireChatGPTUser('/admin/invoices');
-  if (user.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(user.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

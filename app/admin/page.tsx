@@ -1,13 +1,13 @@
 import { headers } from 'next/headers';
 import { requireChatGPTUser } from '../chatgpt-auth';
 import {
-  ADMIN_OWNER,
   ADMIN_SECTIONS,
-  staffPermissions,
+  isOwnerEmail,
+  staffPermissions
 } from '../lib/admin-access';
 import {
   ActivityTrendChart,
-  CategoryDistributionBarChart,
+  CategoryDistributionBarChart
 } from './dashboard-charts';
 
 export const dynamic = 'force-dynamic';
@@ -50,7 +50,7 @@ export default async function AdminPage() {
       requestHeaders.get('x-kh-staff-email') || '',
     ).toLowerCase(),
     actualEmail = staffEmail || user.email.toLowerCase(),
-    owner = actualEmail === ADMIN_OWNER;
+    owner = isOwnerEmail(actualEmail);
 
   const { env } = await import('cloudflare:workers');
 

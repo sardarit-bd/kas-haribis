@@ -1,7 +1,7 @@
 import { getRequestEmail, isOwnerRequest } from '../../lib/request-auth';
-import { ADMIN_OWNER } from '../../lib/admin-access';
+import { isOwnerEmail } from '../../lib/admin-access';
 import { ensureCertificationApplications } from '../../lib/certification-applications';
-const owner = ADMIN_OWNER;
+
 const clean = (value: unknown, length = 5000) =>
     String(value ?? '')
       .trim()

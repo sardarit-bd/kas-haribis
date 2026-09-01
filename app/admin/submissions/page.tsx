@@ -1,22 +1,22 @@
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
+import { isOwnerEmail } from "../../lib/admin-access";
 import { ensureContactSubmissions } from '../../lib/contact-submissions';
 import SubmissionInbox from './submission-inbox';
 export const dynamic = 'force-dynamic';
-export default async function Page() {
 
+const breadcrumbs = [
+  { label: 'Dashboard', href: '/admin' },
+  { label: 'Submissions & Inquiries', href: '/admin/submissions' },
+];
 
-
-  const breadcrumbs = [
-    { label: 'Dashboard', href: '/admin' },
-    { label: 'Submissions', href: '/admin/submissions' },
-]
-
-
-
+export default async function SubmissionsPage() {
+  const { env } = await import('cloudflare:workers');
+  await ensureContactSubmissions(env.DB);
 
   const user = await requireChatGPTUser('/admin/submissions');
-  if (user.email.toLowerCase() !== 'mdemong87@gmail.com')
+  console.log(user);
+  if (!isOwnerEmail(user.email))
     return (
       <main className="adminPage">
         <div className="adminShell">
@@ -26,8 +26,8 @@ export default async function Page() {
     );
 
 
-  const { env } = await import('cloudflare:workers');
-  await ensureContactSubmissions(env.DB);
+  // const { env } = await import('cloudflare:workers');
+  // await ensureContactSubmissions(env.DB);
   const result = await env.DB.prepare(
     'SELECT * FROM contact_submissions ORDER BY created_at DESC',
   ).all();

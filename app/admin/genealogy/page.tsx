@@ -1,18 +1,19 @@
-import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
+import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { ensureContactSubmissions } from '../../lib/contact-submissions';
 import SubmissionInbox from '../submissions/submission-inbox';
+import { isOwnerEmail } from "../../lib/admin-access";
 
 export const dynamic = 'force-dynamic';
 
 const breadcrumbs = [
   { label: 'Dashboard', href: '/admin' },
-  { label: 'Genealogy Requests', href: '/admin/genealogy' },
+  { label: 'Genealogy Inquiries', href: '/admin/genealogy' },
 ];
 
 export default async function GenealogyAdminPage() {
   const user = await requireChatGPTUser('/admin/genealogy');
-  if (user.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(user.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

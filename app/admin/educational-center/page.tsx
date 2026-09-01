@@ -1,5 +1,6 @@
-import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
+import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
+import { isOwnerEmail } from "../../lib/admin-access";
 import { listEducationalResources } from '../../lib/directories';
 import EducationalManager from './educational-manager';
 export const dynamic = 'force-dynamic';
@@ -11,7 +12,7 @@ const breadcrumbs = [
 
 export default async function Page() {
   const user = await requireChatGPTUser('/admin/educational-center');
-  if (user.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(user.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

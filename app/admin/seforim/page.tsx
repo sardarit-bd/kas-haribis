@@ -1,17 +1,18 @@
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import { listSeforim } from '../../lib/seforim';
+import { isOwnerEmail } from "../../lib/admin-access";
 import SeforimManager from './seforim-manager';
 export const dynamic = 'force-dynamic';
 
 const breadcrumbs = [
   { label: 'Dashboard', href: '/admin' },
-  { label: 'Seforim Manager', href: '/admin/seforim' },
+  { label: 'Seforim Catalog', href: '/admin/seforim' },
 ];
 
 export default async function SeforimAdmin() {
   const user = await requireChatGPTUser('/admin/seforim');
-  if (user.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(user.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

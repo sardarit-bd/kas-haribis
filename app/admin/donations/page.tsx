@@ -1,16 +1,17 @@
-import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
+import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
+import { isOwnerEmail } from "../../lib/admin-access";
 
 export const dynamic = 'force-dynamic';
 
 const breadcrumbs = [
   { label: 'Dashboard', href: '/admin' },
-  { label: 'Donation Records', href: '/admin/donations' },
+  { label: 'Donation History', href: '/admin/donations' },
 ];
 
 export default async function DonationsAdmin() {
   const user = await requireChatGPTUser('/admin/donations');
-  if (user.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(user.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

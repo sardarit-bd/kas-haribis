@@ -1,8 +1,8 @@
-import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
+import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import {
-  ADMIN_OWNER,
   ADMIN_SECTIONS,
+  isOwnerEmail,
   ensureAdminStaff,
 } from '../../lib/admin-access';
 import StaffAccessManager from './staff-access-manager';
@@ -15,7 +15,7 @@ const breadcrumbs = [
 
 export default async function StaffAccessPage() {
   const user = await requireChatGPTUser('/admin/staff-access');
-  if (user.email.toLowerCase() !== ADMIN_OWNER)
+  if (!isOwnerEmail(user.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

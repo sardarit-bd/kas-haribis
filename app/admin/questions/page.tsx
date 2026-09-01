@@ -1,16 +1,17 @@
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
+import { isOwnerEmail } from "../../lib/admin-access";
 
 export const dynamic = 'force-dynamic';
 
 const breadcrumbs = [
   { label: 'Dashboard', href: '/admin' },
-  { label: 'Question Inbox', href: '/admin/questions' },
+  { label: 'Halacha Questions', href: '/admin/questions' },
 ];
 
 export default async function QuestionsAdmin() {
   const user = await requireChatGPTUser('/admin/questions');
-  if (user.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(user.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

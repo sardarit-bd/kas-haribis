@@ -1,5 +1,6 @@
-import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
+import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
+import { isOwnerEmail } from "../../lib/admin-access";
 import { ensureAlertSubscribers } from '../../lib/directories';
 import Subscribers from './subscribers';
 export const dynamic = 'force-dynamic';
@@ -11,7 +12,7 @@ const breadcrumbs = [
 
 export default async function Page() {
   const u = await requireChatGPTUser('/admin/alert-subscribers');
-  if (u.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(u.email))
     return (
       <main className="adminPage">
         <div className="adminShell">

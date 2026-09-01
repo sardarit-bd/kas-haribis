@@ -1,5 +1,5 @@
-import { getCurrentUser } from '../lib/auth';
 import { redirect } from 'next/navigation';
+import { getCurrentUser } from '../lib/auth';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
 export const dynamic = 'force-dynamic';
 
@@ -58,8 +58,8 @@ export default async function SignInPage({
   return (
     <main className="flex min-h-screen flex-col bg-[#f7f3ea]">
       <SiteHeader />
-      <div className="grid flex-1 lg:grid-cols-2">
-        <section className="relative flex flex-col justify-between overflow-hidden bg-gradient-to-br from-[#102a43] via-[#173f5f] to-[#0a2033] px-8 py-10 text-white sm:px-12 lg:px-14 lg:py-14">
+      <div className="grid flex-1 lg:grid-cols-2  container my-20">
+        <section className="relative flex flex-col justify-between overflow-hidden bg-gradient-to-br from-[#102a43] via-[#173f5f] to-[#0a2033] px-8 py-10 text-white sm:px-12 lg:px-14 lg:py-14 rounded-xl">
           <div className="pointer-events-none absolute -right-16 top-20 h-64 w-64 rounded-full bg-[#c69b46]/10 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-20 left-10 h-72 w-72 rounded-full bg-[#c69b46]/10 blur-3xl" />
 

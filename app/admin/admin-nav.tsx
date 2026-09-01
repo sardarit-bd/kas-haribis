@@ -1,4 +1,4 @@
-import { ADMIN_OWNER } from '../lib/admin-access';
+import { ADMIN_OWNER, isOwnerEmail } from '../lib/admin-access';
 import { getCurrentUser, signOutPath } from '../lib/auth';
 
 export default async function AdminNav() {
@@ -7,7 +7,7 @@ export default async function AdminNav() {
 
   const userName = user?.displayName || user?.fullName || 'Admin User';
   const userEmail = user?.email || '';
-  const isOwner = userEmail.toLowerCase() === ADMIN_OWNER.toLowerCase();
+  const isOwner = isOwnerEmail(userEmail);
   const role = isOwner ? 'Super Admin' : 'Administrator';
 
   // Extract initials for avatar (e.g. "Md Emon Hossen" -> "ME")

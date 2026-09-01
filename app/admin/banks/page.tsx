@@ -1,22 +1,23 @@
-import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { headers } from 'next/headers';
 import { requireChatGPTUser } from '../../chatgpt-auth';
-import { listBanksAdmin } from '../../lib/directories';
+import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { ensureBankPremium } from '../../lib/bank-premium';
+import { isOwnerEmail } from "../../lib/admin-access";
+import { listBanksAdmin } from '../../lib/directories';
 import BankManager from './bank-manager';
 import PremiumMemberManager from './premium-member-manager';
 export const dynamic = 'force-dynamic';
 
 const breadcrumbs = [
   { label: 'Dashboard', href: '/admin' },
-  { label: 'Bank Manager', href: '/admin/banks' },
+  { label: 'Kosher Banks', href: '/admin/banks' },
 ];
 
-export default async function BanksAdmin() {
+export default async function Page() {
   const user = await requireChatGPTUser('/admin/banks'),
     requestHeaders = await headers(),
     staffEmail = requestHeaders.get('x-kh-staff-email') || '';
-  if (user.email.toLowerCase() !== 'mdemong87@gmail.com')
+  if (!isOwnerEmail(user.email))
     return (
       <main className="adminPage">
         <div className="adminShell">
