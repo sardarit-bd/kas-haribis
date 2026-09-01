@@ -157,6 +157,7 @@ export default function AboutPage() {
           </figure>
         </div>
       </section>
+      
 
       <section className="aboutCta">
         <div>
