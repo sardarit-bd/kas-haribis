@@ -12,7 +12,7 @@ export function SiteHeader() {
       </div>
       <header className="siteHeader migrationHeader">
         <a className="brand" href="/">
-          <img src={'../../public/logo.png'} alt="logo" className='w-[220px] h-auto' />
+          <img src={'../../public/logos/logo.png'} alt="logo" className='w-[220px] h-auto' />
         </a>
         <NavigationMenu />
       </header>
@@ -29,7 +29,7 @@ export function SiteFooter({
       <div className="footerMainGrid">
         <div className="footerBrandCol">
           <div className="brand light mb-3">
-               <img src={'../../public/logo.png'} alt="logo" className='w-[300px] h-auto bg-white p-3' />
+               <img src={'../../public/logos/logo.png'} alt="logo" className='w-[300px] h-auto bg-white p-3' />
           </div>
           <p className="footerTagline">Torah guidance for responsible commerce.</p>
           <p className="footerDesc">
