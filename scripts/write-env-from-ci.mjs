@@ -14,9 +14,12 @@ const required = [
   'GOOGLE_CLIENT_ID',
   'GOOGLE_CLIENT_SECRET',
   'D1_DATABASE_ID',
+  'EMAIL_USER',
+  'EMAIL_PASSWORD',
+  'CARDKNOX_SETTINGS_KEY',
 ];
 
-const optional = ['CARDKNOX_SETTINGS_KEY'];
+const optional = [];
 
 function normalizeValue(key, raw) {
   let value = raw?.trim() || defaults[key] || '';

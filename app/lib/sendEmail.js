@@ -5,16 +5,35 @@ import {
 } from "./emailTemplates.js";
 
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-});
+async function getEmailConfig() {
+  let user = process.env.EMAIL_USER || '';
+  let pass = process.env.EMAIL_PASSWORD || '';
+  if (!user || !pass) {
+    try {
+      const { env } = await import('cloudflare:workers');
+      if (env) {
+        user = user || env.EMAIL_USER || '';
+        pass = pass || env.EMAIL_PASSWORD || '';
+      }
+    } catch {
+      // non-worker environment fallback
+    }
+  }
+  return { user, pass };
+}
 
 const sendEmail = async (emails, subject, data, templateType) => {
   try {
+    const { user, pass } = await getEmailConfig();
+    if (!user || !pass) {
+      throw new Error("Email credentials (EMAIL_USER / EMAIL_PASSWORD) are not configured.");
+    }
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: { user, pass },
+    });
+
     // 1. Array validation
     const recipientList = Array.isArray(emails) ? emails : [emails];
     if (recipientList.length === 0) {
@@ -36,7 +55,7 @@ const sendEmail = async (emails, subject, data, templateType) => {
 
     // 3. Mail Options Setup
     const mailOptions = {
-      from: `"Kav Haribis" <${process.env.EMAIL_USER}>`,
+      from: `"Kav Haribis" <${user}>`,
       to: recipientList.length === 1 ? recipientList[0] : undefined,
       bcc: recipientList.length > 1 ? recipientList : undefined,
       subject,
