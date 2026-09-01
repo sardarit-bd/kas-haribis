@@ -25,12 +25,28 @@ const labels: Record<string, string> = {
   'lack-of-information': 'Insufficient information',
 };
 
+function getPageNumbers(current: number, total: number) {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  if (current <= 3) {
+    return [1, 2, 3, 4, '...', total];
+  }
+  if (current >= total - 2) {
+    return [1, '...', total - 3, total - 2, total - 1, total];
+  }
+  return [1, '...', current - 1, current, current + 1, '...', total];
+}
+
 export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('all');
   const [open, setOpen] = useState<string | number | null>(null);
   const [unlock, setUnlock] = useState<Bank | null>(null);
   const [view, setView] = useState<'list' | 'grid'>('list');
+  const [perPage, setPerPage] = useState<number | 'all'>(16);
+  const [currentPage, setCurrentPage] = useState(1);
+
   const filtered = useMemo(
     () =>
       banks.filter(
@@ -43,6 +59,37 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
     [banks, query, status],
   );
 
+  const totalPages = useMemo(() => {
+    if (perPage === 'all') return 1;
+    return Math.max(1, Math.ceil(filtered.length / perPage));
+  }, [filtered.length, perPage]);
+
+  const activePage = Math.min(currentPage, totalPages);
+
+  const paginatedBanks = useMemo(() => {
+    if (perPage === 'all') return filtered;
+    const start = (activePage - 1) * perPage;
+    return filtered.slice(start, start + perPage);
+  }, [filtered, activePage, perPage]);
+
+  const handleQueryChange = (val: string) => {
+    setQuery(val);
+    setCurrentPage(1);
+  };
+
+  const handleStatusChange = (val: string) => {
+    setStatus(val);
+    setCurrentPage(1);
+  };
+
+  const handlePerPageChange = (val: number | 'all') => {
+    setPerPage(val);
+    setCurrentPage(1);
+  };
+
+  const pageNumbers = getPageNumbers(activePage, totalPages);
+  const startIndex = perPage === 'all' ? 0 : (activePage - 1) * perPage;
+
   return (
     <section className="directorySection">
       <div className="directoryTools">
@@ -50,7 +97,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
           Search financial institutions
           <input
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) => handleQueryChange(event.target.value)}
             placeholder="Bank or lender name…"
           />
         </label>
@@ -58,7 +105,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
           Status
           <select
             value={status}
-            onChange={(event) => setStatus(event.target.value)}
+            onChange={(event) => handleStatusChange(event.target.value)}
           >
             <option value="all">All statuses</option>
             {Object.entries(labels).map(([value, label]) => (
@@ -66,6 +113,24 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                 {label}
               </option>
             ))}
+          </select>
+        </label>
+        <label className="directoryPerPageSelect">
+          Reports per page
+          <select
+            value={perPage}
+            onChange={(event) => {
+              const val =
+                event.target.value === 'all'
+                  ? 'all'
+                  : Number(event.target.value);
+              handlePerPageChange(val);
+            }}
+          >
+            <option value={16}>16 per page</option>
+            <option value={25}>25 per page</option>
+            <option value={50}>50 per page</option>
+            <option value="all">All</option>
           </select>
         </label>
         <b aria-live="polite">{filtered.length} banks listed</b>
@@ -98,7 +163,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
             No banks match this search. Clear the search or choose All statuses.
           </p>
         )}
-        {filtered.map((bank) => (
+        {paginatedBanks.map((bank) => (
           <article key={bank.id}>
             <div className="bankCardTop">
               <button
@@ -181,6 +246,63 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
           </article>
         ))}
       </div>
+      {filtered.length > 0 && (
+        <div className="directoryPagination">
+          <div className="paginationInfo">
+            Showing{' '}
+            <b>
+              {perPage === 'all'
+                ? `1–${filtered.length}`
+                : `${startIndex + 1}–${Math.min(startIndex + perPage, filtered.length)}`}
+            </b>{' '}
+            of <b>{filtered.length}</b> banks
+          </div>
+          {perPage !== 'all' && totalPages > 1 && (
+            <div className="paginationControls">
+              <button
+                className="paginationBtn"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={activePage === 1}
+                aria-label="Previous page"
+              >
+                ← Prev
+              </button>
+
+              <div className="paginationPages">
+                {pageNumbers.map((page, idx) =>
+                  typeof page === 'number' ? (
+                    <button
+                      key={page}
+                      className={`paginationPageBtn ${activePage === page ? 'active' : ''}`}
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </button>
+                  ) : (
+                    <span
+                      key={`ellipsis-${idx}`}
+                      className="paginationEllipsis"
+                    >
+                      …
+                    </span>
+                  ),
+                )}
+              </div>
+
+              <button
+                className="paginationBtn"
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(totalPages, p + 1))
+                }
+                disabled={activePage === totalPages}
+                aria-label="Next page"
+              >
+                Next →
+              </button>
+            </div>
+          )}
+        </div>
+      )}
       {unlock && (
         <BankReportUnlock
           bankId={String(unlock.id)}

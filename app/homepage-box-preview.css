@@ -1,18 +1,18 @@
 .boxFlashPreview {
   background: #f7f3ea;
-  overflow: hidden;
+  overflow-x: clip;
 }
 .boxFlashPreview .homeHero {
   min-height: 610px;
 }
 .flashOfferings {
-  padding: 95px 6vw 110px;
+  padding: 95px 40px 110px;
   background:
     radial-gradient(circle at 90% 5%, #c69b461c, transparent 28%),
     linear-gradient(180deg, #fbfaf7, #f2ecdf);
 }
 .flashOfferings > header {
-  max-width: 1420px;
+  max-width: 1440px;
   margin: 0 auto 42px;
   display: flex;
   align-items: end;
@@ -58,7 +58,7 @@
   font: 17px Georgia;
 }
 .flashOfferingGrid {
-  max-width: 1420px;
+  max-width: 1440px;
   margin: auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);

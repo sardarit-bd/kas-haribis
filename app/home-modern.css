@@ -167,9 +167,9 @@
   font-size: 20px;
 }
 .homeMission {
-  max-width: 1400px;
+  max-width: 1440px;
   margin: auto;
-  padding: 120px 7vw 90px;
+  padding: 120px 40px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 9vw;
@@ -195,11 +195,11 @@
   font-size: 13px;
 }
 .homeServices {
-  padding: 95px 7vw;
+  padding: 95px 40px;
   background: #f6f2e9;
 }
 .homeSectionHeading {
-  max-width: 1350px;
+  max-width: 1440px;
   margin: 0 auto 42px;
   display: flex;
   align-items: end;
@@ -220,7 +220,7 @@
   font-size: 13px;
 }
 .homeServiceGrid {
-  max-width: 1350px;
+  max-width: 1440px;
   margin: auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -340,10 +340,10 @@
   line-height: 2;
 }
 .homeLearning {
-  padding: 100px 7vw;
+  padding: 100px 40px;
 }
 .homeLearningGrid {
-  max-width: 1350px;
+  max-width: 1440px;
   margin: auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -383,7 +383,9 @@
   font-size: 12px;
 }
 .homePrograms {
-  padding: 95px 7vw;
+  max-width: 1440px;
+  margin: auto;
+  padding: 95px 40px;
   background: linear-gradient(125deg, #132f47, #1a4c6c);
   color: white;
   display: grid;
@@ -433,7 +435,9 @@
   font-size: 13px;
 }
 .homeQuestion {
-  padding: 100px 7vw;
+  max-width: 1440px;
+  margin: auto;
+  padding: 100px 40px;
   background: #f4efe4;
   display: grid;
   grid-template-columns: 0.85fr 1.15fr;
@@ -512,7 +516,9 @@
   text-decoration: underline;
 }
 .homeFinalCta {
-  padding: 75px 7vw;
+  max-width: 1440px;
+  margin: auto;
+  padding: 75px 40px;
   display: grid;
   grid-template-columns: 1.25fr 0.75fr;
   gap: 7vw;

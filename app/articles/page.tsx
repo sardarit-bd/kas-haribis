@@ -10,6 +10,7 @@ export default async function ArticlesPage() {
       title="Practical Torah guidance for modern financial life"
       intro="Browse the complete Kav Haribis collection of concise publications on practical questions in Hilchos Ribbis."
     >
+      <div className='hidden'>
       <section className="articleCollectionIntro">
         <div>
           <p className="eyebrow gold">THE KAV HARIBIS GILYON</p>
@@ -26,6 +27,7 @@ export default async function ArticlesPage() {
           <small>Original publications preserved in full</small>
         </aside>
       </section>
+      </div>
       <section className="articleLibrary">
         <div className="articleLibraryHead">
           <div>
@@ -91,7 +93,7 @@ export default async function ArticlesPage() {
           ))}
         </div>
       </section>
-      <section className="articleCallout">
+      <section className="articleCallout my-10">
         <div>
           <p className="eyebrow">STAY INFORMED</p>
           <h2>Bring practical Hilchos Ribbis into your home and business</h2>

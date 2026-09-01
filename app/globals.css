@@ -32,9 +32,18 @@ a {
 }
 
 
-.container{
-  width: 1440px;
-  margin: auto;
+.container {
+  max-width: 1440px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 }
 
 button,
@@ -896,19 +905,35 @@ footer, .siteFooterBig {
   .nav {
     display: none;
     position: absolute;
-    top: 92px;
+    top: 100%;
     left: 0;
     right: 0;
-    background: white;
-    padding: 25px;
+    background: #ffffff;
+    padding: 20px 25px 30px;
     flex-direction: column;
-    box-shadow: 0 10px 20px #0002;
+    gap: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    border-bottom: 3px solid var(--gold);
   }
   .nav.open {
-    display: flex;
+    display: flex !important;
   }
   .menuButton {
-    display: block;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccd5da;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 24px;
+    line-height: 1;
+    color: var(--navy);
+    cursor: pointer;
+    padding: 8px 14px;
+    z-index: 10000;
   }
   .heroCard {
     display: none;
@@ -2501,8 +2526,8 @@ footer, .siteFooterBig {
 }
 .directorySection,
 .audioSection {
-  padding: 65px 6vw 90px;
-  max-width: 1400px;
+  padding: 35px 0vw 90px;
+  max-width: 1440px;
   margin: auto;
 }
 .directoryTools {

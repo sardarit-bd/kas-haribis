@@ -42,14 +42,14 @@
   color: #d8e2e7;
   font: 11px/1.5 Georgia;
 }
-.offeringGroups button {
+.motionServiceStage .offeringGroups button {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   transition: 0.25s;
 }
-.offeringGroups button span {
+.motionServiceStage .offeringGroups button span {
   width: 30px;
   height: 30px;
   display: grid;
@@ -57,23 +57,23 @@
   border-radius: 50%;
   font: 16px Georgia;
 }
-.offeringGroups button.directory span {
+.motionServiceStage .offeringGroups button.directory span {
   background: #dbe9ef;
   color: #174b69;
 }
-.offeringGroups button.learning span {
+.motionServiceStage .offeringGroups button.learning span {
   background: #eee0bd;
   color: #84611f;
 }
-.offeringGroups button.services span {
+.motionServiceStage .offeringGroups button.services span {
   background: #dfebdf;
   color: #365f3c;
 }
-.offeringGroups button.support span {
+.motionServiceStage .offeringGroups button.support span {
   background: #efdcdf;
   color: #7d3f49;
 }
-.offeringGroups button.active span {
+.motionServiceStage .offeringGroups button.active span {
   background: #ffffff20;
   color: #fff;
 }

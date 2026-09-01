@@ -159,7 +159,8 @@ export default function AboutPage() {
       </section>
       
 
-      <section className="aboutCta">
+      <section className='my-10'>
+        <section className="aboutCta">
         <div>
           <p className="eyebrow">HOW CAN WE HELP?</p>
           <h2>
@@ -172,6 +173,7 @@ export default function AboutPage() {
           </a>
           <a className='hidden' href="/bais-horaah">Submit a Ribbis question →</a>
         </div>
+      </section>
       </section>
       <SiteFooter />
     </main>

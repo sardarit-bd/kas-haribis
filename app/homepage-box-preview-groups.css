@@ -1,31 +1,31 @@
-.groupedOfferings {
+.boxFlashPreview .groupedOfferings {
   padding-left: 6vw;
   padding-right: 6vw;
 }
-.offeringGroups {
-  max-width: 1180px;
+.boxFlashPreview .groupedOfferings .offeringGroups {
+  max-width: 1440px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
+  display: flex !important;
+  flex-direction: column !important;
   gap: 54px;
 }
-.offeringGroup {
+.boxFlashPreview .offeringGroup {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(340px, 0.76fr);
   gap: 28px;
   align-items: stretch;
 }
-.offeringGroup:nth-child(even) {
+.boxFlashPreview .offeringGroup:nth-child(even) {
   grid-template-columns: minmax(340px, 0.76fr) minmax(0, 1fr);
 }
-.offeringGroup:nth-child(even) figure {
+.boxFlashPreview .offeringGroup:nth-child(even) figure {
   grid-column: 1;
   grid-row: 1;
 }
-.offeringGroup:nth-child(even) .offeringGroupGrid {
+.boxFlashPreview .offeringGroup:nth-child(even) .offeringGroupGrid {
   grid-column: 2;
 }
-.offeringGroupGrid {
+.boxFlashPreview .offeringGroupGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
@@ -42,7 +42,7 @@
   width: 48px;
   height: 48px;
 }
-.offeringGroup figure {
+.boxFlashPreview .offeringGroup figure {
   position: relative;
   min-height: 344px;
   margin: 0;
@@ -51,22 +51,22 @@
   background: #102a43;
   box-shadow: 0 20px 50px #102a4320;
 }
-.offeringGroup figure:after {
+.boxFlashPreview .offeringGroup figure:after {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, transparent 42%, #071b2de6);
 }
-.offeringGroup figure img {
+.boxFlashPreview .offeringGroup figure img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.7s;
 }
-.offeringGroup figure:hover img {
+.boxFlashPreview .offeringGroup figure:hover img {
   transform: scale(1.035);
 }
-.offeringGroup figcaption {
+.boxFlashPreview .offeringGroup figcaption {
   position: absolute;
   z-index: 1;
   left: 25px;
@@ -74,7 +74,7 @@
   bottom: 24px;
   color: #fff;
 }
-.offeringGroup figcaption span {
+.boxFlashPreview .offeringGroup figcaption span {
   display: block;
   margin-bottom: 7px;
   color: #d8b66f;
@@ -82,51 +82,51 @@
   font-weight: 900;
   letter-spacing: 0.15em;
 }
-.offeringGroup figcaption b {
+.boxFlashPreview .offeringGroup figcaption b {
   font: 24px/1.2 Georgia;
 }
-.offeringGroup:last-child .offeringGroupGrid {
-  grid-template-columns: minmax(250px, 1fr);
-  max-width: 350px;
+.boxFlashPreview .offeringGroup:last-child {
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 0.76fr);
 }
-.offeringGroup:last-child {
-  grid-template-columns: minmax(280px, 0.55fr) minmax(390px, 1fr);
+.boxFlashPreview .offeringGroup:last-child .offeringGroupGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: none;
 }
 @media (max-width: 950px) {
-  .offeringGroup,
-  .offeringGroup:nth-child(even),
-  .offeringGroup:last-child {
-    grid-template-columns: 1fr;
+  .boxFlashPreview .offeringGroup,
+  .boxFlashPreview .offeringGroup:nth-child(even),
+  .boxFlashPreview .offeringGroup:last-child {
+    grid-template-columns: 1fr !important;
   }
-  .offeringGroup:nth-child(even) figure,
-  .offeringGroup:nth-child(even) .offeringGroupGrid {
+  .boxFlashPreview .offeringGroup:nth-child(even) figure,
+  .boxFlashPreview .offeringGroup:nth-child(even) .offeringGroupGrid {
     grid-column: auto;
     grid-row: auto;
   }
-  .offeringGroup figure {
+  .boxFlashPreview .offeringGroup figure {
     min-height: 300px;
   }
-  .offeringGroup:last-child .offeringGroupGrid {
+  .boxFlashPreview .offeringGroup:last-child .offeringGroupGrid {
     max-width: none;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 @media (max-width: 600px) {
-  .groupedOfferings {
+  .boxFlashPreview .groupedOfferings {
     padding-left: 5vw;
     padding-right: 5vw;
   }
-  .offeringGroupGrid,
-  .offeringGroup:last-child .offeringGroupGrid {
+  .boxFlashPreview .offeringGroupGrid,
+  .boxFlashPreview .offeringGroup:last-child .offeringGroupGrid {
     grid-template-columns: 1fr;
   }
   .boxFlashPreview .offeringGroupGrid .flashOffering {
     min-height: 150px;
   }
-  .offeringGroup figure {
+  .boxFlashPreview .offeringGroup figure {
     min-height: 240px;
   }
-  .offeringGroups {
+  .boxFlashPreview .offeringGroups {
     gap: 38px;
   }
 }

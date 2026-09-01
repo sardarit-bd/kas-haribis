@@ -1,11 +1,14 @@
-.offeringGroups {
+.motionServiceStage .offeringGroups {
   max-width: 1400px;
   margin: 0 auto 18px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
 }
-.offeringGroups button {
+.homemissionimage{
+  border-radius: 20px;
+}
+.motionServiceStage .offeringGroups button {
   padding: 17px 12px;
   border: 1px solid #d8d2c6;
   background: #fff;
@@ -13,7 +16,7 @@
   font-weight: 800;
   cursor: pointer;
 }
-.offeringGroups button.active {
+.motionServiceStage .offeringGroups button.active {
   background: #102a43;
   border-color: #102a43;
   color: #fff;
@@ -31,12 +34,12 @@
   letter-spacing: 0.12em;
 }
 @media (max-width: 1000px) {
-  .offeringGroups {
+  .motionServiceStage .offeringGroups {
     grid-template-columns: 1fr 1fr;
   }
 }
 @media (max-width: 650px) {
-  .offeringGroups,
+  .motionServiceStage .offeringGroups,
   .motionLearning > div.allOfferingCards {
     grid-template-columns: 1fr;
   }

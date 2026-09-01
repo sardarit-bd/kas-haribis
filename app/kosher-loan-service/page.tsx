@@ -10,6 +10,7 @@ export default async function Page() {
       title="Kosher Loan Services"
       intro="Reliable brokers. Kosher deals. Peace of mind. Connect with professionals who understand the importance of arranging financing in accordance with Hilchos Ribbis."
     >
+      <div className='hidden'>
       <section className="loanServiceIntro">
         <div>
           <p className="eyebrow gold">FINANCING WITH CLARITY</p>
@@ -34,7 +35,8 @@ export default async function Page() {
           <a href="/bais-horaah">Ask the Bais Horaah →</a>
         </aside>
       </section>
-      <section className="loanServicesDirectory" id="loan-services">
+      </div>
+      <section className="loanServicesDirectory my-10" id="loan-services">
         <div className="loanDirectoryHead">
           <div>
             <p className="eyebrow gold">TRUSTED PROFESSIONALS</p>
@@ -143,7 +145,7 @@ export default async function Page() {
           </div>
         )}
       </section>
-      <section className="loanServiceDisclaimer">
+      <section className="loanServiceDisclaimer my-10">
         <div>
           <p className="eyebrow">IMPORTANT</p>
           <h2>Every loan must be reviewed individually</h2>

@@ -76,7 +76,7 @@
 .aboutWelcome {
   max-width: 1440px;
   margin: auto;
-  padding: 105px 7vw;
+  padding: 105px 40px;
   display: grid;
   grid-template-columns: 0.85fr 1.15fr;
   gap: 9vw;
@@ -137,7 +137,7 @@
 .aboutMission {
   max-width: 1440px;
   margin: auto;
-  padding: 110px 7vw;
+  padding: 110px 40px;
 }
 .aboutSectionHead {
   display: grid;
@@ -187,7 +187,9 @@
   line-height: 1.75;
 }
 .aboutImpact {
-  padding: 105px 7vw;
+  max-width: 1440px;
+  margin: auto;
+  padding: 105px 40px;
   background: #f0eadf;
   display: grid;
   grid-template-columns: 0.72fr 1.28fr;
@@ -220,7 +222,9 @@
   transform: scale(1.03);
 }
 .aboutCta {
-  padding: 80px 7vw;
+  max-width: 1440px;
+  margin: auto;
+  padding: 80px 40px;
   background: #d5ad58;
   display: flex;
   justify-content: space-between;

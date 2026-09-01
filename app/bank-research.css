@@ -1,13 +1,11 @@
 .bankResearchSubmission {
-  max-width: 1400px;
+  max-width: 1440px;
   margin: 0 auto 95px;
-  padding: 62px 6vw;
+  padding: 40px;
   display: grid;
   grid-template-columns: 0.85fr 1.15fr;
   gap: 70px;
   background: linear-gradient(135deg, #f8f4ea, #fff);
-  border-top: 1px solid #e5dcc9;
-  border-bottom: 1px solid #e5dcc9;
 }
 .bankResearchIntro h2 {
   font: clamp(36px, 4vw, 52px) Georgia;

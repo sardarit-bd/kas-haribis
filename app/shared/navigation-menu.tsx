@@ -32,19 +32,23 @@ const groups: Record<string, string[][]> = {
 export default function NavigationMenu() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('');
+
+  const closeMenu = () => setOpen(false);
+
   return (
     <>
       <button
+        type="button"
         className="menuButton"
         onClick={() => setOpen(!open)}
         aria-expanded={open}
         aria-label="Open website menu"
       >
-        ☰
+        {open ? '✕' : '☰'}
       </button>
-      <nav className={open ? 'nav completeNav open' : 'nav completeNav'}>
-        <a className='' href="/">Home</a>
-        <a href="/about-us">About</a>
+      <nav className={`nav completeNav ${open ? 'open' : ''}`}>
+        <a href="/" onClick={closeMenu}>Home</a>
+        <a href="/about-us" onClick={closeMenu}>About</a>
         {Object.entries(groups).map(([name, links]) => (
           <div
             className={active === name ? 'navGroup active' : 'navGroup'}
@@ -60,15 +64,15 @@ export default function NavigationMenu() {
             </button>
             <div>
               {links.map(([label, url]) => (
-                <a href={url} key={url}>
+                <a href={url} key={url} onClick={closeMenu}>
                   {label}
                 </a>
               ))}
             </div>
           </div>
         ))}
-        <a href="/contact">Contact</a>
-        <a className="donateNav" href="/donate">
+        <a href="/contact" onClick={closeMenu}>Contact</a>
+        <a className="donateNav" href="/donate" onClick={closeMenu}>
           Donate
         </a>
       </nav>

@@ -2,7 +2,6 @@ import { listBanks } from '../lib/directories';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
 import BankDirectoryClient from './bank-directory-client';
 import BankResearchForm from './bank-research-form';
-import BankResearchPopup from './bank-research-popup';
 import ResearchAccessGate from './research-access-gate';
 export const dynamic = 'force-dynamic';
 
@@ -37,7 +36,7 @@ export default async function BankDirectory() {
         </blockquote>
       </section>
       <section
-        className="bankResearchVisual"
+        className="bankResearchVisual hidden"
         aria-label="Kav Haribis financial institution research"
       >
         <img
@@ -107,9 +106,9 @@ export default async function BankDirectory() {
           </div>
         </aside>
       </section>
-      <BankResearchPopup />
+      {/* <BankResearchPopup /> */}
       <section
-        className="bankStatusGuide"
+        className="bankStatusGuide hidden"
         aria-labelledby="bank-status-guide-title"
       >
         <div className="bankStatusGuideHeading">

@@ -1,7 +1,7 @@
 .bankAuthorityIntro {
-  max-width: 1400px;
+  max-width: 1440px;
   margin: auto;
-  padding: 65px 6vw 25px;
+  padding: 65px 0vw 25px;
   display: grid;
   grid-template-columns: 1.35fr 0.65fr;
   gap: 38px;

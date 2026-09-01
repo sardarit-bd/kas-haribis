@@ -11,6 +11,7 @@ export default async function Page() {
       title="Kosher Investment Opportunities"
       intro="Explore investment opportunities together with the practical halachic information and disclosures provided for each listing."
     >
+      <div className='hidden'>
       <section className="investHero">
         <div>
           <p className="eyebrow gold">INVEST WITH CLARITY</p>
@@ -30,7 +31,8 @@ export default async function Page() {
           </p>
         </aside>
       </section>
-      <section className="investDirectory">
+      </div>
+      <section className="investDirectory my-10" id="investment-opportunities">
         <div className="investHead">
           <div>
             <p className="eyebrow gold">CURRENT LISTINGS</p>
@@ -164,7 +166,7 @@ export default async function Page() {
           </div>
         )}
       </section>
-      <section className="investDisclaimer">
+      <section className="investDisclaimer mb-10">
         <div>
           <p className="eyebrow">PLEASE NOTE</p>
           <h2>

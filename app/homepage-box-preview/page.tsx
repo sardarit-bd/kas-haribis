@@ -197,7 +197,8 @@ export default function BoxPreview({
           src="/kav-brand/home-hero.png"
           alt="A study desk combining Torah learning and financial research"
         />
-        <div className="homeHeroCopy">
+       
+         <div className="homeHeroCopy lg:pl-7">
           <p className="eyebrow">A CENTER FOR HILCHOS RIBBIS</p>
           <h1>Torah clarity for a complex financial world.</h1>
           <p>
@@ -221,7 +222,7 @@ export default function BoxPreview({
             <span>Community resources</span>
           </div>
         </div>
-        <aside className="homeHeroPanel">
+        <aside className="homeHeroPanel lg:mr-7">
           <div className="homeHeroSeal">
             <span>KH</span>
           </div>
@@ -234,7 +235,9 @@ export default function BoxPreview({
           <a href="/about-us">About Kav Haribis →</a>
           <ServiceRotator />
         </aside>
+       
       </section>
+      <div className='hidden'>
       <nav
         className="quickPreviewStrip liveQuickActions"
         aria-label="Popular Kav Haribis services"
@@ -280,22 +283,15 @@ export default function BoxPreview({
           <em></em>
         </a>
       </nav>
-      <section className="homeMission previewMission">
-        <div className="previewMissionHeading">
+      </div>
+      <section className="container flex items-center gap-10 py-20">
+        <div>
+          <div className="previewMissionHeading">
           <p className="eyebrow gold">OUR MISSION</p>
           <h2>
             Making Hilchos Ribbis understandable, accessible, and practical.
           </h2>
         </div>
-        <figure>
-          <img
-            src="/kav-brand/mission-visual-v2.png"
-            alt="A traditional library passage opening toward a modern financial district"
-          />
-          <figcaption>
-            Timeless Torah guidance for today’s financial world
-          </figcaption>
-        </figure>
         <div className="previewMissionCopy">
           <p>
             Modern financial arrangements can involve mortgages, business
@@ -306,8 +302,17 @@ export default function BoxPreview({
             Kav Haribis combines Torah education with practical research so that
             questions can be recognized early and addressed responsibly.
           </p>
-          <a href="/about-us">Learn about the organization →</a>
+          <a className='pt-6 font-bold' href="/about-us">Learn about the organization →</a>
         </div>
+        </div>
+        <figure>
+          <img
+            className='homemissionimage'
+            src="/kav-brand/mission-visual-v2.png"
+            alt="A traditional library passage opening toward a modern financial district"
+          />
+        </figure>
+        
       </section>
       {cardsPreview && (
         <section
@@ -560,77 +565,7 @@ export default function BoxPreview({
           <span>FINANCIAL EDUCATION</span>
         </a>
       </section>
-      <section className="homeQuestion">
-        <div className="homeQuestionCopy">
-          <p className="eyebrow">BAIS HORAAH</p>
-          <h2>Have a personal Ribbis question?</h2>
-          <p>
-            Submit the relevant details securely. A member of the Bais Horaah
-            team can review your question and respond using your preferred
-            contact information.
-          </p>
-          <ul>
-            <li>Private, organized submission</li>
-            <li>Immediate reference number</li>
-            <li>Urgent questions can also be raised by phone</li>
-          </ul>
-          <a href="/bais-horaah">Visit the complete Bais Horaah page →</a>
-        </div>
-        {reference ? (
-          <div className="homeQuestionSuccess">
-            <span>✓</span>
-            <h3>Question received</h3>
-            <p>Your reference number is</p>
-            <strong>{reference}</strong>
-            <button onClick={() => setReference('')}>
-              Submit another question
-            </button>
-          </div>
-        ) : (
-          <form onSubmit={submitQuestion}>
-            <div className="twoFields">
-              <label>
-                Name
-                <input required name="name" />
-              </label>
-              <label>
-                Email
-                <input required type="email" name="email" />
-              </label>
-            </div>
-            <div className="twoFields">
-              <label>
-                Phone
-                <input name="phone" />
-              </label>
-              <label>
-                Topic
-                <select name="topic">
-                  <option>Loan or mortgage</option>
-                  <option>Business arrangement</option>
-                  <option>Investment</option>
-                  <option>Banking product</option>
-                  <option>Other</option>
-                </select>
-              </label>
-            </div>
-            <label>
-              Your question
-              <textarea
-                required
-                minLength={10}
-                rows={6}
-                name="question"
-                placeholder="Describe the arrangement and relevant details…"
-              />
-            </label>
-            {error && <p className="formError">{error}</p>}
-            <button className="primary" disabled={busy}>
-              {busy ? 'Submitting…' : 'Submit question securely →'}
-            </button>
-          </form>
-        )}
-      </section>
+
       <section className="homeFinalCta">
         <div>
           <p className="eyebrow gold">SUPPORT THE MISSION</p>
@@ -639,10 +574,9 @@ export default function BoxPreview({
           </h2>
         </div>
         <div>
-          <a className="primary" href="/donate">
-            Donate securely
+          <a className="primary" href="/contact">
+            Contact Kav Haribis →
           </a>
-          <a href="/contact">Contact Kav Haribis →</a>
         </div>
       </section>
       <SiteFooter showHeterNotice />

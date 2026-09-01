@@ -11,6 +11,7 @@ export default async function BusinessesPage() {
       title="Businesses With a Heter Iska"
       intro="A growing directory of businesses listed by Kav Haribis as operating with a Heter Iska. Review the information and confirm that the document remains current before relying on a listing."
     >
+      <div className='hidden'>
       <section className="businessIskaIntroduction">
         <div className="businessIntroCopy">
           <p className="eyebrow gold">RESPONSIBLE JEWISH COMMERCE</p>
@@ -38,7 +39,8 @@ export default async function BusinessesPage() {
           <cite>הגאון הרב משה שטרנבוך שליט״א</cite>
         </aside>
       </section>
-      <section className="businessDirectory" id="business-directory">
+      </div>
+      <section className="businessDirectory my-10" id="business-directory">
         <div className="businessDirectoryHeading">
           <div>
             <p className="eyebrow gold">DIRECTORY</p>
@@ -124,7 +126,7 @@ export default async function BusinessesPage() {
           ))}
         </div>
       </section>
-      <section className="businessVerificationNotice">
+      <section className="businessVerificationNotice my-10">
         <div>
           <p className="eyebrow">IMPORTANT GUIDANCE</p>
           <h2>Verify before relying on a listing</h2>

@@ -1,7 +1,7 @@
 .contactServiceHub {
-  max-width: 1400px;
+  max-width: 1440px;
   margin: auto;
-  padding: 66px 6vw 15px;
+  padding: 66px 40px 15px;
 }
 .contactServiceHub > div:first-child {
   max-width: 780px;

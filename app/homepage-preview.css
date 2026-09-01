@@ -1,7 +1,7 @@
 .motionPreview {
   background: #f7f3ea;
   color: #152b3d;
-  overflow: hidden;
+  overflow-x: clip;
 }
 .motionHero {
   min-height: 660px;

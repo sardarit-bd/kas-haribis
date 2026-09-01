@@ -13,6 +13,11 @@ export default async function SavingsPage() {
       intro="Compare savings opportunities together with the practical information Kav Haribis has reviewed. Rates and terms can change, so verify the current details before opening an account."
     >
       
+
+<div className='hidden'>
+
+
+
       <section className="savingsHero">
         <div>
           <p className="eyebrow gold">SAVE WITH CLARITY</p>
@@ -28,7 +33,8 @@ export default async function SavingsPage() {
           <small>Information should be reconfirmed with the institution.</small>
         </aside>
       </section>
-      <section className="savingsDirectory">
+      </div>
+      <section className="savingsDirectory my-10">
         <div className="savingsDirectoryHead">
           <div>
             <p className="eyebrow gold">AVAILABLE ACCOUNTS</p>
@@ -141,7 +147,7 @@ export default async function SavingsPage() {
           })}
         </div>
       </section>
-      <section className="savingsDisclaimer">
+      <section className="savingsDisclaimer mb-10">
         <div>
           <p className="eyebrow">IMPORTANT</p>
           <h2>Confirm terms before depositing funds</h2>

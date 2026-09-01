@@ -23,7 +23,7 @@ export default async function AdminNav() {
     <header className="w-full bg-white border-b border-slate-200 text-slate-800 px-4 lg:px-6 py-3 flex items-center justify-between sticky top-0 z-30 shadow-xs">
       {/* Brand Logo */}
       <a className="flex items-center gap-3 group" href="/admin">
-        <img src={'../../public/logo.png'} alt="logo" className='w-[140px] h-[40px] scale-125 pl-2' />
+        <img src={'/logos/logo.png'} alt="logo" className='w-[140px] h-[40px] scale-125 pl-2' />
       </a>
 
       {/* Right Side: View Site + Logged-in User Profile Header */}

@@ -59,7 +59,7 @@ export default async function Page() {
           <TipForm />
         </section>
       </details>
-      <section className="modernAlertDisclaimer">
+      <section className="modernAlertDisclaimer my-10">
         <div>
           <p className="eyebrow">IMPORTANT</p>
           <h2>Alerts do not replace a personal psak</h2>
