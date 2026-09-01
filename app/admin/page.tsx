@@ -20,6 +20,7 @@ async function getStats(db: any) {
     donations: 0,
   };
 
+  
   try {
     const res = await db.prepare('SELECT COUNT(*) as count FROM contact_submissions').first();
     stats.submissions = Number(res?.count || 0);
