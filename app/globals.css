@@ -39,10 +39,10 @@ a {
   margin-right: auto;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 1440px) {
   .container {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 30px!important;
+    padding-right: 30px!important;
   }
 }
 

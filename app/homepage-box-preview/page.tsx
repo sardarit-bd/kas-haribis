@@ -284,7 +284,9 @@ export default function BoxPreview({
         </a>
       </nav>
       </div>
-      <section className="container flex items-center gap-10 py-20">
+      <section className="container ">
+
+        <div className='flex flex-col lg:flex-row items-center gap-10 py-20 px-4 md:px-10 lg:px-10 xl:px-0'>
         <div>
           <div className="previewMissionHeading">
           <p className="eyebrow gold">OUR MISSION</p>
@@ -312,7 +314,7 @@ export default function BoxPreview({
             alt="A traditional library passage opening toward a modern financial district"
           />
         </figure>
-        
+        </div>
       </section>
       {cardsPreview && (
         <section
@@ -390,7 +392,8 @@ export default function BoxPreview({
           })}
         </div>
       </section>
-      <section className="homeCertification">
+      <section className=" bg-[#e9dfca] ">
+      <section className="homeCertification container">
         <div>
           <small>KASHRUS OF INVESTMENTS</small>
           <h2>Request a structured investment certification review.</h2>
@@ -417,6 +420,7 @@ export default function BoxPreview({
             04 <b>Written outcome</b>
           </span>
         </aside>
+      </section>
       </section>
       <section className="homeBankFeature">
         <div className="homeBankVisual">
@@ -475,7 +479,8 @@ export default function BoxPreview({
           ))}
         </div>
       </section>
-      <section className="boxPreviewMembership">
+      <div className='hidden'>
+        <section className="boxPreviewMembership">
         <div className="boxPreviewMembershipCopy">
           <p className="eyebrow gold">KAV HARIBIS MEMBERSHIP</p>
           <h2>Your Kav Haribis membership, all in one place.</h2>
@@ -491,7 +496,7 @@ export default function BoxPreview({
             <a href="/membership/account">Member login →</a>
           </div>
         </div>
-        <aside>
+        <aside className=''>
           <span>FREE MEMBERSHIP</span>
           <b>
             Read.
@@ -503,6 +508,7 @@ export default function BoxPreview({
           <small>Newsletters · Alerts · Orders</small>
         </aside>
       </section>
+    
       <section className="boxPreviewPrograms">
         <div className="boxPreviewProgramsCopy">
           <p className="eyebrow gold">EDUCATION &amp; OUTREACH</p>
@@ -542,7 +548,8 @@ export default function BoxPreview({
           </article>
         </aside>
       </section>
-      <section className="homeImpactStrip">
+      </div>
+      <section className="homeImpactStrip container">
         <a href="/programs">
           <img
             src="/kav-impact/student-shiur.jpg"
