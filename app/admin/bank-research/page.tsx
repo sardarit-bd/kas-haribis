@@ -1,8 +1,8 @@
-import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
+import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
+import { canAccessSection, isOwnerEmail } from "../../lib/admin-access";
 import { ensureBankResearch } from '../../lib/directories';
 import { ensureResearchAccess } from '../../lib/research-access';
-import { canAccessSection } from "../../lib/admin-access";
 import BankResearchReview from './review-manager';
 export const dynamic = 'force-dynamic';
 
@@ -15,6 +15,7 @@ export default async function BankResearchAdmin() {
   const { env } = await import('cloudflare:workers');
   const user = await requireChatGPTUser('/admin/bank-research');
   const email = user.email.toLowerCase();
+  const owner = isOwnerEmail(email);
   await Promise.all([ensureBankResearch(env.DB), ensureResearchAccess(env.DB)]);
   
   const reviewer =

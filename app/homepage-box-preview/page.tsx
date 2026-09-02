@@ -2,6 +2,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import ServiceRotator from '../shared/service-rotator';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
+import SubscriptionForm from '../ribis-alerts/subscription-form';
 
 const offerings = [
   [
@@ -586,6 +587,10 @@ export default function BoxPreview({
           </a>
         </div>
       </section>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SubscriptionForm />
+      </div>
       <SiteFooter showHeterNotice />
     </main>
   );
