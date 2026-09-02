@@ -143,22 +143,249 @@
   color: #a87c2a;
 }
 .storeCheckout .checkoutCard {
-  padding: 27px;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 30px rgba(16, 42, 67, 0.05);
+}
+.checkoutCardHeader {
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid #f1f5f9;
+}
+.checkoutCardHeader h2 {
+  font: 26px Georgia, serif;
+  color: #102a43;
+  margin: 0;
+}
+.checkoutCardHeader p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #64748b;
+}
+.formGroupSection {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+.formGroupSection.shippingFieldset {
+  margin: 20px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.groupHeader {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #cbd5e1;
+}
+.stepBadge {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #102a43;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.groupHeader h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #102a43;
+}
+.paymentAcceptedChips {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+.paymentAcceptedChips span {
+  padding: 2px 6px;
+  background: #e2e8f0;
+  color: #475569;
+  font-size: 10px;
+  font-weight: 800;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+.requiredStar {
+  color: #e11d48;
+  font-weight: 900;
+}
+.paymentForm label {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+}
+.paymentForm input,
+.paymentForm select {
+  width: 100%;
+  height: 46px;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  font-size: 14px;
+  color: #0f172a;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.iframeCardField {
+  width: 100%;
+  box-sizing: border-box;
+}
+.ifieldWrapper {
+  width: 100%;
+  height: 46px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.paymentForm input:focus,
+.paymentForm select:focus,
+.ifieldWrapper:focus-within {
+  border-color: #c69b46;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(198, 155, 70, 0.18);
+}
+.ifieldWrapper iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 38px;
+  background: #ffffff;
+  border: 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  display: block;
+  box-sizing: border-box;
+}
+.cardRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.expiry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.expirySlash {
+  color: #94a3b8;
+  font-weight: 700;
 }
 .shippingRow {
   display: grid;
   grid-template-columns: 1fr 90px 100px;
+  gap: 10px;
+}
+.paymentButton {
+  width: 100%;
+  margin-top: 10px;
+  padding: 15px;
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #102a43 0%, #1e4b7a 100%);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(16, 42, 67, 0.2);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.paymentButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 42, 67, 0.3);
+  background: linear-gradient(135deg, #0d2338 0%, #183e66 100%);
+}
+.paymentButton:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+.processingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 8px;
 }
-.paymentForm fieldset {
-  margin: 15px 0;
-  padding: 14px;
-  border: 1px solid #d9dfdf;
+.btnSpinner,
+.loadingSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
-.paymentForm legend {
-  color: #98702a;
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.secureNoteBanner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 12px 16px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  color: #166534;
+}
+.secureNoteBanner .lockIcon {
+  font-size: 20px;
+}
+.secureNoteBanner strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #15803d;
+}
+.secureNoteBanner p {
+  margin: 2px 0 0;
   font-size: 11px;
-  font-weight: 900;
+  color: #166534;
+}
+.formError {
+  margin: 12px 0;
+  padding: 10px 14px;
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #be123c;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.paymentUnavailableState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #64748b;
 }
 .storeCheckoutSuccess,
 .emptyCart {

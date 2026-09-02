@@ -201,113 +201,166 @@ export default function StoreCheckout({
           </div>
         </section>
         <section className="checkoutCard">
-          <h2>Customer & payment</h2>
+          <div className="checkoutCardHeader">
+            <h2>Customer & Payment Details</h2>
+            <p>Enter your contact, shipping, and card info to place order</p>
+          </div>
           {ready ? (
             <form className="paymentForm" onSubmit={submit}>
-              <div className="twoFields">
-                <label>
-                  Name
-                  <input name="name" required autoComplete="name" />
-                </label>
-                <label>
-                  Email
-                  <input
-                    name="email"
-                    type="email"
-                    required
-                    autoComplete="email"
-                  />
+              <div className="formGroupSection">
+                <div className="groupHeader">
+                  <span className="stepBadge">1</span>
+                  <h3>Contact Information</h3>
+                </div>
+                <div className="twoFields">
+                  <label>
+                    <span>Full Name <b className="requiredStar">*</b></span>
+                    <input name="name" required autoComplete="name" placeholder="e.g. John Doe" />
+                  </label>
+                  <label>
+                    <span>Email Address <b className="requiredStar">*</b></span>
+                    <input
+                      name="email"
+                      type="email"
+                      required
+                      autoComplete="email"
+                      placeholder="john@example.com"
+                    />
+                  </label>
+                </div>
+                <label className="phoneField">
+                  <span>Phone Number</span>
+                  <input name="phone" type="tel" autoComplete="tel" placeholder="(555) 000-0000" />
                 </label>
               </div>
-              <label>
-                Phone
-                <input name="phone" type="tel" autoComplete="tel" />
-              </label>
+
               {physical && (
-                <fieldset>
-                  <legend>Shipping address</legend>
-                  <label>
-                    Street address
+                <div className="formGroupSection shippingFieldset">
+                  <div className="groupHeader">
+                    <span className="stepBadge">2</span>
+                    <h3>Shipping Address</h3>
+                  </div>
+                  <label className="fieldFull">
+                    <span>Street Address <b className="requiredStar">*</b></span>
                     <input
                       name="address"
                       required
                       autoComplete="street-address"
+                      placeholder="123 Main Street, Apt 4B"
                     />
                   </label>
                   <div className="shippingRow">
                     <label>
-                      City
-                      <input name="city" required />
+                      <span>City <b className="requiredStar">*</b></span>
+                      <input name="city" required placeholder="New York" />
                     </label>
                     <label>
-                      State
-                      <input name="state" required />
+                      <span>State <b className="requiredStar">*</b></span>
+                      <input name="state" required placeholder="NY" />
                     </label>
                     <label>
-                      ZIP
-                      <input name="zip" required inputMode="numeric" />
+                      <span>ZIP <b className="requiredStar">*</b></span>
+                      <input name="zip" required inputMode="numeric" placeholder="10001" />
                     </label>
                   </div>
-                </fieldset>
+                </div>
               )}
-              <label>
-                Card number
-                <iframe
-                  title="Secure card number"
-                  data-ifields-id="card-number"
-                  data-ifields-placeholder="Card number"
-                  src="https://cdn.cardknox.com/ifields/3.5.2607.1401/ifield.htm"
-                />
-                <input type="hidden" data-ifields-id="card-number-token" />
-              </label>
-              <div className="cardRow">
-                <label>
-                  Expiration
-                  <div className="expiry">
-                    <select name="month" required defaultValue="">
-                      <option value="" disabled>
-                        MM
-                      </option>
-                      {Array.from({ length: 12 }, (_, i) =>
-                        String(i + 1).padStart(2, '0'),
-                      ).map((x) => (
-                        <option key={x}>{x}</option>
-                      ))}
-                    </select>
-                    <b>/</b>
-                    <select name="year" required defaultValue="">
-                      <option value="" disabled>
-                        YY
-                      </option>
-                      {Array.from({ length: 12 }, (_, i) =>
-                        String(new Date().getFullYear() + i).slice(-2),
-                      ).map((x) => (
-                        <option key={x}>{x}</option>
-                      ))}
-                    </select>
+
+              <div className="formGroupSection paymentFieldGroup">
+                <div className="groupHeader">
+                  <span className="stepBadge">{physical ? '3' : '2'}</span>
+                  <h3>Payment Method</h3>
+                  <div className="paymentAcceptedChips">
+                    <span>VISA</span>
+                    <span>MC</span>
+                    <span>AMEX</span>
+                    <span>DISC</span>
                   </div>
+                </div>
+
+                <label className="iframeCardField">
+                  <span>Card Number <b className="requiredStar">*</b></span>
+                  <div className="ifieldWrapper">
+                    <iframe
+                      className='border border-red-900'
+                      title="Secure card number"
+                      data-ifields-id="card-number"
+                      data-ifields-placeholder="4111 •••• •••• 1111"
+                      src="https://cdn.cardknox.com/ifields/3.5.2607.1401/ifield.htm"
+                    />
+                  </div>
+                  <input type="hidden" data-ifields-id="card-number-token" />
                 </label>
-                <label>
-                  Security code
-                  <iframe
-                    title="Secure card security code"
-                    data-ifields-id="cvv"
-                    data-ifields-placeholder="CVV"
-                    src="https://cdn.cardknox.com/ifields/3.5.2607.1401/ifield.htm"
-                  />
-                  <input type="hidden" data-ifields-id="cvv-token" />
-                </label>
+
+                <div className="cardRow">
+                  <label className="expiryField">
+                    <span>Expiration Date <b className="requiredStar">*</b></span>
+                    <div className="expiry">
+                      <select name="month" required defaultValue="">
+                        <option value="" disabled>
+                          MM
+                        </option>
+                        {Array.from({ length: 12 }, (_, i) =>
+                          String(i + 1).padStart(2, '0'),
+                        ).map((x) => (
+                          <option key={x}>{x}</option>
+                        ))}
+                      </select>
+                      <b className="expirySlash">/</b>
+                      <select name="year" required defaultValue="">
+                        <option value="" disabled>
+                          YY
+                        </option>
+                        {Array.from({ length: 12 }, (_, i) =>
+                          String(new Date().getFullYear() + i).slice(-2),
+                        ).map((x) => (
+                          <option key={x}>{x}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </label>
+
+                  <label className="cvvField">
+                    <span>Security Code (CVV) <b className="requiredStar">*</b></span>
+                    <div className="ifieldWrapper">
+                      <iframe
+                        className=''
+                        title="Secure card security code"
+                        data-ifields-id="cvv"
+                        data-ifields-placeholder="CVV"
+                        src="https://cdn.cardknox.com/ifields/3.5.2607.1401/ifield.htm"
+                      />
+                    </div>
+                    <input type="hidden" data-ifields-id="cvv-token" />
+                  </label>
+                </div>
               </div>
-              {message && <p className="formError">{message}</p>}
+
+              {message && <p className="formError">⚠️ {message}</p>}
+
               <button className="primary paymentButton" disabled={working}>
-                {working ? 'PROCESSING…' : `PAY $${total.toFixed(2)}`}
+                {working ? (
+                  <span className="processingState">
+                    <span className="btnSpinner" /> PROCESSING PAYMENT…
+                  </span>
+                ) : (
+                  `PAY $${total.toFixed(2)} NOW`
+                )}
               </button>
-              <small className="secureNote">
-                🔒 Secure payment powered by Cardknox/Sola
-              </small>
+
+              <div className="secureNoteBanner">
+                <span className="lockIcon">🔒</span>
+                <div>
+                  <strong>256-Bit Encrypted Secure Payment</strong>
+                  <p>Powered by Cardknox / Sola Merchant Gateway</p>
+                </div>
+              </div>
             </form>
           ) : (
-            <p>Secure checkout is loading or payment setup is unavailable.</p>
+            <div className="paymentUnavailableState">
+              <span className="loadingSpinner" />
+              <p>Secure payment form is initializing...</p>
+            </div>
           )}
         </section>
       </div>
