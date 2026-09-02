@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 
 type Section = {
@@ -32,6 +33,7 @@ export default function StaffAccessManager({
   initialStaff: Staff[];
   sections: Section[];
 }) {
+  const router = useRouter();
   const [staff, setStaff] = useState<Staff[]>(initialStaff);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStaff, setSelectedStaff] = useState<Staff | null>(null);
@@ -39,15 +41,17 @@ export default function StaffAccessManager({
   const [message, setMessage] = useState('');
 
   async function load() {
-    const response = await fetch('/api/admin-staff-access');
-    const json = (await response.json()) as any;
-    const list = json.staff || [];
-    setStaff(list);
-    // If modal is open, keep selectedStaff in sync
-    if (selectedStaff) {
-      const updated = list.find((s: Staff) => s.email === selectedStaff.email);
-      if (updated) setSelectedStaff(updated);
-    }
+    try {
+      const response = await fetch('/api/admin-staff-access');
+      const json = (await response.json()) as any;
+      const list = json.staff || [];
+      setStaff(list);
+      // If modal is open, keep selectedStaff in sync
+      if (selectedStaff) {
+        const updated = list.find((s: Staff) => s.email === selectedStaff.email);
+        if (updated) setSelectedStaff(updated);
+      }
+    } catch {}
   }
 
   async function add(event: FormEvent<HTMLFormElement>) {
@@ -77,7 +81,8 @@ export default function StaffAccessManager({
     form.reset();
     setShowAddModal(false);
     await load();
-    setMessage('Staff access saved.');
+    router.refresh();
+    setMessage('New staff access created successfully.');
   }
 
   async function updateModalStaff(
@@ -110,6 +115,7 @@ export default function StaffAccessManager({
     }
 
     await load();
+    router.refresh();
     setMessage(`Updated staff member details for ${person.email}.`);
     setSelectedStaff(null);
   }
@@ -126,6 +132,7 @@ export default function StaffAccessManager({
       }),
     });
     await load();
+    router.refresh();
     setMessage(`Access ${person.active ? 'paused' : 'restored'} for ${person.email}.`);
   }
 
@@ -140,6 +147,7 @@ export default function StaffAccessManager({
       setSelectedStaff(null);
     }
     await load();
+    router.refresh();
     setMessage(`Removed staff member ${person.email}.`);
   }
 
