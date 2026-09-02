@@ -15,13 +15,17 @@ function fromBase64(value: string) {
   return Uint8Array.from(atob(value), (character) => character.charCodeAt(0));
 }
 
-async function decrypt(value: string, keyHex: string) {
+async function decrypt(value: string, secret: string) {
   const [ivText, encryptedText] = value.split('.');
   if (!ivText || !encryptedText)
     throw new Error('Invalid encrypted payment setting');
+  const keyBuffer = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(secret),
+  );
   const key = await crypto.subtle.importKey(
     'raw',
-    fromHex(keyHex),
+    keyBuffer,
     'AES-GCM',
     false,
     ['decrypt'],
@@ -46,7 +50,11 @@ export async function getPaymentSettings() {
   ).all();
   const settings: Record<string, string> = {};
   for (const row of result.results as Array<{ name: string; value: string }>) {
-    settings[row.name] = await decrypt(row.value, env.CARDKNOX_SETTINGS_KEY);
+    try {
+      settings[row.name] = await decrypt(row.value, env.CARDKNOX_SETTINGS_KEY);
+    } catch {
+      settings[row.name] = '';
+    }
   }
   return {
     env,

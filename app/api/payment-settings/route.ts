@@ -10,14 +10,15 @@ async function table(db: any) {
     )
     .run();
 }
-function bytes(hex: string) {
-  return Uint8Array.from(hex.match(/.{2}/g) || [], (b) => parseInt(b, 16));
-}
-async function encrypt(value: string, keyHex: string) {
+async function encrypt(value: string, secret: string) {
   const iv = crypto.getRandomValues(new Uint8Array(12));
+  const keyBuffer = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(secret),
+  );
   const key = await crypto.subtle.importKey(
     'raw',
-    bytes(keyHex),
+    keyBuffer,
     'AES-GCM',
     false,
     ['encrypt'],

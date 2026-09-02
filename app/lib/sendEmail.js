@@ -1,9 +1,9 @@
 import nodemailer from "nodemailer";
 import {
-  contactSubmissionEmailTemplate,
-  statusUpdateEmailTemplate,
   baisHoraahQuestionEmailTemplate,
   certificationApplicationEmailTemplate,
+  contactSubmissionEmailTemplate,
+  statusUpdateEmailTemplate,
 } from "./emailTemplates.js";
 
 
