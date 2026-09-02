@@ -1,6 +1,7 @@
-import { getRequestEmail, isOwnerRequest } from '../../lib/request-auth';
-import { isOwnerEmail } from '../../lib/admin-access';
+import { ADMIN_OWNER } from '../../lib/admin-access';
 import { ensureCertificationApplications } from '../../lib/certification-applications';
+import { isOwnerRequest } from '../../lib/request-auth';
+import sendEmail from '../../lib/sendEmail';
 
 const clean = (value: unknown, length = 5000) =>
     String(value ?? '')
@@ -58,6 +59,16 @@ export async function POST(request: Request) {
       httpMetadata: { contentType: file.type },
     });
   }
+  const phone = clean(form.get('phone'), 100),
+    website = clean(form.get('website'), 1000),
+    investment_type = clean(form.get('investment_type'), 200),
+    offering_name = clean(form.get('offering_name'), 300),
+    minimum_investment = clean(form.get('minimum_investment'), 100),
+    investor_profile = clean(form.get('investor_profile'), 3000),
+    current_heter_iska = clean(form.get('current_heter_iska'), 100),
+    desired_timeline = clean(form.get('desired_timeline'), 200),
+    response_method = clean(form.get('response_method'), 100) || 'Email';
+
   await env.DB.prepare(
     "INSERT INTO certification_applications(id,reference,company_name,contact_name,email,phone,website,investment_type,offering_name,minimum_investment,structure_details,investor_profile,current_heter_iska,desired_timeline,response_method,status,notes,attachment_key,attachment_name,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'New','',?,?,?,?)",
   )
@@ -67,22 +78,55 @@ export async function POST(request: Request) {
       company,
       name,
       email,
-      clean(form.get('phone'), 100),
-      clean(form.get('website'), 1000),
-      clean(form.get('investment_type'), 200),
-      clean(form.get('offering_name'), 300),
-      clean(form.get('minimum_investment'), 100),
+      phone,
+      website,
+      investment_type,
+      offering_name,
+      minimum_investment,
       details,
-      clean(form.get('investor_profile'), 3000),
-      clean(form.get('current_heter_iska'), 100),
-      clean(form.get('desired_timeline'), 200),
-      clean(form.get('response_method'), 100) || 'Email',
+      investor_profile,
+      current_heter_iska,
+      desired_timeline,
+      response_method,
       key,
       fileName,
       now,
       now,
     )
     .run();
+
+  const emailData = {
+    id,
+    reference,
+    company_name: company,
+    contact_name: name,
+    email,
+    phone,
+    website,
+    investment_type,
+    offering_name,
+    minimum_investment,
+    structure_details: details,
+    investor_profile,
+    current_heter_iska,
+    desired_timeline,
+    response_method,
+    attachment_key: key,
+    attachment_name: fileName,
+    created_at: now,
+  };
+
+  try {
+    await sendEmail(
+      ADMIN_OWNER,
+      `New Investment Certification Application: ${company} (${reference})`,
+      emailData,
+      'certification-application',
+    );
+  } catch (err) {
+    console.error('Error sending Investment Certification application email:', err);
+  }
+
   return Response.json({ reference });
 }
 export async function GET(request: Request) {

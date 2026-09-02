@@ -3,6 +3,7 @@ import {
   contactSubmissionEmailTemplate,
   statusUpdateEmailTemplate,
   baisHoraahQuestionEmailTemplate,
+  certificationApplicationEmailTemplate,
 } from "./emailTemplates.js";
 
 
@@ -53,6 +54,9 @@ const sendEmail = async (emails, subject, data, templateType) => {
       case "bais-horaah-question":
         htmlTemplate = baisHoraahQuestionEmailTemplate(data);
         break;
+      case "certification-application":
+        htmlTemplate = certificationApplicationEmailTemplate(data);
+        break;
       default:
         throw new Error(`Invalid email template type: ${templateType}`);
     }
@@ -60,8 +64,7 @@ const sendEmail = async (emails, subject, data, templateType) => {
     // 3. Mail Options Setup
     const mailOptions = {
       from: `"Kav Haribis" <${user}>`,
-      to: recipientList.length === 1 ? recipientList[0] : undefined,
-      bcc: recipientList.length > 1 ? recipientList : undefined,
+      to: recipientList.join(', '),
       subject,
       html: htmlTemplate,
     };

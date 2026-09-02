@@ -233,3 +233,117 @@ export const baisHoraahQuestionEmailTemplate = (data = {}) => {
         </div>
     `;
 };
+
+export const certificationApplicationEmailTemplate = (data = {}) => {
+  return `
+        <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+            <div style="max-width: 650px; margin: 0 auto; background-color: #ffffff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                
+                <!-- Header -->
+                <div style="border-bottom: 2px solid #2b6cb0; padding-bottom: 15px; margin-bottom: 20px;">
+                    <span style="background-color: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; padding: 5px 12px; font-size: 12px; font-weight: bold; border-radius: 4px; display: inline-block;">
+                        ${sanitize(data.reference) || "NEW APPLICATION"}
+                    </span>
+                    <h2 style="color: #102a43; margin: 12px 0 5px 0; font-size: 20px;">
+                        New Investment Certification Application
+                    </h2>
+                    <p style="color: #627d98; font-size: 13px; margin: 0;">
+                        Company: <strong>${sanitize(data.company_name) || "N/A"}</strong>
+                    </p>
+                </div>
+
+                <!-- Structure Details Box -->
+                ${data.structure_details ? `
+                <div style="background-color: #f8fafc; border-left: 4px solid #2b6cb0; padding: 16px; margin-bottom: 22px; border-radius: 4px;">
+                    <p style="font-size: 11px; font-weight: bold; color: #2b6cb0; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.5px;">Investment Structure Details</p>
+                    <p style="color: #102a43; font-size: 14px; margin: 0; line-height: 1.6; white-space: pre-line;">${sanitize(data.structure_details)}</p>
+                </div>
+                ` : ''}
+
+                <!-- Company & Applicant Information -->
+                <h3 style="color: #334e68; font-size: 15px; border-bottom: 1px solid #e4e7eb; padding-bottom: 8px; margin-bottom: 15px;">Applicant & Investment Information</h3>
+                
+                <table style="width: 100%; border-collapse: collapse; font-size: 14px; color: #486581;">
+                    <tr>
+                        <td style="padding: 8px 0; width: 40%;"><strong>Company Name:</strong></td>
+                        <td style="padding: 8px 0; width: 60%; color: #102a43;"><strong>${sanitize(data.company_name) || "N/A"}</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Contact Name:</strong></td>
+                        <td style="padding: 8px 0; color: #102a43;">${sanitize(data.contact_name) || "N/A"}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Email Address:</strong></td>
+                        <td style="padding: 8px 0;"><a href="mailto:${sanitize(data.email)}" style="color: #007bff; text-decoration: none;">${sanitize(data.email) || "N/A"}</a></td>
+                    </tr>
+                    ${data.phone ? `
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Phone Number:</strong></td>
+                        <td style="padding: 8px 0; color: #102a43;">${sanitize(data.phone)}</td>
+                    </tr>` : ''}
+                    ${data.website ? `
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Website:</strong></td>
+                        <td style="padding: 8px 0;"><a href="${sanitize(data.website)}" target="_blank" style="color: #007bff;">${sanitize(data.website)}</a></td>
+                    </tr>` : ''}
+                    ${data.investment_type ? `
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Investment Type:</strong></td>
+                        <td style="padding: 8px 0; color: #102a43;">${sanitize(data.investment_type)}</td>
+                    </tr>` : ''}
+                    ${data.offering_name ? `
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Offering Name:</strong></td>
+                        <td style="padding: 8px 0; color: #102a43;">${sanitize(data.offering_name)}</td>
+                    </tr>` : ''}
+                    ${data.minimum_investment ? `
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Minimum Investment:</strong></td>
+                        <td style="padding: 8px 0; color: #102a43;">${sanitize(data.minimum_investment)}</td>
+                    </tr>` : ''}
+                    ${data.investor_profile ? `
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Investor Profile:</strong></td>
+                        <td style="padding: 8px 0; color: #102a43;">${sanitize(data.investor_profile)}</td>
+                    </tr>` : ''}
+                    ${data.current_heter_iska ? `
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Current Heter Iska:</strong></td>
+                        <td style="padding: 8px 0; color: #102a43;">${sanitize(data.current_heter_iska)}</td>
+                    </tr>` : ''}
+                    ${data.desired_timeline ? `
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Desired Timeline:</strong></td>
+                        <td style="padding: 8px 0; color: #102a43;">${sanitize(data.desired_timeline)}</td>
+                    </tr>` : ''}
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Preferred Response:</strong></td>
+                        <td style="padding: 8px 0; color: #102a43;">${sanitize(data.response_method) || "Email"}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Submitted At:</strong></td>
+                        <td style="padding: 8px 0; color: #102a43;">${sanitize(data.created_at)}</td>
+                    </tr>
+                </table>
+
+                <!-- Attachment Section -->
+                ${data.attachment_key ? `
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+                    <p style="font-size: 14px; margin-bottom: 8px;"><strong>Supporting Document:</strong></p>
+                    <span style="font-size: 13px; color: #102a43; font-weight: bold;">
+                        📎 ${sanitize(data.attachment_name) || "Attachment Uploaded"}
+                    </span>
+                </div>
+                ` : ''}
+
+                <!-- Footer Note -->
+                <div style="border-top: 1px solid #e4e7eb; padding-top: 15px; margin-top: 25px; text-align: center;">
+                    <p style="color: #829ab1; font-size: 12px; margin: 0;">
+                        This email was automatically generated by Kav Haribis Investment Certification System.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    `;
+};
