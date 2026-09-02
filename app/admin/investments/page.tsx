@@ -3,7 +3,7 @@ import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { listInvestments } from '../../lib/directories';
 import Manager from './investment-manager';
 export const dynamic = 'force-dynamic';
-import { isOwnerEmail } from "../../lib/admin-access";
+import { canAccessSection } from "../../lib/admin-access";
 
 const breadcrumbs = [
   { label: 'Dashboard', href: '/admin' },
@@ -11,8 +11,9 @@ const breadcrumbs = [
 ];
 
 export default async function Page() {
+  const { env } = await import('cloudflare:workers');
   const u = await requireChatGPTUser('/admin/investments');
-  if (!isOwnerEmail(u.email))
+  if (!(await canAccessSection(env.DB, u.email, 'investments')))
     return (
       <main className="adminPage">
         <div className="adminShell">
@@ -20,7 +21,6 @@ export default async function Page() {
         </div>
       </main>
     );
-  const { env } = await import('cloudflare:workers');
   return (
     <main className="adminPage">
       <div className="adminShell">

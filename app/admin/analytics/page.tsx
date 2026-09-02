@@ -1,6 +1,6 @@
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
-import { isOwnerEmail } from "../../lib/admin-access";
+import { canAccessSection } from "../../lib/admin-access";
 import { ensureAnalytics } from '../../lib/analytics';
 export const dynamic = 'force-dynamic';
 const label = (p: string) =>
@@ -32,8 +32,9 @@ export default async function AnalyticsAdmin({
 }: {
   searchParams: Promise<{ range?: string }>;
 }) {
+  const { env } = await import('cloudflare:workers');
   const u = await requireChatGPTUser('/admin/analytics');
-  if (!isOwnerEmail(u.email))
+  if (!(await canAccessSection(env.DB, u.email, 'analytics')))
     return (
       <main className="adminPage">
         <div className="adminShell">
@@ -41,7 +42,6 @@ export default async function AnalyticsAdmin({
         </div>
       </main>
     );
-  const { env } = await import('cloudflare:workers');
   await ensureAnalytics(env.DB);
   const params = await searchParams,
     daysBack = params.range === '30d' ? 30 : params.range === '90d' ? 90 : 7,

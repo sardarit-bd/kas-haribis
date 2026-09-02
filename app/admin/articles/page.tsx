@@ -1,7 +1,7 @@
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import { listArticles } from '../../lib/directories';
-import { isOwnerEmail } from "../../lib/admin-access";
+import { canAccessSection } from "../../lib/admin-access";
 import ArticleManager from './article-manager';
 export const dynamic = 'force-dynamic';
 
@@ -12,7 +12,8 @@ const breadcrumbs = [
 
 export default async function Page() {
   const u = await requireChatGPTUser('/admin/articles');
-  if (!isOwnerEmail(u.email))
+  const { env } = await import('cloudflare:workers');
+  if (!(await canAccessSection(env.DB, u.email, 'articles')))
     return (
       <main className="adminPage">
         <div className="adminShell">
@@ -20,7 +21,6 @@ export default async function Page() {
         </div>
       </main>
     );
-  const { env } = await import('cloudflare:workers');
   return (
     <main className="adminPage">
       <div className="adminShell">

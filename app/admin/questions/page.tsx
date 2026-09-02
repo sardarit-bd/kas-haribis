@@ -1,6 +1,6 @@
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
-import { isOwnerEmail } from "../../lib/admin-access";
+import { canAccessSection } from "../../lib/admin-access";
 
 export const dynamic = 'force-dynamic';
 
@@ -11,7 +11,8 @@ const breadcrumbs = [
 
 export default async function QuestionsAdmin() {
   const user = await requireChatGPTUser('/admin/questions');
-  if (!isOwnerEmail(user.email))
+  const { env } = await import('cloudflare:workers');
+  if (!(await canAccessSection(env.DB, user.email, 'questions')))
     return (
       <main className="adminPage">
         <div className="adminShell">
@@ -19,7 +20,6 @@ export default async function QuestionsAdmin() {
         </div>
       </main>
     );
-  const { env } = await import('cloudflare:workers');
   await env.DB.prepare(
     `CREATE TABLE IF NOT EXISTS questions (id INTEGER PRIMARY KEY AUTOINCREMENT, reference TEXT NOT NULL UNIQUE, name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT, topic TEXT NOT NULL, question TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'New', notes TEXT, created_at TEXT NOT NULL)`,
   ).run();

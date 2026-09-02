@@ -1,6 +1,6 @@
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
-import { isOwnerEmail } from "../../lib/admin-access";
+import { canAccessSection } from "../../lib/admin-access";
 
 export const dynamic = 'force-dynamic';
 
@@ -11,16 +11,16 @@ const breadcrumbs = [
 
 export default async function DonationsAdmin() {
   const user = await requireChatGPTUser('/admin/donations');
-  if (!isOwnerEmail(user.email))
+  const { env } = await import('cloudflare:workers');
+  if (!(await canAccessSection(env.DB, user.email, 'donations')))
     return (
       <main className="adminPage">
         <div className="adminShell">
           <h1>Administrator access</h1>
-          <p>This account is not authorized.</p>
+          <p>This account is not authorized to access this section.</p>
         </div>
       </main>
     );
-  const { env } = await import('cloudflare:workers');
   await env.DB.prepare(
     'CREATE TABLE IF NOT EXISTS payment_records (id TEXT PRIMARY KEY, kind TEXT NOT NULL, amount REAL NOT NULL, name TEXT NOT NULL, email TEXT NOT NULL, dedication TEXT, anonymous INTEGER NOT NULL DEFAULT 0, status TEXT NOT NULL, reference TEXT, download_token TEXT, created_at TEXT NOT NULL)',
   ).run();

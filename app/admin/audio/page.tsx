@@ -2,7 +2,7 @@ import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import { listAudio } from '../../lib/directories';
 import AudioManager from './audio-manager';
-import { isOwnerEmail } from "../../lib/admin-access";
+import { canAccessSection } from "../../lib/admin-access";
 export const dynamic = 'force-dynamic';
 
 const breadcrumbs = [
@@ -11,8 +11,9 @@ const breadcrumbs = [
 ];
 
 export default async function AudioAdmin() {
+  const { env } = await import('cloudflare:workers');
   const user = await requireChatGPTUser('/admin/audio');
-  if (!isOwnerEmail(user.email))
+  if (!(await canAccessSection(env.DB, user.email, 'audio')))
     return (
       <main className="adminPage">
         <div className="adminShell">
@@ -20,7 +21,6 @@ export default async function AudioAdmin() {
         </div>
       </main>
     );
-  const { env } = await import('cloudflare:workers');
   const audios = await listAudio(env.DB);
   return (
     <main className="adminPage">

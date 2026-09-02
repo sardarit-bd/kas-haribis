@@ -5,10 +5,26 @@ export default async function AdminNav() {
   const user = await getCurrentUser();
   const logoutHref = signOutPath('/sign-in');
 
-  const userName = user?.displayName || user?.fullName || 'Admin User';
   const userEmail = user?.email || '';
   const isOwner = isOwnerEmail(userEmail);
-  const role = isOwner ? 'Super Admin' : 'Administrator';
+
+  let staffName = '';
+  if (!isOwner && userEmail) {
+    try {
+      const { env } = await import('cloudflare:workers');
+      const row = (await env.DB.prepare(
+        'SELECT name FROM admin_staff_access WHERE LOWER(email)=? AND active=1',
+      )
+        .bind(userEmail.trim().toLowerCase())
+        .first()) as any;
+      if (row?.name) {
+        staffName = String(row.name).trim();
+      }
+    } catch {}
+  }
+
+  const userName = staffName || user?.displayName || user?.fullName || 'User';
+  const role = isOwner ? 'Administrator' : 'Staff';
 
   // Extract initials for avatar (e.g. "Md Emon Hossen" -> "ME")
   const initials =

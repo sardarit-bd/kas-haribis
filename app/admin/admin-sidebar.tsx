@@ -233,9 +233,23 @@ export const ADMIN_LINKS: AdminLink[] = [
   },
 ];
 
-export default function AdminSidebar() {
+export default function AdminSidebar({
+  isOwner = true,
+  permissions = [],
+}: {
+  isOwner?: boolean;
+  permissions?: string[];
+}) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const visibleLinks = ADMIN_LINKS.filter((link) => {
+    if (link.href === '/admin') return isOwner;
+    if (isOwner) return true;
+    if (link.href === '/admin/staff-access') return false;
+    const key = link.href.split('/admin/')[1];
+    return key ? permissions.includes(key) : false;
+  });
 
   return (
     <>
@@ -278,7 +292,7 @@ export default function AdminSidebar() {
           </h2>
         </div>
         <nav className="flex flex-1 min-h-0 flex-col gap-1 overflow-y-auto px-4 py-4">
-          {ADMIN_LINKS.map((link) => {
+          {visibleLinks.map((link) => {
             const isActive =
               link.href === '/admin'
                 ? pathname === '/admin'

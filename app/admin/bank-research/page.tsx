@@ -2,7 +2,7 @@ import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import { ensureBankResearch } from '../../lib/directories';
 import { ensureResearchAccess } from '../../lib/research-access';
-import { ADMIN_OWNER } from "../../lib/admin-access";
+import { canAccessSection } from "../../lib/admin-access";
 import BankResearchReview from './review-manager';
 export const dynamic = 'force-dynamic';
 
@@ -12,13 +12,13 @@ const breadcrumbs = [
 ];
 
 export default async function BankResearchAdmin() {
-  const user = await requireChatGPTUser('/admin/bank-research'),
-    email = user.email.toLowerCase(),
-    owner = email === 'mdemong87@gmail.com';
   const { env } = await import('cloudflare:workers');
+  const user = await requireChatGPTUser('/admin/bank-research');
+  const email = user.email.toLowerCase();
   await Promise.all([ensureBankResearch(env.DB), ensureResearchAccess(env.DB)]);
+  
   const reviewer =
-    owner ||
+    (await canAccessSection(env.DB, email, 'bank-research')) ||
     Boolean(
       await env.DB.prepare(
         'SELECT email FROM bank_research_reviewers WHERE email=? AND active=1',

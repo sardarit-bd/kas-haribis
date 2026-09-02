@@ -26,7 +26,7 @@ export default async function StaffAccessPage() {
   const { env } = await import('cloudflare:workers');
   await ensureAdminStaff(env.DB);
   const result = await env.DB.prepare(
-    'SELECT * FROM admin_staff_access ORDER BY active DESC,name COLLATE NOCASE,email COLLATE NOCASE',
+    'SELECT email, name, active, permissions, created_at, updated_at, (password_hash IS NOT NULL AND password_hash != "") as has_password FROM admin_staff_access ORDER BY active DESC,name COLLATE NOCASE,email COLLATE NOCASE',
   ).all();
   return (
     <main className="adminPage">

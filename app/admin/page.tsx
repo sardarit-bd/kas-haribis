@@ -59,7 +59,7 @@ export default async function AdminPage() {
     ? ADMIN_SECTIONS.map((section) => section.key)
     : await staffPermissions(env.DB, actualEmail);
 
-  if (!owner && !permissions.length) {
+  if (!owner) {
     return (
       <main className="p-6 max-w-4xl mx-auto">
         <div className="bg-white border border-red-200 rounded-2xl p-8 text-center text-slate-800 shadow-sm">
@@ -68,7 +68,7 @@ export default async function AdminPage() {
           </div>
           <h1 className="text-xl font-semibold mb-1 text-slate-900">Unauthorized Access</h1>
           <p className="text-sm text-slate-600">
-            The account <code className="text-amber-700 font-semibold">{actualEmail}</code> does not have access permissions.
+            The main dashboard overview is reserved for Admin Owners. Account <code className="text-amber-700 font-semibold">{actualEmail}</code> is not authorized to view this page.
           </p>
         </div>
       </main>

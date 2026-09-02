@@ -1,7 +1,7 @@
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import { listSeforim } from '../../lib/seforim';
-import { isOwnerEmail } from "../../lib/admin-access";
+import { canAccessSection } from "../../lib/admin-access";
 import SeforimManager from './seforim-manager';
 export const dynamic = 'force-dynamic';
 
@@ -12,16 +12,16 @@ const breadcrumbs = [
 
 export default async function SeforimAdmin() {
   const user = await requireChatGPTUser('/admin/seforim');
-  if (!isOwnerEmail(user.email))
+  const { env } = await import('cloudflare:workers');
+  if (!(await canAccessSection(env.DB, user.email, 'seforim')))
     return (
       <main className="adminPage">
         <div className="adminShell">
           <h1>Administrator access</h1>
-          <p>This account is not authorized.</p>
+          <p>This account is not authorized to access this section.</p>
         </div>
       </main>
     );
-  const { env } = await import('cloudflare:workers');
   const books = await listSeforim(env.DB);
   return (
     <main className="adminPage">

@@ -1,7 +1,7 @@
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { ensureSeforimOrders } from '../../lib/seforim';
-import { isOwnerEmail } from "../../lib/admin-access";
+import { canAccessSection } from "../../lib/admin-access";
 export const dynamic = 'force-dynamic';
 
 const breadcrumbs = [
@@ -11,15 +11,16 @@ const breadcrumbs = [
 
 export default async function OrdersPage() {
   const user = await requireChatGPTUser('/admin/orders');
-  if (!isOwnerEmail(user.email))
+  const { env } = await import('cloudflare:workers');
+  if (!(await canAccessSection(env.DB, user.email, 'orders')))
     return (
       <main className="adminPage">
         <div className="adminShell">
           <h1>Administrator access</h1>
+          <p>This account is not authorized to access this section.</p>
         </div>
       </main>
     );
-  const { env } = await import('cloudflare:workers');
   await ensureSeforimOrders(env.DB);
   const result = await env.DB.prepare(
       'SELECT * FROM sefer_orders ORDER BY created_at DESC',

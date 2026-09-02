@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { ensureBankPremium } from '../../lib/bank-premium';
-import { isOwnerEmail } from "../../lib/admin-access";
+import { canAccessSection } from "../../lib/admin-access";
 import { listBanksAdmin } from '../../lib/directories';
 import BankManager from './bank-manager';
 import PremiumMemberManager from './premium-member-manager';
@@ -17,7 +17,8 @@ export default async function Page() {
   const user = await requireChatGPTUser('/admin/banks'),
     requestHeaders = await headers(),
     staffEmail = requestHeaders.get('x-kh-staff-email') || '';
-  if (!isOwnerEmail(user.email))
+  const { env } = await import('cloudflare:workers');
+  if (!(await canAccessSection(env.DB, user.email, 'banks')))
     return (
       <main className="adminPage">
         <div className="adminShell">
@@ -25,7 +26,6 @@ export default async function Page() {
         </div>
       </main>
     );
-  const { env } = await import('cloudflare:workers');
   const banks = await listBanksAdmin(env.DB);
   await ensureBankPremium(env.DB);
   const premiumMembers = !staffEmail

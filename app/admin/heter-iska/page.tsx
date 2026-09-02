@@ -3,7 +3,7 @@ import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { ensureHeterTables } from '../../lib/heter-documents';
 import AccessCodeManager from './access-code-manager';
 import HeterManager from './heter-manager';
-import { isOwnerEmail } from "../../lib/admin-access";
+import { canAccessSection } from "../../lib/admin-access";
 
 export const dynamic = 'force-dynamic';
 
@@ -13,8 +13,9 @@ const breadcrumbs = [
 ];
 
 export default async function HeterAdmin() {
+  const { env } = await import('cloudflare:workers');
   const user = await requireChatGPTUser('/admin/heter-iska');
-  if (!isOwnerEmail(user.email))
+  if (!(await canAccessSection(env.DB, user.email, 'heter-iska')))
     return (
       <main className="adminPage">
         <div className="adminShell">
@@ -23,7 +24,6 @@ export default async function HeterAdmin() {
         </div>
       </main>
     );
-  const { env } = await import('cloudflare:workers');
   await ensureHeterTables(env.DB);
   await env.DB.prepare(
     'CREATE TABLE IF NOT EXISTS payment_records (id TEXT PRIMARY KEY, kind TEXT NOT NULL, amount REAL NOT NULL, name TEXT NOT NULL, email TEXT NOT NULL, dedication TEXT, anonymous INTEGER NOT NULL DEFAULT 0, status TEXT NOT NULL, reference TEXT, download_token TEXT, created_at TEXT NOT NULL)',

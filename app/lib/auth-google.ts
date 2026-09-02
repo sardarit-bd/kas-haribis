@@ -204,8 +204,22 @@ export async function buildGoogleCallbackResponse(
     return new Response('A verified Google email is required.', { status: 403 });
   }
 
+  const email = profile.email.toLowerCase();
+  const { env } = await import('cloudflare:workers');
+  const { isActiveStaffOrOwner } = await import('./admin-access');
+  const allowed = await isActiveStaffOrOwner(env.DB, email);
+
+  if (!allowed) {
+    const secureCookies = useSecureCookies(config.APP_URL);
+    const errorUrl = `${config.APP_URL}/sign-in?error=no_staff_access&return_to=${encodeURIComponent(oauthState.returnTo)}`;
+    const headers = new Headers();
+    headers.set('Location', errorUrl);
+    headers.append('Set-Cookie', clearOAuthStateCookieHeader(secureCookies));
+    return new Response(null, { status: 302, headers });
+  }
+
   const sessionPayload: SessionPayload = {
-    email: profile.email.toLowerCase(),
+    email,
     name: String(profile.name || '').trim(),
     exp: Math.floor(Date.now() / 1000) + SESSION_MAX_AGE_SECONDS,
   };

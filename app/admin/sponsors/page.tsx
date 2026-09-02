@@ -1,6 +1,6 @@
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
-import { isOwnerEmail } from "../../lib/admin-access";
+import { canAccessSection } from "../../lib/admin-access";
 import SponsorManager from './sponsor-manager';
 export const dynamic = 'force-dynamic';
 
@@ -11,7 +11,8 @@ const breadcrumbs = [
 
 export default async function Sponsors() {
   const user = await requireChatGPTUser('/admin/sponsors');
-  if (!isOwnerEmail(user.email))
+  const { env } = await import('cloudflare:workers');
+  if (!(await canAccessSection(env.DB, user.email, 'sponsors')))
     return (
       <main className="adminPage">
         <div className="adminShell">

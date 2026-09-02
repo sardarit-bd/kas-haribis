@@ -2,7 +2,7 @@ import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import { ensureInvoices } from '../../lib/invoices';
 import InvoiceManager from './invoice-manager';
-import { isOwnerEmail } from "../../lib/admin-access";
+import { canAccessSection } from "../../lib/admin-access";
 export const dynamic = 'force-dynamic';
 
 const breadcrumbs = [
@@ -11,8 +11,9 @@ const breadcrumbs = [
 ];
 
 export default async function InvoiceAdmin() {
+  const { env } = await import('cloudflare:workers');
   const user = await requireChatGPTUser('/admin/invoices');
-  if (!isOwnerEmail(user.email))
+  if (!(await canAccessSection(env.DB, user.email, 'invoices')))
     return (
       <main className="adminPage">
         <div className="adminShell">
@@ -20,7 +21,6 @@ export default async function InvoiceAdmin() {
         </div>
       </main>
     );
-  const { env } = await import('cloudflare:workers');
   await ensureInvoices(env.DB);
   const result = await env.DB.prepare(
     'SELECT * FROM invoices ORDER BY created_at DESC',

@@ -2,7 +2,7 @@ import { requireChatGPTUser } from '../../chatgpt-auth';
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { ensureContactSubmissions } from '../../lib/contact-submissions';
 import SubmissionInbox from '../submissions/submission-inbox';
-import { isOwnerEmail } from "../../lib/admin-access";
+import { canAccessSection } from "../../lib/admin-access";
 
 export const dynamic = 'force-dynamic';
 
@@ -12,8 +12,9 @@ const breadcrumbs = [
 ];
 
 export default async function GenealogyAdminPage() {
+  const { env } = await import('cloudflare:workers');
   const user = await requireChatGPTUser('/admin/genealogy');
-  if (!isOwnerEmail(user.email))
+  if (!(await canAccessSection(env.DB, user.email, 'genealogy')))
     return (
       <main className="adminPage">
         <div className="adminShell">
@@ -21,7 +22,6 @@ export default async function GenealogyAdminPage() {
         </div>
       </main>
     );
-  const { env } = await import('cloudflare:workers');
   await ensureContactSubmissions(env.DB);
   const result = await env.DB.prepare(
     'SELECT * FROM contact_submissions WHERE topic = ? ORDER BY created_at DESC',

@@ -1,6 +1,6 @@
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
-import { isOwnerEmail } from "../../lib/admin-access";
+import { canAccessSection } from "../../lib/admin-access";
 import { ensureContactSubmissions } from '../../lib/contact-submissions';
 import SubmissionInbox from './submission-inbox';
 export const dynamic = 'force-dynamic';
@@ -15,8 +15,7 @@ export default async function SubmissionsPage() {
   await ensureContactSubmissions(env.DB);
 
   const user = await requireChatGPTUser('/admin/submissions');
-  console.log(user);
-  if (!isOwnerEmail(user.email))
+  if (!(await canAccessSection(env.DB, user.email, 'submissions')))
     return (
       <main className="adminPage">
         <div className="adminShell">

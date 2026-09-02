@@ -176,10 +176,12 @@ export function SiteFooter({
             <p className="footerCopyright">
               © {new Date().getFullYear()} Kav Haribis — קו הריבית. All rights reserved.
             </p>
+            <div className='hidden'>
             <div className="footerBottomMeta">
               <span>בס״ד</span>
               <span className="dotSeparator">•</span>
               <span>Torah Guidance for Responsible Commerce</span>
+            </div>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
-import { isOwnerEmail } from "../../lib/admin-access";
+import { canAccessSection } from "../../lib/admin-access";
 import { ensureAlertSubscribers } from '../../lib/directories';
 import Subscribers from './subscribers';
 export const dynamic = 'force-dynamic';
@@ -11,8 +11,9 @@ const breadcrumbs = [
 ];
 
 export default async function Page() {
+  const { env } = await import('cloudflare:workers');
   const u = await requireChatGPTUser('/admin/alert-subscribers');
-  if (!isOwnerEmail(u.email))
+  if (!(await canAccessSection(env.DB, u.email, 'alert-subscribers')))
     return (
       <main className="adminPage">
         <div className="adminShell">
@@ -20,7 +21,6 @@ export default async function Page() {
         </div>
       </main>
     );
-  const { env } = await import('cloudflare:workers');
   await ensureAlertSubscribers(env.DB);
   const q = await env.DB.prepare(
     'SELECT * FROM alert_subscribers ORDER BY created_at DESC',
