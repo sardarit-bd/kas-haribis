@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 import {
   contactSubmissionEmailTemplate,
   statusUpdateEmailTemplate,
+  baisHoraahQuestionEmailTemplate,
 } from "./emailTemplates.js";
 
 
@@ -48,6 +49,9 @@ const sendEmail = async (emails, subject, data, templateType) => {
         break;
       case "contact-submission-update-status":
         htmlTemplate = statusUpdateEmailTemplate(data);
+        break;
+      case "bais-horaah-question":
+        htmlTemplate = baisHoraahQuestionEmailTemplate(data);
         break;
       default:
         throw new Error(`Invalid email template type: ${templateType}`);
