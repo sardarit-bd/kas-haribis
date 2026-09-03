@@ -323,7 +323,7 @@
   line-height: 1.7;
 }
 .homeBankCopy {
-  padding: 95px 7vw;
+  padding: 95px clamp(20px, 4vw, 40px);
   align-self: center;
 }
 .homeBankCopy h2 {
@@ -340,11 +340,16 @@
   line-height: 2;
 }
 .homeLearning {
-  padding: 100px 40px;
+  padding: 100px 0;
 }
+.homeSectionHeading,
 .homeLearningGrid {
   max-width: 1440px;
   margin: auto;
+  padding-left: clamp(20px, 4vw, 40px);
+  padding-right: clamp(20px, 4vw, 40px);
+}
+.homeLearningGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 14px;
@@ -697,54 +702,144 @@
     text-align: center;
   }
 }
-.homeImpactStrip {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  padding: 8px;
-  background: #fff;
+/* 2-Row Auto-Sliding Impact Marquee Section */
+.homeImpactStripSection {
+  background: #f7f3ea;
+  padding: 48px 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-top: 1px solid #e8e2d5;
 }
-.homeImpactStrip a {
+
+.impactMarqueeContainer {
   position: relative;
-  height: 350px;
+  width: 100%;
   overflow: hidden;
 }
-.homeImpactStrip img {
+
+.impactMarqueeContainer::before,
+.impactMarqueeContainer::after {
+  display: none;
+}
+
+.impactMarqueeTrack {
+  display: flex;
+  width: max-content;
+  gap: 20px;
+  will-change: transform;
+}
+
+.impactMarqueeTrack.rtl {
+  animation: impactMarqueeRTL 36s linear infinite;
+}
+
+.impactMarqueeTrack.ltr {
+  animation: impactMarqueeLTR 36s linear infinite;
+}
+
+.impactMarqueeTrack:hover {
+  animation-play-state: paused;
+}
+
+.impactCard {
+  position: relative;
+  width: 460px;
+  min-width: 460px;
+  height: 290px;
+  border-radius: 18px;
+  overflow: hidden;
+  text-decoration: none;
+  background: #ffffff;
+  padding: 0;
+  box-shadow: 0 6px 20px rgba(16, 42, 67, 0.08);
+  border: 1px solid #e2ded5;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.impactCard:hover {
+  transform: translateY(-4px);
+  border-color: #c69b46;
+  box-shadow: 0 12px 28px rgba(16, 42, 67, 0.12);
+}
+
+.impactCard img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: 0.3s;
-}
-.homeImpactStrip a:first-child img {
   object-position: center;
+  display: block;
+  padding: 0;
+  margin: 0;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.homeImpactStrip a:nth-child(2) img {
-  object-position: center 28%;
+
+.impactCard:hover img {
+  transform: scale(1.05);
 }
-.homeImpactStrip a:hover img {
-  transform: scale(1.03);
+
+.impactCard::after {
+  display: none;
 }
-.homeImpactStrip a:after {
-  content: '';
-  position: absolute;
-  inset: 45% 0 0;
-  background: linear-gradient(transparent, #071d2dcc);
-}
-.homeImpactStrip span {
+
+.impactCard span {
   position: absolute;
   z-index: 2;
-  left: 22px;
-  bottom: 20px;
-  color: white;
+  left: 16px;
+  bottom: 16px;
+  color: #ffffff;
   font-size: 11px;
-  font-weight: bold;
-  letter-spacing: 0.14em;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(16, 42, 67, 0.85);
+  padding: 7px 14px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
-@media (max-width: 700px) {
-  .homeImpactStrip {
-    grid-template-columns: 1fr;
+
+.impactCard:hover span {
+  background: #102a43;
+  border-color: #c69b46;
+  color: #e5c474;
+}
+
+@keyframes impactMarqueeRTL {
+  0% {
+    transform: translateX(0);
   }
-  .homeImpactStrip a {
-    height: 320px;
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes impactMarqueeLTR {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .impactCard {
+    width: 290px;
+    min-width: 290px;
+    height: 195px;
+  }
+  .impactCard span {
+    font-size: 10px;
+    padding: 6px 12px;
+  }
+  .impactMarqueeTrack.rtl {
+    animation-duration: 28s;
+  }
+  .impactMarqueeTrack.ltr {
+    animation-duration: 28s;
   }
 }

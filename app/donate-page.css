@@ -1,0 +1,611 @@
+/* Donate Page & Enhanced Checkout Styles */
+
+.donateHero {
+  background: linear-gradient(135deg, #091726 0%, #102a43 50%, #173f5f 100%);
+  color: #ffffff;
+  padding: 70px 5vw 80px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.donateHero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(198, 155, 70, 0.15) 0%, rgba(16, 42, 67, 0) 70%);
+  pointer-events: none;
+}
+
+.donateHeroContainer {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.donateHeroTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: rgba(198, 155, 70, 0.15);
+  border: 1px solid rgba(198, 155, 70, 0.4);
+  border-radius: 30px;
+  color: #e3c176;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.donateHeroTitle {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(32px, 5vw, 54px);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #ffffff;
+  margin-bottom: 20px;
+  letter-spacing: -0.01em;
+}
+
+.donateHeroTitle span {
+  background: linear-gradient(135deg, #fceecb 0%, #c69b46 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.donateHeroSubtitle {
+  font-size: clamp(16px, 2vw, 19px);
+  line-height: 1.6;
+  color: #c0ceda;
+  max-width: 740px;
+  margin: 0 auto 36px;
+}
+
+.donateTrustBadges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.donateBadgeItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #dce6f0;
+  font-size: 14px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 8px 16px;
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.donateBadgeIcon {
+  color: #c69b46;
+  font-size: 16px;
+}
+
+/* Impact Section */
+.impactSection {
+  background: #f8fafc;
+  padding: 70px 5vw;
+}
+
+.impactHeader {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 50px;
+}
+
+.impactEyebrow {
+  color: #c69b46;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.impactTitle {
+  font-family: Georgia, serif;
+  font-size: 32px;
+  color: #102a43;
+  font-weight: 700;
+}
+
+.impactGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.impactCard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 28px 24px;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 16px rgba(16, 42, 67, 0.04);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.impactCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(16, 42, 67, 0.1);
+  border-color: #c69b46;
+}
+
+.impactAmountBadge {
+  display: inline-block;
+  font-family: Georgia, serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #c69b46;
+  margin-bottom: 12px;
+}
+
+.impactCardTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #102a43;
+  margin-bottom: 10px;
+}
+
+.impactCardDesc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #627d98;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.impactSelectBtn {
+  align-self: flex-start;
+  padding: 8px 16px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #102a43;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.impactSelectBtn:hover,
+.impactCard:hover .impactSelectBtn {
+  background: #102a43;
+  color: #ffffff;
+  border-color: #102a43;
+}
+
+/* Enhanced Checkout Notice Section */
+.donateCheckoutWrapper {
+  padding: 70px 5vw;
+  background: #ffffff;
+}
+
+.enhancedCheckoutArea {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.enhancedCheckoutSummary {
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 40px;
+  position: sticky;
+  top: 110px;
+  z-index: 10;
+}
+
+@media (max-width: 960px) {
+  .enhancedCheckoutArea {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .enhancedCheckoutSummary {
+    position: static;
+  }
+}
+
+.summaryHeader {
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 24px;
+  margin-bottom: 28px;
+}
+
+.summaryEyebrow {
+  color: #c69b46;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.summaryTitle {
+  font-family: Georgia, serif;
+  font-size: 28px;
+  color: #102a43;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.summaryBigAmount {
+  font-family: Georgia, serif;
+  font-size: 52px;
+  font-weight: 800;
+  color: #c69b46;
+  line-height: 1;
+  margin: 16px 0 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.summaryBigAmount span {
+  font-size: 20px;
+  font-weight: 600;
+  color: #627d98;
+}
+
+.summaryFeaturesList {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.summaryFeatureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #334e68;
+}
+
+.summaryFeatureIcon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(198, 155, 70, 0.15);
+  color: #c69b46;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.taxReceiptBox {
+  margin-top: 32px;
+  padding: 20px;
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.taxReceiptIcon {
+  font-size: 28px;
+}
+
+.taxReceiptText b {
+  display: block;
+  font-size: 14px;
+  color: #102a43;
+}
+
+.taxReceiptText p {
+  font-size: 12px;
+  color: #627d98;
+  margin: 2px 0 0;
+}
+
+/* Enhanced Checkout Form Card */
+.enhancedCheckoutCard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 20px 50px rgba(16, 42, 67, 0.08);
+  position: relative;
+}
+
+.cardHeaderTitle {
+  font-family: Georgia, serif;
+  font-size: 24px;
+  color: #102a43;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cardHeaderSubtitle {
+  font-size: 13px;
+  color: #627d98;
+  margin-bottom: 28px;
+}
+
+.presetAmountGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 500px) {
+  .presetAmountGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.presetBtn {
+  padding: 12px 8px;
+  border: 1.5px solid #cbd5e1;
+  background: #ffffff;
+  color: #102a43;
+  font-weight: 700;
+  font-size: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.presetBtn:hover {
+  border-color: #c69b46;
+  color: #c69b46;
+  background: #fffdf9;
+}
+
+.presetBtn.selected {
+  background: #102a43;
+  color: #ffffff;
+  border-color: #102a43;
+  box-shadow: 0 4px 12px rgba(16, 42, 67, 0.2);
+}
+
+.customMoneyField {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.currencyPrefix {
+  position: absolute;
+  left: 16px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #c69b46;
+  pointer-events: none;
+}
+
+.customMoneyInput {
+  padding-left: 36px !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #102a43 !important;
+}
+
+.enhancedFormGroup {
+  margin-bottom: 20px;
+}
+
+.enhancedFormLabel {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #334e68;
+  margin-bottom: 6px;
+}
+
+.enhancedFormInput,
+.enhancedFormSelect,
+.enhancedFormTextarea {
+  width: 100%;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #102a43;
+  background: #ffffff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+
+.enhancedFormInput:focus,
+.enhancedFormSelect:focus,
+.enhancedFormTextarea:focus {
+  border-color: #c69b46;
+  box-shadow: 0 0 0 3px rgba(198, 155, 70, 0.15);
+}
+
+.iframeWrapper {
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.iframeWrapper:focus-within {
+  border-color: #c69b46;
+  box-shadow: 0 0 0 3px rgba(198, 155, 70, 0.15);
+}
+
+
+.iframeWrapper iframe {
+  width: 100%;
+  height: 44px;
+  border: none;
+  display: block;
+}
+
+
+.cardSecurityRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 500px) {
+  .cardSecurityRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.expirySelects {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+}
+
+.expiryDivider {
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+.anonymousCheckboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #334e68;
+  font-weight: 500;
+  user-select: none;
+  margin-top: 12px;
+}
+
+.anonymousCheckboxLabel input {
+  width: 18px;
+  height: 18px;
+  accent-color: #102a43;
+  cursor: pointer;
+}
+
+.enhancedPayBtn {
+  width: 100%;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #102a43 0%, #173f5f 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 8px 20px rgba(16, 42, 67, 0.25);
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.enhancedPayBtn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #173f5f 0%, #0b1d30 100%);
+  box-shadow: 0 12px 28px rgba(16, 42, 67, 0.35);
+  transform: translateY(-1px);
+}
+
+.enhancedPayBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+
+
+.securityFooterNote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 18px;
+  font-size: 12px;
+  color: #627d98;
+  font-weight: 500;
+}
+
+.securityFooterNote svg {
+  color: #22c55e;
+}
+
+/* Trust / FAQ Section */
+.donateFaqSection {
+  padding: 70px 5vw;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+.faqContainer {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faqHeader {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 500px) {
+  .faqGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.faqItem {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.faqQuestion {
+  font-size: 16px;
+  font-weight: 700;
+  color: #102a43;
+  margin-bottom: 8px;
+}
+
+.faqAnswer {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #486581;
+}

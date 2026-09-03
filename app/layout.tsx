@@ -75,6 +75,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { CartProvider } from './shared/cart-context';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -86,7 +88,9 @@ export default function RootLayout({
         {/* <SponsorBanner /> */}
         <AnalyticsTracker />
         <ArticlePdfLinks />
-        {children}
+        <CartProvider>
+          {children}
+        </CartProvider>
       </body>
     </html>
   );

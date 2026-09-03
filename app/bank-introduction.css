@@ -1,104 +1,232 @@
 .bankAuthorityIntro {
   max-width: 1440px;
-  margin: auto;
-  padding: 65px 0vw 25px;
+  margin: 0 auto;
+  padding: 85px clamp(20px, 4vw, 40px) 45px;
   display: grid;
-  grid-template-columns: 1.35fr 0.65fr;
-  gap: 38px;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 48px;
   align-items: start;
 }
+
 .bankIntroStatement h2 {
   max-width: 850px;
-  font: clamp(34px, 4vw, 52px)/1.08 Georgia;
-  color: var(--navy);
-  margin: 10px 0 17px;
+  font: 700 clamp(32px, 3.8vw, 48px)/1.15 Georgia, serif;
+  color: #102a43;
+  margin: 10px 0 20px;
 }
+
 .bankIntroLead {
   max-width: 850px;
-  font-size: 18px;
-  line-height: 1.75;
-  color: #526979;
+  font-size: 17px;
+  line-height: 1.8;
+  color: #526879;
 }
+
 .bankLeadershipStatement {
   position: relative;
-  margin-top: 28px;
-  padding: 28px 30px 28px 64px;
-  border: 1px solid #ded5c2;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #fff, #faf7ef);
-  box-shadow: 0 12px 35px #17364c0c;
+  margin-top: 32px;
+  padding: 32px 34px 32px 68px;
+  border: 1px solid #e8e2d5;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 8px 30px rgba(16, 42, 67, 0.05);
 }
+
 .bankLeadershipStatement > span {
   position: absolute;
-  left: 22px;
-  top: 13px;
-  font: 58px Georgia;
-  color: var(--gold);
+  left: 24px;
+  top: 16px;
+  font: 64px Georgia, serif;
+  color: #c69b46;
 }
+
 .bankLeadershipStatement p {
   margin: 0;
   color: #40596a;
   line-height: 1.85;
-  font-size: 15px;
+  font-size: 15.5px;
 }
+
 .bankLeadershipStatement strong {
-  color: var(--navy);
+  color: #102a43;
 }
+
 .bankIntroDisclaimers {
   display: grid;
-  gap: 13px;
+  gap: 20px;
 }
+
 .bankIntroDisclaimers > div {
-  padding: 24px;
-  border-radius: 10px;
-  background: #0d2b48;
+  padding: 28px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #071728 0%, #102a43 100%);
   color: white;
-  box-shadow: 0 12px 35px #17364c15;
+  box-shadow: 0 12px 35px rgba(16, 42, 67, 0.12);
+  border: 1px solid rgba(198, 155, 70, 0.3);
 }
+
 .bankIntroDisclaimers > div:nth-child(2) {
-  background: #f4efe4;
-  color: var(--navy);
-  border: 1px solid #ded5c2;
+  background: #ffffff;
+  color: #102a43;
+  border: 1px solid #e2ded5;
+  box-shadow: 0 6px 24px rgba(16, 42, 67, 0.05);
 }
+
 .bankIntroDisclaimers small {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
-  letter-spacing: 0.15em;
-  color: #d7b66f;
+  letter-spacing: 0.12em;
+  color: #c69b46;
+  text-transform: uppercase;
 }
+
 .bankIntroDisclaimers h3 {
-  font: 23px Georgia;
-  margin: 9px 0;
+  font: 700 22px Georgia, serif;
+  margin: 10px 0 12px;
 }
+
 .bankIntroDisclaimers p {
-  font-size: 12px;
-  line-height: 1.7;
-  color: #ced9e0;
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: #cbd5e1;
   margin: 0;
 }
+
 .bankIntroDisclaimers > div:nth-child(2) p {
-  color: #596d7b;
+  color: #526879;
 }
+
 @media (max-width: 980px) {
   .bankAuthorityIntro {
     grid-template-columns: 1fr;
+    gap: 32px;
   }
   .bankIntroDisclaimers {
     grid-template-columns: 1fr 1fr;
   }
 }
+
 @media (max-width: 650px) {
   .bankAuthorityIntro {
-    padding: 45px 5vw 20px;
+    padding: 55px clamp(20px, 4vw, 40px) 25px;
   }
   .bankIntroDisclaimers {
     grid-template-columns: 1fr;
   }
   .bankLeadershipStatement {
-    padding: 45px 20px 22px;
+    padding: 45px 22px 24px;
   }
   .bankLeadershipStatement > span {
-    left: 18px;
-    top: 4px;
+    left: 20px;
+    top: 6px;
+  }
+}
+
+/* Bank Status Levels Guide Grid */
+.bankStatusGuide {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 60px clamp(20px, 4vw, 40px) 75px;
+}
+
+.bankStatusGuideHeading {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 40px;
+}
+
+.bankStatusGuideHeading span {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #c69b46;
+  text-transform: uppercase;
+}
+
+.bankStatusGuideHeading h2 {
+  font: 700 clamp(28px, 3.5vw, 42px)/1.15 Georgia, serif;
+  color: #102a43;
+  margin: 8px 0 12px;
+}
+
+.bankStatusGuideHeading p {
+  color: #526879;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.bankStatusLevels {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.bankStatusLevels article {
+  background: #ffffff;
+  border: 1px solid #e8e2d5;
+  border-radius: 16px;
+  padding: 24px 20px;
+  box-shadow: 0 4px 16px rgba(16, 42, 67, 0.04);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.bankStatusLevels article:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(16, 42, 67, 0.08);
+  border-color: #c69b46;
+}
+
+.bankStatusLevels article b {
+  font: 700 17px Georgia, serif;
+  color: #102a43;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.bankStatusLevels article small {
+  color: #526879;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.bankStatusLevels article.level-mehudar {
+  border-top: 4px solid #16a34a;
+}
+
+.bankStatusLevels article.level-kosher {
+  border-top: 4px solid #2563eb;
+}
+
+.bankStatusLevels article.level-iska {
+  border-top: 4px solid #d97706;
+}
+
+.bankStatusLevels article.level-case {
+  border-top: 4px solid #8b5cf6;
+}
+
+.bankStatusLevels article.level-question {
+  border-top: 4px solid #ea580c;
+}
+
+.bankStatusLevels article.level-no {
+  border-top: 4px solid #dc2626;
+}
+
+.bankStatusLevels article.level-unknown {
+  border-top: 4px solid #64748b;
+}
+
+@media (max-width: 1024px) {
+  .bankStatusLevels {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .bankStatusLevels {
+    grid-template-columns: 1fr;
   }
 }

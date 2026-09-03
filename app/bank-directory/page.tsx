@@ -12,28 +12,30 @@ export default async function BankDirectory() {
     <main>
       <SiteHeader />
       <section className="bankDirectoryHero">
-        <div className="bankHeroHeading">
-          <p className="eyebrow">KOSHER BANK RESEARCH CENTER</p>
-          <h1>Kosher Bank Directory</h1>
-          <p>
-            Search the Kav Haribis research directory for banks, lenders and
-            financial institutions. Review the listed status and open each
-            record for additional information.
-          </p>
+        <div className="bankDirectoryHeroInner">
+          <div className="bankHeroHeading">
+            <p className="eyebrow gold mb-1">KOSHER BANK RESEARCH CENTER</p>
+            <h1>Kosher Bank Directory</h1>
+            <p>
+              Search the Kav Haribis research directory for banks, lenders and
+              financial institutions. Review the listed status and open each
+              record for additional information.
+            </p>
+          </div>
+          <blockquote className="bankHeroQuote" dir="rtl" lang="he">
+            <span aria-hidden="true">״</span>
+            <p>
+              עוד ראיתי לעורר שמאד נצרך לברר ה״באנק״ השייכין לישראלים ולפרסם
+              הרשימות של ה״באנקים״ שיש עליהן חשש רבית למנוע הרבים ממכשול הרבית,
+              ומה מאד הי׳ ראוי למנות ע״ז אנשים מוכשרים היודעין לברר ענין זה, ושכרם
+              יהי׳ הרבח מאד ובכלל מזכי רבים יחשבו.
+            </p>
+            <footer>
+              <strong>הגאון הרב יחזקאל ראטה זצ״ל</strong>
+              <small>Harav Yechezkel Roth zt״l</small>
+            </footer>
+          </blockquote>
         </div>
-        <blockquote className="bankHeroQuote" dir="rtl" lang="he">
-          <span aria-hidden="true">״</span>
-          <p>
-            עוד ראיתי לעורר שמאד נצרך לברר ה״באנק״ השייכין לישראלים ולפרסם
-            הרשימות של ה״באנקים״ שיש עליהן חשש רבית למנוע הרבים ממכשול הרבית,
-            ומה מאד הי׳ ראוי למנות ע״ז אנשים מוכשרים היודעין לברר ענין זה, ושכרם
-            יהי׳ הרבח מאד ובכלל מזכי רבים יחשבו.
-          </p>
-          <footer>
-            <strong>הגאון הרב יחזקאל ראטה זצ״ל</strong>
-            <small>Harav Yechezkel Roth zt״l</small>
-          </footer>
-        </blockquote>
       </section>
       <section
         className="bankResearchVisual hidden"
@@ -50,6 +52,7 @@ export default async function BankDirectory() {
           </b>
         </div>
       </section>
+      <div className='hidden'>
       <section className="bankAuthorityIntro">
         <div className="bankIntroStatement">
           <p className="eyebrow gold">RESEARCH • GUIDANCE • CLARITY</p>
@@ -106,9 +109,10 @@ export default async function BankDirectory() {
           </div>
         </aside>
       </section>
+      
       {/* <BankResearchPopup /> */}
       <section
-        className="bankStatusGuide hidden"
+        className="bankStatusGuide"
         aria-labelledby="bank-status-guide-title"
       >
         <div className="bankStatusGuideHeading">
@@ -170,6 +174,7 @@ export default async function BankDirectory() {
           </article>
         </div>
       </section>
+      </div>
       <BankDirectoryClient
         banks={banks.map((bank) => ({ ...bank, source: '' }))}
       />

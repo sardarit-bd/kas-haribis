@@ -33,8 +33,8 @@ export function SiteFooter({
       <div className="container">
         <div className="footerMainGrid">
           <div className="footerBrandCol">
-            <div className="brand light mb-3">
-                 <img src={'/logos/logo.png'} alt="logo" className='w-[300px] h-auto bg-white p-3' />
+            <div className="footerBrandLogoWrapper mb-2">
+              <img src={'/logos/logo.png'} alt="Kav Haribis Logo" className="w-[240px] sm:w-[260px] h-auto block" />
             </div>
             <p className="footerTagline">Torah guidance for responsible commerce.</p>
             <p className="footerDesc">
@@ -42,10 +42,11 @@ export function SiteFooter({
             </p>
             <div className="footerActions">
               <a href="/donate" className="footerDonateBtn">
-                Donate &amp; Support
+                <span>Donate &amp; Support</span>
+                <span>→</span>
               </a>
               <a href="/contact" className="footerContactBtn">
-                Contact Bais Horaah
+                <span>Contact Bais Horaah</span>
               </a>
             </div>
           </div>
@@ -176,13 +177,6 @@ export function SiteFooter({
             <p className="footerCopyright">
               © {new Date().getFullYear()} Kav Haribis — קו הריבית. All rights reserved.
             </p>
-            <div className='hidden'>
-            <div className="footerBottomMeta">
-              <span>בס״ד</span>
-              <span className="dotSeparator">•</span>
-              <span>Torah Guidance for Responsible Commerce</span>
-            </div>
-            </div>
           </div>
         </div>
       </div>

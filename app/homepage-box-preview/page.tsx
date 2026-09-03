@@ -1,8 +1,9 @@
 'use client';
 import { FormEvent, useEffect, useState } from 'react';
-import ServiceRotator from '../shared/service-rotator';
-import { SiteFooter, SiteHeader } from '../shared/site-shell';
 import SubscriptionForm from '../ribis-alerts/subscription-form';
+import FeaturedSeforim from '../shared/featured-seforim';
+import LandingFaq from '../shared/landing-faq';
+import { SiteFooter, SiteHeader } from '../shared/site-shell';
 
 const offerings = [
   [
@@ -136,15 +137,153 @@ const offeringImages = [
   ],
 ] as const;
 
+const impactRow1 = [
+  { title: 'STUDENT EDUCATION', src: '/kav-impact/student-shiur.jpg' },
+  { title: 'BUSINESS OUTREACH', src: '/kav-impact/heter-iska-presentation.jpg' },
+  { title: 'FINANCIAL EDUCATION', src: '/kav-impact/financial-outreach.jpg' },
+  { title: 'COMMUNITY OUTREACH', src: '/kav-impact/community-event.jpg' },
+];
+
+const impactRow2 = [
+  { title: 'COMMERCIAL ADVISORY', src: '/kav-impact/business-visit.jpg' },
+  { title: 'RABBINIC RECOGNITION', src: '/kav-impact/recognition-event.jpg' },
+  { title: 'HETER ISKA ADVISORY', src: '/kav-impact/heter-iska-presentation-2.jpg' },
+  { title: 'TORAH LECTURES', src: '/kav-impact/student-shiur.jpg' },
+];
+
+const mainOfferingsCategories = [
+  {
+    title: 'Directories',
+    icon: '⌕',
+    eyebrow: 'Verified Lists & Directories',
+    description: 'Explore verified kosher financial institutions, businesses with Heter Iska, and savings opportunities.',
+    links: [
+      { name: 'Kosher Banks Directory', href: '/bank-directory' },
+      { name: 'Businesses with a Heter Iska', href: '/businesses-with-a-heter-iska' },
+      { name: 'Kosher Loan Services', href: '/kosher-loan-service' },
+      { name: 'Investment Opportunities', href: '/kosher-investment-opportunities' },
+      { name: 'Kosher Savings Programs', href: '/savings' },
+    ],
+  },
+  {
+    title: 'Learning & Resources',
+    icon: '📚',
+    eyebrow: 'Shiurim, Seforim & Guides',
+    description: 'Comprehensive Torah education materials, audio shiurim, halachic guides, and publications catalog.',
+    links: [
+      { name: 'Educational Center', href: '/educational-center' },
+      { name: 'Audio & Shiurim', href: '/audio' },
+      { name: 'Articles & Guides', href: '/articles' },
+      { name: 'Common Questions', href: '/questions' },
+      { name: 'Seforim Store', href: '/seforim' },
+      { name: 'Reading Circle', href: '/reading-circle' },
+      { name: 'Kav Haribis Membership', href: '/membership' },
+    ],
+  },
+  {
+    title: 'Services & Programs',
+    icon: '⚖️',
+    eyebrow: 'Advisory & Certification',
+    description: 'Professional Bais Horaah consultation, Heter Iska drafting, community outreach, and urgent alerts.',
+    links: [
+      { name: 'Heter Iska Advisory', href: '/heter-iska' },
+      { name: 'Bais Horaah Consultation', href: '/bais-horaah' },
+      { name: 'Genealogy Services', href: '/genealogy-services' },
+      { name: 'Community Programs', href: '/programs' },
+      { name: 'Investment Certification', href: '/kosher-investment-certification' },
+      { name: 'Ribbis Alerts', href: '/ribis-alerts' },
+    ],
+  },
+];
+
+const heroSlides = [
+  {
+    id: 1,
+    image: '/kav-brand/home-hero.png',
+    alt: 'A study desk combining Torah learning and financial research',
+    eyebrow: 'A CENTER FOR HILCHOS RIBBIS',
+    title: 'Torah clarity for a complex financial world.',
+    description:
+      'Kav Haribis brings practical guidance, trusted research, and accessible learning resources to individuals, families, businesses, and communities.',
+    primaryCta: {
+      text: 'Explore the Bank Directory',
+      href: '/bank-directory',
+    },
+    secondaryCta: {
+      text: 'Ask the Bais Horaah →',
+      href: '/bais-horaah',
+    },
+    badge: 'Clarity in Hilchos Ribbis',
+    panelDesc:
+      'Practical resources for responsible commerce and everyday financial decisions.',
+    panelLink: {
+      text: 'About Kav Haribis →',
+      href: '/about-us',
+    },
+  },
+  {
+    id: 2,
+    image: '/kav-brand/bank-research.png',
+    alt: 'Comprehensive financial research and bank directory analysis',
+    eyebrow: 'KOSHER BANKING DIRECTORY',
+    title: 'Comprehensive Bank & Lender Research.',
+    description:
+      'Search hundreds of commercial banks, mortgage lenders, and financial institutions with verified Heter Iska statuses and full research reports.',
+    primaryCta: {
+      text: 'Search Kosher Bank Directory',
+      href: '/bank-directory',
+    },
+    secondaryCta: {
+      text: 'Heter Iska Library →',
+      href: '/heter-iska',
+    },
+    badge: 'Verified Bank Statuses',
+    panelDesc:
+      'Search listings, review heter iska documents, and access full bank research reports.',
+    panelLink: {
+      text: 'Open Bank Directory →',
+      href: '/bank-directory',
+    },
+  },
+  {
+    id: 3,
+    image: '/kav-brand/bais-horaah.png',
+    alt: 'Rabbinic consultations for Jewish business owners and individuals',
+    eyebrow: 'FREE RABBINIC CONSULTATIONS',
+    title: 'Expert Rabbinic Guidance for Your Business.',
+    description:
+      'Submit questions directly to experienced Rabbanim, review partnership agreements, and ensure 100% Ribis compliance in all financial transactions.',
+    primaryCta: {
+      text: 'Submit a Question to Bais Horaah',
+      href: '/bais-horaah',
+    },
+    secondaryCta: {
+      text: 'Listen to Shiurim →',
+      href: '/audio',
+    },
+    badge: 'Personalized Halachic Advice',
+    panelDesc:
+      'Direct contact with Bais Horaah Rabbanim for prompt, authoritative halachic decisions.',
+    panelLink: {
+      text: 'Ask a Question →',
+      href: '/bais-horaah',
+    },
+  },
+];
+
 export default function BoxPreview({
   cardsPreview = false,
 }: {
   cardsPreview?: boolean;
 }) {
   const [active, setActive] = useState(0),
-    [reference, setReference] = useState(''),
+    [currentSlide, setCurrentSlide] = useState(0),
+    [dragStartX, setDragStartX] = useState<number | null>(null),
+    [isDragging, setIsDragging] = useState(false),
+    [busy, setBusy] = useState(false),
     [error, setError] = useState(''),
-    [busy, setBusy] = useState(false);
+    [reference, setReference] = useState<string | null>(null);
+
   useEffect(() => {
     const timer = setInterval(
       () => setActive((i) => (i + 1) % offerings.length),
@@ -152,6 +291,30 @@ export default function BoxPreview({
     );
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    const slideTimer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5500);
+    return () => clearInterval(slideTimer);
+  }, []);
+
+  const handleDragStart = (clientX: number) => {
+    setDragStartX(clientX);
+    setIsDragging(true);
+  };
+
+  const handleDragEnd = (clientX: number) => {
+    if (dragStartX === null) return;
+    const diffX = dragStartX - clientX;
+    if (diffX > 40) {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    } else if (diffX < -40) {
+      setCurrentSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
+    }
+    setDragStartX(null);
+    setIsDragging(false);
+  };
   async function submitQuestion(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
@@ -192,51 +355,66 @@ export default function BoxPreview({
           <a href="/">Return to current homepage →</a>
         </div>
       )}
-      <section className="homeHero">
-        <img
-          className="homeHeroImage"
-          src="/kav-brand/home-hero.png"
-          alt="A study desk combining Torah learning and financial research"
-        />
-       
-         <div className="homeHeroCopy lg:pl-7">
-          <p className="eyebrow">A CENTER FOR HILCHOS RIBBIS</p>
-          <h1>Torah clarity for a complex financial world.</h1>
-          <p>
-            Kav Haribis brings practical guidance, trusted research, and
-            accessible learning resources to individuals, families, businesses,
-            and communities.
-          </p>
-          <div className="homeHeroActions">
-            <a className="primary" href="/bank-directory">
-              Explore the Bank Directory
-            </a>
-            <a href="/bais-horaah">Ask the Bais Horaah →</a>
+      {/* Interactive Hero Slider with 3 Slides */}
+      <section
+        className={`heroSliderContainer ${isDragging ? 'dragging' : ''}`}
+        onMouseDown={(e) => handleDragStart(e.clientX)}
+        onMouseUp={(e) => handleDragEnd(e.clientX)}
+        onMouseLeave={(e) => isDragging && handleDragEnd(e.clientX)}
+        onTouchStart={(e) => handleDragStart(e.touches[0].clientX)}
+        onTouchEnd={(e) => handleDragEnd(e.changedTouches[0].clientX)}
+      >
+        {heroSlides.map((slide, index) => (
+          <div
+            key={slide.id}
+            className={`heroSlideItem ${index === currentSlide ? 'active' : ''}`}
+          >
+            <img
+              className="heroSlideBgImage"
+              src={slide.image}
+              alt={slide.alt}
+            />
+            <div className="heroSlideOverlay" />
+            <div className="heroSlideInner container">
+              <div className="homeHeroCopy lg:pl-7">
+                <p className="eyebrow">{slide.eyebrow}</p>
+                <h1>{slide.title}</h1>
+                <p>{slide.description}</p>
+                <div className="homeHeroActions">
+                  <a className="primary" href={slide.primaryCta.href}>
+                    {slide.primaryCta.text}
+                  </a>
+                  <a href={slide.secondaryCta.href}>
+                    {slide.secondaryCta.text}
+                  </a>
+                </div>
+                <div className="hidden">
+                  <div className="homeTrustLine">
+                  <span>Research</span>
+                  <i></i>
+                  <span>Halachic guidance</span>
+                  <i></i>
+                  <span>Education</span>
+                  <i></i>
+                  <span>Community resources</span>
+                </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="homeTrustLine">
-            <span>Research</span>
-            <i></i>
-            <span>Halachic guidance</span>
-            <i></i>
-            <span>Education</span>
-            <i></i>
-            <span>Community resources</span>
-          </div>
+        ))}
+
+        {/* Slide Pagination Dots */}
+        <div className="heroSliderPagination">
+          {heroSlides.map((slide, index) => (
+            <button
+              key={slide.id}
+              className={`heroSliderDot ${index === currentSlide ? 'active' : ''}`}
+              onClick={() => setCurrentSlide(index)}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
         </div>
-        <aside className="homeHeroPanel lg:mr-7">
-          <div className="homeHeroSeal">
-            <span>KH</span>
-          </div>
-          <small>קו הריבית</small>
-          <h2>Clarity in Hilchos Ribbis</h2>
-          <p>
-            Practical resources for responsible commerce and everyday financial
-            decisions.
-          </p>
-          <a href="/about-us">About Kav Haribis →</a>
-          <ServiceRotator />
-        </aside>
-       
       </section>
       <div className='hidden'>
       <nav
@@ -285,36 +463,40 @@ export default function BoxPreview({
         </a>
       </nav>
       </div>
-      <section className="container ">
+      {/* Clean & Professional OUR MISSION Section */}
+      <section className="missionSectionWrapper">
+        <div className="container">
+          <div className="missionGrid">
+            {/* Left Side: Clean Image */}
+            <div className="missionVisualContainer">
+              <div className="missionImageFrame">
+                <img
+                  className="missionImage"
+                  src="/kav-brand/mission-visual-v2.png"
+                  alt="A traditional library passage opening toward a modern financial district"
+                />
+              </div>
+            </div>
 
-        <div className='flex flex-col lg:flex-row items-center gap-10 py-20 px-4 md:px-10 lg:px-10 xl:px-0'>
-        <div>
-          <div className="previewMissionHeading">
-          <p className="eyebrow gold">OUR MISSION</p>
-          <h2>
-            Making Hilchos Ribbis understandable, accessible, and practical.
-          </h2>
-        </div>
-        <div className="previewMissionCopy">
-          <p>
-            Modern financial arrangements can involve mortgages, business
-            financing, investments, payment plans, banking products, and
-            partnerships. Each may require careful Halachic consideration.
-          </p>
-          <p>
-            Kav Haribis combines Torah education with practical research so that
-            questions can be recognized early and addressed responsibly.
-          </p>
-          <a className='pt-6 font-bold' href="/about-us">Learn about the organization →</a>
-        </div>
-        </div>
-        <figure>
-          <img
-            className='homemissionimage'
-            src="/kav-brand/mission-visual-v2.png"
-            alt="A traditional library passage opening toward a modern financial district"
-          />
-        </figure>
+            {/* Right Side: Content */}
+            <div className="missionContent">
+              <span className="missionEyebrow">OUR MISSION</span>
+              <h2 className="missionTitle">
+                Making Hilchos Ribbis understandable, accessible, and practical.
+              </h2>
+              <p className="missionDesc">
+                Modern financial arrangements can involve mortgages, business financing, investments, payment plans, banking products, and partnerships. Each may require careful Halachic consideration.
+              </p>
+              <p className="missionDesc">
+                Kav Haribis combines Torah education with practical research so that questions can be recognized early and addressed responsibly.
+              </p>
+              <div className="missionActions">
+                <a href="/about-us" className="missionLinkBtn">
+                  Learn about the organization →
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
       {cardsPreview && (
@@ -340,61 +522,40 @@ export default function BoxPreview({
           </div>
         </section>
       )}
-      <section className="flashOfferings groupedOfferings">
-        <header>
-          <div>
-            <p className="eyebrow gold">ALL 18 KAV HARIBIS OFFERINGS</p>
-            <h2>Everything we offer—alive, clear, and easy to explore.</h2>
-          </div>
-          <div className="flashLive">
-            <i></i>
-            <span>Now highlighting</span>
-            <b>{offerings[active][0]}</b>
-          </div>
+      {/* 3 MAIN CATEGORIES KAV HARIBIS OFFERINGS */}
+      <section className="cleanOfferingsSection">
+        <header className="cleanOfferingsHeader">
+          <p className="eyebrow gold">KAV HARIBIS OFFERINGS</p>
+          <h2>Everything we offer—alive, clear, and easy to explore.</h2>
         </header>
-        <div className="offeringGroups">
-          {offeringImages.map((visual, groupIndex) => {
-            const group = offerings.slice(groupIndex * 4, groupIndex * 4 + 4);
-            if (!group.length) return null;
-            return (
-              <div className="offeringGroup" key={visual[0]}>
-                <div className="offeringGroupGrid">
-                  {group.map((item, itemIndex) => {
-                    const index = groupIndex * 4 + itemIndex;
-                    return (
-                      <a
-                        className={`flashOffering ${item[4]} ${index === active ? 'active' : ''}`}
-                        href={item[2]}
-                        key={item[0]}
-                      >
-                        <span className="flashNumber">
-                          {String(index + 1).padStart(2, '0')}
-                        </span>
-                        <i>{item[3]}</i>
-                        <div>
-                          <b>{item[0]}</b>
-                          <small>{item[1]}</small>
-                        </div>
-                        <strong>→</strong>
-                        <em></em>
-                      </a>
-                    );
-                  })}
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-[1440px] mx-auto px-4 sm:px-8">
+          {mainOfferingsCategories.map((cat) => (
+            <div key={cat.title} className="categoryCard3Col">
+              <div className="categoryCardHeader">
+                <span className="categoryCardIcon">{cat.icon}</span>
+                <div className="categoryCardTitleGroup">
+                  <span>{cat.eyebrow}</span>
+                  <h3>{cat.title}</h3>
                 </div>
-                <figure>
-                  <img src={visual[0]} alt={visual[1]} />
-                  <figcaption>
-                    <span>KAV HARIBIS IN ACTION</span>
-                    <b>{visual[1]}</b>
-                  </figcaption>
-                </figure>
               </div>
-            );
-          })}
+              <p className="categoryCardDesc">{cat.description}</p>
+
+              <div className="categoryLinksList">
+                {cat.links.map((link) => (
+                  <a key={link.href} href={link.href} className="categoryLinkItem">
+                    <span>{link.name}</span>
+                    <span className="arrow">→</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
       <section className=" bg-[#e9dfca] ">
-      <section className="homeCertification container">
+      <div className='hidden'>
+        <section className="homeCertification container">
         <div>
           <small>KASHRUS OF INVESTMENTS</small>
           <h2>Request a structured investment certification review.</h2>
@@ -422,7 +583,9 @@ export default function BoxPreview({
           </span>
         </aside>
       </section>
+      </div>
       </section>
+      <div className='hidden'>
       <section className="homeBankFeature">
         <div className="homeBankVisual">
           <div className="researchLines">
@@ -460,12 +623,12 @@ export default function BoxPreview({
         </div>
       </section>
       <section className="homeLearning">
-        <div className="homeSectionHeading">
-          <div>
+        <div className="homeSectionHeading flex items-center justify-between">
+          <div className='mb-3'>
             <p className="eyebrow gold">LEARN &amp; GROW</p>
             <h2>Torah resources for every level</h2>
           </div>
-          <a href="/audio">Browse all shiurim →</a>
+          <a className='pb-5' href="/audio">Browse all shiurim →</a>
         </div>
         <div className="homeLearningGrid">
           {previewLearning.map((item) => (
@@ -480,7 +643,7 @@ export default function BoxPreview({
           ))}
         </div>
       </section>
-      <div className='hidden'>
+      
         <section className="boxPreviewMembership">
         <div className="boxPreviewMembershipCopy">
           <p className="eyebrow gold">KAV HARIBIS MEMBERSHIP</p>
@@ -550,47 +713,37 @@ export default function BoxPreview({
         </aside>
       </section>
       </div>
-      <section className="homeImpactStrip container">
-        <a href="/programs">
-          <img
-            src="/kav-impact/student-shiur.jpg"
-            alt="Kav Haribis student education program"
-          />
-          <span>STUDENT EDUCATION</span>
-        </a>
-        <a href="/programs">
-          <img
-            src="/kav-impact/heter-iska-presentation.jpg"
-            alt="Kav Haribis Heter Iska outreach"
-          />
-          <span>BUSINESS OUTREACH</span>
-        </a>
-        <a href="/programs">
-          <img
-            src="/kav-impact/financial-outreach.jpg"
-            alt="Kav Haribis financial industry outreach"
-          />
-          <span>FINANCIAL EDUCATION</span>
-        </a>
-      </section>
+      <FeaturedSeforim />
 
-      <section className="homeFinalCta">
-        <div>
-          <p className="eyebrow gold">SUPPORT THE MISSION</p>
-          <h2>
-            Help expand Torah education and responsible financial guidance.
-          </h2>
+      {/* 2-Row White Background Auto-Sliding Impact Marquee */}
+      <section className="homeImpactStripSection">
+        {/* Row 1: Right to Left */}
+        <div className="impactMarqueeContainer">
+          <div className="impactMarqueeTrack rtl">
+            {[...impactRow1, ...impactRow1, ...impactRow1].map((item, idx) => (
+              <a href="/programs" className="impactCard" key={`r1-${idx}`}>
+                <img src={item.src} alt={item.title} />
+                <span>{item.title}</span>
+              </a>
+            ))}
+          </div>
         </div>
-        <div>
-          <a className="primary" href="/contact">
-            Contact Kav Haribis →
-          </a>
+
+        {/* Row 2: Left to Right */}
+        <div className="impactMarqueeContainer">
+          <div className="impactMarqueeTrack ltr">
+            {[...impactRow2, ...impactRow2, ...impactRow2].map((item, idx) => (
+              <a href="/programs" className="impactCard" key={`r2-${idx}`}>
+                <img src={item.src} alt={item.title} />
+                <span>{item.title}</span>
+              </a>
+            ))}
+          </div>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SubscriptionForm />
-      </div>
+      <LandingFaq />
+      <SubscriptionForm />
       <SiteFooter showHeterNotice />
     </main>
   );

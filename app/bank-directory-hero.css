@@ -1,104 +1,126 @@
 .bankDirectoryHero {
   position: relative;
   overflow: hidden;
-  padding: 66px 6vw;
-  background: linear-gradient(125deg, #0b263f, #164869);
+  background: linear-gradient(135deg, #071728 0%, #102a43 60%, #0e304b 100%);
   color: white;
+  border-bottom: 2px solid #c69b46;
+}
+
+.bankDirectoryHeroInner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 80px clamp(20px, 4vw, 40px);
   display: grid;
-  grid-template-columns: 0.86fr 1.14fr;
-  gap: 55px;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
   align-items: center;
 }
+
 .bankDirectoryHero:after {
   content: '';
   position: absolute;
-  width: 430px;
-  height: 430px;
-  border: 1px solid #d9b66e25;
+  width: 450px;
+  height: 450px;
+  border: 1px solid rgba(198, 155, 70, 0.2);
   border-radius: 50%;
   right: -210px;
   top: -210px;
+  pointer-events: none;
 }
+
 .bankHeroHeading {
   position: relative;
   z-index: 1;
 }
+
 .bankHeroHeading h1 {
-  font: 500 clamp(45px, 5vw, 72px)/1.04 Georgia;
-  margin: 8px 0 20px;
+  font: 700 clamp(36px, 4.5vw, 58px)/1.1 Georgia, serif;
+  margin: 12px 0 20px;
+  color: #ffffff;
 }
+
 .bankHeroHeading > p:last-child {
-  max-width: 620px;
+  max-width: 640px;
   font-size: 17px;
-  line-height: 1.75;
-  color: #d4e0e7;
+  line-height: 1.8;
+  color: #cbd5e1;
 }
+
 .bankHeroQuote {
   position: relative;
   z-index: 1;
   margin: 0;
-  padding: 29px 34px 26px;
-  border: 1px solid #d9b66e70;
-  border-radius: 12px;
-  background: #061a2c80;
-  box-shadow: 0 20px 55px #04162645;
+  padding: 34px 38px;
+  border: 1px solid rgba(198, 155, 70, 0.5);
+  border-radius: 20px;
+  background: rgba(7, 23, 40, 0.85);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
 }
+
 .bankHeroQuote > span {
   position: absolute;
-  left: 18px;
-  top: 3px;
-  font: 68px Georgia;
-  color: #d9b66e45;
+  left: 20px;
+  top: 6px;
+  font: 72px Georgia, serif;
+  color: rgba(198, 155, 70, 0.35);
 }
+
 .bankHeroQuote > p {
   margin: 0;
-  font:
-    clamp(20px, 2vw, 29px)/1.7 Georgia,
-    'Times New Roman',
-    serif;
-  color: #fff;
+  font: 500 clamp(20px, 2vw, 26px)/1.75 Georgia, 'Times New Roman', serif;
+  color: #ffffff;
 }
+
 .bankHeroQuote > footer {
-  margin-top: 17px;
-  padding-top: 14px;
-  border-top: 1px solid #ffffff20;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
   display: flex;
   align-items: center;
-  gap: 13px;
+  gap: 14px;
 }
+
 .bankHeroQuote > footer:before {
   content: '';
-  width: 38px;
+  width: 40px;
   height: 2px;
-  background: #d9b66e;
+  background: #c69b46;
 }
+
 .bankHeroQuote strong {
-  color: #f0d59a;
+  color: #e5c474;
   font-size: 15px;
+  font-weight: 700;
 }
+
 .bankHeroQuote small {
   direction: ltr;
-  color: #b9cbd8;
-  font-size: 10px;
+  color: #cbd5e1;
+  font-size: 11px;
 }
+
 .bankDirectoryHero + .bankAuthorityIntro {
-  padding-top: 55px;
+  padding-top: 75px;
 }
+
 @media (max-width: 980px) {
   .bankDirectoryHero {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 32px;
+    padding: 60px 6vw;
   }
   .bankHeroHeading > p:last-child {
-    max-width: 800px;
+    max-width: 100%;
   }
 }
+
 @media (max-width: 600px) {
   .bankDirectoryHero {
     padding: 45px 5vw;
   }
   .bankHeroQuote {
-    padding: 25px 20px;
+    padding: 24px 20px;
   }
   .bankHeroQuote > p {
     font-size: 20px;
@@ -106,8 +128,6 @@
   .bankHeroQuote > footer {
     align-items: flex-start;
     flex-direction: column;
-  }
-  .bankHeroQuote > footer:before {
-    width: 45px;
+    gap: 6px;
   }
 }

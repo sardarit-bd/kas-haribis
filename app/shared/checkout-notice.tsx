@@ -172,66 +172,151 @@ export default function CheckoutNotice({
           : 'Heter Iska download';
   if (success)
     return (
-      <section className="checkoutArea">
-        <div className="paymentSuccess">
+      <section className="donateCheckoutWrapper">
+        <div className="paymentSuccess" style={{ maxWidth: '800px', margin: '0 auto' }}>
           <span>✓</span>
-          <h2>Payment approved</h2>
-          <p>
-            Confirmation: <b>{success.reference}</b>
+          <h2>Payment Approved!</h2>
+          <p style={{ fontSize: '16px', color: '#334e68', margin: '12px 0 20px' }}>
+            Thank you for your generous support to Kav Haribis. Your transaction reference number is: <b style={{ color: '#102a43' }}>{success.reference}</b>
           </p>
           {success.downloadUrl ? (
-            <a className="primary" href={success.downloadUrl}>
+            <a className="enhancedPayBtn" style={{ display: 'inline-flex', width: 'auto', textDecoration: 'none' }} href={success.downloadUrl}>
               {kind === 'bank-report'
-                ? 'View the full bank report'
+                ? 'View Full Bank Report →'
                 : kind === 'sefer-pdf'
-                  ? 'Download your PDF book'
-                  : 'Download the protected Heter Iska'}
+                  ? 'Download Your PDF Book →'
+                  : 'Download Protected Heter Iska →'}
             </a>
           ) : (
-            <p>Thank you for supporting Kav Haribis.</p>
+            <div className="taxReceiptBox" style={{ justifyContent: 'center', textAlign: 'left', maxWidth: '500px', margin: '20px auto 0' }}>
+              <span className="taxReceiptIcon">📜</span>
+              <div className="taxReceiptText">
+                <b>Tax-Deductible Receipt Sent</b>
+                <p>A confirmation email with your tax-deductible receipt details has been issued.</p>
+              </div>
+            </div>
           )}
         </div>
       </section>
     );
+
+
+
+
+
+
+
+
+
+
+
+
+    useEffect(() => {
+    // Cardknox লাইব্রেরি লোড হয়েছে কিনা নিশ্চিত করা
+    if (window.setIfieldStyle) {
+      const inputStyle = {
+        width: '100%',
+        height: '44px',
+        border: '1px solid #cbd5e1',
+        'box-sizing': 'border-box',
+        padding: '0 12px',
+        'font-size': '16px',
+        color: '#333333',
+        outline: 'none',
+        'border-radius': '4px'
+      };
+
+      // data-ifields-id="card-number" এর সাথে মিলিয়ে স্টাইল পাঠানো
+      window.setIfieldStyle('card-number', inputStyle);
+      window.setIfieldStyle('cvv', inputStyle);
+
+      // যদি CVV থাকে:
+      // window.setIfieldStyle('cvv', inputStyle);
+    }
+  }, []);
+
+
+
+
+
+
+
+
+
+
   return (
-    <section className="checkoutArea">
-      <div className="checkoutSummary">
-        <p className="eyebrow gold">PAYMENT SUMMARY</p>
-        <h2>{label}</h2>
-        <strong>
-          {kind === 'donation'
-            ? Number.isFinite(total)
-              ? `$${total.toFixed(2)}`
-              : 'Custom amount'
-            : amount}
-        </strong>
-        <p>
-          Your card number and security code are secured by Cardknox iFields.
-          They do not pass through or remain on the Kav Haribis website.
-        </p>
-        {kind === 'sefer-pdf' && (
-          <p>
-            <b>One protected download</b> becomes available immediately after
-            payment.
-          </p>
-        )}
-      </div>
-      <div className="checkoutCard">
-        {status?.ready ? (
-          <>
-            <h2>Secure payment</h2>
-            <form className="paymentForm" onSubmit={submit}>
-              {kind === 'donation' && (
-                <>
-                  <label>
-                    Donation amount
-                    <div className="amountChoices">
-                      {[18, 36, 72, 180].map((value) => (
+    <section className="donateCheckoutWrapper">
+      <div className="enhancedCheckoutArea">
+        {/* Left Side: Summary & Trust Info */}
+        <div className="enhancedCheckoutSummary">
+          <div className="summaryHeader">
+            <span className="summaryEyebrow">SECURE CHECKOUT</span>
+            <h2 className="summaryTitle">{label}</h2>
+            <div className="summaryBigAmount">
+              ${Number.isFinite(total) ? total.toFixed(2) : '0.00'}
+              {kind === 'donation' && <span>USD</span>}
+            </div>
+          </div>
+
+          <ul className="summaryFeaturesList">
+            <li className="summaryFeatureItem">
+              <span className="summaryFeatureIcon">✓</span>
+              <div>
+                <strong>Direct Halachic & Educational Impact</strong>
+                <div style={{ fontSize: '13px', color: '#627d98', marginTop: '2px' }}>
+                  Supports Ribis education, pubic lectures, and free halachic guidance worldwide.
+                </div>
+              </div>
+            </li>
+            <li className="summaryFeatureItem">
+              <span className="summaryFeatureIcon">🔒</span>
+              <div>
+                <strong>PCI-DSS Compliant Security</strong>
+                <div style={{ fontSize: '13px', color: '#627d98', marginTop: '2px' }}>
+                  Card details are encrypted via Cardknox iFields and never stored on our server.
+                </div>
+              </div>
+            </li>
+            <li className="summaryFeatureItem">
+              <span className="summaryFeatureIcon">📜</span>
+              <div>
+                <strong>Instant Receipt & Confirmation</strong>
+                <div style={{ fontSize: '13px', color: '#627d98', marginTop: '2px' }}>
+                  Confirmation ID is generated immediately upon successful payment approval.
+                </div>
+              </div>
+            </li>
+          </ul>
+
+          <div className="taxReceiptBox">
+            <span className="taxReceiptIcon">🏛️</span>
+            <div className="taxReceiptText">
+              <b>Kav Haribis Educational Fund</b>
+              <p>Dedicated to pure Torah scholarship & Ribis compliance.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side: Payment Form Card */}
+        <div className="enhancedCheckoutCard">
+          {status?.ready ? (
+            <>
+              <div className="cardHeaderTitle">
+                <span>🔒</span> Payment Details
+              </div>
+              <p className="cardHeaderSubtitle">
+                Please enter your details below to complete your secure payment.
+              </p>
+
+              <form className="paymentForm" onSubmit={submit}>
+                {kind === 'donation' && (
+                  <div className="enhancedFormGroup">
+                    <label className="enhancedFormLabel">Select Donation Amount (USD)</label>
+                    <div className="presetAmountGrid">
+                      {[18, 36, 72, 180, 360, 1000].map((value) => (
                         <button
                           type="button"
-                          className={
-                            customAmount === String(value) ? 'selected' : ''
-                          }
+                          className={`presetBtn ${customAmount === String(value) ? 'selected' : ''}`}
                           onClick={() => setCustomAmount(String(value))}
                           key={value}
                         >
@@ -239,137 +324,177 @@ export default function CheckoutNotice({
                         </button>
                       ))}
                     </div>
-                    <span className="moneyInput">
-                      $
+
+                    <div className="customMoneyField">
+                      <span className="currencyPrefix">$</span>
                       <input
                         aria-label="Custom donation amount"
                         type="number"
                         min="1"
                         max="100000"
                         step="0.01"
+                        className="enhancedFormInput customMoneyInput"
+                        placeholder="Other amount"
                         value={customAmount}
                         onChange={(e) => setCustomAmount(e.target.value)}
                         required
                       />
-                    </span>
-                  </label>
-                </>
-              )}
-              <div className="twoFields">
-                <label>
-                  Name
-                  <input name="name" autoComplete="name" required />
-                </label>
-                <label>
-                  Email
-                  <input
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                  />
-                </label>
-              </div>
-              {kind === 'donation' && (
-                <>
-                  <label>
-                    Dedication or memorial message <small>(optional)</small>
-                    <textarea name="dedication" rows={3} />
-                  </label>
-                  <label className="checkLabel">
-                    <input name="anonymous" type="checkbox" /> Show this
-                    donation as anonymous
-                  </label>
-                </>
-              )}
-              <label>
-                Card number
-                <iframe
-                  title="Secure card number"
-                  data-ifields-id="card-number"
-                  data-ifields-placeholder="Card number"
-                  src="https://cdn.cardknox.com/ifields/3.5.2607.1401/ifield.htm"
-                />
-                <input type="hidden" data-ifields-id="card-number-token" />
-              </label>
-              <div className="cardRow">
-                <label>
-                  Expiration
-                  <div className="expiry">
-                    <select
-                      name="month"
-                      aria-label="Expiration month"
-                      required
-                      defaultValue=""
-                    >
-                      <option value="" disabled>
-                        MM
-                      </option>
-                      {Array.from({ length: 12 }, (_, i) =>
-                        String(i + 1).padStart(2, '0'),
-                      ).map((m) => (
-                        <option key={m}>{m}</option>
-                      ))}
-                    </select>
-                    <b>/</b>
-                    <select
-                      name="year"
-                      aria-label="Expiration year"
-                      required
-                      defaultValue=""
-                    >
-                      <option value="" disabled>
-                        YY
-                      </option>
-                      {Array.from({ length: 12 }, (_, i) =>
-                        String(new Date().getFullYear() + i).slice(-2),
-                      ).map((y) => (
-                        <option key={y}>{y}</option>
-                      ))}
-                    </select>
+                    </div>
                   </div>
-                </label>
-                <label>
-                  Security code
-                  <iframe
-                    title="Secure card security code"
-                    data-ifields-id="cvv"
-                    data-ifields-placeholder="CVV"
-                    src="https://cdn.cardknox.com/ifields/3.5.2607.1401/ifield.htm"
-                  />
-                  <input type="hidden" data-ifields-id="cvv-token" />
-                </label>
-              </div>
-              {message && (
-                <p className="formError" role="alert">
-                  {message}
-                </p>
-              )}
-              <button className="primary paymentButton" disabled={working}>
-                {working
-                  ? 'PROCESSING SECURELY…'
-                  : `PROCESS PAYMENT — $${Number.isFinite(total) ? total.toFixed(2) : '0.00'}`}
-              </button>
-              <small className="secureNote">
-                🔒 Secure payment powered by Cardknox/Sola
-              </small>
-            </form>
-          </>
-        ) : status === null ? (
-          <p>Loading secure payment…</p>
-        ) : (
-          <>
-            <span className="statusDot" />
-            <h2>Payment setup is not complete</h2>
-            <p>
-              The administrator must add the Cardknox credentials before
-              payments can be processed.
-            </p>
-            <a className="primary" href="/admin/settings">
-              Open payment settings
-            </a>
-          </>
-        )}
+                )}
+
+                <div className="cardSecurityRow" style={{ marginBottom: '0' }}>
+                  <div className="enhancedFormGroup">
+                    <label className="enhancedFormLabel">Full Name</label>
+                    <input
+                      name="name"
+                      autoComplete="name"
+                      className="enhancedFormInput"
+                      placeholder="e.g. Moshe Cohen"
+                      required
+                    />
+                  </div>
+                  <div className="enhancedFormGroup">
+                    <label className="enhancedFormLabel">Email Address</label>
+                    <input
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      className="enhancedFormInput"
+                      placeholder="moshe@example.com"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {kind === 'donation' && (
+                  <div className="enhancedFormGroup">
+                    <label className="enhancedFormLabel">
+                      Dedication or Memorial Message <small style={{ fontWeight: 400, color: '#627d98' }}>(Optional)</small>
+                    </label>
+                    <textarea
+                      name="dedication"
+                      rows={2}
+                      className="enhancedFormTextarea"
+                      placeholder="In honor of / In memory of..."
+                    />
+                    <label className="anonymousCheckboxLabel">
+                      <input name="anonymous" type="checkbox" />
+                      Make this donation anonymous
+                    </label>
+                  </div>
+                )}
+
+                <div className="enhancedFormGroup">
+                  <label className="enhancedFormLabel">Card Number</label>
+                  <div className="iframeWrapper">
+                    <iframe
+                      title="Secure card number"
+                      data-ifields-id="card-number"
+                      data-ifields-placeholder="•••• •••• •••• ••••"
+                      src="https://cdn.cardknox.com/ifields/3.5.2607.1401/ifield.htm"
+                    />
+                  </div>
+                  <input type="hidden" data-ifields-id="card-number-token" />
+                </div>
+
+                <div className="cardSecurityRow">
+                  <div className="enhancedFormGroup">
+                    <label className="enhancedFormLabel">Expiration Date</label>
+                    <div className="expirySelects">
+                      <select
+                        name="month"
+                        aria-label="Expiration month"
+                        className="enhancedFormSelect"
+                        required
+                        defaultValue=""
+                      >
+                        <option value="" disabled>
+                          MM
+                        </option>
+                        {Array.from({ length: 12 }, (_, i) =>
+                          String(i + 1).padStart(2, '0'),
+                        ).map((m) => (
+                          <option key={m}>{m}</option>
+                        ))}
+                      </select>
+                      <span className="expiryDivider">/</span>
+                      <select
+                        name="year"
+                        aria-label="Expiration year"
+                        className="enhancedFormSelect"
+                        required
+                        defaultValue=""
+                      >
+                        <option value="" disabled>
+                          YY
+                        </option>
+                        {Array.from({ length: 12 }, (_, i) =>
+                          String(new Date().getFullYear() + i).slice(-2),
+                        ).map((y) => (
+                          <option key={y}>{y}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="enhancedFormGroup">
+                    <label className="enhancedFormLabel">Security Code (CVV)</label>
+                    <div className="iframeWrapper">
+                      <iframe
+                        title="Secure card security code"
+                        data-ifields-id="cvv"
+                        data-ifields-placeholder="CVC / CVV"
+                        src="https://cdn.cardknox.com/ifields/3.5.2607.1401/ifield.htm"
+                      />
+                    </div>
+                    <input type="hidden" data-ifields-id="cvv-token" />
+                  </div>
+                </div>
+
+                {message && (
+                  <p className="formError" role="alert" style={{ color: '#dc2626', background: '#fef2f2', border: '1px solid #fecaca', padding: '10px 14px', borderRadius: '8px', fontSize: '13px', marginTop: '12px' }}>
+                    {message}
+                  </p>
+                )}
+
+                <button className="enhancedPayBtn" disabled={working}>
+                  {working ? (
+                    <>⏳ PROCESSING SECURELY…</>
+                  ) : (
+                    <>
+                      <span>🔒</span> PROCESS SECURE PAYMENT — ${Number.isFinite(total) ? total.toFixed(2) : '0.00'}
+                    </>
+                  )}
+                </button>
+
+                <div className="securityFooterNote">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                  </svg>
+                  256-Bit SSL Encrypted & Powered by Cardknox / Sola
+                </div>
+              </form>
+            </>
+          ) : status === null ? (
+            <div style={{ textAlign: 'center', padding: '40px 0', color: '#627d98' }}>
+              <p>Loading secure payment environment...</p>
+            </div>
+          ) : (
+            <div style={{ textAlign: 'center', padding: '20px 0' }}>
+              <span className="statusDot" style={{ margin: '0 auto 16px' }} />
+              <h2 style={{ fontFamily: 'Georgia, serif', color: '#102a43', fontSize: '22px' }}>
+                Payment Setup Pending
+              </h2>
+              <p style={{ color: '#627d98', fontSize: '14px', margin: '12px 0 24px' }}>
+                The administrator must configure Cardknox API credentials in the settings.
+              </p>
+              <a className="enhancedPayBtn" style={{ display: 'inline-flex', width: 'auto', textDecoration: 'none' }} href="/admin/settings">
+                Open Admin Settings →
+              </a>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

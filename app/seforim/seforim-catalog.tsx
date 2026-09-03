@@ -1,6 +1,7 @@
 'use client';
 import { useMemo, useState } from 'react';
-import StoreCheckout, { type CartItem } from './store-checkout';
+import { useCart } from '../shared/cart-context';
+
 export type Sefer = {
   id: string;
   title: string;
@@ -13,43 +14,31 @@ export type Sefer = {
   pdf_price: number;
   pdf_filename: string;
 };
+
 export default function SeforimCatalog({ books }: { books: Sefer[] }) {
+  const { cart, addToCart, setCartOpen, totalCount } = useCart();
   const [query, setQuery] = useState(''),
     [format, setFormat] = useState('all'),
     [selected, setSelected] = useState<Sefer | null>(null),
-    [cart, setCart] = useState<CartItem[]>([]),
-    [cartOpen, setCartOpen] = useState(false),
     [notice, setNotice] = useState('');
+
   const filtered = useMemo(
-      () =>
-        books.filter(
-          (book) =>
-            book.title.toLowerCase().includes(query.toLowerCase()) &&
-            (format === 'all' ||
-              (format === 'book'
-                ? book.available
-                : format === 'pdf'
-                  ? book.pdf_available
-                  : book.available && book.pdf_available)),
-        ),
-      [books, query, format],
-    ),
-    count = cart.reduce((n, x) => n + x.quantity, 0);
+    () =>
+      books.filter(
+        (book) =>
+          book.title.toLowerCase().includes(query.toLowerCase()) &&
+          (format === 'all' ||
+            (format === 'book'
+              ? book.available
+              : format === 'pdf'
+                ? book.pdf_available
+                : book.available && book.pdf_available)),
+      ),
+    [books, query, format],
+  );
+
   function add(book: Sefer, kind: 'book' | 'pdf') {
-    setCart((current) => {
-      const index = current.findIndex(
-        (x) => x.book.id === book.id && x.format === kind,
-      );
-      if (index < 0) return [...current, { book, format: kind, quantity: 1 }];
-      return current.map((x, i) =>
-        i === index
-          ? {
-              ...x,
-              quantity: kind === 'pdf' ? 1 : Math.min(10, x.quantity + 1),
-            }
-          : x,
-      );
-    });
+    addToCart(book, kind);
     setNotice(`${kind === 'pdf' ? 'PDF' : 'Printed book'} added to cart.`);
     setSelected(null);
   }
@@ -80,7 +69,7 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
             </label>
             <b>{filtered.length} titles</b>
             <button className="cartButton" onClick={() => setCartOpen(true)}>
-            Cart <span>{count}</span>
+            Cart <span>{totalCount}</span>
           </button>
           </div>
           
@@ -207,43 +196,8 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
                     </button>
                   </div>
                 )}
-                {!selected.available && !selected.pdf_available && (
-                  <span className="stockNotice">
-                    This title is currently unavailable.
-                  </span>
-                )}
               </div>
             </div>
-          </div>
-        </div>
-      )}
-      {cartOpen && (
-        <div className="pdfCheckoutBackdrop" role="dialog" aria-modal="true">
-          <div className="fullCartModal">
-            {cart.length ? (
-              <StoreCheckout
-                items={cart}
-                onClose={() => setCartOpen(false)}
-                onQuantity={(i, q) =>
-                  setCart((c) =>
-                    c.map((x, n) => (n === i ? { ...x, quantity: q } : x)),
-                  )
-                }
-                onRemove={(i) => setCart((c) => c.filter((_, n) => n !== i))}
-              />
-            ) : (
-              <div className="emptyCart">
-                <button className="close" onClick={() => setCartOpen(false)}>
-                  ×
-                </button>
-                <span>🛒</span>
-                <h2>Your cart is empty</h2>
-                <p>Add a printed book or PDF from the catalog.</p>
-                <button className="primary" onClick={() => setCartOpen(false)}>
-                  Continue shopping
-                </button>
-              </div>
-            )}
           </div>
         </div>
       )}

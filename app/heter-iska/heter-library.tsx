@@ -16,6 +16,34 @@ export default function HeterLibrary() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const checkoutRef = useRef<HTMLDivElement | null>(null);
 
+
+  useEffect(() => {
+    // Cardknox লাইব্রেরি লোড হয়েছে কিনা নিশ্চিত করা
+    if (window.setIfieldStyle) {
+      const inputStyle = {
+        width: '100%',
+        height: '44px',
+        border: '1px solid #cbd5e1',
+        'box-sizing': 'border-box',
+        padding: '0 12px',
+        'font-size': '16px',
+        color: '#333333',
+        outline: 'none',
+        'border-radius': '4px'
+      };
+
+      // data-ifields-id="card-number" এর সাথে মিলিয়ে স্টাইল পাঠানো
+      window.setIfieldStyle('card-number', inputStyle);
+      window.setIfieldStyle('cvv', inputStyle);
+
+      // যদি CVV থাকে:
+      // window.setIfieldStyle('cvv', inputStyle);
+    }
+  }, []);
+
+
+  
+
   useEffect(() => {
     fetch('/api/heter-documents')
       .then((r) => r.json())
