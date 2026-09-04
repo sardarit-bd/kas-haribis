@@ -4,6 +4,7 @@ import {
   certificationApplicationEmailTemplate,
   contactSubmissionEmailTemplate,
   statusUpdateEmailTemplate,
+  ribbisAlertEmailTemplate,
 } from "./emailTemplates.js";
 
 
@@ -56,6 +57,9 @@ const sendEmail = async (emails, subject, data, templateType) => {
         break;
       case "certification-application":
         htmlTemplate = certificationApplicationEmailTemplate(data);
+        break;
+      case "ribbis-alert":
+        htmlTemplate = ribbisAlertEmailTemplate(data);
         break;
       default:
         throw new Error(`Invalid email template type: ${templateType}`);

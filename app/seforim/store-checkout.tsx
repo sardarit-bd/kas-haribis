@@ -1,5 +1,7 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
+import { MdKeyboardBackspace } from "react-icons/md";
 import type { Sefer } from './seforim-catalog';
 export type CartItem = {
   book: Sefer;
@@ -27,6 +29,7 @@ export default function StoreCheckout({
   onQuantity: (index: number, q: number) => void;
   onRemove: (index: number) => void;
 }) {
+  const router = useRouter();
   const [ready, setReady] = useState(false),
     [message, setMessage] = useState(''),
     [working, setWorking] = useState(false),
@@ -203,7 +206,12 @@ export default function StoreCheckout({
     <div className="storeCheckout">
     
       <header>
-        <p className="eyebrow gold">YOUR CART</p>
+        <div className='flex items-center gap-3'>
+          <button onClick={()=>{router.back()}} className='bg-yellow-700/10 p-1 cursor-pointer'>
+            <MdKeyboardBackspace size={24} />
+          </button>
+          <p className="font-semibold text-yellow-700 text-xl">YOUR CART</p>
+        </div>
         <h2>Complete your Seforim order</h2>
         <strong>${total.toFixed(2)}</strong>
       </header>

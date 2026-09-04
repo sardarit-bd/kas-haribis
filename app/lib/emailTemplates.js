@@ -347,3 +347,79 @@ export const certificationApplicationEmailTemplate = (data = {}) => {
         </div>
     `;
 };
+
+export const ribbisAlertEmailTemplate = (data = {}) => {
+  const severity = sanitize(data.severity) || 'Important';
+  const category = sanitize(data.category) || 'General Alert';
+  const title = sanitize(data.title) || 'Ribbis Alert Notice';
+  const alertDate = sanitize(data.alert_date) || '';
+  const summary = sanitize(data.summary) || '';
+  const fullDetails = sanitize(data.full_details) || '';
+  const actionLabel = sanitize(data.action_label);
+  const actionUrl = sanitize(data.action_url);
+
+  let severityBadgeStyle = 'background-color: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8;';
+  if (severity.toLowerCase() === 'urgent') {
+    severityBadgeStyle = 'background-color: #fff5f5; color: #c53030; border: 1px solid #feb2b2;';
+  } else if (severity.toLowerCase() === 'important') {
+    severityBadgeStyle = 'background-color: #fffaf0; color: #dd6b20; border: 1px solid #fbd38d;';
+  } else if (severity.toLowerCase() === 'update') {
+    severityBadgeStyle = 'background-color: #f0fff4; color: #276749; border: 1px solid #9ae6b4;';
+  }
+
+  return `
+    <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+        <div style="max-width: 650px; margin: 0 auto; background-color: #ffffff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            
+            <!-- Header -->
+            <div style="border-bottom: 2px solid #b7791f; padding-bottom: 15px; margin-bottom: 20px;">
+                <div style="margin-bottom: 10px;">
+                    <span style="${severityBadgeStyle} padding: 4px 10px; font-size: 12px; font-weight: bold; border-radius: 4px; display: inline-block; margin-right: 6px;">
+                        ${severity.toUpperCase()}
+                    </span>
+                    <span style="background-color: #edf2f7; color: #4a5568; padding: 4px 10px; font-size: 12px; font-weight: bold; border-radius: 4px; display: inline-block;">
+                        ${category}
+                    </span>
+                </div>
+                <h2 style="color: #1a202c; margin: 10px 0 5px 0; font-size: 22px;">
+                    ${title}
+                </h2>
+                ${alertDate ? `<p style="color: #718096; font-size: 13px; margin: 0;">Date: ${alertDate}</p>` : ''}
+            </div>
+
+            <!-- Summary Box -->
+            ${summary ? `
+            <div style="background-color: #fffaf0; border-left: 4px solid #dd6b20; padding: 16px; margin-bottom: 20px; border-radius: 4px;">
+                <p style="font-size: 11px; font-weight: bold; color: #9c4221; margin: 0 0 6px 0; text-transform: uppercase; letter-spacing: 0.5px;">Alert Summary</p>
+                <p style="color: #2d3748; font-size: 14px; margin: 0; line-height: 1.6; white-space: pre-line;">${summary}</p>
+            </div>
+            ` : ''}
+
+            <!-- Details Section -->
+            ${fullDetails ? `
+            <div style="margin-bottom: 20px;">
+                <h3 style="color: #2d3748; font-size: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 10px;">Full Details</h3>
+                <p style="color: #4a5568; font-size: 14px; line-height: 1.6; margin: 0; white-space: pre-line;">${fullDetails}</p>
+            </div>
+            ` : ''}
+
+            <!-- Action Button -->
+            ${actionUrl ? `
+            <div style="margin: 25px 0 15px 0; text-align: center;">
+                <a href="${actionUrl}" target="_blank" style="background-color: #b7791f; color: #ffffff; padding: 10px 22px; text-decoration: none; border-radius: 6px; display: inline-block; font-size: 14px; font-weight: bold;">
+                    ${actionLabel || 'View Details'} →
+                </a>
+            </div>
+            ` : ''}
+
+            <!-- Footer Note -->
+            <div style="border-top: 1px solid #e2e8f0; padding-top: 15px; margin-top: 25px; text-align: center;">
+                <p style="color: #a0aec0; font-size: 12px; margin: 0;">
+                    You are receiving this email because you subscribed to Ribbis Alert updates from Kav Haribis.
+                </p>
+            </div>
+
+        </div>
+    </div>
+  `;
+};

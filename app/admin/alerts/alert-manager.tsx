@@ -75,7 +75,13 @@ export default function Manager({ initialItems }: { initialItems: Item[] }) {
     await reload();
     setEditing(null);
     f.reset();
-    setMsg(d.id ? 'Alert updated.' : 'Alert added.');
+    if (d.id) {
+      setMsg('Alert updated.');
+    } else if (j.emailsSent > 0) {
+      setMsg(`Alert added and emailed to ${j.emailsSent} subscriber${j.emailsSent > 1 ? 's' : ''}.`);
+    } else {
+      setMsg('Alert added.');
+    }
     setBusy(false);
   }
   async function remove(x: Item) {

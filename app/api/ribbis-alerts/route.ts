@@ -1,5 +1,7 @@
 import { getRequestEmail, isOwnerRequest } from '../../lib/request-auth';
-import { ensureRibbisAlerts, listRibbisAlerts } from '../../lib/directories';
+import { ensureRibbisAlerts, ensureAlertSubscribers, listRibbisAlerts } from '../../lib/directories';
+import sendEmail from '../../lib/sendEmail';
+
 const clean = (v: unknown, n = 8000) =>
     String(v ?? '')
       .trim()
@@ -54,7 +56,32 @@ export async function POST(r: Request) {
       now,
     )
     .run();
-  return Response.json({ saved: true, id });
+
+  let emailsSent = 0;
+  try {
+    await ensureAlertSubscribers(e.DB);
+    const subRes = await e.DB.prepare('SELECT email, name FROM alert_subscribers WHERE active=1').all();
+    const emails = (subRes.results || []).map((s: any) => String(s.email).trim()).filter(Boolean);
+    if (emails.length > 0) {
+      const alertData = {
+        title: clean(b.title, 250),
+        alert_date: clean(b.alert_date, 50),
+        category: clean(b.category, 100),
+        severity: clean(b.severity, 100),
+        alert_status: clean(b.alert_status, 100),
+        summary: clean(b.summary, 10000),
+        full_details: clean(b.full_details, 10000),
+        action_label: clean(b.action_label, 200),
+        action_url: clean(b.action_url, 1000),
+      };
+      await sendEmail(emails, `Ribbis Alert: ${alertData.title}`, alertData, 'ribbis-alert');
+      emailsSent = emails.length;
+    }
+  } catch (err: any) {
+    console.error('Failed to send alert emails to subscribers:', err?.message || err);
+  }
+
+  return Response.json({ saved: true, id, emailsSent });
 }
 export async function PUT(r: Request) {
   if (!(await isOwnerRequest(r)))
