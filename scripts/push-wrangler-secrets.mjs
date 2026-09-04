@@ -17,8 +17,6 @@ const secretKeys = [
   'GOOGLE_CLIENT_ID',
   'GOOGLE_CLIENT_SECRET',
   'CARDKNOX_SETTINGS_KEY',
-  'EMAIL_USER',
-  'EMAIL_PASSWORD',
 ];
 
 const secrets = Object.fromEntries(

@@ -45,8 +45,6 @@ jobs:
           D1_DATABASE_ID: ${{ secrets.D1_DATABASE_ID }}
           R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
           CARDKNOX_SETTINGS_KEY: ${{ secrets.CARDKNOX_SETTINGS_KEY }}
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: node scripts/write-env-from-ci.mjs
 
       - name: Sync Wrangler config
