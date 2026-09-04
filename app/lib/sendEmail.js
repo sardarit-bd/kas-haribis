@@ -6,23 +6,11 @@ import {
   statusUpdateEmailTemplate,
   ribbisAlertEmailTemplate,
 } from "./emailTemplates.js";
+import { getEmailSettings } from "./email-settings";
 
 
 async function getEmailConfig() {
-  let user = process.env.EMAIL_USER || '';
-  let pass = process.env.EMAIL_PASSWORD || '';
-  if (!user || !pass) {
-    try {
-      const { env } = await import('cloudflare:workers');
-      if (env) {
-        user = user || env.EMAIL_USER || '';
-        pass = pass || env.EMAIL_PASSWORD || '';
-      }
-    } catch {
-      // non-worker environment fallback
-    }
-  }
-  return { user, pass };
+  return await getEmailSettings();
 }
 
 const sendEmail = async (emails, subject, data, templateType) => {
