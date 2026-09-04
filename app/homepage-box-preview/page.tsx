@@ -4,6 +4,7 @@ import SubscriptionForm from '../ribis-alerts/subscription-form';
 import FeaturedSeforim from '../shared/featured-seforim';
 import LandingFaq from '../shared/landing-faq';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
+import SponsorBanner from '../shared/sponsor-banner';
 
 const offerings = [
   [
@@ -416,6 +417,7 @@ export default function BoxPreview({
           ))}
         </div>
       </section>
+      <SponsorBanner/>
       <div className='hidden'>
       <nav
         className="quickPreviewStrip liveQuickActions"
