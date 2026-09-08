@@ -107,7 +107,7 @@ export default function SponsorBanner() {
         </span>
         <span className="topSponsorName">
           <b>{sponsor.company_name}</b>
-          <small>{clickable ? 'Click for details' : 'Proud supporter'}</small>
+          <small className=''>{clickable ? 'Click for details' : 'Proud supporter'}</small>
         </span>
         {clickable && <span className="topSponsorArrow hidden">›</span>}
       </button>

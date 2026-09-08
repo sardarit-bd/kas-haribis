@@ -843,3 +843,195 @@
     animation-duration: 28s;
   }
 }
+
+/* Community Impact Grid Gallery Section */
+.homeImpactGridSection {
+  background: #fcfbf9;
+  padding: 72px 0 84px;
+  border-top: 1px solid #e8e2d5;
+  border-bottom: 1px solid #e8e2d5;
+}
+
+.impactGridHeader {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.impactGalleryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1200px) {
+  .impactGalleryGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 860px) {
+  .impactGalleryGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 540px) {
+  .impactGalleryGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.impactGalleryCard {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(16, 42, 67, 0.05);
+  border: 1px solid #e2ded5;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.impactGalleryCard:hover {
+  transform: translateY(-6px);
+  border-color: #c69b46;
+  box-shadow: 0 16px 36px rgba(16, 42, 67, 0.12);
+}
+
+.galleryImgWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #102a43;
+}
+
+.galleryImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.impactGalleryCard:hover .galleryImg {
+  transform: scale(1.06);
+}
+
+.galleryBadge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #102a43;
+  background: rgba(255, 255, 255, 0.94);
+  padding: 4px 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+}
+
+.impactGalleryCard:hover .galleryBadge {
+  background: #102a43;
+  color: #e5c474;
+  border-color: #c69b46;
+}
+
+.galleryCardContent {
+  padding: 20px 20px 18px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  background: #ffffff;
+}
+
+.galleryCardTitle {
+  font-size: 16.5px;
+  font-weight: 700;
+  color: #102a43;
+  margin: 0 0 6px 0;
+  line-height: 1.35;
+  transition: color 0.25s ease;
+}
+
+.impactGalleryCard:hover .galleryCardTitle {
+  color: #c69b46;
+}
+
+.galleryCardSubtitle {
+  font-size: 13px;
+  color: #627d98;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.galleryCardAction {
+  font-size: 13px;
+  font-weight: 700;
+  color: #c69b46;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  transition: all 0.25s ease;
+}
+
+.galleryCardAction .arrow {
+  transition: transform 0.25s ease;
+}
+
+.impactGalleryCard:hover .galleryCardAction {
+  color: #a37828;
+}
+
+.impactGalleryCard:hover .galleryCardAction .arrow {
+  transform: translateX(4px);
+}
+
+.impactGridFooter {
+  margin-top: 44px;
+  text-align: center;
+}
+
+.impactCtaBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #c69b46;
+  color: #ffffff !important;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 14px 34px;
+  border-radius: 10px;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(198, 155, 70, 0.28);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.impactCtaBtn:hover {
+  background: #b3832b;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(198, 155, 70, 0.4);
+}
+
+.impactCtaBtn .arrow {
+  transition: transform 0.25s ease;
+}
+
+.impactCtaBtn:hover .arrow {
+  transform: translateX(4px);
+}

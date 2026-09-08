@@ -137,18 +137,63 @@ const offeringImages = [
   ],
 ] as const;
 
-const impactRow1 = [
-  { title: 'STUDENT EDUCATION', src: '/kav-impact/student-shiur.jpg' },
-  { title: 'BUSINESS OUTREACH', src: '/kav-impact/heter-iska-presentation.jpg' },
-  { title: 'FINANCIAL EDUCATION', src: '/kav-impact/financial-outreach.jpg' },
-  { title: 'COMMUNITY OUTREACH', src: '/kav-impact/community-event.jpg' },
-];
-
-const impactRow2 = [
-  { title: 'COMMERCIAL ADVISORY', src: '/kav-impact/business-visit.jpg' },
-  { title: 'RABBINIC RECOGNITION', src: '/kav-impact/recognition-event.jpg' },
-  { title: 'HETER ISKA ADVISORY', src: '/kav-impact/heter-iska-presentation-2.jpg' },
-  { title: 'TORAH LECTURES', src: '/kav-impact/student-shiur.jpg' },
+const impactGalleryItems = [
+  {
+    title: 'Student Education',
+    subtitle: 'Torah Lectures & Kehilla Seminars',
+    src: '/kav-impact/student-shiur.jpg',
+    category: 'Shiurim & Classes',
+    link: '/programs',
+  },
+  {
+    title: 'Business Outreach',
+    subtitle: 'Halachic Guidance for Modern Enterprise',
+    src: '/kav-impact/heter-iska-presentation.jpg',
+    category: 'Commercial Advisory',
+    link: '/programs',
+  },
+  {
+    title: 'Financial Education',
+    subtitle: 'Responsible Commerce & Observance',
+    src: '/kav-impact/financial-outreach.jpg',
+    category: 'Education',
+    link: '/programs',
+  },
+  {
+    title: 'Community Outreach',
+    subtitle: 'Raising Awareness on Hilchos Ribbis',
+    src: '/kav-impact/community-event.jpg',
+    category: 'Community',
+    link: '/programs',
+  },
+  {
+    title: 'Commercial Advisory',
+    subtitle: 'Structuring Kosher Financial Contracts',
+    src: '/kav-impact/business-visit.jpg',
+    category: 'Heter Iska',
+    link: '/programs',
+  },
+  {
+    title: 'Rabbinic Recognition',
+    subtitle: 'Bais Horaah Endorsements & Conferences',
+    src: '/kav-impact/recognition-event.jpg',
+    category: 'Rabbinical Advisory',
+    link: '/programs',
+  },
+  {
+    title: 'Heter Iska Advisory',
+    subtitle: 'Custom Agreements & Legal Frameworks',
+    src: '/kav-impact/heter-iska-presentation-2.jpg',
+    category: 'Legal & Halacha',
+    link: '/programs',
+  },
+  {
+    title: 'Educational Shiurim',
+    subtitle: 'Practical Guidance for Daily Life',
+    src: '/kav-impact/student-shiur.jpg',
+    category: 'Learning',
+    link: '/programs',
+  },
 ];
 
 const mainOfferingsCategories = [
@@ -610,10 +655,10 @@ export default function BoxPreview({
             />
             <div className="heroSlideOverlay" />
             <div className="heroSlideInner container">
-              <div className="homeHeroCopy lg:pl-7">
+              <div className="homeHeroCopy">
                 <p className="eyebrow hidden">{slide.eyebrow}</p>
-                <h1>{slide.title}</h1>
-                <p className='pt-6'>{slide.description}</p>
+                <h1 className=''>{slide.title}</h1>
+                <p className='pt-8'>{slide.description}</p>
                 <div className="homeHeroActions">
                   <a className="primary" href={slide.primaryCta.href}>
                     {slide.primaryCta.text}
@@ -953,29 +998,40 @@ export default function BoxPreview({
       </div>
       <FeaturedSeforim />
 
-      {/* 2-Row White Background Auto-Sliding Impact Marquee */}
-      <section className="homeImpactStripSection">
-        {/* Row 1: Right to Left */}
-        <div className="impactMarqueeContainer">
-          <div className="impactMarqueeTrack rtl">
-            {[...impactRow1, ...impactRow1, ...impactRow1].map((item, idx) => (
-              <a href="/programs" className="impactCard" key={`r1-${idx}`}>
-                <img src={item.src} alt={item.title} />
-                <span>{item.title}</span>
+      {/* Community Impact Grid Gallery Section */}
+      <section className="homeImpactGridSection">
+        <div className="container">
+          <div className="impactGridHeader">
+            <p className="eyebrow gold mb-2">KAV HARIBIS IN ACTION</p>
+            <h2 className="text-center text-black text-4xl py-2 font-bold">Community Impact &amp; Gallery</h2>
+            <p className="sectionSubtitle max-w-2xl mx-auto text-slate-600 mt-2">
+              Promoting Hilchos Ribbis education, commercial advisory, and rabbinical guidance across kehillos and businesses worldwide.
+            </p>
+          </div>
+
+          <div className="impactGalleryGrid">
+            {impactGalleryItems.map((item, idx) => (
+              <a href={item.link} className="impactGalleryCard group" key={idx}>
+                <div className="galleryImgWrapper">
+                  <img src={item.src} alt={item.title} className="galleryImg" />
+                  <span className="galleryBadge hidden">{item.category}</span>
+                </div>
+                <div className="galleryCardContent">
+                  <h3 className="galleryCardTitle">{item.title}</h3>
+                  <p className="galleryCardSubtitle">{item.subtitle}</p>
+                  <span className="galleryCardAction">
+                    Explore program <span className="arrow">→</span>
+                  </span>
+                </div>
               </a>
             ))}
           </div>
-        </div>
 
-        {/* Row 2: Left to Right */}
-        <div className="impactMarqueeContainer">
-          <div className="impactMarqueeTrack ltr">
-            {[...impactRow2, ...impactRow2, ...impactRow2].map((item, idx) => (
-              <a href="/programs" className="impactCard" key={`r2-${idx}`}>
-                <img src={item.src} alt={item.title} />
-                <span>{item.title}</span>
-              </a>
-            ))}
+          <div className="impactGridFooter">
+            <a href="/contact" className="impactCtaBtn">
+              <span>Request a Program</span>
+              <span className="arrow">→</span>
+            </a>
           </div>
         </div>
       </section>

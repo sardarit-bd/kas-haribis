@@ -2,16 +2,17 @@ import { listBanks } from '../lib/directories';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
 import BankDirectoryClient from './bank-directory-client';
 import BankResearchForm from './bank-research-form';
-import ResearchAccessGate from './research-access-gate';
+// import ResearchAccessGate from './research-access-gate';
 export const dynamic = 'force-dynamic';
 
 export default async function BankDirectory() {
   const { env } = await import('cloudflare:workers');
   const banks = await listBanks(env.DB);
   return (
-    <main>
+    <main className=''>
       <SiteHeader />
-      <section className="bankDirectoryHero">
+      <div className='overflow-x-hidden'>
+        <section className="bankDirectoryHero">
         <div className="bankDirectoryHeroInner">
           <div className="bankHeroHeading">
             <p className="eyebrow gold mb-1">KOSHER BANK RESEARCH CENTER</p>
@@ -30,10 +31,10 @@ export default async function BankDirectory() {
               ומה מאד הי׳ ראוי למנות ע״ז אנשים מוכשרים היודעין לברר ענין זה, ושכרם
               יהי׳ הרבח מאד ובכלל מזכי רבים יחשבו.
             </p>
-            <footer>
+            <div className='mt-6'>
               <strong>הגאון הרב יחזקאל ראטה זצ״ל</strong>
               <small>Harav Yechezkel Roth zt״l</small>
-            </footer>
+            </div>
           </blockquote>
         </div>
       </section>
@@ -179,8 +180,9 @@ export default async function BankDirectory() {
         banks={banks.map((bank) => ({ ...bank, source: '' }))}
       />
       <BankResearchForm />
+      </div>
       <SiteFooter />
-      <ResearchAccessGate />
+      {/* <ResearchAccessGate /> */}
     </main>
   );
 }
