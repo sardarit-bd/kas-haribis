@@ -171,30 +171,23 @@ export default function StoreCheckout({
 
 
 
-    useEffect(() => {
-    // Cardknox লাইব্রেরি লোড হয়েছে কিনা নিশ্চিত করা
-    if (window.setIfieldStyle) {
-      const inputStyle = {
-        width: '100%',
-        height: '44px',
-        border: '1px solid #cbd5e1',
-        'box-sizing': 'border-box',
-        padding: '0 12px',
-        'font-size': '16px',
-        color: '#333333',
-        outline: 'none',
-        'border-radius': '4px'
-      };
 
-      // data-ifields-id="card-number" এর সাথে মিলিয়ে স্টাইল পাঠানো
-      window.setIfieldStyle('card-number', inputStyle);
-      window.setIfieldStyle('cvv', inputStyle);
+  const handleIframeLoad = () => {
+  const inputStyle = {
+    width: '100%',
+    height: '44px',
+    border: '1px solid #cbd5e1',
+    'box-sizing': 'border-box',
+    padding: '0 12px',
+    'font-size': '16px',
+    color: '#333333',
+    outline: 'none',
+    'border-radius': '4px',
+  };
 
-      // যদি CVV থাকে:
-      // window.setIfieldStyle('cvv', inputStyle);
-    }
-  }, []);
-
+  (window as any).setIfieldStyle?.('card-number', inputStyle);
+  (window as any).setIfieldStyle?.('cvv', inputStyle);
+};
 
 
 
@@ -338,6 +331,7 @@ export default function StoreCheckout({
                       data-ifields-id="card-number"
                       data-ifields-placeholder="4111 •••• •••• 1111"
                       src="https://cdn.cardknox.com/ifields/3.5.2607.1401/ifield.htm"
+                      onLoad={() => handleIframeLoad()}
                     />
                   </div>
                   <input type="hidden" data-ifields-id="card-number-token" />
@@ -380,6 +374,7 @@ export default function StoreCheckout({
                         data-ifields-id="cvv"
                         data-ifields-placeholder="CVV"
                         src="https://cdn.cardknox.com/ifields/3.5.2607.1401/ifield.htm"
+                        onLoad={() => handleIframeLoad()}
                       />
                     </div>
                     <input type="hidden" data-ifields-id="cvv-token" />

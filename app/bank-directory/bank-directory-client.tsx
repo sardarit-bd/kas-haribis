@@ -217,7 +217,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                     </time>
                   </p>
                 )}
-                <p>
+                <p className='pt-5'>
                   {bank.summary ||
                     'The current directory lists this institution under the status shown above. Contact Kav Haribis for details before relying on the listing.'}
                 </p>
@@ -237,7 +237,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                     Institution website ↗
                   </a>
                 )}
-                <p className="directoryWarning">
+                <p className="directoryWarning mt-6">
                   Information may change. Confirm the current status with the
                   Bais Horaah before making a financial decision.
                 </p>

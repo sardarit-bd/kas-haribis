@@ -177,7 +177,7 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
 
       <section className="audioLibraryModern" ref={libraryRef}>
         <button
-          className="backToSeries"
+          className="backToSeries hidden"
           type="button"
           onClick={() =>
             pickerRef.current?.scrollIntoView({

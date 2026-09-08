@@ -1,7 +1,7 @@
 'use client';
 
-import { useCart } from './cart-context';
 import type { Sefer } from '../seforim/seforim-catalog';
+import { useCart } from './cart-context';
 
 const featuredBooks: Sefer[] = [
   {
@@ -77,7 +77,7 @@ export default function FeaturedSeforim() {
                   <img
                     src={book.image}
                     alt={book.title}
-                    className="max-h-full max-w-full object-contain drop-shadow-md"
+                    className="max-h-full max-w-full object-contain"
                   />
                 </div>
 
