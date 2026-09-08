@@ -200,7 +200,7 @@ export function InteriorPage({
     <main>
       <SiteHeader />
       <section className="innerHero compactHero">
-        <div className="container">
+        <div className="w-full">
           <p className="eyebrow">{eyebrow}</p>
           <h1>{title}</h1>
           <p>{intro}</p>

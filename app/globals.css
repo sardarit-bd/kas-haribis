@@ -713,15 +713,16 @@ textarea {
   margin-top: 8px;
 }
 footer, .siteFooterBig {
-  background: linear-gradient(180deg, #071726 0%, #0c2338 60%, #05101a 100%);
-  color: #c9d4da;
+  background: #ffffff;
+  color: var(--ink);
   padding: 80px 0 35px;
   display: block;
-  border-top: 2px solid rgba(198, 155, 70, 0.35);
+  border-top: 1px solid #e2e8f0;
+  box-shadow: 0 -4px 24px rgba(18, 38, 58, 0.05);
   position: relative;
 }
 .brand.light b {
-  color: white;
+  color: var(--navy);
 }
 .footerMainGrid {
   display: grid;
@@ -736,23 +737,23 @@ footer, .siteFooterBig {
 }
 .footerBrandLogoWrapper {
   display: inline-block;
-  background: #ffffff;
-  padding: 10px 16px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
   width: fit-content;
 }
 .footerTagline {
   font-weight: 700;
-  color: #ffffff;
+  color: var(--navy);
   font-size: 15px;
   margin: 4px 0 0 0;
   letter-spacing: -0.01em;
 }
 .footerDesc {
   font-size: 13px;
-  color: #9fb3c8;
+  color: var(--muted);
   line-height: 1.65;
   margin: 0;
   max-width: 320px;
@@ -765,7 +766,7 @@ footer, .siteFooterBig {
 }
 .footerDonateBtn {
   background: #c69b46;
-  color: #071d31 !important;
+  color: #ffffff !important;
   padding: 9px 18px;
   border-radius: 8px;
   font-weight: 700;
@@ -778,13 +779,13 @@ footer, .siteFooterBig {
   box-shadow: 0 4px 12px rgba(198, 155, 70, 0.25);
 }
 .footerDonateBtn:hover {
-  background: #dfb867;
+  background: #b3832b;
   transform: translateY(-2px);
   box-shadow: 0 8px 18px rgba(198, 155, 70, 0.35);
 }
 .footerContactBtn {
-  border: 1px solid rgba(198, 155, 70, 0.45);
-  color: #e5c474 !important;
+  border: 1px solid #c69b46;
+  color: #806227 !important;
   padding: 9px 18px;
   border-radius: 8px;
   font-weight: 600;
@@ -798,30 +799,22 @@ footer, .siteFooterBig {
 }
 .footerContactBtn:hover {
   border-color: #c69b46;
-  background: rgba(198, 155, 70, 0.15);
+  background: #c69b46;
   color: #ffffff !important;
   transform: translateY(-2px);
 }
 .footerColTitle {
-  color: #c69b46;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  color: #a37828;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: capitalize;
   margin: 0 0 18px 0;
   position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.footerColTitle::before {
-  content: '';
-  width: 3px;
-  height: 14px;
-  background: #c69b46;
-  border-radius: 2px;
-  display: inline-block;
-}
+
 .footerNavList {
   list-style: none;
   padding: 0;
@@ -831,7 +824,7 @@ footer, .siteFooterBig {
   gap: 11px;
 }
 .footerNavList a {
-  color: #9fb3c8;
+  color: #475569;
   font-size: 13.5px;
   text-decoration: none;
   transition: all 0.2s ease;
@@ -840,11 +833,11 @@ footer, .siteFooterBig {
   gap: 6px;
 }
 .footerNavList a:hover {
-  color: #ffffff;
+  color: #102a43;
   transform: translateX(4px);
 }
 .footerHeterNoticeCard {
-  background: rgba(10, 28, 46, 0.7);
+  background: #f8fafc;
   border: 1px solid rgba(198, 155, 70, 0.3);
   border-radius: 12px;
   padding: 20px 26px;
@@ -866,21 +859,21 @@ footer, .siteFooterBig {
 .footerHeterNoticeCard .footerHeterNotice {
   margin: 0;
   padding: 0;
-  color: #9fb3c8;
+  color: #475569;
   font-size: 13px;
   line-height: 1.75;
 }
 .footerHeterNoticeCard a {
-  color: #e5c474;
+  color: #806227;
   text-decoration: underline;
   text-underline-offset: 3px;
   transition: color 0.2s ease;
 }
 .footerHeterNoticeCard a:hover {
-  color: #ffffff;
+  color: #102a43;
 }
 .footerBottomBar {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid #e2e8f0;
   padding-top: 26px;
 }
 .footerBottomContent {
@@ -890,7 +883,7 @@ footer, .siteFooterBig {
   flex-wrap: wrap;
   gap: 16px;
   font-size: 13px;
-  color: #7b93a4;
+  color: #64748b;
 }
 .footerCopyright {
   margin: 0;
@@ -901,7 +894,7 @@ footer, .siteFooterBig {
   gap: 16px;
 }
 .footerBottomMeta span {
-  color: #9fb3c8;
+  color: #64748b;
   font-size: 12.5px;
 }
 @media (max-width: 1100px) {
