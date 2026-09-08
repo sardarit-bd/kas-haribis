@@ -1,3 +1,4 @@
+import BottomCTA from '../componnent/BottomCTA';
 import { listEducationalResources } from '../lib/directories';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
 
@@ -131,18 +132,15 @@ export default async function EducationalCenter() {
           </p>
         )}
       </section>
-      <section className="educationCta">
-        <small>SCHOOLS &amp; EDUCATORS</small>
-        <h2>Want a Ribbis curriculum for your school?</h2>
-        <p>
-          Reach out and see what we can do for you. We can explore
-          age-appropriate lessons, workshops, and educational materials designed
-          for your students.
-        </p>
-        <a href="/contact" className="primary">
-          Start a conversation →
-        </a>
-      </section>
+
+
+
+      {/* CTA Section Banner */}
+      <BottomCTA eyebrow={"SCHOOLS AND EDUCATORS"} title={"Want a Ribbis curriculum for your school?"} discription={"Reach out and see what we can do for you. We can explore age-appropriate lessons, workshops, and educational materials designed for your students."} link="/bais-horaah" linktext="Start a conversation →" link2="" link2text=""/>
+
+
+
+
       <SiteFooter />
     </main>
   );

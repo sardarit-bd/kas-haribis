@@ -1,3 +1,4 @@
+import BottomCTA from '../componnent/BottomCTA';
 import { listInvestments } from '../lib/directories';
 import { InteriorPage } from '../shared/site-shell';
 export const dynamic = 'force-dynamic';
@@ -166,21 +167,11 @@ export default async function Page() {
           </div>
         )}
       </section>
-      <section className="investDisclaimer mb-10">
-        <div>
-          <p className="eyebrow">PLEASE NOTE</p>
-          <h2>
-            Halachic review and financial due diligence are both essential
-          </h2>
-          <p>
-            Investment opportunities involve risk, including possible loss of
-            principal. Confirm all current terms, investigate the sponsor
-            independently, review offering documents with your advisers, and ask
-            a qualified Rav about your circumstances.
-          </p>
-        </div>
-        <a href="/bais-horaah">Ask a halachic question →</a>
-      </section>
+
+    {/* CTA Section Banner */}
+      <BottomCTA eyebrow={"PLEASE NOTE"} title={"Halachic review and financial due diligence are both essential"} discription={"Investment opportunities involve risk, including possible loss of principal. Confirm all current terms, investigate the sponsor independently, review offering documents with your advisers, and ask a qualified Rav about your circumstances."} link="/bais-horaah" linktext="Ask a halachic question →" link2="" link2text=""/>
+
+
     </InteriorPage>
   );
 }

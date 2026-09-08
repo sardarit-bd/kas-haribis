@@ -4994,7 +4994,7 @@ footer, .siteFooterBig {
   font-weight: bold;
 }
 .businessDirectory {
-  padding: 90px 7vw;
+  padding: 40px;
   background: var(--cream);
 }
 .businessDirectoryHeading {
@@ -5380,7 +5380,7 @@ footer, .siteFooterBig {
   font-weight: bold;
 }
 .loanServicesDirectory {
-  padding: 90px 7vw;
+  padding: 40px;
   background: #f7f3ea;
 }
 .loanDirectoryHead {

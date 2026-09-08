@@ -1,3 +1,4 @@
+import BottomCTA from '../componnent/BottomCTA';
 import { listAudio } from '../lib/directories';
 import { InteriorPage } from '../shared/site-shell';
 import AudioLibrary from './audio-library';
@@ -15,6 +16,9 @@ export default async function AudioPage() {
       <AudioLibrary
         audios={audios.map((item, index) => ({ ...item, id: index }))}
       />
+
+      {/* CTA Section Banner */}
+      <BottomCTA eyebrow={"SCHOOLS AND EDUCATORS"} title={"Want a Ribbis curriculum for your school?"} discription={"Reach out and see what we can do for you. We can explore age-appropriate lessons, workshops, and educational materials designed for your students."} link="/bais-horaah" linktext="Start a conversation →" link2="" link2text=""/>
 
     </InteriorPage>
   );

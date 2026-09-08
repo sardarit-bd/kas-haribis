@@ -1,3 +1,4 @@
+import BottomCTA from '../componnent/BottomCTA';
 import { listBusinesses } from '../lib/directories';
 import { InteriorPage } from '../shared/site-shell';
 
@@ -126,34 +127,11 @@ export default async function BusinessesPage() {
           ))}
         </div>
       </section>
-      <section className="businessVerificationNotice my-10">
-        <div>
-          <p className="eyebrow">IMPORTANT GUIDANCE</p>
-          <h2>Verify before relying on a listing</h2>
-          <p>
-            A listing is educational information and does not guarantee that
-            every transaction is covered. Confirm that the business’s Heter Iska
-            is current, properly executed, and applicable to the specific
-            arrangement.
-          </p>
-        </div>
-        <a href="/bais-horaah">Ask the Bais Horaah →</a>
-      </section>
-      <div className='hidden'>
-      <section className="businessSubmissionCallout">
-        <div>
-          <p className="eyebrow gold">GROW THE DIRECTORY</p>
-          <h2>Does your business operate with a Heter Iska?</h2>
-          <p>
-            Contact Kav Haribis to submit a business for review or to update an
-            existing listing.
-          </p>
-        </div>
-        <a className="primary" href="/contact">
-          Submit or update a business →
-        </a>
-      </section>
-      </div>
+
+      {/* CTA Section Banner */}
+      <BottomCTA eyebrow={"IMPORTANT GUIDANCE"} title={"Verify before relying on a listing"} discription={"A listing is educational information and does not guarantee that every transaction is covered. Confirm that the business’s Heter Iska is current, properly executed, and applicable to the specific arrangement."} link="/bais-horaah" linktext="Ask the Bais Horaah →" link2="" link2text=""/>
+
+
     </InteriorPage>
   );
 }

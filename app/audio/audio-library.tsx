@@ -97,14 +97,6 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
     setSeries(value);
     setQuery('');
     setCurrentPage(1);
-    window.setTimeout(
-      () =>
-        libraryRef.current?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        }),
-      50,
-    );
   }
 
   const handleQueryChange = (val: string) => {
@@ -124,106 +116,62 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
   const startIndex = perPage === 'all' ? 0 : (activePage - 1) * perPage;
 
   return (
-    <>
-      <section
-        className="audioSeriesPicker"
-        ref={pickerRef}
-        aria-labelledby="choose-a-series"
-      >
-        <div className="audioSectionHeading">
-          <span>LISTEN &amp; LEARN</span>
-          <h2 id="choose-a-series">Choose an Audio Collection</h2>
-          <p>
-            Choose a 5-minute language series, General Shiurim, or the Video
-            Shiurim collection.
-          </p>
+    <section className="audioLibraryModern" ref={libraryRef}>
+      <div className="audioLibraryTitle text-center">
+        <div className="mx-auto text-center mb-10">
+          <span>NOW BROWSING</span>
+          <h2>{selected.title}</h2>
         </div>
-        <div className="audioSeriesCards">
-          {seriesDetails.map((item, index) => {
-            const count = audios.filter(
-              (audio) => audio.series === item.value,
-            ).length;
-            return (
-              <button
-                key={item.value}
-                className={`audioSeriesCard ${series === item.value ? 'selected' : ''}`}
-                onClick={() => chooseSeries(item.value)}
-              >
-                <span className="seriesNumber">0{index + 1}</span>
-                <span
-                  className="seriesMonogram"
-                  dir={index === 0 ? 'ltr' : 'rtl'}
-                >
-                  {item.monogram}
-                </span>
-                <small>
-                  {item.language} · {count} {count === 1 ? 'SHIUR' : 'SHIURIM'}
-                </small>
-                <strong>{item.title}</strong>
-                <span
-                  className="seriesDescription"
-                  dir={index === 1 || index === 2 ? 'rtl' : 'ltr'}
-                >
-                  {item.description}
-                </span>
-                <span className="seriesAction">
-                  Explore series <b>→</b>
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </section>
+      </div>
+      <div className="audioSearchRow">
+        <label className="audioSeriesSelect">
+          Select Collection ({filtered.length} {filtered.length === 1 ? 'item' : 'items'})
+          <select
+            value={series}
+            onChange={(event) => chooseSeries(event.target.value)}
+          >
+            {seriesDetails.map((item) => {
+              const count = audios.filter(
+                (audio) => audio.series === item.value,
+              ).length;
+              return (
+                <option value={item.value} key={item.value}>
+                  {item.title} ({count})
+                </option>
+              );
+            })}
+          </select>
+        </label>
 
-      <section className="audioLibraryModern" ref={libraryRef}>
-        <button
-          className="backToSeries hidden"
-          type="button"
-          onClick={() =>
-            pickerRef.current?.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start',
-            })
-          }
-        >
-          ← Back to all series
-        </button>
-        <div className="audioLibraryTitle">
-          <div>
-            <span>NOW BROWSING</span>
-            <h2>{selected.title}</h2>
-          </div>
-          <b>{filtered.length} recordings</b>
+        <div className="audioSearch">
+          <span aria-hidden="true">⌕</span>
+          <input
+            value={query}
+            onChange={(event) => handleQueryChange(event.target.value)}
+            placeholder="Search by topic…"
+            aria-label="Search audio recordings"
+          />
         </div>
-        <div className="audioSearchRow">
-          <div className="audioSearch">
-            <span aria-hidden="true">⌕</span>
-            <input
-              value={query}
-              onChange={(event) => handleQueryChange(event.target.value)}
-              placeholder="Search this series by topic…"
-              aria-label="Search this audio series"
-            />
-          </div>
-          <label className="audioPerPageSelect">
-            Record per page
-            <select
-              value={perPage}
-              onChange={(event) => {
-                const val =
-                  event.target.value === 'all'
-                    ? 'all'
-                    : Number(event.target.value);
-                handlePerPageChange(val);
-              }}
-            >
-              <option value={15}>15 per page</option>
-              <option value={25}>25 per page</option>
-              <option value={50}>50 per page</option>
-              <option value="all">All</option>
-            </select>
-          </label>
-        </div>
+
+        <label className="audioPerPageSelect">
+          Record per page
+          <select
+            value={perPage}
+            onChange={(event) => {
+              const val =
+                event.target.value === 'all'
+                  ? 'all'
+                  : Number(event.target.value);
+              handlePerPageChange(val);
+            }}
+          >
+            <option value={15}>15 per page</option>
+            <option value={25}>25 per page</option>
+            <option value={50}>50 per page</option>
+            <option value="all">All</option>
+          </select>
+        </label>
+      </div>
         {filtered.length ? (
           <>
             <div className="audioGridModern">
@@ -322,7 +270,6 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
           </div>
         )}
       </section>
-    </>
   );
 }
 

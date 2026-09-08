@@ -1,3 +1,4 @@
+import BottomCTA from '../componnent/BottomCTA';
 import { listArticles } from '../lib/directories';
 import { InteriorPage } from '../shared/site-shell';
 export const dynamic = 'force-dynamic';
@@ -93,17 +94,12 @@ export default async function ArticlesPage() {
           ))}
         </div>
       </section>
-      <section className="articleCallout my-10">
-        <div>
-          <p className="eyebrow">STAY INFORMED</p>
-          <h2>Bring practical Hilchos Ribbis into your home and business</h2>
-          <p>
-            Read the latest gilyonos and share them with family, colleagues, and
-            community members.
-          </p>
-        </div>
-        <a href="/contact">Receive publication updates →</a>
-      </section>
+
+
+      {/* CTA Section Banner */}
+      <BottomCTA eyebrow={"STAY INFORMED"} title={"Receive publication updates"} discription={"Receive the complete Kav Haribis collection of concise publications on practical questions in Hilchos Ribbis."} link="/contact" linktext="Receive publication updates →" link2="" link2text=""/>
+
+
     </InteriorPage>
   );
 }

@@ -1,3 +1,4 @@
+import BottomCTA from "../componnent/BottomCTA";
 import { listSavingsAccounts } from '../lib/directories';
 import { InteriorPage } from '../shared/site-shell';
 export const dynamic = 'force-dynamic';
@@ -147,18 +148,10 @@ export default async function SavingsPage() {
           })}
         </div>
       </section>
-      <section className="savingsDisclaimer mb-10">
-        <div>
-          <p className="eyebrow">IMPORTANT</p>
-          <h2>Confirm terms before depositing funds</h2>
-          <p>
-            Interest rates, fees, eligibility, and account structures can
-            change. Review the institution’s current disclosures and ask a
-            qualified Rav when a personal halachic question applies.
-          </p>
-        </div>
-        <a href="/bais-horaah">Ask a Ribbis question →</a>
-      </section>
+  
+      <BottomCTA eyebrow={"IMPORTANT"} title={"Confirm terms before depositing funds"} discription={"Interest rates, fees, eligibility, and account structures can change. Review the institution’s current disclosures and ask a qualified Rav when a personal halachic question applies."}
+       link="/bais-horaah" linktext="Ask a Ribbis question →"/>
+       
     </InteriorPage>
   );
 }

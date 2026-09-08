@@ -1,3 +1,4 @@
+import BottomCTA from '../componnent/BottomCTA';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
 
 export const metadata = {
@@ -146,7 +147,7 @@ export default function AboutPage() {
 
       {/* Work in Action Photo Showcase */}
       <section className="aboutImpactSection">
-        <div className="aboutImpactGrid">
+        <div className="aboutImpactGrid container">
           <div>
             <p className="eyebrow gold mb-2">OUR WORK IN ACTION</p>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#102a43] mb-4">
@@ -189,31 +190,7 @@ export default function AboutPage() {
       </section>
 
       {/* CTA Section Banner */}
-      <section className="aboutCtaBanner">
-        <div className="aboutCtaInner">
-          <div>
-            <p className="eyebrow gold mb-1">HOW CAN WE HELP?</p>
-            <h2>Bring your question, program, or research need to Kav Haribis.</h2>
-          </div>
-          <div className="flex items-center gap-4 flex-wrap">
-            <a
-              href="/contact"
-              style={{ color: 'white' }}
-              className="bg-[#c69b46] hover:bg-[#b08738] text-white font-bold py-3.5 px-7 rounded-xl text-sm transition shadow-lg inline-flex items-center gap-2"
-            >
-              <span>Contact Kav Haribis</span>
-              <span>→</span>
-            </a>
-            <a
-              href="/bais-horaah"
-              className="border border-white/30 hover:border-white text-white font-bold py-3.5 px-6 rounded-xl text-sm transition inline-flex items-center gap-2"
-            >
-              <span>Submit a Question</span>
-              <span>→</span>
-            </a>
-          </div>
-        </div>
-      </section>
+      <BottomCTA eyebrow={"HOW CAN WE HELP?"} title={"Bring your question, program, or research need to Kav Haribis."} discription={"Whether you have a personal question, need halachic guidance for a financial product, or would like to invite Kav Haribis to present a program, we are here to help."} link="/contact" linktext="Contact Kav Haribis →" link2="/contact" link2text="Contact Kav Haribis →"/>
 
       <SiteFooter showHeterNotice />
     </main>

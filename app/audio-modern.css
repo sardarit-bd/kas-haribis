@@ -126,10 +126,11 @@
 }
 .audioLibraryTitle {
   display: flex;
-  justify-content: space-between;
-  align-items: end;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   padding-bottom: 22px;
-  border-bottom: 1px solid #dce3e7;
 }
 .audioLibraryTitle h2 {
   font: clamp(27px, 3vw, 38px) Georgia;
@@ -369,6 +370,7 @@
   flex: 1;
   margin: 0;
 }
+.audioSeriesSelect,
 .audioPerPageSelect {
   display: flex;
   flex-direction: column;
@@ -378,12 +380,15 @@
   color: var(--navy);
   white-space: nowrap;
 }
+.audioSeriesSelect select,
 .audioPerPageSelect select {
-  padding: 13px;
+  padding: 13px 16px;
   border: 1px solid #d5dde2;
   border-radius: 9px;
   background: white;
   font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
   cursor: pointer;
 }
 .audioLibraryModern .directoryPagination {

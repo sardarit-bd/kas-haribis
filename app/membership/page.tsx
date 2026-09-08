@@ -1,3 +1,4 @@
+import BottomCTA from '../componnent/BottomCTA';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
 const benefits = [
   {
@@ -125,19 +126,13 @@ export default function MembershipPage() {
           <small>Future orders, neatly organized.</small>
         </aside>
       </section>
-      <section className="readingCircleCta">
-        <div>
-          <p className="eyebrow gold">FREE TO JOIN</p>
-          <h2>Become a Kav Haribis member</h2>
-          <p>
-            Register, choose your preferences, and begin building your Kav
-            Haribis member history.
-          </p>
-        </div>
-        <a className="primary" href="/membership/account">
-          Create or open your account →
-        </a>
-      </section>
+
+
+      {/* CTA Section Banner */}
+      <BottomCTA eyebrow={"FREE TO JOIN"} title={"Become a Kav Haribis member"} discription={"Register, choose your preferences, and begin building your Kav Haribis member history."} link="/membership/account" linktext="Create or open your account →" link2="" link2text=""/>
+
+
+
       <SiteFooter />
     </main>
   );

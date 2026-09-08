@@ -45,7 +45,7 @@
   line-height: 1.5;
 }
 .savingsDirectory {
-  padding: 90px 7vw;
+  padding: 40px;
   background: #f7f3ea;
 }
 .savingsDirectoryHead {
@@ -207,13 +207,16 @@
   font-weight: 700;
 }
 .savingsDisclaimer {
-  padding: 76px 8vw;
+  padding: 50px;
   background: var(--navy);
   color: #fff;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: space-between;
   gap: 50px;
+  border-radius: 20px;
+  text-align: center;
 }
 .savingsDisclaimer > div {
   max-width: 880px;
@@ -225,13 +228,23 @@
   color: #d0dce3;
   line-height: 1.75;
 }
-.savingsDisclaimer > a {
+.savingsDisclaimer >div > a:first-child {
   padding: 14px 18px;
   background: var(--gold);
   border-radius: 5px;
   font-weight: 800;
   text-align: center;
 }
+
+.savingsDisclaimer >div > a:last-child {
+  padding: 14px 18px;
+  color: rgb(233, 233, 233)!important;
+  border: 1px solid rgb(116, 116, 116);
+  border-radius: 5px;
+  font-weight: 800;
+  text-align: center;
+}
+
 @media (max-width: 900px) {
   .savingsHero {
     grid-template-columns: 1fr;

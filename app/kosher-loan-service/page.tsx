@@ -1,3 +1,4 @@
+import BottomCTA from '../componnent/BottomCTA';
 import { listLoanServices } from '../lib/directories';
 import { InteriorPage } from '../shared/site-shell';
 export const dynamic = 'force-dynamic';
@@ -145,33 +146,11 @@ export default async function Page() {
           </div>
         )}
       </section>
-      <section className="loanServiceDisclaimer my-10">
-        <div>
-          <p className="eyebrow">IMPORTANT</p>
-          <h2>Every loan must be reviewed individually</h2>
-          <p>
-            A listed broker or service does not automatically make every
-            transaction permissible. The lender, funding source, documents, and
-            Heter Iska must be appropriate for the specific loan.
-          </p>
-        </div>
-        <a href="/bais-horaah">Review your loan with the Bais Horaah →</a>
-      </section>
-      <div className='hidden'>
-      <section className="loanServiceSubmit">
-        <div>
-          <p className="eyebrow gold">EXPAND THE DIRECTORY</p>
-          <h2>Know a broker who arranges kosher loans?</h2>
-          <p>
-            Send Kav Haribis the broker’s information so it can be reviewed for
-            inclusion.
-          </p>
-        </div>
-        <a className="primary" href="/contact">
-          Recommend a loan professional →
-        </a>
-      </section>
-      </div>
+
+      {/* CTA Section Banner */}
+      <BottomCTA eyebrow={"IMPORTANT"} title={"Every loan must be reviewed individually"} discription={"A listed broker or service does not automatically make every transaction permissible. The lender, funding source, documents, and Heter Iska must be appropriate for the specific loan."} link="/bais-horaah" linktext="Review your loan with the Bais Horaah →" link2="" link2text=""/>
+
+
     </InteriorPage>
   );
 }
