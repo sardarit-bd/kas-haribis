@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { DM_Sans } from 'next/font/google';
 import './about-modern.css';
 import './admin-empty-message.css';
 import './alerts.css';
@@ -56,9 +56,10 @@ import './analytics-daily.css';
 import AnalyticsTracker from './shared/analytics-tracker';
 import ArticlePdfLinks from './shared/article-pdf-links';
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ['latin'],
-  variable: '--font-inter',
+  weight: ['300', '400', '500', '600', '700', '800'],
+  variable: '--font-dm-sans',
   display: 'swap',
 });
 
@@ -83,8 +84,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className={`${inter.className} antialiased`}>
+    <html lang="en" className={dmSans.variable}>
+      <body className={`${dmSans.className} antialiased`}>
         {/* <SponsorBanner /> */}
         <AnalyticsTracker />
         <ArticlePdfLinks />

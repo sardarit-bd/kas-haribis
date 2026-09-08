@@ -4,7 +4,6 @@ import SubscriptionForm from '../ribis-alerts/subscription-form';
 import FeaturedSeforim from '../shared/featured-seforim';
 import LandingFaq from '../shared/landing-faq';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
-import SponsorBanner from '../shared/sponsor-banner';
 
 const offerings = [
   [
@@ -197,6 +196,240 @@ const mainOfferingsCategories = [
   },
 ];
 
+const offeringsGridItems = [
+  {
+    title: 'Kosher Bank Directory',
+    subtitle: 'Research banks and lenders',
+    href: '/bank-directory',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 26L32 14L52 26" />
+        <path d="M8 26H56V30H8V26Z" />
+        <circle cx="32" cy="22" r="2.5" />
+        <path d="M16 30V46" />
+        <path d="M26.6 30V46" />
+        <path d="M37.3 30V46" />
+        <path d="M48 30V46" />
+        <path d="M10 46H54V50H10V46Z" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Businesses with a Heter Iska',
+    subtitle: 'Browse verified business directory',
+    href: '/businesses-with-a-heter-iska',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 26L18 16H46L50 26" />
+        <path d="M12 26H52V48C52 49.1 51.1 50 50 50H14C12.9 50 12 49.1 12 48V26Z" />
+        <path d="M24 34H40V50H24V34Z" />
+        <circle cx="44" cy="20" r="5" fill="white" />
+        <path d="M42 20L43.5 21.5L46 19" strokeWidth="2" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Kosher Loan Services',
+    subtitle: 'Find appropriate financing resources',
+    href: '/kosher-loan-service',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 42C12 42 18 40 22 40C26 40 30 44 36 44C42 44 46 41 50 41" />
+        <path d="M12 42V52H52V47" />
+        <path d="M24 24C24 20 27 18 30 18C33 18 36 20 36 24C38 25 40 28 39 34C38 38 34 40 30 40C26 40 22 38 21 34C20 28 22 25 24 24Z" fill="white" />
+        <path d="M27 22H33" />
+        <path d="M30 27V35M28.5 29.5C28.5 29.5 29.3 28.5 30 28.5C30.7 28.5 31.5 29.5 31.5 30.5C31.5 32 28.5 32 28.5 33.5C28.5 34.5 29.3 35.5 30 35.5C30.7 35.5 31.5 34.5 31.5 34.5" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Investment Opportunities',
+    subtitle: 'Review kosher investment models',
+    href: '/kosher-investment-opportunities',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 50V18C12 16.8954 12.8954 16 14 16H32C33.1046 16 34 16.8954 34 18V50" />
+        <rect x="17" y="22" width="4" height="4" rx="0.5" />
+        <rect x="25" y="22" width="4" height="4" rx="0.5" />
+        <rect x="17" y="30" width="4" height="4" rx="0.5" />
+        <rect x="25" y="30" width="4" height="4" rx="0.5" />
+        <circle cx="44" cy="38" r="9" fill="white" />
+        <path d="M44 33V43M42 36C42 36 43 35 44 35C45 35 46 36 46 37C46 38.5 42 38.5 42 40C42 41 43 42 44 42C45 42 46 41 46 41" />
+        <line x1="8" y1="50" x2="56" y2="50" />
+      </svg>
+    ),
+  },
+  {
+    title: 'High-Yield Savings',
+    subtitle: 'Compare savings-account information',
+    href: '/savings',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="12" y="18" width="40" height="32" rx="4" />
+        <circle cx="32" cy="34" r="8" />
+        <path d="M32 26V42M24 34H40" />
+        <circle cx="44" cy="24" r="2" fill="currentColor" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Heter Iska Library',
+    subtitle: 'Preview and obtain documents',
+    href: '/heter-iska',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M16 14H40L50 24V50C50 51.1 49.1 52 48 52H16C14.9 52 14 51.1 14 50V16C14 14.9 14.9 14 16 14Z" />
+        <path d="M38 14V26H50" />
+        <path d="M22 34H42M22 40H38M22 46H32" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Bais Horaah Consultation',
+    subtitle: 'Submit a Ribbis question',
+    href: '/bais-horaah',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M32 12V48M16 22H48M16 22L10 36H22L16 22ZM48 22L42 36H54L48 22Z" />
+        <path d="M22 48H42" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Audio & Video Shiurim',
+    subtitle: 'Listen and learn anytime',
+    href: '/audio',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="32" cy="32" r="20" />
+        <path d="M27 22L42 32L27 42V22Z" fill="#b87b5c" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Articles & Gilyonos',
+    subtitle: 'Read practical Torah guidance',
+    href: '/articles',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="14" y="12" width="36" height="42" rx="3" />
+        <line x1="20" y1="20" x2="44" y2="20" />
+        <line x1="20" y1="28" x2="44" y2="28" />
+        <line x1="20" y1="36" x2="36" y2="36" />
+        <line x1="20" y1="44" x2="32" y2="44" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Halacha Guidance',
+    subtitle: 'Explore practical Hilchos Ribbis',
+    href: '/halacha',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 18C12 18 20 14 32 18C44 14 52 18 52 18V48C52 48 44 44 32 48C20 44 12 48 12 48V18Z" />
+        <line x1="32" y1="18" x2="32" y2="48" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Seforim Store',
+    subtitle: 'Browse Kav Haribis publications',
+    href: '/seforim',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 20H46V46H14V20Z" />
+        <path d="M14 20L20 14H50V40L46 46" />
+        <line x1="20" y1="20" x2="20" y2="46" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Investment Certification',
+    subtitle: 'Request a structured review',
+    href: '/kosher-investment-certification',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M32 12L48 18V32C48 42 38 48 32 52C26 48 16 42 16 32V18L32 12Z" />
+        <path d="M26 31L30 35L38 25" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Community Programs',
+    subtitle: 'Education and community outreach',
+    href: '/programs',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="32" cy="24" r="6" />
+        <path d="M20 44C20 37.4 25.4 32 32 32C38.6 32 44 37.4 44 44" />
+        <circle cx="18" cy="28" r="4" />
+        <path d="M10 44C10 39.5 13.6 36 18 36" />
+        <circle cx="46" cy="28" r="4" />
+        <path d="M54 44C54 39.5 50.4 36 46 36" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Genealogy Services',
+    subtitle: 'Research potential ownership concerns',
+    href: '/genealogy-services',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="28" cy="28" r="14" />
+        <path d="M38 38L50 50" strokeWidth="3" />
+        <path d="M24 28H32M28 24V32" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Kav Haribis Membership',
+    subtitle: 'Join free and manage preferences',
+    href: '/membership',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="12" y="16" width="40" height="32" rx="4" />
+        <circle cx="26" cy="30" r="5" />
+        <path d="M18 42C18 38 21.6 35 26 35C30.4 35 34 38 34 42" />
+        <line x1="38" y1="26" x2="46" y2="26" />
+        <line x1="38" y1="32" x2="44" y2="32" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Ribbis Alerts',
+    subtitle: 'View important community updates',
+    href: '/ribis-alerts',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M32 14C23.2 14 18 21 18 30V38L14 44H50L46 38V30C46 21 40.8 14 32 14Z" />
+        <path d="M27 48C27 50.8 29.2 53 32 53C34.8 53 37 50.8 37 48" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Support & Donate',
+    subtitle: 'Support the Kav Haribis mission',
+    href: '/donate',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M32 48C32 48 14 36 14 24C14 18.5 18.5 14 24 14C27.5 14 30.5 15.8 32 18.5C33.5 15.8 36.5 14 40 14C45.5 14 50 18.5 50 24C50 36 32 48 32 48Z" fill="#b87b5c" fillOpacity="0.15" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Educational Center',
+    subtitle: 'Coloring pages, pamphlets & school resources',
+    href: '/educational-center',
+    icon: (
+      <svg className="w-12 h-12 text-[#b87b5c]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 24L32 14L52 24L32 34L12 24Z" />
+        <path d="M20 28V42C20 42 26 46 32 46C38 46 44 42 44 42V28" />
+        <path d="M48 26V40" />
+      </svg>
+    ),
+  },
+];
+
 const heroSlides = [
   {
     id: 1,
@@ -378,14 +611,14 @@ export default function BoxPreview({
             <div className="heroSlideOverlay" />
             <div className="heroSlideInner container">
               <div className="homeHeroCopy lg:pl-7">
-                <p className="eyebrow">{slide.eyebrow}</p>
+                <p className="eyebrow hidden">{slide.eyebrow}</p>
                 <h1>{slide.title}</h1>
-                <p>{slide.description}</p>
+                <p className='pt-6'>{slide.description}</p>
                 <div className="homeHeroActions">
                   <a className="primary" href={slide.primaryCta.href}>
                     {slide.primaryCta.text}
                   </a>
-                  <a href={slide.secondaryCta.href}>
+                  <a className='hidden'  href={slide.secondaryCta.href}>
                     {slide.secondaryCta.text}
                   </a>
                 </div>
@@ -417,7 +650,6 @@ export default function BoxPreview({
           ))}
         </div>
       </section>
-      <SponsorBanner/>
       <div className='hidden'>
       <nav
         className="quickPreviewStrip liveQuickActions"
@@ -524,35 +756,39 @@ export default function BoxPreview({
           </div>
         </section>
       )}
-      {/* 3 MAIN CATEGORIES KAV HARIBIS OFFERINGS */}
-      <section className="cleanOfferingsSection">
-        <header className="cleanOfferingsHeader">
-          <p className="eyebrow gold">KAV HARIBIS OFFERINGS</p>
-          <h2>Everything we offer—alive, clear, and easy to explore.</h2>
+      {/* KAV HARIBIS OFFERINGS SECTION */}
+      <section className="cleanOfferingsSection bg-[#042d22] py-20 px-4 sm:px-8">
+        <header className="cleanOfferingsHeader text-center max-w-4xl mx-auto mb-14">
+          <p className="eyebrow gold text-[#e5c474] font-bold text-xs tracking-widest uppercase mb-3">
+            KAV HARIBIS OFFERINGS
+          </p>
+          <h2 className="text-white font-serif text-3xl sm:text-4xl md:text-5xl font-medium leading-tight">
+            Everything we offer—alive, clear, and easy to explore.
+          </h2>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-[1440px] mx-auto px-4 sm:px-8">
-          {mainOfferingsCategories.map((cat) => (
-            <div key={cat.title} className="categoryCard3Col">
-              <div className="categoryCardHeader">
-                <span className="categoryCardIcon">{cat.icon}</span>
-                <div className="categoryCardTitleGroup">
-                  <span>{cat.eyebrow}</span>
-                  <h3>{cat.title}</h3>
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-7">
+            {offeringsGridItems.map((item) => (
+              <a
+                key={item.title}
+                href={item.href}
+                className="bg-white rounded-[20px] p-6 sm:p-7 flex flex-col items-center justify-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 min-h-[165px] group border border-white/10"
+              >
+                <div className="mb-3 transition-transform duration-300 group-hover:scale-105">
+                  {item.icon}
                 </div>
-              </div>
-              <p className="categoryCardDesc">{cat.description}</p>
-
-              <div className="categoryLinksList">
-                {cat.links.map((link) => (
-                  <a key={link.href} href={link.href} className="categoryLinkItem">
-                    <span>{link.name}</span>
-                    <span className="arrow">→</span>
-                  </a>
-                ))}
-              </div>
-            </div>
-          ))}
+                <h3 className="font-bold text-[#1e293b] text-base sm:text-lg leading-snug">
+                  {item.title}
+                </h3>
+                {item.subtitle && (
+                  <p className="text-[#64748b] text-xs sm:text-sm mt-1 font-medium">
+                    {item.subtitle}
+                  </p>
+                )}
+              </a>
+            ))}
+          </div>
         </div>
       </section>
       <section className=" bg-[#e9dfca] ">

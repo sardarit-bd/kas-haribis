@@ -10,6 +10,7 @@ type Sponsor = {
   ad_type: string;
   description?: string | null;
   phone?: string | null;
+  image_key?: string | null;
 };
 const fallback: Sponsor = {
   id: 0,
@@ -88,19 +89,34 @@ export default function SponsorBanner() {
             : `${sponsor.company_name}, proud supporter`
         }
       >
-        <span className="topSponsorLogo">{initials(sponsor.company_name)}</span>
+        <span className="topSponsorLogo">
+          {sponsor.image_key ? (
+            <img
+              src={sponsor.image_key}
+              alt={sponsor.company_name}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                borderRadius: '4px',
+              }}
+            />
+          ) : (
+            initials(sponsor.company_name)
+          )}
+        </span>
         <span className="topSponsorName">
           <b>{sponsor.company_name}</b>
           <small>{clickable ? 'Click for details' : 'Proud supporter'}</small>
         </span>
-        {clickable && <span className="topSponsorArrow">›</span>}
+        {clickable && <span className="topSponsorArrow hidden">›</span>}
       </button>
     );
   };
   return (
     <>
       <aside className="topSponsorStrip" aria-label="Supporters of Kav Haribis">
-        <span className="topSponsorLabel">PROUD SUPPORTERS</span>
+        <span className="topSponsorLabel">Proud<br/>Supporters</span>
         <div className="topSponsorConveyor">
           <div className="topSponsorTrack">
             <div className="topSponsorGroup">
@@ -116,7 +132,7 @@ export default function SponsorBanner() {
           </div>
         </div>
         <a className="becomeSponsor" href="/contact-us">
-          Become a sponsor
+          Become a<br/> sponsor
         </a>
       </aside>
       {selected && (
@@ -140,7 +156,19 @@ export default function SponsorBanner() {
             </button>
             <div className="sponsorModalMain">
               <div className="sponsorModalLogo">
-                {initials(selected.company_name)}
+                {selected.image_key ? (
+                  <img
+                    src={selected.image_key}
+                    alt={selected.company_name}
+                    style={{
+                      maxWidth: '100%',
+                      maxHeight: '140px',
+                      objectFit: 'contain',
+                    }}
+                  />
+                ) : (
+                  initials(selected.company_name)
+                )}
               </div>
               <div className="sponsorModalCopy">
                 <p>PROUD SUPPORTER OF KAV HARIBIS</p>

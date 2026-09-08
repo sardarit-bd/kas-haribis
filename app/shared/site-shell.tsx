@@ -1,10 +1,12 @@
 
 import type { ReactNode } from 'react';
 import NavigationMenu from './navigation-menu';
+import SponsorBanner from './sponsor-banner';
 
 export function SiteHeader() {
   return (
     <>
+    <SponsorBanner/>
       <div className="topline">
         <div className="container flex items-center justify-between">
           <span>בס״ד</span>

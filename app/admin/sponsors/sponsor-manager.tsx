@@ -7,12 +7,14 @@ type Sponsor = {
   ad_type: string;
   description?: string | null;
   phone?: string | null;
+  image_key?: string | null;
 };
 
 export default function SponsorManager() {
   const [items, setItems] = useState<Sponsor[]>([]);
   const [editing, setEditing] = useState<Sponsor | null>(null);
   const [message, setMessage] = useState('');
+  const [busy, setBusy] = useState(false);
 
   async function load() {
     const response = await fetch('/api/sponsors');
@@ -24,18 +26,40 @@ export default function SponsorManager() {
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setBusy(true);
     const form = event.currentTarget;
-    const data = Object.fromEntries(new FormData(form).entries());
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
     const response = await fetch('/api/sponsors', {
       method: editing ? 'PUT' : 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(editing ? { ...data, id: editing.id } : data),
     });
-    const result = (await response.json()) as { error?: string };
+    const result = (await response.json()) as { error?: string; id?: number };
     if (!response.ok) {
       setMessage(result.error || 'The advertisement could not be saved.');
+      setBusy(false);
       return;
     }
+
+    const sponsorId = editing ? editing.id : result.id;
+    const file = (form.elements.namedItem('logoFile') as HTMLInputElement)?.files?.[0];
+    if (file && sponsorId) {
+      const fd = new FormData();
+      fd.set('id', String(sponsorId));
+      fd.set('file', file);
+      const uploadRes = await fetch('/api/admin/sponsor-logo', {
+        method: 'POST',
+        body: fd,
+      });
+      const uploadResult = (await uploadRes.json()) as { error?: string };
+      if (!uploadRes.ok) {
+        setMessage(
+          `Advertisement saved, but logo upload failed: ${uploadResult.error || 'upload error'}`,
+        );
+      }
+    }
+
     form.reset();
     setEditing(null);
     setMessage(
@@ -43,7 +67,8 @@ export default function SponsorManager() {
         ? 'Advertisement updated.'
         : 'Advertisement added to the rotation.',
     );
-    load();
+    await load();
+    setBusy(false);
   }
   async function remove(id: number) {
     if (!confirm('Remove this advertisement?')) return;
@@ -89,6 +114,39 @@ export default function SponsorManager() {
           </select>
         </label>
         <label>
+          Logo / Advertisement Image
+          <input
+            name="logoFile"
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
+          />
+          <small>
+            {editing?.image_key
+              ? 'Upload a new file only to replace the current image.'
+              : 'PNG, JPG, WEBP, GIF, or SVG up to 5 MB.'}
+          </small>
+        </label>
+        {editing?.image_key && (
+          <div style={{ marginTop: '8px', marginBottom: '12px' }}>
+            <p style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+              Current logo:
+            </p>
+            <img
+              src={editing.image_key}
+              alt="Current logo"
+              style={{
+                maxHeight: '60px',
+                maxWidth: '160px',
+                objectFit: 'contain',
+                borderRadius: '4px',
+                border: '1px solid #ddd',
+                padding: '4px',
+                background: '#fff',
+              }}
+            />
+          </div>
+        )}
+        <label>
           Services or description
           <textarea
             name="description"
@@ -101,8 +159,8 @@ export default function SponsorManager() {
           <input name="phone" defaultValue={editing?.phone || ''} />
         </label>
         <div className="editFormActions">
-          <button className="primary">
-            {editing ? 'Save changes' : 'Add to rotation'}
+          <button className="primary" disabled={busy}>
+            {busy ? 'Saving…' : editing ? 'Save changes' : 'Add to rotation'}
           </button>
           {editing && (
             <button
@@ -133,7 +191,20 @@ export default function SponsorManager() {
               key={item.id}
             >
               <div className="sponsorIcon">
-                {item.company_name.slice(0, 2).toUpperCase()}
+                {item.image_key ? (
+                  <img
+                    src={item.image_key}
+                    alt={item.company_name}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      borderRadius: '6px',
+                    }}
+                  />
+                ) : (
+                  item.company_name.slice(0, 2).toUpperCase()
+                )}
               </div>
               <div>
                 <b>{item.company_name}</b>

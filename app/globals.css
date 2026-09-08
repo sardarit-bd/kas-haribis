@@ -9,6 +9,9 @@
 @import './homepage-preview-mission.css';
 
 :root {
+  --font-dm-sans: 'DM Sans', sans-serif;
+  --font-inter: 'DM Sans', sans-serif;
+  --font-poppins: 'DM Sans', sans-serif;
   --navy: #102a43;
   --navy2: #173f5f;
   --gold: #c69b46;
@@ -17,6 +20,17 @@
   --muted: #637282;
   --white: #fff;
 }
+
+*,
+*::before,
+*::after,
+html,
+body,
+h1, h2, h3, h4, h5, h6,
+p, a, span, button, input, select, textarea, label, div, section, article, header, footer {
+  font-family: var(--font-dm-sans, 'DM Sans'), 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -27,7 +41,7 @@ body {
   margin: 0;
   background: #fff;
   color: var(--ink);
-  font-family: var(--font-inter), 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  font-family: var(--font-dm-sans, 'DM Sans'), 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
 a {
   text-decoration: none;
@@ -3424,13 +3438,19 @@ footer, .siteFooterBig {
   z-index: 45;
 }
 .topSponsorLabel {
-  font-size: 9px;
+  /* font-size: 9px;
   line-height: 1.35;
   letter-spacing: 0.14em;
   font-weight: bold;
   color: #8b6a2b;
   width: 72px;
-  flex: 0 0 72px;
+  flex: 0 0 72px; */
+
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: bold;
+  color: #846220;
+  text-align: center;
 }
 .topSponsorRail {
   display: flex;
@@ -3450,17 +3470,17 @@ footer, .siteFooterBig {
   align-items: center;
   gap: 10px;
   padding: 5px 11px;
-  border: 1px solid #e0ddd6;
+  /* border: 1px solid #e0ddd6; */
   border-radius: 6px;
-  background: white;
-  box-shadow: 0 2px 8px #102a430a;
+  /* background: white; */
+  /* box-shadow: 0 2px 8px #102a430a; */
   text-align: left;
   color: var(--navy);
   cursor: pointer;
 }
 .topSponsorCard:hover {
   border-color: #c8a45a;
-  box-shadow: 0 4px 14px #102a4314;
+  /* box-shadow: 0 4px 14px #102a4314; */
 }
 .topSponsorCard:disabled {
   cursor: default;
@@ -3475,7 +3495,6 @@ footer, .siteFooterBig {
   background: #f2eadb;
   color: #17364f;
   font: 700 13px Georgia;
-  border: 1px solid #d8c49c;
 }
 .topSponsorName {
   min-width: 0;
@@ -3500,9 +3519,10 @@ footer, .siteFooterBig {
 }
 .becomeSponsor {
   white-space: nowrap;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: bold;
   color: #846220;
+  text-align: center;
 }
 .sponsorModalBackdrop {
   position: fixed;

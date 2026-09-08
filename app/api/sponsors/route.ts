@@ -37,19 +37,21 @@ export async function POST(request: Request) {
     );
   const d = await db();
   await table(d);
-  await d
+  const res = await d
     .prepare(
-      'INSERT INTO sponsors(company_name,ad_type,description,phone,active,created_at) VALUES(?,?,?,?,1,?)',
+      'INSERT INTO sponsors(company_name,ad_type,description,phone,image_key,active,created_at) VALUES(?,?,?,?,?,1,?)',
     )
     .bind(
       body.companyName.trim(),
       body.adType || 'details',
       body.description?.trim() || null,
       body.phone?.trim() || null,
+      body.imageKey?.trim() || null,
       new Date().toISOString(),
     )
     .run();
-  return Response.json({ saved: true });
+  const id = res.meta?.last_row_id;
+  return Response.json({ saved: true, id });
 }
 export async function PUT(request: Request) {
   if (
@@ -75,17 +77,21 @@ export async function PUT(request: Request) {
     );
   await d
     .prepare(
-      'UPDATE sponsors SET company_name=?,ad_type=?,description=?,phone=? WHERE id=?',
+      'UPDATE sponsors SET company_name=?,ad_type=?,description=?,phone=?,image_key=? WHERE id=?',
     )
     .bind(
       body.companyName.trim(),
       body.adType || 'details',
       body.description?.trim() || null,
       body.phone?.trim() || null,
+      body.imageKey?.trim() || editingOrNull(body.imageKey),
       body.id,
     )
     .run();
   return Response.json({ saved: true });
+}
+function editingOrNull(val?: string) {
+  return val?.trim() || null;
 }
 export async function DELETE(request: Request) {
   if (
@@ -96,5 +102,11 @@ export async function DELETE(request: Request) {
   const d = await db();
   await table(d);
   await d.prepare('DELETE FROM sponsors WHERE id=?').bind(id).run();
+  try {
+    const { env } = await import('cloudflare:workers');
+    if (env.BUCKET && id) {
+      await env.BUCKET.delete(`sponsor-logos/${id}`);
+    }
+  } catch {}
   return Response.json({ deleted: true });
 }

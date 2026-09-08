@@ -56,19 +56,25 @@ export default function AboutPage() {
       {/* Welcome & Founder Story Section */}
       <section className="aboutWelcomeSection bg-white border-b border-[#eee8dc]">
         <div className="aboutWelcomeGrid">
+          <div className="aboutWelcomeImageCard">
+            <img
+              src="/kav-impact/heter-iska-presentation-2.jpg"
+              alt="Kav Haribis educational presentation"
+            />
+          </div>
           <div>
             <p className="eyebrow gold mb-2">WELCOME TO KAV HARIBIS</p>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#102a43] leading-tight">
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#102a43] leading-tight mb-6">
               A center for awareness, education, and practical halachic guidance
             </h2>
-          </div>
-          <div className="aboutWelcomeText">
-            <p>
-              Kav Haribis was founded by <strong>Rabbi Yaakov Yitzchok Jacob</strong> together with other talmidim of <strong>Harav Pinchos Vind shlita</strong>. Inspired by Rav Vind’s worldwide network of Batei Horaah and his lifelong commitment to expanding awareness of Hilchos Ribbis, they established Kav Haribis to make these complex halachos clearer and more accessible for modern business and everyday financial life.
-            </p>
-            <p>
-              Kav Haribis works closely with Harav Pinchos Vind shlita and his network of Batei Horaah to advance public awareness and provide current, carefully considered guidance in Hilchos Ribbis.
-            </p>
+            <div className="aboutWelcomeText !border-l-0 !pl-0">
+              <p>
+                Kav Haribis was founded by <strong>Rabbi Yaakov Yitzchok Jacob</strong> together with other talmidim of <strong>Harav Pinchos Vind shlita</strong>. Inspired by Rav Vind’s worldwide network of Batei Horaah and his lifelong commitment to expanding awareness of Hilchos Ribbis, they established Kav Haribis to make these complex halachos clearer and more accessible for modern business and everyday financial life.
+              </p>
+              <p>
+                Kav Haribis works closely with Harav Pinchos Vind shlita and his network of Batei Horaah to advance public awareness and provide current, carefully considered guidance in Hilchos Ribbis.
+              </p>
+            </div>
           </div>
         </div>
       </section>

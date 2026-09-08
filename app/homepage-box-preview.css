@@ -412,8 +412,8 @@
 /* 3-Column 18 Offerings Grid (Learn & Grow Card Style) */
 .cleanOfferingsSection {
   padding: 95px 0 115px;
-  background: #f7f3ea;
-  border-top: 1px solid #e8e2d5;
+  background: #042d22;
+  border-top: 1px solid #063c2e;
 }
 
 .cleanOfferingsHeader {
@@ -428,7 +428,7 @@
   max-width: 840px;
   margin: 10px auto 0;
   font: 500 clamp(32px, 3.8vw, 52px)/1.15 Georgia, serif;
-  color: var(--navy, #102a43);
+  color: #ffffff;
 }
 
 .cleanOfferingsGrid {
