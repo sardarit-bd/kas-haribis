@@ -2,187 +2,65 @@ import { listBanks } from '../lib/directories';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
 import BankDirectoryClient from './bank-directory-client';
 import BankResearchForm from './bank-research-form';
-// import ResearchAccessGate from './research-access-gate';
+
 export const dynamic = 'force-dynamic';
 
 export default async function BankDirectory() {
   const { env } = await import('cloudflare:workers');
   const banks = await listBanks(env.DB);
   return (
-    <main className=''>
+    <main className="min-h-screen bg-[#fbfaf7]">
       <SiteHeader />
-      <div className='overflow-x-hidden'>
-        <section className="bankDirectoryHero">
-        <div className="bankDirectoryHeroInner">
-          <div className="bankHeroHeading">
-            <p className="eyebrow gold mb-1">KOSHER BANK RESEARCH CENTER</p>
-            <h1>Kosher Bank Directory</h1>
-            <p>
-              Search the Kav Haribis research directory for banks, lenders and
-              financial institutions. Review the listed status and open each
-              record for additional information.
-            </p>
-          </div>
-          <blockquote className="bankHeroQuote" dir="rtl" lang="he">
-            <span aria-hidden="true">״</span>
-            <p>
-              עוד ראיתי לעורר שמאד נצרך לברר ה״באנק״ השייכין לישראלים ולפרסם
-              הרשימות של ה״באנקים״ שיש עליהן חשש רבית למנוע הרבים ממכשול הרבית,
-              ומה מאד הי׳ ראוי למנות ע״ז אנשים מוכשרים היודעין לברר ענין זה, ושכרם
-              יהי׳ הרבח מאד ובכלל מזכי רבים יחשבו.
-            </p>
-            <div className='mt-6'>
-              <strong>הגאון הרב יחזקאל ראטה זצ״ל</strong>
-              <small>Harav Yechezkel Roth zt״l</small>
+      <div className="overflow-x-hidden">
+        {/* Hero Section */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#071728] via-[#102a43] to-[#0e304b] text-white border-b-2 border-[#c69b46]">
+          <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-[80px] grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-[50px] items-center relative z-10">
+            <div className="relative z-10">
+              <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1">
+                KOSHER BANK RESEARCH CENTER
+              </p>
+              <h1 className="text-white font-serif font-bold text-3xl sm:text-4xl md:text-5xl lg:text-[58px] leading-[1.1] my-3">
+                Kosher Bank Directory
+              </h1>
+              <p className="text-[#cbd5e1] text-base sm:text-[17px] leading-[1.8] max-w-[640px]">
+                Search the Kav Haribis research directory for banks, lenders and
+                financial institutions. Review the listed status and open each
+                record for additional information.
+              </p>
             </div>
-          </blockquote>
-        </div>
-      </section>
-      <section
-        className="bankResearchVisual hidden"
-        aria-label="Kav Haribis financial institution research"
-      >
-        <img
-          src="/kav-brand/bank-research.png"
-          alt="Financial institution ownership research and review"
+
+            <blockquote
+              className="relative z-10 m-0 p-6 sm:p-[34px_38px] border border-[#c69b46]/50 rounded-[20px] bg-[#071728]/85 backdrop-blur-md shadow-[0_20px_50px_rgba(0,0,0,0.35)]"
+              dir="rtl"
+              lang="he"
+            >
+              <span className="absolute left-5 top-1.5 font-serif text-6xl sm:text-[72px] text-[#c69b46]/35 leading-none" aria-hidden="true">״</span>
+              <p className="m-0 font-serif text-xl sm:text-[24px] font-medium leading-[1.75] text-white">
+                עוד ראיתי לעורר שמאד נצרך לברר ה״באנק״ השייכין לישראלים ולפרסם
+                הרשימות של ה״באנקים״ שיש עליהן חשש רבית למנוע הרבים ממכשול הרבית,
+                ומה מאד הי׳ ראוי למנות ע״ז אנשים מוכשרים היודעין לברר ענין זה, ושכרם
+                יהי׳ הרבח מאד ובכלל מזכי רבים יחשבו.
+              </p>
+              <div className="mt-5 pt-4 border-t border-white/15 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-[14px]" dir="ltr">
+                <span className="w-10 h-0.5 bg-[#c69b46] shrink-0 hidden sm:inline-block"></span>
+                <div>
+                  <strong className="text-[#e5c474] text-[15px] font-bold block">הגאון הרב יחזקאל ראטה זצ״ל</strong>
+                  <small className="text-[#cbd5e1] text-[11px] block">Harav Yechezkel Roth zt״l</small>
+                </div>
+              </div>
+            </blockquote>
+          </div>
+        </section>
+
+        {/* Directory Listing Component */}
+        <BankDirectoryClient
+          banks={banks.map((bank) => ({ ...bank, source: '' }))}
         />
-        <div>
-          <small>INDEPENDENT RESEARCH</small>
-          <b>
-            Ownership, structure, and current information—carefully reviewed.
-          </b>
-        </div>
-      </section>
-      <div className='hidden'>
-      <section className="bankAuthorityIntro">
-        <div className="bankIntroStatement">
-          <p className="eyebrow gold">RESEARCH • GUIDANCE • CLARITY</p>
-          <h2>Guidelines for the kashrus status of financial institutions</h2>
-          <p className="bankIntroLead">
-            Kav Haribis has researched financial institutions around the world
-            to provide the community with practical guidelines regarding their
-            kashrus status.
-          </p>
-          <div className="bankLeadershipStatement">
-            <span aria-hidden="true">״</span>
-            <p>
-              The Kosher Bank Directory is headed by{' '}
-              <strong>Rabbi Yaakov Yitzchok Jacob</strong>, under the guidance
-              and with the backing of <strong>Harav Pinchos Vind shlita</strong>
-              . Its research is based primarily on the opinions of{' '}
-              <strong>Harav Moshe Feinstein zt״l</strong>,{' '}
-              <strong>Harav Yosef Shalom Elyashiv zt״l</strong>,{' '}
-              <strong>Harav Yisroel Belsky zt״l</strong>, and{' '}
-              <strong>Harav Yechezkel Roth zt״l</strong>; and, ybl״c,{' '}
-              <strong>Harav Moshe Sternbuch shlita</strong>. The directory has
-              also benefited from extensive guidance from{' '}
-              <strong>Harav Ari Marburger shlita</strong> and other Rabbanim who
-              are experts in this field. The research also considers the
-              commonly accepted practice in many kehillos throughout the United
-              States.
-            </p>
-          </div>
-        </div>
-        <aside className="bankIntroDisclaimers">
-          <div>
-            <small>HALACHIC TERMINOLOGY</small>
-            <h3>How classifications are used</h3>
-            <p>
-              The terms “problematic” and “not problematic” describe how Kav
-              Haribis understands that a financial institution or arrangement
-              should be viewed for the relevant halachic analysis. They are not
-              general judgments about an institution, its owners, or its
-              services.
-            </p>
-          </div>
-          <div>
-            <small>INFORMATION DISCLAIMER</small>
-            <h3>Independent verification required</h3>
-            <p>
-              Information concerning entities that are not certified by Kav
-              Haribis is provided solely for general informational purposes and
-              may be incomplete or outdated. No express or implied warranty is
-              made regarding its accuracy, adequacy, completeness, legality,
-              reliability, or usefulness. Users are responsible for
-              independently verifying all information and obtaining appropriate
-              halachic guidance.
-            </p>
-          </div>
-        </aside>
-      </section>
-      
-      {/* <BankResearchPopup /> */}
-      <section
-        className="bankStatusGuide"
-        aria-labelledby="bank-status-guide-title"
-      >
-        <div className="bankStatusGuideHeading">
-          <span>STATUS GUIDE</span>
-          <h2 id="bank-status-guide-title">
-            Understand the seven directory levels
-          </h2>
-          <p>
-            These brief labels summarize the current research. Open an
-            institution for its specific comments and updated information.
-          </p>
-        </div>
-        <div className="bankStatusLevels">
-          <article className="level-mehudar">
-            <b>Mehudar</b>
-            <small>
-              Not problematic; a preferred option based on the current review.
-            </small>
-          </article>
-          <article className="level-kosher">
-            <b>Kosher</b>
-            <small>
-              Not problematic for general use based on the information reviewed.
-            </small>
-          </article>
-          <article className="level-iska">
-            <b>Kosher with Heter Iska</b>
-            <small>
-              Not problematic when the applicable Heter Iska is properly relied
-              upon.
-            </small>
-          </article>
-          <article className="level-case">
-            <b>Case by case</b>
-            <small>
-              The status depends on the product, transaction, terms, or
-              individual circumstances.
-            </small>
-          </article>
-          <article className="level-question">
-            <b>Questionable</b>
-            <small>
-              A possible concern or uncertainty requires additional guidance.
-            </small>
-          </article>
-          <article className="level-no">
-            <b>Not recommended</b>
-            <small>
-              Problematic for ordinary use unless qualified guidance says
-              otherwise.
-            </small>
-          </article>
-          <article className="level-unknown">
-            <b>Insufficient information</b>
-            <small>
-              There is not yet enough reliable information to determine the
-              status.
-            </small>
-          </article>
-        </div>
-      </section>
-      </div>
-      <BankDirectoryClient
-        banks={banks.map((bank) => ({ ...bank, source: '' }))}
-      />
-      <BankResearchForm />
+
+        {/* Research Form Component */}
+        <BankResearchForm />
       </div>
       <SiteFooter />
-      {/* <ResearchAccessGate /> */}
     </main>
   );
 }

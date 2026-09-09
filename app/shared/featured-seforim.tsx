@@ -69,11 +69,11 @@ export default function FeaturedSeforim() {
           {featuredBooks.map((book) => (
             <article
               key={book.id}
-              className="bg-[#fcfaf7] rounded-2xl border border-[#e8e2d5] p-5 flex flex-col justify-between hover:shadow-xl hover:border-[#c69b46] transition-all duration-300 group"
+              className="bg-[#fcfaf7]  border border-[#e8e2d5] p-5 flex flex-col justify-between transition-all duration-300 group"
             >
               <div>
                 {/* Book Cover Image */}
-                <div className="h-56 w-full rounded-xl overflow-hidden bg-white p-3 mb-4 border border-[#eee8dc] flex items-center justify-center shadow-xs group-hover:scale-102 transition duration-300">
+                <div className="h-56 w-full overflow-hidden bg-white p-3 mb-4 border border-[#eee8dc] flex items-center justify-center shadow-xs group-hover:scale-102 transition duration-300">
                   <img
                     src={book.image}
                     alt={book.title}
@@ -98,7 +98,7 @@ export default function FeaturedSeforim() {
                 </div>
                 <button
                   onClick={() => addToCart(book, 'book')}
-                  className="bg-[#102a43] hover:bg-[#c69b46] text-white hover:text-[#071d31] font-bold text-xs px-4 py-2.5 rounded-xl transition duration-200 flex items-center gap-1.5 cursor-pointer shadow-sm"
+                  className="bg-[#102a43] hover:bg-[#c69b46] text-white hover:text-[#071d31] font-bold text-xs px-4 py-2.5 transition duration-200 flex items-center gap-1.5 cursor-pointer shadow-sm"
                 >
                   <span>🛒 Add to Cart</span>
                 </button>
@@ -112,7 +112,7 @@ export default function FeaturedSeforim() {
           <a
             href="/seforim"
             style={{ color: 'white' }}
-            className="inline-flex items-center gap-2 bg-[#102a43] hover:bg-[#173f5f] text-white font-bold py-3.5 px-8 rounded-xl text-sm transition shadow-lg hover:shadow-xl border border-[#c69b46]/30"
+            className="inline-flex items-center gap-2 bg-[#102a43] hover:bg-[#173f5f] text-white font-bold py-3.5 px-8 text-sm transition shadow-lg hover:shadow-xl border border-[#c69b46]/30"
           >
             <span>View Full Catalog</span>
             <span className="text-base font-bold">→</span>

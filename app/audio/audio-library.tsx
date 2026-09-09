@@ -116,85 +116,92 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
   const startIndex = perPage === 'all' ? 0 : (activePage - 1) * perPage;
 
   return (
-    <section className="audioLibraryModern" ref={libraryRef}>
-      <div className="audioLibraryTitle text-center">
-        <div className="mx-auto text-center mb-10">
-          <span>NOW BROWSING</span>
-          <h2>{selected.title}</h2>
-        </div>
-      </div>
-      <div className="audioSearchRow">
-        <label className="audioSeriesSelect">
-          Select Collection ({filtered.length} {filtered.length === 1 ? 'item' : 'items'})
-          <select
-            value={series}
-            onChange={(event) => chooseSeries(event.target.value)}
-          >
-            {seriesDetails.map((item) => {
-              const count = audios.filter(
-                (audio) => audio.series === item.value,
-              ).length;
-              return (
-                <option value={item.value} key={item.value}>
-                  {item.title} ({count})
-                </option>
-              );
-            })}
-          </select>
-        </label>
-
-        <div className="audioSearch">
-          <span aria-hidden="true">⌕</span>
-          <input
-            value={query}
-            onChange={(event) => handleQueryChange(event.target.value)}
-            placeholder="Search by topic…"
-            aria-label="Search audio recordings"
-          />
+    <section className="w-full bg-[#f7f3ea] py-10 sm:py-14" ref={libraryRef}>
+      <div className="container max-w-[1440px] mx-auto px-4 sm:px-8">
+        <div className="text-center mb-8 hidden">
+          <div className="mx-auto text-center mb-6">
+            <span className="text-[#a37828] text-xs font-bold tracking-widest uppercase block mb-1">NOW BROWSING</span>
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#102a43]">{selected.title}</h2>
+          </div>
         </div>
 
-        <label className="audioPerPageSelect">
-          Record per page
-          <select
-            value={perPage}
-            onChange={(event) => {
-              const val =
-                event.target.value === 'all'
-                  ? 'all'
-                  : Number(event.target.value);
-              handlePerPageChange(val);
-            }}
-          >
-            <option value={15}>15 per page</option>
-            <option value={25}>25 per page</option>
-            <option value={50}>50 per page</option>
-            <option value="all">All</option>
-          </select>
-        </label>
-      </div>
+        {/* Filter controls bar */}
+        <div className="bg-white p-4 sm:p-6 mb-8 flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+          <label className="flex-1 text-sm font-bold text-gray-600 flex flex-col gap-1.5">
+            Select Collection ({filtered.length} {filtered.length === 1 ? 'item' : 'items'})
+            <select
+              className="w-full bg-[#f8fafc] focus:bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] cursor-pointer transition-all"
+              value={series}
+              onChange={(event) => chooseSeries(event.target.value)}
+            >
+              {seriesDetails.map((item) => {
+                const count = audios.filter(
+                  (audio) => audio.series === item.value,
+                ).length;
+                return (
+                  <option value={item.value} key={item.value}>
+                    {item.title} ({count})
+                  </option>
+                );
+              })}
+            </select>
+          </label>
+
+          <div className="flex-1 relative flex flex-col justify-end">
+            <span className="absolute left-3.5 bottom-2.5 text-slate-400 text-base pointer-events-none" aria-hidden="true">⌕</span>
+            <input
+              className="w-full bg-[#f8fafc] focus:bg-white border border-slate-300 rounded-xl pl-9 pr-3.5 py-2.5 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
+              value={query}
+              onChange={(event) => handleQueryChange(event.target.value)}
+              placeholder="Search by topic…"
+              aria-label="Search audio recordings"
+            />
+          </div>
+
+          <label className="w-full md:w-48 text-sm font-bold text-gray-600 flex flex-col gap-1.5">
+            Record per page
+            <select
+              className="w-full bg-[#f8fafc] focus:bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] cursor-pointer transition-all"
+              value={perPage}
+              onChange={(event) => {
+                const val =
+                  event.target.value === 'all'
+                    ? 'all'
+                    : Number(event.target.value);
+                handlePerPageChange(val);
+              }}
+            >
+              <option value={15}>15 per page</option>
+              <option value={25}>25 per page</option>
+              <option value={50}>50 per page</option>
+              <option value="all">All</option>
+            </select>
+          </label>
+        </div>
+
         {filtered.length ? (
           <>
-            <div className="audioGridModern">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
               {paginatedAudios.map((item, index) => {
                 const globalIndex = startIndex + index;
                 return (
-                  <article key={item.id}>
-                    <div className="audioTrackNumber">
+                  <article key={item.id} className="bg-white p-5 hover:border-slate-300 hover:shadow-md transition-all flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-[#f8fafc] border border-slate-200 text-[#102a43] font-mono text-sm font-bold flex items-center justify-center shrink-0 shadow-sm">
                       {String(globalIndex + 1).padStart(2, '0')}
                     </div>
-                    <div className="audioTrackBody">
-                      <small>
+                    <div className="flex-1 min-w-0">
+                      <small className="text-gray-500 text-[11px] font-bold block mb-1">
                         {item.series === 'general-shiurim'
                           ? 'GENERAL SHIURIM'
                           : item.series === 'video-shiurim'
                             ? 'VIDEO SHIURIM'
                             : `5-MINUTE ${seriesLabels[item.series] || 'AUDIO'} SERIES`}
                       </small>
-                      <h3>{item.title}</h3>
+                      <h3 className="text-base font-bold text-[#102a43] mb-3 leading-snug truncate" title={item.title}>{item.title}</h3>
                       {item.series === 'video-shiurim' ? (
                         <VideoPlayer url={item.audioUrl} title={item.title} />
                       ) : (
-                        <audio controls preload="none" src={item.audioUrl}>
+                        <audio controls preload="none" src={item.audioUrl} className="w-full h-10 rounded-lg focus:outline-none">
                           Your browser does not support audio playback.
                         </audio>
                       )}
@@ -203,20 +210,20 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
                 );
               })}
             </div>
-            <div className="directoryPagination">
-              <div className="paginationInfo">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 text-sm text-slate-600">
+              <div className="text-slate-600">
                 Showing{' '}
-                <b>
+                <b className="text-slate-900 font-semibold">
                   {perPage === 'all'
                     ? `1–${filtered.length}`
                     : `${startIndex + 1}–${Math.min(startIndex + perPage, filtered.length)}`}
                 </b>{' '}
-                of <b>{filtered.length}</b> recordings
+                of <b className="text-slate-900 font-semibold">{filtered.length}</b> recordings
               </div>
               {perPage !== 'all' && totalPages > 1 && (
-                <div className="paginationControls">
+                <div className="flex items-center gap-2">
                   <button
-                    className="paginationBtn"
+                    className="px-3.5 py-1.5 rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-semibold transition shadow-sm"
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={activePage === 1}
                     aria-label="Previous page"
@@ -224,12 +231,12 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
                     ← Prev
                   </button>
 
-                  <div className="paginationPages">
+                  <div className="flex items-center gap-1">
                     {pageNumbers.map((page, idx) =>
                       typeof page === 'number' ? (
                         <button
                           key={page}
-                          className={`paginationPageBtn ${activePage === page ? 'active' : ''}`}
+                          className={`w-8 h-8 rounded-xl text-xs font-bold transition flex items-center justify-center ${activePage === page ? 'bg-[#c69b46] text-white shadow-sm' : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50'}`}
                           onClick={() => setCurrentPage(page)}
                         >
                           {page}
@@ -237,7 +244,7 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
                       ) : (
                         <span
                           key={`ellipsis-${idx}`}
-                          className="paginationEllipsis"
+                          className="px-1 text-slate-400"
                         >
                           …
                         </span>
@@ -246,7 +253,7 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
                   </div>
 
                   <button
-                    className="paginationBtn"
+                    className="px-3.5 py-1.5 rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-semibold transition shadow-sm"
                     onClick={() =>
                       setCurrentPage((p) => Math.min(totalPages, p + 1))
                     }
@@ -260,16 +267,17 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
             </div>
           </>
         ) : (
-          <div className="audioEmpty">
-            <span>♫</span>
-            <h3>This series is ready for recordings</h3>
-            <p>
+          <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center my-8 shadow-sm">
+            <span className="text-4xl text-[#a37828] block mb-3">♫</span>
+            <h3 className="text-xl font-serif font-bold text-[#102a43] mb-2">This series is ready for recordings</h3>
+            <p className="text-slate-600 text-sm max-w-md mx-auto">
               New {selected.language} shiurim will appear here as soon as they
               are published from the Audio Administrator.
             </p>
           </div>
         )}
-      </section>
+      </div>
+    </section>
   );
 }
 
@@ -280,7 +288,7 @@ function VideoPlayer({ url, title }: { url: string; title: string }) {
   if (youtube)
     return (
       <iframe
-        className="videoShiurPlayer"
+        className="w-full aspect-video rounded-lg border border-slate-700"
         src={`https://www.youtube.com/embed/${youtube[1]}`}
         title={title}
         loading="lazy"
@@ -289,8 +297,9 @@ function VideoPlayer({ url, title }: { url: string; title: string }) {
       />
     );
   return (
-    <video className="videoShiurPlayer" controls preload="metadata" src={url}>
+    <video className="w-full aspect-video rounded-lg border border-slate-700 bg-black" controls preload="metadata" src={url}>
       Your browser does not support video playback.
     </video>
   );
 }
+

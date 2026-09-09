@@ -61,62 +61,68 @@ export default function HeterLibrary() {
 
   return (
     <>
-      <section className="documentCatalog" id="document-library">
-        <div className="sectionHead">
-          <div>
-            <p className="eyebrow gold">AVAILABLE DOCUMENTS</p>
-            <h2>Choose a Heter Iska</h2>
+      <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-10 md:py-14" id="document-library">
+        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-10 pb-6 border-b border-[#e2e8f0]">
+          <div className="space-y-2">
+            <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase">AVAILABLE DOCUMENTS</p>
+            <h2 className="text-[#102a43] font-serif font-bold text-3xl sm:text-4xl">Choose a Heter Iska</h2>
           </div>
-          <p>
+          <p className="max-w-md text-xs sm:text-sm text-[#64748b] leading-relaxed">
             Compare the available forms below. Previewing is free; payment is
             required only for the protected PDF download.
           </p>
         </div>
         {documents === null ? (
-          <p className="catalogLoading">Loading documents…</p>
+          <p className="text-center py-12 text-sm text-[#64748b]">Loading documents…</p>
         ) : documents.length === 0 ? (
-          <div className="emptyState">
-            <b>Documents are being prepared</b>
-            <p>The administrator has not uploaded a Heter Iska PDF yet.</p>
+          <div className="p-12 text-center bg-white border border-dashed border-[#cbd5e1] rounded-2xl max-w-md mx-auto space-y-2">
+            <b className="text-lg font-serif font-bold text-[#102a43] block">Documents are being prepared</b>
+            <p className="text-sm text-[#64748b]">The administrator has not uploaded a Heter Iska PDF yet.</p>
           </div>
         ) : (
-          <div className="heterGrid">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {documents.map((item, index) => (
               <article
-                className={
-                  checkoutOpen && selected?.id === item.id ? 'selected' : ''
-                }
+                className={`p-6 bg-white border border-[#dedfdc] rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between space-y-5 ${
+                  checkoutOpen && selected?.id === item.id ? 'ring-2 ring-[#102a43] border-[#102a43]' : ''
+                }`}
                 key={item.id}
               >
-                <div className="heterCardTop">
-                  <span className="heterNumber">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                  <span className="heterAvailability">Available</span>
-                </div>
-                <div className="heterCardBody">
-                  <div className="miniDocument">
-                    <span>בס״ד</span>
-                    <b>היתר עיסקא</b>
-                    <small>KAV HARIBIS</small>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-[#f1f5f9]">
+                    <span className="font-mono text-xs font-bold text-[#94a3b8]">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <span className="px-2.5 py-0.5 bg-[#e9f4eb] text-[#367448] rounded-full text-[11px] font-bold">Available</span>
                   </div>
-                  <div className="heterCardCopy">
-                    <h2>{item.title}</h2>
-                    <p>
-                      {item.description ||
-                        'Review this Heter Iska before purchasing a protected copy.'}
-                    </p>
+                  <div className="flex gap-4 items-start">
+                    <div className="w-16 h-20 rounded-lg bg-[#071728] text-white p-2 flex flex-col justify-between items-center shrink-0 shadow-inner">
+                      <span className="text-[10px] text-[#c69b46]">בס״ד</span>
+                      <b className="font-serif text-xs font-bold text-center leading-tight">היתר עיסקא</b>
+                      <small className="text-[7px] text-[#cbd5e1] font-mono">KAV</small>
+                    </div>
+                    <div className="space-y-1 flex-1 min-w-0">
+                      <h2 className="text-lg font-serif font-bold text-[#102a43] leading-snug">{item.title}</h2>
+                      <p className="text-xs text-[#475569] leading-relaxed line-clamp-3">
+                        {item.description ||
+                          'Review this Heter Iska before purchasing a protected copy.'}
+                      </p>
+                    </div>
                   </div>
                 </div>
-                <div className="docActions">
+                <div className="flex items-center gap-3 pt-4 border-t border-[#f1f5f9] text-xs font-bold">
                   <a
-                    className="viewAction"
+                    className="px-3.5 py-2 bg-white border border-[#cbd5da] text-[#102a43] rounded-xl hover:bg-[#f8fafc] transition-colors text-center"
                     href={`/heter-iska/preview?id=${item.id}`}
                   >
                     Preview document
                   </a>
-                  <button type="button" onClick={() => openCheckout(item)}>
-                    Continue to payment — $25
+                  <button
+                    type="button"
+                    className="flex-1 px-3.5 py-2 bg-[#102a43] hover:bg-[#1a385c] text-white rounded-xl transition-colors text-center shadow-sm cursor-pointer"
+                    onClick={() => openCheckout(item)}
+                  >
+                    Continue — $25
                   </button>
                 </div>
               </article>
@@ -128,19 +134,20 @@ export default function HeterLibrary() {
         <div
           id="purchase"
           ref={checkoutRef}
-          className="heterPurchase"
+          className="container max-w-4xl mx-auto px-4 sm:px-8 my-10 p-6 sm:p-8 bg-[#f7f3ea] border border-[#e2dacd] rounded-2xl space-y-6 shadow-md"
           tabIndex={-1}
         >
-          <div className="selectedDocument">
-            <span>Selected document</span>
-            <b>{selected.title}</b>
+          <div className="p-4 bg-white border border-[#ded7c9] rounded-xl flex items-center justify-between gap-4">
+            <span className="text-xs font-bold text-[#c69b46] uppercase tracking-wider block">Selected document</span>
+            <b className="text-lg font-serif font-bold text-[#102a43]">{selected.title}</b>
           </div>
           <AccessCodeForm
             key={`code-${selected.id}`}
             documentId={selected.id}
           />
-          <div className="heterPaymentDivider">
-            <span>OR PAY SECURELY</span>
+          <div className="relative text-center my-4">
+            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[#e2dacd]"></div></div>
+            <span className="relative px-4 bg-[#f7f3ea] text-[11px] font-bold text-[#64748b] tracking-wider uppercase">OR PAY SECURELY</span>
           </div>
           <CheckoutNotice
             key={selected.id}

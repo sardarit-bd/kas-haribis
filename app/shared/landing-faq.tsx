@@ -49,7 +49,7 @@ export default function LandingFaq() {
   };
 
   return (
-    <section className="py-16 bg-[#ffffff] border-t border-[#e2e8f0]">
+    <section className="py-16 bg-[#f2f2f2]">
       <div className="max-w-4xl mx-auto px-4">
         {/* Centered Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
@@ -69,7 +69,7 @@ export default function LandingFaq() {
             return (
               <div
                 key={faq.question}
-                className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
+                className={` border transition-all duration-200 overflow-hidden ${
                   isOpen
                     ? 'border-[#c69b46] bg-[#fcfaf6] shadow-md'
                     : 'border-slate-200/90 bg-white hover:border-slate-300'
@@ -85,7 +85,7 @@ export default function LandingFaq() {
                     <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#946e28] block">
                       {faq.category}
                     </span>
-                    <h3 className="font-serif text-base sm:text-lg font-bold text-[#102a43] leading-snug">
+                    <h3 className="text-base sm:text-lg font-bold text-[#102a43]">
                       {faq.question}
                     </h3>
                   </div>
@@ -123,7 +123,7 @@ export default function LandingFaq() {
           <a
             href="/questions"
             style={{ color: 'white' }}
-            className="inline-flex items-center gap-2 bg-[#102a43] hover:bg-[#173f5f] text-white font-bold py-3.5 px-8 rounded-xl text-sm transition shadow-md border border-[#c69b46]/30"
+            className="inline-flex items-center gap-2 bg-[#102a43] hover:bg-[#173f5f] text-white font-bold py-3.5 px-8 text-sm transition shadow-md border border-[#c69b46]/30"
           >
             <span>View All Common Questions</span>
             <span className="text-base font-bold">→</span>

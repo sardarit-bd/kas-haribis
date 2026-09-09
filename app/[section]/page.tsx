@@ -162,11 +162,13 @@ export default async function SectionPage({
         <div className="contentLead">
           {source?.summary && <p>{source.summary}</p>}
         </div>
-        <div className="innerGrid">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
           {page.items.map((item, index) => (
-            <article key={item}>
-              <span>{String(index + 1).padStart(2, '0')}</span>
-              <h2>{item}</h2>
+            <article key={item} className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex items-start gap-4">
+              <span className="w-10 h-10 rounded-xl bg-[#f8fafc] border border-slate-200 text-[#102a43] font-mono text-sm font-bold flex items-center justify-center shrink-0 shadow-sm">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <h2 className="text-lg font-serif font-bold text-[#102a43] leading-snug pt-1">{item}</h2>
             </article>
           ))}
         </div>

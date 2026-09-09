@@ -37,45 +37,78 @@ export default function GenealogyRequestForm() {
   }
   if (reference)
     return (
-      <div className="genealogySuccess">
-        <span>✓</span>
-        <small>REQUEST RECEIVED</small>
-        <h2>Thank you</h2>
-        <p>
+      <div className="p-8 bg-white border border-[#e2e8f0] rounded-2xl shadow-md text-center space-y-4">
+        <div className="w-12 h-12 bg-[#e9f4eb] text-[#367448] rounded-full flex items-center justify-center text-xl font-bold mx-auto">✓</div>
+        <small className="text-[#367448] font-mono font-bold text-[10px] tracking-widest uppercase block">REQUEST RECEIVED</small>
+        <h2 className="text-2xl font-serif font-bold text-[#102a43]">Thank you</h2>
+        <p className="text-sm text-[#64748b]">
           Your genealogy research request has been saved. Kav Haribis will
           review it and contact you about the next steps and pricing.
         </p>
-        <strong>{reference}</strong>
-        <button type="button" onClick={() => setReference('')}>
-          Submit another request
-        </button>
+        <strong className="text-2xl font-mono text-[#c69b46] bg-[#f8fafc] px-4 py-2 rounded-lg border border-[#e2e8f0] inline-block">{reference}</strong>
+        <div>
+          <button
+            type="button"
+            className="mt-4 px-6 py-3 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-colors shadow-md cursor-pointer"
+            onClick={() => setReference('')}
+          >
+            Submit another request
+          </button>
+        </div>
       </div>
     );
   return (
-    <form className="genealogyForm" onSubmit={submit}>
-      <div className="genealogyFormRow">
-        <label>
+    <form className="p-6 sm:p-8 bg-white border border-[#e2e8f0] rounded-2xl shadow-md space-y-5" onSubmit={submit}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
           Full name
-          <input name="name" autoComplete="name" required />
+          <input
+            name="name"
+            autoComplete="name"
+            required
+            className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+          />
         </label>
-        <label>
+        <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
           Email address
-          <input name="email" type="email" autoComplete="email" required />
+          <input
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+            className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+          />
         </label>
       </div>
-      <div className="genealogyFormRow">
-        <label>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
           Phone number
-          <input name="phone" type="tel" autoComplete="tel" required />
+          <input
+            name="phone"
+            type="tel"
+            autoComplete="tel"
+            required
+            className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+          />
         </label>
-        <label>
-          Organization <em>optional</em>
-          <input name="organization" />
+        <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
+          Organization <em className="not-italic text-[10px] font-normal text-[#94a3b8] normal-case">(optional)</em>
+          <input
+            name="organization"
+            className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+          />
         </label>
       </div>
-      <label>
+
+      <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
         Research purpose
-        <select name="request_subtype" required defaultValue="">
+        <select
+          name="request_subtype"
+          required
+          defaultValue=""
+          className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+        >
           <option value="" disabled>
             Choose the purpose
           </option>
@@ -86,56 +119,85 @@ export default function GenealogyRequestForm() {
           <option>Another ethical genealogy purpose</option>
         </select>
       </label>
-      <label>
+
+      <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
         Person, family, business, or institution being researched
-        <input name="related_name" required placeholder="Name or entity" />
+        <input
+          name="related_name"
+          required
+          placeholder="Name or entity"
+          className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+        />
       </label>
-      <div className="genealogyFormRow">
-        <label>
-          Relevant locations <em>optional</em>
-          <input name="location" placeholder="Cities, states, or countries" />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
+          Relevant locations <em className="not-italic text-[10px] font-normal text-[#94a3b8] normal-case">(optional)</em>
+          <input
+            name="location"
+            placeholder="Cities, states, or countries"
+            className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+          />
         </label>
-        <label>
-          Approximate years or generations <em>optional</em>
-          <input name="audience" placeholder="Example: 1920–present" />
+        <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
+          Approximate years or generations <em className="not-italic text-[10px] font-normal text-[#94a3b8] normal-case">(optional)</em>
+          <input
+            name="audience"
+            placeholder="Example: 1920–present"
+            className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+          />
         </label>
       </div>
-      <label>
+
+      <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
         What needs to be investigated?
         <textarea
           name="message"
-          rows={8}
+          rows={6}
           minLength={20}
           required
           placeholder="Explain the question, what you already know, and the result you are trying to clarify…"
+          className="w-full p-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
         />
       </label>
-      <label>
+
+      <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
         Preferred response method
-        <select name="response_method">
+        <select
+          name="response_method"
+          className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+        >
           <option>Email</option>
           <option>Phone</option>
           <option>Either email or phone</option>
         </select>
       </label>
-      <label className="genealogyUpload">
-        Supporting records <em>optional</em>
+
+      <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
+        Supporting records <em className="not-italic text-[10px] font-normal text-[#94a3b8] normal-case">(optional)</em>
         <input
           name="attachment"
           type="file"
           accept="application/pdf,image/png,image/jpeg,image/webp,.doc,.docx"
+          className="w-full text-xs text-[#64748b] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#102a43] file:text-white hover:file:bg-[#1a385c] file:cursor-pointer"
         />
-        <small>PDF, Word, JPG, PNG, or WEBP up to 10 MB.</small>
+        <small className="text-[11px] font-normal text-[#94a3b8] normal-case block">PDF, Word, JPG, PNG, or WEBP up to 10 MB.</small>
       </label>
-      <button className="primary" disabled={busy}>
+
+      <button
+        className="w-full h-12 bg-[#102a43] hover:bg-[#1a385c] text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-colors shadow-md disabled:opacity-50 cursor-pointer"
+        disabled={busy}
+      >
         {busy ? 'Submitting securely…' : 'Submit Research Request →'}
       </button>
+
       {error && (
-        <p className="formError" role="alert">
+        <p className="text-xs text-[#9b1c1c] bg-[#fde8e8] p-3 rounded-lg border border-[#f8b4b4] text-center" role="alert">
           {error}
         </p>
       )}
-      <small className="genealogyPrivacy">
+
+      <small className="block text-center text-xs text-[#94a3b8]">
         Please submit only information you are authorized to share and only for
         lawful, ethical purposes.
       </small>
