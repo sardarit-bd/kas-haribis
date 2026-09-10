@@ -1,5 +1,6 @@
 'use client';
 import { FormEvent, useState } from 'react';
+import { FaBorderAll } from "react-icons/fa";
 import type { MemberOrder, MemberRecord } from '../../lib/members';
 
 export default function MembershipDashboard({
@@ -41,7 +42,7 @@ export default function MembershipDashboard({
   return (
     <section className="w-full">
       <div className="grid md:grid-cols-12 gap-8 items-start mb-12">
-        <form className="md:col-span-8 bg-white border border-slate-200/90 p-6 sm:p-8 rounded-2xl flex flex-col gap-6 shadow-sm" onSubmit={save}>
+        <form className="md:col-span-8 bg-white p-6 sm:p-8 flex flex-col gap-6" onSubmit={save}>
           <div>
             <p className="text-[#a37828] text-xs font-bold tracking-widest uppercase mb-1">MEMBER PROFILE</p>
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#102a43]">Your information</h2>
@@ -121,23 +122,23 @@ export default function MembershipDashboard({
               ✓ Your Kav Haribis membership was saved.
             </p>
           )}
-          <button className="py-3 px-6 rounded-xl bg-[#102a43] hover:bg-[#102a43]/90 text-white font-bold text-sm tracking-wide transition shadow-sm cursor-pointer self-start disabled:opacity-50" style={{ color: 'white' }} disabled={busy}>
+          <button className="py-3 px-6 bg-[#102a43] hover:bg-[#102a43]/90 text-white font-bold text-sm tracking-wide transition shadow-sm cursor-pointer self-start disabled:opacity-50" style={{ color: 'white' }} disabled={busy}>
             {busy ? 'Saving…' : 'Save membership preferences'}
           </button>
         </form>
-        <aside className="md:col-span-4 bg-white border border-slate-200/90 p-6 sm:p-8 rounded-2xl text-center shadow-sm flex flex-col items-center">
+        <aside className="md:col-span-4 bg-white p-6 sm:p-8 text-center flex flex-col items-center">
           <div className="w-16 h-16 rounded-full bg-[#f8fafc] border-2 border-[#a37828] flex flex-col items-center justify-center mb-4 text-[#102a43]">
             <span className="font-serif text-lg font-bold">KH</span>
             <small className="text-[7px] font-bold tracking-widest uppercase text-[#a37828]">MEMBER</small>
           </div>
           <p className="text-xl font-serif font-bold text-[#102a43] mb-1">{member.name || 'Member'}</p>
           <b className="text-slate-600 text-sm font-mono block mb-4 break-all">{member.email}</b>
-          <small className="text-slate-500 text-xs pt-4 border-t border-slate-100 w-full block">
+          <small className="text-slate-500 text-xs pt-4 w-full block">
             Member since {new Date(member.createdAt).toLocaleDateString()}
           </small>
         </aside>
       </div>
-      <section className="bg-white border border-slate-200/90 p-6 sm:p-8 rounded-2xl shadow-sm">
+      <section className="bg-white p-6 sm:p-8">
         <div className="flex items-center justify-between gap-4 mb-6 border-b border-slate-100 pb-4">
           <div>
             <p className="text-[#a37828] text-xs font-bold tracking-widest uppercase mb-1">ORDER HISTORY</p>
@@ -165,13 +166,15 @@ export default function MembershipDashboard({
           </div>
         ) : (
           <div className="text-center py-12">
-            <span className="text-3xl text-slate-400 block mb-2">□</span>
+            <span className="text-3xl text-slate-400 block mb-2 flex items-center justify-center w-full mb-4">
+              <FaBorderAll />
+            </span>
             <h3 className="text-lg font-serif font-bold text-[#102a43] mb-2">No Kav Haribis orders yet</h3>
             <p className="text-slate-500 text-sm max-w-md mx-auto mb-6">
               When future orders are connected to this email address, they will
               appear here.
             </p>
-            <a className="inline-flex items-center gap-1.5 text-[#a37828] hover:text-[#102a43] text-sm font-bold transition" href="/seforim">Browse Kav Haribis seforim →</a>
+            <a style={{color:"white"}} className="inline-flex items-center gap-1.5 text-[#a37828] hover:text-[#102a43] text-sm font-bold transition bg-gray-700 px-4 py-3 text-white" href="/seforim">Browse Kav Haribis seforim →</a>
           </div>
         )}
       </section>
