@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import data from '../data/current-site.json';
-import { InteriorPage } from '../shared/site-shell';
+import { InteriorPage, SiteFooter, SiteHeader } from '../shared/site-shell';
 
 const aliases: Record<string, string> = {
   audios: '/audio',
@@ -157,18 +157,20 @@ export default async function SectionPage({
   if (!page) notFound();
   const source = data.sourcePages.find((item) => item.slug === section);
   return (
-    <InteriorPage eyebrow={page.eyebrow} title={page.title} intro={page.intro}>
+    <>
+    <SiteHeader/>
+    <InteriorPage eyebrow={page.eyebrow} title={page.title} intro={page.intro}/>
       <section className="contentPage">
-        <div className="contentLead">
+        <div className="contentLead hidden">
           {source?.summary && <p>{source.summary}</p>}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-0">
           {page.items.map((item, index) => (
-            <article key={item} className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex items-start gap-4">
-              <span className="w-10 h-10 rounded-xl bg-[#f8fafc] border border-slate-200 text-[#102a43] font-mono text-sm font-bold flex items-center justify-center shrink-0 shadow-sm">
+            <article key={item} className="bg-gray-200 p-6 transition-all flex items-center gap-4">
+              <span className="w-10 h-10 bg-[#f8fafc] border border-slate-200 text-[#102a43] font-mono text-sm font-bold flex items-center justify-center shrink-0">
                 {String(index + 1).padStart(2, '0')}
               </span>
-              <h2 className="text-lg font-serif font-bold text-[#102a43] leading-snug pt-1">{item}</h2>
+              <h2 className="text-lg font-serif font-semibol text-gray-700 leading-snug pt-1">{item}</h2>
             </article>
           ))}
         </div>
@@ -181,6 +183,7 @@ export default async function SectionPage({
           </div>
         )}
       </section>
-    </InteriorPage>
+      <SiteFooter/>
+    </>
   );
 }

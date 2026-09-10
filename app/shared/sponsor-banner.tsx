@@ -113,10 +113,10 @@ export default function SponsorBanner() {
         </div>
 
         {/* Item Title Below Logo */}
-        <b className="text-[13px] sm:text-[17px] font-medium text-gray-900 max-w-[140px] truncate leading-tight mb-0.5 group-hover:text-[#c69b46] transition-colors">
+        <b className="text-md sm:text-lg font-medium text-gray-800 max-w-[160px] truncate leading-tight mb-0.5">
           {sponsor.company_name}
         </b>
-        <small className="text-[11px] text-[#637282] leading-tight">
+        <small className="text-md text-gray-500">
           {clickable ? 'Click for details' : 'Proud Supporter'}
         </small>
       </button>

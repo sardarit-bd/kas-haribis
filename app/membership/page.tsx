@@ -36,109 +36,97 @@ const benefits = [
 
 export default function MembershipPage() {
   return (
-    <main className="min-h-screen bg-[#f7f3ea] text-slate-900 flex flex-col font-sans">
+    <main className="min-h-screen bg-[#fbfaf7] text-slate-900 flex flex-col font-sans">
       <SiteHeader />
-      <section className="relative max-w-[1440px] mx-auto px-4 sm:px-8 py-12 md:py-20 grid md:grid-cols-12 gap-8 items-center border-b border-slate-200/80 w-full overflow-hidden">
-        <div className="md:col-span-8 relative z-10">
-          <p className="text-[#a37828] text-xs font-bold tracking-widest uppercase mb-3">KAV HARIBIS MEMBERSHIP</p>
-          <h1 className="text-4xl sm:text-5xl font-serif text-[#102a43] font-bold tracking-tight mb-4 leading-tight">
-            Stay connected.
-            <br />
-            <em className="text-[#a37828] not-italic">Keep learning.</em>
-          </h1>
-          <p className="text-slate-600 text-lg max-w-2xl mb-8 leading-relaxed">
-            A free Kav Haribis membership for publications, alerts, account
-            preferences, and future book orders—all organized in one secure
-            place.
-          </p>
-          <div className="flex flex-wrap gap-4 mb-4">
-            <a className="inline-flex items-center px-6 py-3 rounded-xl bg-[#102a43] hover:bg-[#102a43]/90 text-white font-bold text-sm tracking-wide transition shadow-sm" style={{ color: 'white' }} href="/membership/account">
-              Join Kav Haribis →
-            </a>
-            <a className="inline-flex items-center px-6 py-3 rounded-xl border border-slate-300 hover:border-slate-400 bg-white text-slate-800 font-semibold text-sm transition shadow-sm" href="/membership/account">Member login →</a>
-          </div>
-          <small className="text-slate-500 text-xs tracking-wide">
-            This membership belongs exclusively to the Kav Haribis organization.
-          </small>
-        </div>
-        <aside className="md:col-span-4 bg-white border border-slate-200/90 p-6 sm:p-8 rounded-2xl text-center shadow-sm relative z-10">
-          <div className="w-20 h-20 rounded-full bg-[#f8fafc] border-2 border-[#a37828] flex flex-col items-center justify-center mx-auto mb-4 text-[#102a43]">
-            <span className="font-serif text-xl font-bold">KH</span>
-            <i className="not-italic text-[8px] font-bold tracking-widest uppercase text-[#a37828]">MEMBERSHIP</i>
-          </div>
-          <p className="text-slate-500 text-xs font-semibold tracking-widest uppercase mb-1">MEMBER No.</p>
-          <strong className="text-3xl font-mono font-bold text-[#a37828] block mb-6">0001</strong>
-          <div className="flex justify-center gap-4 text-[10px] font-bold tracking-wider text-slate-600 uppercase pt-4 border-t border-slate-100">
-            <span>READ</span>
-            <span className="text-[#a37828]">·</span>
-            <span>LEARN</span>
-            <span className="text-[#a37828]">·</span>
-            <span>CONNECT</span>
-          </div>
-        </aside>
-      </section>
 
-      <section className="max-w-[1440px] mx-auto px-4 sm:px-8 py-12 md:py-16 w-full border-b border-slate-200/80">
-        <div className="mb-4">
-          <p className="text-[#a37828] text-xs font-bold tracking-widest uppercase mb-2">A BETTER WAY TO STAY CONNECTED</p>
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#102a43] mb-4">Your Kav Haribis member home</h2>
-        </div>
-        <p className="text-slate-600 text-base max-w-3xl leading-relaxed">
-          Kav Haribis Membership brings communication preferences, publications,
-          and purchasing records together in a private account. New members can
-          register at no charge, and existing members can return to manage their
-          information.
-        </p>
-      </section>
-
-      <section className="max-w-[1440px] mx-auto px-4 sm:px-8 py-12 md:py-16 w-full">
-        <div className="mb-10">
-          <div>
-            <p className="text-[#a37828] text-xs font-bold tracking-widest uppercase mb-2">MEMBERSHIP BENEFITS</p>
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#102a43] mb-3">Everything in one place</h2>
+      {/* Section 1: Hero (Dark Navy Theme) */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#071728] via-[#102a43] to-[#0e304b] text-white py-16 md:py-20">
+        <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 grid md:grid-cols-12 gap-8 items-center relative z-10">
+          <div className="md:col-span-8 space-y-6">
+            <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase hidden">
+              KAV HARIBIS MEMBERSHIP
+            </p>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-white leading-tight">
+              Stay connected.
+              <br />
+              <span className="text-[#c69b46]">Keep learning.</span>
+            </h1>
+            <p className="text-[#cbd5e1] text-base sm:text-lg leading-relaxed max-w-2xl">
+              A free Kav Haribis membership for publications, alerts, account
+              preferences, and future book orders—all organized in one secure place.
+            </p>
+            <div className="flex flex-wrap gap-4 pt-2">
+              <a
+                className="px-6 py-3.5 bg-[#c69b46]  text-[#102a43] text-md font-medium text-center"
+                href="/membership/account"
+              >
+                Join Kav Haribis
+              </a>
+              <a
+                className="px-6 py-3.5 bg-white/10 border border-white/20 hover:bg-white/20 text-white text-md font-medium text-center"
+                href="/membership/account"
+              >
+                Member login
+              </a>
+            </div>
+            <p className="text-slate-400 text-xs tracking-wide hidden">
+              This membership belongs exclusively to the Kav Haribis organization.
+            </p>
           </div>
-          <p className="text-slate-600 text-base max-w-2xl leading-relaxed">
-            You control what you receive. Newsletter, Ribbis Alert, and discount
-            notifications can be selected according to your preferences.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {benefits.map((item) => (
-            <article className="bg-white border border-slate-200/90 p-6 rounded-2xl hover:border-[#c69b46] hover:shadow-md transition duration-300 shadow-sm flex flex-col" key={item.mark}>
-              <span className="text-[#a37828] font-mono text-lg font-bold mb-3">{item.mark}</span>
-              <h3 className="text-xl font-serif font-bold text-[#102a43] mb-2">{item.title}</h3>
-              <p className="text-slate-600 text-sm leading-relaxed">{item.text}</p>
-            </article>
-          ))}
         </div>
       </section>
 
-      <section className="max-w-[1440px] mx-auto px-4 sm:px-8 py-12 md:py-16 w-full grid md:grid-cols-12 gap-8 items-center">
-        <div className="md:col-span-7">
-          <p className="text-[#a37828] text-xs font-bold tracking-widest uppercase mb-2">ORDER HISTORY</p>
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#102a43] mb-4">Ready for every future sefer order</h2>
-          <p className="text-slate-600 text-base leading-relaxed max-w-xl">
-            Your Kav Haribis member account includes a dedicated book-order
-            history. If no orders are connected yet, the dashboard displays a
-            clear empty message and remains ready for future purchases.
-          </p>
-        </div>
-        <aside className="md:col-span-5 bg-white border border-slate-200/90 p-8 rounded-2xl text-center flex flex-col items-center justify-center shadow-sm">
-          <span className="text-[#a37828] text-xs font-bold tracking-widest uppercase mb-6 block">YOUR KAV HARIBIS LIBRARY</span>
-          <div className="flex gap-2 items-end h-24 mb-6">
-            <div className="w-8 h-20 bg-[#a37828] rounded-t-sm" />
-            <div className="w-8 h-24 bg-slate-300 rounded-t-sm" />
-            <div className="w-8 h-16 bg-[#102a43] rounded-t-sm" />
+      {/* Section 2: Benefits Grid (Warm Cream Theme) */}
+      <section className="bg-[#f7f3ea] py-16 md:py-16">
+        <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 space-y-10">
+          <div className="space-y-2">
+            <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase hidden">
+              MEMBERSHIP BENEFITS
+            </p>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#102a43]">
+              Everything in one place
+            </h2>
+            <p className="text-slate-600 text-sm sm:text-base pt-2 max-w-2xl leading-relaxed">
+              You control what you receive. Newsletter, Ribbis Alert, and discount
+              notifications can be selected according to your preferences.
+            </p>
           </div>
-          <small className="text-slate-500 text-xs">Future orders, neatly organized.</small>
-        </aside>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {benefits.map((item) => (
+              <article
+                className="bg-white border border-gray-100 p-6 sm:p-8 space-y-3 hover:border-[#c69b46] hover:shadow-md transition duration-300 flex flex-col"
+                key={item.mark}
+              >
+                <span className="text-[#c69b46] font-mono text-md font-bold">
+                  {item.mark}
+                </span>
+                <h3 className="text-xl font-serif font-bold text-[#102a43]">
+                  {item.title}
+                </h3>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  {item.text}
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
       </section>
 
-      {/* CTA Section Banner */}
-      <BottomCTA eyebrow={"FREE TO JOIN"} title={"Become a Kav Haribis member"} discription={"Register, choose your preferences, and begin building your Kav Haribis member history."} link="/membership/account" linktext="Create or open your account →" link2="" link2text=""/>
+      {/* Bottom CTA Banner */}
+      <BottomCTA
+        eyebrow={"FREE TO JOIN"}
+        title={"Become a Kav Haribis member"}
+        discription={
+          "Register, choose your preferences, and begin building your Kav Haribis member history."
+        }
+        link="/membership/account"
+        linktext="Create or open your account →"
+        link2=""
+        link2text=""
+      />
 
       <SiteFooter />
     </main>
   );
 }
-

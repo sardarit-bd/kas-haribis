@@ -14,7 +14,7 @@ export default async function BankDirectory() {
       <div className="overflow-x-hidden">
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-br from-[#071728] via-[#102a43] to-[#0e304b] text-white border-b-2 border-[#c69b46]">
-          <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-[80px] grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-[50px] items-center relative z-10">
+          <div className="container px-4 sm:px-8 py-[80px] grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-[50px] items-center relative z-10">
             <div className="relative z-10">
               <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1">
                 KOSHER BANK RESEARCH CENTER
@@ -30,7 +30,7 @@ export default async function BankDirectory() {
             </div>
 
             <blockquote
-              className="relative z-10 m-0 p-6 sm:p-[34px_38px] border border-[#c69b46]/50 rounded-[20px] bg-[#071728]/85 backdrop-blur-md shadow-[0_20px_50px_rgba(0,0,0,0.35)]"
+              className="relative z-10 m-0 p-6 sm:p-[34px_38px] border border-[#c69b46]/50 bg-[#071728]/85 backdrop-blur-md shadow-[0_20px_50px_rgba(0,0,0,0.35)]"
               dir="rtl"
               lang="he"
             >

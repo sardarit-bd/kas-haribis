@@ -60,14 +60,14 @@ export default function BaisHoraahPage() {
       <section className="my-12 container grid grid-cols-1 lg:grid-cols-12 gap-8 items-start" id="submit-question">
         <div className="lg:col-span-5 space-y-6">
           <div>
-            <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1">SUBMIT YOUR QUESTION</p>
+            <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1 hidden">SUBMIT YOUR QUESTION</p>
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#102a43]">Send the details securely</h2>
           </div>
-          <p className="text-sm text-[#64748b] leading-relaxed">
+          <p className="text-md text-[#64748b] leading-relaxed">
             Your submission is saved in the private Bais Horaah administrator
             inbox. You will receive a reference number immediately.
           </p>
-          <ul className="space-y-2.5 text-xs text-[#475569]">
+          <ul className="space-y-2.5 text-md text-[#475569]">
             <li className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#c69b46]"></span>
               Describe the complete arrangement
@@ -86,8 +86,8 @@ export default function BaisHoraahPage() {
             </li>
           </ul>
           <aside className="p-4 bg-[#f8fafc] border-l-4 border-[#102a43] rounded-r-xl space-y-1">
-            <b className="text-xs font-bold text-[#102a43] block">This form is for halachic questions.</b>
-            <span className="text-xs text-[#64748b] block">
+            <b className="text-md font-bold text-[#102a43] block">This form is for halachic questions.</b>
+            <span className="text-md text-[#64748b] block">
               For programs, sponsorships, seforim, or general inquiries, please
               use the <a href="/contact" className="text-[#c69b46] font-bold hover:underline">Contact page</a>.
             </span>

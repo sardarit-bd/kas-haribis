@@ -2,27 +2,29 @@
 import { FormEvent, useState } from 'react';
 
 export default function GenealogyRequestForm() {
-  const [busy, setBusy] = useState(false),
-    [error, setError] = useState(''),
-    [reference, setReference] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const [reference, setReference] = useState('');
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
     setError('');
-    const form = event.currentTarget,
-      data = new FormData(form);
+    const form = event.currentTarget;
+    const data = new FormData(form);
     data.set('topic', 'Genealogy research request');
     try {
       const response = await fetch('/api/contact-submissions', {
-          method: 'POST',
-          body: data,
-        }),
-        result = (await response.json()) as {
-          reference?: string;
-          error?: string;
-        };
-      if (!response.ok)
+        method: 'POST',
+        body: data,
+      });
+      const result = (await response.json()) as {
+        reference?: string;
+        error?: string;
+      };
+      if (!response.ok) {
         throw new Error(result.error || 'Your request could not be submitted.');
+      }
       setReference(result.reference || '');
       form.reset();
     } catch (err) {
@@ -35,21 +37,31 @@ export default function GenealogyRequestForm() {
       setBusy(false);
     }
   }
-  if (reference)
+
+  if (reference) {
     return (
-      <div className="p-8 bg-white border border-[#e2e8f0] rounded-2xl shadow-md text-center space-y-4">
-        <div className="w-12 h-12 bg-[#e9f4eb] text-[#367448] rounded-full flex items-center justify-center text-xl font-bold mx-auto">✓</div>
-        <small className="text-[#367448] font-mono font-bold text-[10px] tracking-widest uppercase block">REQUEST RECEIVED</small>
-        <h2 className="text-2xl font-serif font-bold text-[#102a43]">Thank you</h2>
-        <p className="text-sm text-[#64748b]">
-          Your genealogy research request has been saved. Kav Haribis will
-          review it and contact you about the next steps and pricing.
+      <div className="p-8 sm:p-10 bg-white border border-gray-100 text-center space-y-5">
+        <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto border border-emerald-100">
+          ✓
+        </div>
+        <div className="space-y-1">
+          <span className="inline-block px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-medium rounded-full border border-emerald-100">
+            Request Received
+          </span>
+          <h2 className="text-2xl font-serif font-bold text-[#102a43] pt-2">
+            Thank you for your submission
+          </h2>
+        </div>
+        <p className="text-sm text-slate-600 max-w-md mx-auto">
+          Your genealogy research request has been saved. Kav Haribis will review it and contact you about the next steps and pricing.
         </p>
-        <strong className="text-2xl font-mono text-[#c69b46] bg-[#f8fafc] px-4 py-2 rounded-lg border border-[#e2e8f0] inline-block">{reference}</strong>
+        <strong className="text-2xl font-mono text-[#c69b46] bg-slate-50 px-5 py-2.5 rounded-xl border border-slate-200 inline-block font-semibold tracking-wider">
+          {reference}
+        </strong>
         <div>
           <button
             type="button"
-            className="mt-4 px-6 py-3 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-colors shadow-md cursor-pointer"
+            className="mt-2 px-6 py-3 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-medium rounded-xl transition-all cursor-pointer"
             onClick={() => setReference('')}
           >
             Submit another request
@@ -57,57 +69,76 @@ export default function GenealogyRequestForm() {
         </div>
       </div>
     );
+  }
+
   return (
-    <form className="p-6 sm:p-8 bg-white border border-[#e2e8f0] rounded-2xl shadow-md space-y-5" onSubmit={submit}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
-          Full name
+    <form
+      className="p-6 sm:p-8 bg-gray-50 border border-gray-100 space-y-6"
+      onSubmit={submit}
+    >
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="space-y-1.5">
+          <label className="block text-sm font-medium text-slate-700">
+            Full name <span className="text-red-500">*</span>
+          </label>
           <input
             name="name"
             autoComplete="name"
             required
-            className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+            placeholder="e.g. David Cohen"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
-        </label>
-        <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
-          Email address
+        </div>
+        <div className="space-y-1.5">
+          <label className="block text-sm font-medium text-slate-700">
+            Email address <span className="text-red-500">*</span>
+          </label>
           <input
             name="email"
             type="email"
             autoComplete="email"
             required
-            className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+            placeholder="you@example.com"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
-        </label>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
-          Phone number
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="space-y-1.5">
+          <label className="block text-sm font-medium text-slate-700">
+            Phone number <span className="text-red-500">*</span>
+          </label>
           <input
             name="phone"
             type="tel"
             autoComplete="tel"
             required
-            className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+            placeholder="(555) 000-0000"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
-        </label>
-        <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
-          Organization <em className="not-italic text-[10px] font-normal text-[#94a3b8] normal-case">(optional)</em>
+        </div>
+        <div className="space-y-1.5">
+          <label className="block text-sm font-medium text-slate-700">
+            Organization <span className="text-xs font-normal text-slate-400">(optional)</span>
+          </label>
           <input
             name="organization"
-            className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+            placeholder="Company or institution name"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
-        </label>
+        </div>
       </div>
 
-      <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
-        Research purpose
+      <div className="space-y-1.5">
+        <label className="block text-sm font-medium text-slate-700">
+          Research purpose <span className="text-red-500">*</span>
+        </label>
         <select
           name="request_subtype"
           required
           defaultValue=""
-          className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+          className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all cursor-pointer"
         >
           <option value="" disabled>
             Choose the purpose
@@ -118,89 +149,107 @@ export default function GenealogyRequestForm() {
           <option>Trust, estate, or succession research</option>
           <option>Another ethical genealogy purpose</option>
         </select>
-      </label>
+      </div>
 
-      <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
-        Person, family, business, or institution being researched
+      <div className="space-y-1.5">
+        <label className="block text-sm font-medium text-slate-700">
+          Person, family, business, or institution being researched <span className="text-red-500">*</span>
+        </label>
         <input
           name="related_name"
           required
-          placeholder="Name or entity"
-          className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+          placeholder="Name or entity to investigate"
+          className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
         />
-      </label>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
-          Relevant locations <em className="not-italic text-[10px] font-normal text-[#94a3b8] normal-case">(optional)</em>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="space-y-1.5">
+          <label className="block text-sm font-medium text-slate-700">
+            Relevant locations <span className="text-xs font-normal text-slate-400">(optional)</span>
+          </label>
           <input
             name="location"
             placeholder="Cities, states, or countries"
-            className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
-        </label>
-        <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
-          Approximate years or generations <em className="not-italic text-[10px] font-normal text-[#94a3b8] normal-case">(optional)</em>
+        </div>
+        <div className="space-y-1.5">
+          <label className="block text-sm font-medium text-slate-700">
+            Approximate years or generations <span className="text-xs font-normal text-slate-400">(optional)</span>
+          </label>
           <input
             name="audience"
-            placeholder="Example: 1920–present"
-            className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+            placeholder="e.g. 1920–present"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
-        </label>
+        </div>
       </div>
 
-      <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
-        What needs to be investigated?
+      <div className="space-y-1.5">
+        <label className="block text-sm font-medium text-slate-700">
+          What needs to be investigated? <span className="text-red-500">*</span>
+        </label>
         <textarea
           name="message"
           rows={6}
           minLength={20}
           required
-          placeholder="Explain the question, what you already know, and the result you are trying to clarify…"
-          className="w-full p-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+          placeholder="Please explain the question, what facts you already know, and the results you are trying to clarify..."
+          className="w-full p-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all leading-relaxed"
         />
-      </label>
+      </div>
 
-      <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
-        Preferred response method
+      <div className="space-y-1.5">
+        <label className="block text-sm font-medium text-slate-700">
+          Preferred response method
+        </label>
         <select
           name="response_method"
-          className="w-full h-11 px-3.5 bg-white border border-[#cbd5da] rounded-xl text-sm font-normal text-[#102a43] normal-case cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+          className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all cursor-pointer"
         >
           <option>Email</option>
           <option>Phone</option>
           <option>Either email or phone</option>
         </select>
-      </label>
+      </div>
 
-      <label className="block space-y-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
-        Supporting records <em className="not-italic text-[10px] font-normal text-[#94a3b8] normal-case">(optional)</em>
-        <input
-          name="attachment"
-          type="file"
-          accept="application/pdf,image/png,image/jpeg,image/webp,.doc,.docx"
-          className="w-full text-xs text-[#64748b] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#102a43] file:text-white hover:file:bg-[#1a385c] file:cursor-pointer"
-        />
-        <small className="text-[11px] font-normal text-[#94a3b8] normal-case block">PDF, Word, JPG, PNG, or WEBP up to 10 MB.</small>
-      </label>
+      <div className="space-y-1.5">
+        <label className="block text-sm font-medium text-slate-700">
+          Supporting records <span className="text-xs font-normal text-slate-400">(optional)</span>
+        </label>
+        <div className="p-3 bg-white border border-dashed border-slate-300 rounded-xl text-xs text-slate-600">
+          <input
+            name="attachment"
+            type="file"
+            accept="application/pdf,image/png,image/jpeg,image/webp,.doc,.docx"
+            className="w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-[#102a43] file:text-white hover:file:bg-[#1a385c] file:cursor-pointer transition-colors"
+          />
+          <span className="text-[11px] text-slate-400 block mt-1.5">Accepted files: PDF, Word, JPG, PNG, or WEBP up to 10 MB.</span>
+        </div>
+      </div>
 
       <button
-        className="w-full h-12 bg-[#102a43] hover:bg-[#1a385c] text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-colors shadow-md disabled:opacity-50 cursor-pointer"
+        type="submit"
+        className="w-fit px-4 h-12 bg-[#102a43] hover:bg-[#1a385c] text-white font-medium text-sm transition-all shadow-sm hover:shadow active:scale-[0.99] disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
         disabled={busy}
       >
-        {busy ? 'Submitting securely…' : 'Submit Research Request →'}
+        {busy ? 'Submitting securely...' : 'Submit Research Request'}
       </button>
 
       {error && (
-        <p className="text-xs text-[#9b1c1c] bg-[#fde8e8] p-3 rounded-lg border border-[#f8b4b4] text-center" role="alert">
+        <p
+          className="text-xs text-red-700 bg-red-50 p-3 rounded-xl border border-red-200 text-center font-medium"
+          role="alert"
+        >
           {error}
         </p>
       )}
 
-      <small className="block text-center text-xs text-[#94a3b8]">
-        Please submit only information you are authorized to share and only for
-        lawful, ethical purposes.
-      </small>
+      <p className="text-center text-xs text-slate-400">
+        Please submit only information you are authorized to share and only for lawful, ethical purposes.
+      </p>
     </form>
   );
 }
+

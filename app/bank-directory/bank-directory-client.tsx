@@ -107,16 +107,16 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
   };
 
   return (
-    <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-10 md:py-14">
+    <section className="container px-4 sm:px-8 py-10 md:py-14">
       {/* Directory Tools */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[minmax(200px,1fr)_minmax(150px,0.7fr)_minmax(130px,0.6fr)_auto_auto] gap-4 items-end mb-8 bg-[#f7f3ea] p-5 sm:p-6 rounded-xl border border-[#e2dacd]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[minmax(200px,1fr)_minmax(150px,0.7fr)_minmax(130px,0.6fr)_auto_auto] gap-4 items-end mb-8 bg-[#f7f3ea] p-5 sm:p-6">
         <label className="flex flex-col gap-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
           Search financial institutions
           <input
             value={query}
             onChange={(event) => handleQueryChange(event.target.value)}
             placeholder="Bank or lender name…"
-            className="h-[43px] px-3.5 bg-white border border-[#cbd5da] rounded-lg text-sm text-[#102a43] font-normal normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+            className="h-[43px] px-3.5 bg-white border border-[#cbd5da] text-sm text-[#102a43] font-normal normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
           />
         </label>
         <label className="flex flex-col gap-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
@@ -124,7 +124,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
           <select
             value={status}
             onChange={(event) => handleStatusChange(event.target.value)}
-            className="h-[43px] px-3.5 bg-white border border-[#cbd5da] rounded-lg text-sm text-[#102a43] font-normal normal-case cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+            className="h-[43px] px-3.5 bg-white border border-[#cbd5da] text-sm text-[#102a43] font-normal normal-case cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
           >
             <option value="all">All statuses</option>
             {Object.entries(labels).map(([value, label]) => (
@@ -145,7 +145,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                   : Number(event.target.value);
               handlePerPageChange(val);
             }}
-            className="h-[43px] px-3.5 bg-white border border-[#cbd5da] rounded-lg text-sm text-[#102a43] font-normal normal-case cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+            className="h-[43px] px-3.5 bg-white border border-[#cbd5da] text-sm text-[#102a43] font-normal normal-case cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
           >
             <option value={16}>16 per page</option>
             <option value={25}>25 per page</option>
@@ -157,7 +157,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
           {filtered.length} banks listed
         </b>
         <div
-          className="inline-flex items-center self-end border border-[#cbd5da] rounded-lg overflow-hidden bg-white w-full sm:w-auto"
+          className="inline-flex items-center self-end border border-[#cbd5da] overflow-hidden bg-white w-full sm:w-auto"
           role="group"
           aria-label="Choose directory layout"
         >
@@ -195,14 +195,14 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
         }
       >
         {filtered.length === 0 && (
-          <p className="col-span-full p-6 text-center text-sm font-semibold text-[#876622] bg-[#fff7e5] border border-[#f3e4bc] rounded-xl">
+          <p className="col-span-full p-6 text-center text-sm font-semibold text-[#876622] bg-[#fff7e5] border border-[#f3e4bc]">
             No banks match this search. Clear the search or choose All statuses.
           </p>
         )}
         {paginatedBanks.map((bank) => (
           <article
             key={bank.id}
-            className="bg-white border border-[#e2e8f0] rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+            className="bg-white border border-gray-100 overflow-hidden"
           >
             <div
               className={`p-5 flex flex-col justify-between gap-4 ${
@@ -288,7 +288,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                     'The current directory lists this institution under the status shown above. Contact Kav Haribis for details before relying on the listing.'}
                 </p>
                 {bank.comment && (
-                  <div className="p-3.5 bg-white border border-[#cbd5e1] rounded-lg text-xs">
+                  <div className="p-3.5 bg-white border border-[#cbd5e1] text-xs">
                     <b className="text-[#102a43] block mb-1">Kav Haribis comment</b>
                     <p className="text-[#475569] leading-relaxed">{bank.comment}</p>
                   </div>
@@ -303,7 +303,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                     Institution website ↗
                   </a>
                 )}
-                <p className="p-3 text-xs text-[#876622] bg-[#fff7e5] border border-[#f3e4bc] rounded-lg">
+                <p className="p-3 text-xs text-[#876622] bg-[#fff7e5] border border-[#f3e4bc]">
                   Information may change. Confirm the current status with the
                   Bais Horaah before making a financial decision.
                 </p>
@@ -315,7 +315,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
 
       {/* Pagination */}
       {filtered.length > 0 && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 p-4 sm:p-5 bg-[#f7f3ea] border border-[#e2dacd] rounded-xl">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 p-4 sm:p-5 bg-[#f7f3ea]">
           <div className="text-xs sm:text-sm text-[#556673]">
             Showing{' '}
             <b className="text-[#102a43]">

@@ -8,6 +8,7 @@ const categories = [
   'Business',
   'Everyday situations',
 ];
+
 const questions = [
   {
     category: 'Heter Iska',
@@ -60,122 +61,91 @@ const questions = [
 ];
 
 export default function CommonQuestions() {
-  const [category, setCategory] = useState('All questions'),
-    [query, setQuery] = useState(''),
-    [open, setOpen] = useState(0);
+  const [category, setCategory] = useState('All questions');
+  const [open, setOpen] = useState(0);
+
   const visible = useMemo(
     () =>
       questions.filter(
-        (item) =>
-          (category === 'All questions' || item.category === category) &&
-          (item.question + item.answer)
-            .toLowerCase()
-            .includes(query.toLowerCase()),
+        (item) => category === 'All questions' || item.category === category,
       ),
-    [category, query],
+    [category],
   );
+
   return (
-    <>
-      <section className="w-full my-6">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
-          <div>
-            <p className="text-[#a37828] text-xs font-bold tracking-widest uppercase mb-2">EXPLORE THE TOPICS</p>
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#102a43]">Practical questions, clearly organized.</h2>
-            <p className="text-slate-600 text-base max-w-xl mt-2">
-              Begin with a common topic, then contact the Bais Horaah when your
-              situation requires an individual review.
-            </p>
-          </div>
-          <label className="w-full md:w-80 flex flex-col gap-1.5">
-            <span className="text-xs font-bold text-[#102a43] uppercase tracking-wider">Search questions</span>
-            <input
-              className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] shadow-sm transition-all"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Try: late fees, private loan…"
-            />
-          </label>
-        </div>
+    <section className="w-full my-6 text-center">
+      <div className="max-w-2xl mx-auto mb-8 space-y-3">
+        <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#102a43]">
+          Practical questions, clearly organized.
+        </h2>
+        <p className="text-slate-600 text-base leading-relaxed">
+          Begin with a common topic, then contact the Bais Horaah when your
+          situation requires an individual review.
+        </p>
+      </div>
 
-        <div className="flex flex-wrap gap-2 mb-8" aria-label="Question categories">
-          {categories.map((item) => (
-            <button
-              className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition cursor-pointer ${category === item ? 'bg-[#c69b46] text-white shadow-sm' : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50'}`}
-              onClick={() => setCategory(item)}
-              key={item}
+      <div
+        className="flex flex-wrap justify-center gap-2 mb-8"
+        aria-label="Question categories"
+      >
+        {categories.map((item) => (
+          <button
+            className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition cursor-pointer ${
+              category === item
+                ? 'bg-[#c69b46] text-white shadow-sm'
+                : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50'
+            }`}
+            onClick={() => setCategory(item)}
+            key={item}
+          >
+            {item}
+          </button>
+        ))}
+      </div>
+
+      <div className="max-w-3xl mx-auto flex flex-col gap-4">
+        {visible.map((item) => {
+          const active = open === questions.indexOf(item);
+          return (
+            <article
+              className={`border transition duration-200 overflow-hidden shadow-sm text-center ${
+                active
+                  ? 'bg-white border-2 border-[#c69b46]'
+                  : 'bg-white border border-gray-100 hover:border-slate-300'
+              }`}
+              key={item.question}
             >
-              {item}
-            </button>
-          ))}
-        </div>
-
-        <div className="grid md:grid-cols-12 gap-8 items-start">
-          <aside className="md:col-span-4 bg-white border border-slate-200/90 p-6 rounded-2xl shadow-sm">
-            <span className="text-3xl font-serif text-[#a37828] block mb-2">?</span>
-            <small className="text-[#a37828] text-xs font-bold tracking-widest uppercase block mb-1">QUICK GUIDANCE</small>
-            <h3 className="text-xl font-serif font-bold text-[#102a43] mb-2">Every detail can matter.</h3>
-            <p className="text-slate-600 text-sm leading-relaxed mb-6">
-              Ownership, timing, documents, and the actual flow of money may
-              change the halachic analysis.
-            </p>
-            <a className="inline-flex items-center gap-1.5 text-[#a37828] hover:text-[#102a43] font-bold text-sm transition" href="/bais-horaah">Submit your question →</a>
-          </aside>
-
-          <div className="md:col-span-8 flex flex-col gap-3.5">
-            {visible.map((item, index) => {
-              const active = open === questions.indexOf(item);
-              return (
-                <article className={`border rounded-2xl transition duration-200 overflow-hidden shadow-sm ${active ? 'bg-white border-2 border-[#c69b46]' : 'bg-white border-slate-200/90 hover:border-slate-300'}`} key={item.question}>
-                  <button
-                    className="w-full p-5 text-left flex items-center justify-between gap-4 cursor-pointer"
-                    onClick={() =>
-                      setOpen(active ? -1 : questions.indexOf(item))
-                    }
-                    aria-expanded={active}
+              <button
+                className="w-full p-5 text-center flex flex-col items-center justify-center gap-1.5 cursor-pointer"
+                onClick={() =>
+                  setOpen(active ? -1 : questions.indexOf(item))
+                }
+                aria-expanded={active}
+              >
+                <small className="text-[#a37828] text-xs font-semibold tracking-wider uppercase">
+                  {item.category}
+                </small>
+                <strong className="text-lg font-serif text-[#102a43] font-bold">
+                  {item.question}
+                </strong>
+              </button>
+              {active && (
+                <div className="px-6 pb-6 pt-3 border-t border-slate-100 text-center">
+                  <p className="text-slate-600 text-sm leading-relaxed mb-4 max-w-xl mx-auto">
+                    {item.answer}
+                  </p>
+                  <a
+                    className="inline-flex items-center gap-1 text-[#a37828] hover:text-[#102a43] text-xs font-bold transition"
+                    href="/bais-horaah"
                   >
-                    <span className="flex flex-col items-start gap-1">
-                      <small className="text-[#a37828] text-xs font-bold tracking-wider uppercase">{item.category}</small>
-                      <strong className="text-lg font-serif text-[#102a43] font-bold">{item.question}</strong>
-                    </span>
-                    <i className="not-italic text-xl text-[#a37828] font-bold shrink-0">{active ? '−' : '+'}</i>
-                  </button>
-                  {active && (
-                    <div className="px-5 pb-5 pt-1 border-t border-slate-100">
-                      <p className="text-slate-600 text-sm leading-relaxed mb-4">{item.answer}</p>
-                      <a className="inline-flex items-center gap-1 text-[#a37828] hover:text-[#102a43] text-xs font-bold transition" href="/bais-horaah">Ask about your situation →</a>
-                    </div>
-                  )}
-                </article>
-              );
-            })}
-            {visible.length === 0 && (
-              <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center shadow-sm">
-                <b className="text-lg font-serif text-[#102a43] block mb-2">No matching question</b>
-                <p className="text-slate-500 text-sm max-w-md mx-auto mb-4">
-                  Try searching for another topic or submit your question directly to the Bais Horaah.
-                </p>
-                <a className="inline-block px-5 py-2.5 rounded-xl bg-[#102a43] text-white font-bold text-xs" href="/bais-horaah">
-                  Ask Bais Horaah →
-                </a>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-      <section className="bg-white border border-slate-200/90 p-8 sm:p-10 rounded-2xl my-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-sm">
-        <div>
-          <p className="text-[#a37828] text-xs font-bold tracking-widest uppercase mb-2">NEED PERSONAL GUIDANCE?</p>
-          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#102a43] mb-2">Your question may depend on details not shown here.</h2>
-          <p className="text-slate-600 text-sm max-w-2xl">
-            Send the Bais Horaah the parties, amounts, timing, documents, and
-            complete background for review.
-          </p>
-        </div>
-        <a className="inline-flex items-center px-6 py-3 rounded-xl bg-[#102a43] hover:bg-[#102a43]/90 text-white font-bold text-sm tracking-wide transition shrink-0 shadow-sm" style={{ color: 'white' }} href="/bais-horaah">
-          Ask the Bais Horaah →
-        </a>
-      </section>
-    </>
+                    Ask about your situation →
+                  </a>
+                </div>
+              )}
+            </article>
+          );
+        })}
+      </div>
+    </section>
   );
 }
-

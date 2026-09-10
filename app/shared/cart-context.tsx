@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { TiShoppingCart } from "react-icons/ti";
 import type { Sefer } from '../seforim/seforim-catalog';
 import type { CartItem } from '../seforim/store-checkout';
 
@@ -126,17 +127,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
             {/* Clean Drawer Header */}
             <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-white">
               <div className="flex items-center gap-3">
-                <span className="text-2xl">🛒</span>
+                <span className="text-2xl">
+                  <TiShoppingCart className='text-4xl text-gray-600'/>
+                </span>
                 <div>
                   <h3 className="font-serif text-lg font-bold text-[#102a43]">Shopping Cart</h3>
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#f7f0e1] text-[#8a6828] font-bold text-[11px] inline-block mt-0.5">
+                  <span className="text-gray-500 font-meduim text-[14px]">
                     {totalCount} {totalCount === 1 ? 'item' : 'items'}
                   </span>
                 </div>
               </div>
               <button
                 onClick={() => setCartOpen(false)}
-                className="w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 hover:bg-slate-200 font-bold flex items-center justify-center text-sm transition cursor-pointer"
+                className="w-8 h-8 bg-slate-100 text-slate-400 hover:text-slate-700 hover:bg-slate-200 font-bold flex items-center justify-center text-sm transition cursor-pointer"
                 aria-label="Close cart drawer"
               >
                 ✕
@@ -144,7 +147,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             </div>
 
             {/* Cart Items List */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-3.5 bg-[#fdfbf7]">
+            <div className="flex-1 overflow-y-auto p-5 space-y-3.5">
               {cart.length === 0 ? (
                 <div className="py-24 text-center space-y-3">
                   <span className="text-5xl block opacity-60">🛒</span>
@@ -159,7 +162,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
                   return (
                     <div
                       key={`${item.book.id}-${item.format}`}
-                      className="bg-white border border-[#eee8dc] rounded-xl p-3.5 flex gap-3.5 items-center shadow-2xs hover:border-[#c69b46]/50 transition-all"
+                      className="bg-white border border-[#eee8dc] p-3.5 flex gap-3.5 items-center"
                     >
                       {/* Thumbnail Container */}
                       <div className="w-16 h-20 bg-slate-50 rounded-lg border border-slate-100 p-1 flex items-center justify-center shrink-0">
@@ -172,7 +175,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
                       {/* Info & Controls */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex justify-between items-start gap-2 mb-1">
+                        <div className="flex justify-between items-start gap-2">
                           <h4 className="font-serif text-sm font-bold text-[#102a43] truncate">
                             {item.book.title}
                           </h4>
@@ -187,8 +190,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
                           </button>
                         </div>
 
-                        <span className="text-[11px] font-semibold text-[#8a6828] bg-[#f7f0e1] px-2 py-0.5 rounded-md inline-block mb-2">
-                          {item.format === 'pdf' ? '📄 PDF Download' : '📚 Printed Book'}
+                        <span className="text-[11px] font-semibold text-gray-500 inline-block mb-2">
+                          {item.format === 'pdf' ? 'PDF Download' : 'Printed Book'}
                         </span>
 
                         <div className="flex items-center justify-between">
@@ -245,7 +248,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
               <a
                 href="/seforim"
                 onClick={() => setCartOpen(false)}
-                className="w-full text-center py-3 border border-[#102a43]/20 hover:border-[#102a43] text-[#102a43] font-bold rounded-xl text-sm transition block bg-slate-50/50 hover:bg-slate-100"
+                className="w-full text-center py-3 border border-[#102a43]/20 hover:border-[#102a43] text-[#102a43] font-boldtext-sm transition block bg-slate-50/50 hover:bg-slate-100"
               >
                 Continue Shopping
               </a>
@@ -255,7 +258,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 href="/checkout"
                 style={{color:"white"}}
                 onClick={() => setCartOpen(false)}
-                className={`w-full text-center py-3.5 bg-yellow-500 hover:bg-[#173f5f] text-white font-bold rounded-xl text-sm transition shadow-md flex items-center justify-center gap-2 block border border-[#c69b46]/30 ${
+                className={`w-full text-center py-3.5 bg-black hover:bg-[#173f5f] text-white font-bold text-sm transition flex items-center justify-center gap-2 block border border-[#c69b46]/30 ${
                   cart.length === 0 ? 'opacity-50 pointer-events-none' : ''
                 }`}
               >

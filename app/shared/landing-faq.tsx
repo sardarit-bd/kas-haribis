@@ -53,7 +53,7 @@ export default function LandingFaq() {
       <div className="max-w-4xl mx-auto px-4">
         {/* Centered Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <p className="eyebrow gold mb-1.5">COMMON QUESTIONS &amp; HALACHA</p>
+          <p className="eyebrow gold mb-1.5 hidden">COMMON QUESTIONS &amp; HALACHA</p>
           <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[#102a43] mb-3">
             Frequently Asked Questions About Hilchos Ribbis
           </h2>
@@ -71,7 +71,7 @@ export default function LandingFaq() {
                 key={faq.question}
                 className={` border transition-all duration-200 overflow-hidden ${
                   isOpen
-                    ? 'border-[#c69b46] bg-[#fcfaf6] shadow-md'
+                    ? 'border-[#c69b46] bg-[#fcfaf6] shadow-sm'
                     : 'border-slate-200/90 bg-white hover:border-slate-300'
                 }`}
               >
@@ -82,10 +82,10 @@ export default function LandingFaq() {
                   aria-expanded={isOpen}
                 >
                   <div className="space-y-1">
-                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#946e28] block">
+                    <span className="text-sm font-semibold text-gray-500 block">
                       {faq.category}
                     </span>
-                    <h3 className="text-base sm:text-lg font-bold text-[#102a43]">
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-700">
                       {faq.question}
                     </h3>
                   </div>
@@ -101,12 +101,12 @@ export default function LandingFaq() {
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-5 sm:px-6 sm:pb-6 text-sm text-slate-600 leading-relaxed border-t border-[#eee7d8] pt-4 space-y-3">
+                  <div className="pt-6 px-5 pb-5 sm:px-6 sm:pb-6 text-sm text-slate-600 leading-relaxed border-t border-[#eee7d8] pt-4 space-y-3">
                     <p>{faq.answer}</p>
-                    <div className="pt-1 flex items-center gap-4 text-xs font-bold">
+                    <div className="pt-4 flex items-center gap-4 text-md font-medium">
                       <a
                         href="/bais-horaah"
-                        className="text-[#c69b46] hover:text-[#946e28] underline underline-offset-3"
+                        className="text-gray-600 text-md underline underline-offset-3"
                       >
                         Ask Bais Horaah about your situation →
                       </a>

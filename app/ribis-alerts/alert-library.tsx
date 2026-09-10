@@ -72,11 +72,11 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
 
   return (
     <>
-      <section className="space-y-8">
+      <section className="space-y-8 container">
         {/* Featured Alert Banner */}
         {featured && (
           <article
-            className={`p-6 sm:p-8 bg-white border-2 rounded-2xl shadow-md space-y-4 ${
+            className={` p-6 sm:p-8 bg-gray-50 border-2 shadow-md space-y-4 ${
               featured.severity?.toLowerCase() === 'high'
                 ? 'border-[#9b1c1c]'
                 : 'border-[#c69b46]'
@@ -108,13 +108,13 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
               <p className="text-sm text-[#475569] leading-relaxed max-w-3xl">{featured.summary}</p>
               <div className="flex items-center gap-3 pt-2">
                 <button
-                  className="px-5 py-2.5 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-colors shadow-sm cursor-pointer"
+                  className="px-5 py-2.5 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-sm cursor-pointer"
                   onClick={() => setSelected(featured)}
                 >
                   View Full Alert
                 </button>
                 <button
-                  className="px-4 py-2.5 bg-white border border-[#cbd5da] hover:bg-[#f8fafc] text-[#102a43] text-xs font-bold uppercase tracking-wider rounded-xl transition-colors cursor-pointer"
+                  className="px-4 py-2.5 bg-white border border-[#cbd5da] hover:bg-[#f8fafc] text-[#102a43] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
                   onClick={() => share(featured)}
                 >
                   Share
@@ -131,8 +131,8 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
         )}
 
         {/* Filter Tools */}
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 p-4 bg-[#f7f3ea] border border-[#e2dacd] rounded-2xl">
-          <label className="flex items-center gap-3 flex-1 bg-white border border-[#cbd5da] px-3.5 py-2 rounded-xl focus-within:ring-2 focus-within:ring-[#102a43]/20">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 p-4 bg-[#f7f3ea]">
+          <label className="flex items-center gap-3 flex-1 bg-white px-3.5 py-2 focus-within:ring-2 focus-within:ring-[#102a43]/20">
             <span className="text-xs font-bold text-[#102a43] uppercase tracking-wider shrink-0">Search</span>
             <input
               value={query}
@@ -144,10 +144,10 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
             {categories.map((x) => (
               <button
-                className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
+                className={`px-3 py-1.5 text-xs font-bold transition-colors whitespace-nowrap cursor-pointer ${
                   category === x
                     ? 'bg-[#102a43] text-white'
-                    : 'bg-white border border-[#cbd5da] text-[#60717d] hover:bg-[#f8fafc]'
+                    : 'bg-white text-[#60717d] hover:bg-[#f8fafc]'
                 }`}
                 onClick={() => setCategory(x)}
                 key={x}
@@ -162,7 +162,7 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((x) => (
             <article
-              className="p-6 bg-white border border-[#dedfdc] rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between space-y-4"
+              className="p-6 bg-white border border-gray-200 flex flex-col justify-between space-y-4"
               key={x.id}
               id={`alert-${x.id}`}
             >

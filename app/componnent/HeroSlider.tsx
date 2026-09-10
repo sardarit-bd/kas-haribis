@@ -80,18 +80,18 @@ export default function HeroSlider() {
             alt={slide.alt}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#102a43]/95 via-[#102a43]/80 to-transparent "></div>
-          <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 h-full flex items-center relative z-20 ">
+          <div className="container px-4 sm:px-8 h-full flex items-center relative z-20 ">
             <div className="max-w-2xl text-white">
               <p className="text-[#c69b46] font-bold text-xs sm:text-sm tracking-widest uppercase mb-3 hidden">
                 {slide.eyebrow}
               </p>
-              <h1 className="text-3xl sm:text-5xl  leading-tight font-serif font-bold mb-4">
+              <h1 className="text-3xl sm:text-5xl text-center md:text-left leading-tight font-serif font-bold mb-4">
                 {slide.title}
               </h1>
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6 py-8">
+              <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6 py-8 text-center md:text-left">
                 {slide.description}
               </p>
-              <div className="flex flex-wrap items-center gap-4">
+              <div className="flex flex-wrap items-center gap-4 justify-center md:justify-start">
                 <a
                   className="px-6 py-3.5 bg-[#c69b46] hover:bg-[#b58a35] text-[#102a43] font-bold text-sm shadow-lg transition-all transform hover:-translate-y-0.5"
                   href={slide.primaryCta.href}
@@ -99,7 +99,7 @@ export default function HeroSlider() {
                   {slide.primaryCta.text}
                 </a>
                 <a
-                  className="px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-sm border border-white/20 transition-colors"
+                  className="hidden md:block px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-sm border border-white/20 transition-colors"
                   href={slide.secondaryCta.href}
                 >
                   {slide.secondaryCta.text}

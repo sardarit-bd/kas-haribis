@@ -59,10 +59,10 @@ const impactGalleryItems = [
 
 export default function CommunityImpact() {
   return (
-    <section className="py-16 md:py-24 bg-slate-50">
+    <section className="py-16 md:py-16 bg-slate-50">
       <div className="container max-w-[1440px] mx-auto px-4 sm:px-8">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-2">
+          <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-2 hidden">
             KAV HARIBIS IN ACTION
           </p>
           <h2 className="text-3xl sm:text-4xl font-semibold text-[#102a43] mb-3">
@@ -77,7 +77,7 @@ export default function CommunityImpact() {
           {impactGalleryItems.map((item, idx) => (
             <a
               href={item.link}
-              className="bg-white overflow-hidden border border-slate-200 transition-all duration-300 group flex flex-col"
+              className="bg-white overflow-hidden transition-all duration-300 group flex flex-col"
               key={idx}
             >
               <div className="h-48 overflow-hidden relative">
@@ -89,12 +89,12 @@ export default function CommunityImpact() {
               </div>
               <div className="p-5 flex flex-col flex-1 justify-between gap-3">
                 <div>
-                  <h3 className="font-bold text-[#102a43] text-base group-hover:text-[#c69b46] transition-colors">
+                  <h3 className="font-bold text-[#102a43] text-base">
                     {item.title}
                   </h3>
-                  <p className="text-xs text-slate-500 mt-1">{item.subtitle}</p>
+                  <p className="text-sm text-slate-500 mt-1">{item.subtitle}</p>
                 </div>
-                <span className="text-xs font-bold text-[#102a43] flex items-center gap-1 group-hover:gap-2 transition-all">
+                <span className="text-sm font-semibold text-gray-500 pt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
                   <span className="">Explore program</span>
                   <span className="">→</span>
                 </span>

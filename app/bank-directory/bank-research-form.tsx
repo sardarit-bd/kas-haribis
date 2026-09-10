@@ -54,15 +54,15 @@ export default function BankResearchForm() {
             information with Kav Haribis.
           </p>
           <div className="space-y-3 pt-2">
-            <div className="flex items-center gap-3.5 p-3.5 bg-white border border-slate-200/80 rounded-xl text-xs sm:text-sm font-medium text-[#102a43] shadow-sm">
+            <div className="flex items-center gap-3.5 p-3.5 bg-white text-xs sm:text-sm font-medium text-[#102a43] border border-gray-100">
               <span className="w-7 h-7 rounded-lg bg-[#102a43]/10 text-[#102a43] flex items-center justify-center text-xs shrink-0 font-bold">01</span>
               <span>Request research on an unlisted lender</span>
             </div>
-            <div className="flex items-center gap-3.5 p-3.5 bg-white border border-slate-200/80 rounded-xl text-xs sm:text-sm font-medium text-[#102a43] shadow-sm">
+            <div className="flex items-center gap-3.5 p-3.5 bg-white border-gray-100 text-xs sm:text-sm font-medium text-[#102a43]">
               <span className="w-7 h-7 rounded-lg bg-[#102a43]/10 text-[#102a43] flex items-center justify-center text-xs shrink-0 font-bold">02</span>
               <span>Share new documents or information</span>
             </div>
-            <div className="flex items-center gap-3.5 p-3.5 bg-white border border-slate-200/80 rounded-xl text-xs sm:text-sm font-medium text-[#102a43] shadow-sm">
+            <div className="flex items-center gap-3.5 p-3.5 bg-white border-gray-100 text-xs sm:text-sm font-medium text-[#102a43]">
               <span className="w-7 h-7 rounded-lg bg-[#102a43]/10 text-[#102a43] flex items-center justify-center text-xs shrink-0 font-bold">03</span>
               <span>Request an update to an existing listing</span>
             </div>
@@ -79,7 +79,7 @@ export default function BankResearchForm() {
         {/* Form Side */}
         <div className="lg:col-span-7">
           {reference ? (
-            <div className="p-8 sm:p-10 bg-white border border-slate-200/80 rounded-2xl shadow-sm text-center space-y-5">
+            <div className="p-8 sm:p-10 bg-white border border-slate-200/80 shadow-sm text-center space-y-5">
               <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center text-2xl mx-auto font-bold border border-emerald-200">
                 ✓
               </div>
@@ -109,7 +109,7 @@ export default function BankResearchForm() {
               </button>
             </div>
           ) : (
-            <form onSubmit={submit} className="p-6 sm:p-8 bg-white border border-slate-200/80 rounded-2xl shadow-sm space-y-6">
+            <form onSubmit={submit} className="p-6 sm:p-8 bg-white border border-gray-100 space-y-6">
               <div className="border-b border-slate-100 pb-4">
                 <h3 className="text-xl font-serif font-bold text-[#102a43]">
                   Submit Information

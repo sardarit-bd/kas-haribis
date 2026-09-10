@@ -22,28 +22,28 @@ export default function Donate() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white border border-slate-200 rounded-[12px] p-6 shadow-xs">
+            <div className="bg-white p-6 shadow-xs">
               <h3 className="text-base font-bold text-[#102a43] mb-2">Is my donation tax-deductible?</h3>
               <p className="text-sm leading-relaxed text-[#486581]">
                 Yes! Kav Haribis is a registered non-profit organization. All contributions are tax-deductible to the fullest extent permitted by law, and an official tax receipt is issued automatically upon payment.
               </p>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-[12px] p-6 shadow-xs">
+            <div className="bg-white p-6 shadow-xs">
               <h3 className="text-base font-bold text-[#102a43] mb-2">How is my payment details protected?</h3>
               <p className="text-sm leading-relaxed text-[#486581]">
                 Your card details are processed using Cardknox iFields PCI-DSS Level 1 compliant tokenization. Sensitive card numbers never touch or get saved on our servers.
               </p>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-[12px] p-6 shadow-xs">
+            <div className="bg-white p-6 shadow-xs">
               <h3 className="text-base font-bold text-[#102a43] mb-2">Can I dedicate my donation?</h3>
               <p className="text-sm leading-relaxed text-[#486581]">
                 Absolutely. You can include a dedication (in honor of, in memory of, or for a Refuah Sheleimah) in the dedication field of the payment form.
               </p>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-[12px] p-6 shadow-xs">
+            <div className="bg-white p-6 shadow-xs">
               <h3 className="text-base font-bold text-[#102a43] mb-2">Can I donate anonymously?</h3>
               <p className="text-sm leading-relaxed text-[#486581]">
                 Yes. Simply check the "Make this donation anonymous" checkbox on the payment form, and your identity will remain private.

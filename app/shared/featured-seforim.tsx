@@ -54,7 +54,7 @@ export default function FeaturedSeforim() {
   const { addToCart } = useCart();
 
   return (
-    <section className="py-16 bg-[#ffffff] border-t border-[#e2e8f0]">
+    <section className="py-16 bg-[#f7f3ea]">
       <div className="container max-w-7xl mx-auto px-4">
         {/* Centered Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
@@ -69,11 +69,11 @@ export default function FeaturedSeforim() {
           {featuredBooks.map((book) => (
             <article
               key={book.id}
-              className="bg-[#fcfaf7]  border border-[#e8e2d5] p-5 flex flex-col justify-between transition-all duration-300 group"
+              className="bg-white p-5 flex flex-col justify-between transition-all duration-300 group"
             >
               <div>
                 {/* Book Cover Image */}
-                <div className="h-56 w-full overflow-hidden bg-white p-3 mb-4 border border-[#eee8dc] flex items-center justify-center shadow-xs group-hover:scale-102 transition duration-300">
+                <div className="h-56 w-full overflow-hidden bg-white p-3 mb-4 flex items-center justify-center group-hover:scale-102 transition duration-300">
                   <img
                     src={book.image}
                     alt={book.title}
@@ -91,7 +91,7 @@ export default function FeaturedSeforim() {
               </div>
 
               {/* Price & Add to Cart */}
-              <div className="pt-3 border-t border-[#eee8dc] flex items-center justify-between gap-2">
+              <div className="pt-3 flex items-center justify-between gap-2">
                 <div>
                   <span className="text-xs text-slate-400 block font-medium">Price</span>
                   <span className="font-bold text-lg text-[#102a43]">${book.price}</span>
@@ -112,7 +112,7 @@ export default function FeaturedSeforim() {
           <a
             href="/seforim"
             style={{ color: 'white' }}
-            className="inline-flex items-center gap-2 bg-[#102a43] hover:bg-[#173f5f] text-white font-bold py-3.5 px-8 text-sm transition shadow-lg hover:shadow-xl border border-[#c69b46]/30"
+            className="inline-flex items-center gap-2 bg-[#102a43] hover:bg-[#173f5f] text-white font-bold py-3.5 px-8 text-sm transition shadow-lg hover:shadow-xl"
           >
             <span>View Full Catalog</span>
             <span className="text-base font-bold">→</span>

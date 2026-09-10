@@ -254,7 +254,7 @@ export default function ContactForm() {
         />
         <small className="block text-[10px] font-medium text-slate-400 mt-1">PDF, Word document, JPG, PNG, or WEBP up to 10 MB.</small>
       </label>
-      <button className="w-full mt-3 py-3.5 px-6 rounded-xl bg-[#102a43] hover:bg-[#102a43]/90 text-white font-bold text-sm tracking-wide transition shadow-sm cursor-pointer disabled:opacity-50" style={{ color: 'white' }} type="submit" disabled={busy}>
+      <button className="w-fit px-4 mt-3 py-3.5 px-6 bg-[#102a43] hover:bg-[#102a43]/90 text-white font-bold text-sm tracking-wide transition shadow-sm cursor-pointer disabled:opacity-50" style={{ color: 'white' }} type="submit" disabled={busy}>
         {busy ? 'Submitting…' : 'Submit Message →'}
       </button>
       {notice && (

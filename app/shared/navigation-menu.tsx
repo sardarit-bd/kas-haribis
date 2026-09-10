@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { BiSolidDownArrow } from "react-icons/bi";
+import { BsCart3 } from "react-icons/bs";
 import { FaBars } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { useCart } from './cart-context';
@@ -136,27 +137,15 @@ export default function NavigationMenu() {
         <div className="flex items-center gap-4 pt-4 lg:pt-0 border-t lg:border-t-0 border-slate-100">
           <button
             type="button"
-            className="relative inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#102a43]/5 border border-[#102a43]/15 text-[#102a43] hover:bg-[#102a43] hover:text-white transition-all cursor-pointer group"
+            className="relative inline-flex items-center justify-center w-10 h-10text-[#102a43] cursor-pointer group"
             onClick={() => {
               setCartOpen(true);
               closeMenu();
             }}
             aria-label="Open Shopping Cart"
           >
-            <svg
-              className="w-5 h-5 text-[#102a43] group-hover:text-white transition-colors"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"
-              />
-            </svg>
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10.5px] font-extrabold min-w-[19px] h-[19px] px-1 rounded-full flex items-center justify-center border-2 border-white shadow">
+            <BsCart3 className='text-2xl'/>
+            <span className="absolute -top-3 -right-1 bg-red-500 text-white text-[10.5px] font-extrabold min-w-[19px] h-[19px] px-1 rounded-full flex items-center justify-center border-2 border-white shadow">
               {totalCount}
             </span>
           </button>

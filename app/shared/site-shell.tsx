@@ -37,13 +37,13 @@ export function SiteFooter({
               <img src={'/logos/logo.png'} alt="Kav Haribis Logo" className="w-[240px] sm:w-[260px] h-auto block" />
             </div>
             <p className="font-bold text-[#102a43] text-[15px] tracking-tight mt-1 hidden">Torah guidance for responsible commerce.</p>
-            <p className="text-[13px] text-[#637282] leading-[1.65] max-w-[320px]">
+            <p className="text-md text-gray-600  max-w-[320px]">
               Promoting awareness and observance of Hilchos Ribbis in modern business and everyday financial transactions.
             </p>
           </div>
 
           <div>
-            <h4 className="text-[#a37828] text-[16px] font-semibold capitalize mb-[18px] flex items-center gap-2">Directories</h4>
+            <h4 className="text-gray-800 text-[17px]  font-semibold capitalize mb-[18px] flex items-center gap-2">Directories</h4>
             <ul className="list-none p-0 m-0 flex flex-col gap-[11px]">
               <li>
                 <a href="/bank-directory" className="text-[#475569] hover:text-[#102a43] text-[13.5px] transition-all hover:translate-x-1 inline-flex items-center gap-1.5">
@@ -74,7 +74,7 @@ export function SiteFooter({
           </div>
 
           <div>
-            <h4 className="text-[#a37828] text-[16px] font-semibold capitalize mb-[18px] flex items-center gap-2">Learning &amp; Resources</h4>
+            <h4 className="text-gray-800 text-[17px] font-semibold capitalize mb-[18px] flex items-center gap-2">Learning &amp; Resources</h4>
             <ul className="list-none p-0 m-0 flex flex-col gap-[11px]">
               <li>
                 <a href="/educational-center" className="text-[#475569] hover:text-[#102a43] text-[13.5px] transition-all hover:translate-x-1 inline-flex items-center gap-1.5">
@@ -115,7 +115,7 @@ export function SiteFooter({
           </div>
 
           <div>
-            <h4 className="text-[#a37828] text-[16px] font-semibold capitalize mb-[18px] flex items-center gap-2">Services &amp; Programs</h4>
+            <h4 className="text-gray-800 text-[17px]  font-semibold capitalize mb-[18px] flex items-center gap-2">Services &amp; Programs</h4>
             <ul className="list-none p-0 m-0 flex flex-col gap-[11px]">
               <li>
                 <a href="/heter-iska" className="text-[#475569] hover:text-[#102a43] text-[13.5px] transition-all hover:translate-x-1 inline-flex items-center gap-1.5">
@@ -151,7 +151,7 @@ export function SiteFooter({
           </div>
 
           <div>
-            <h4 className="text-[#a37828] text-[16px] font-semibold capitalize mb-[18px] flex items-center gap-2">Quick Links</h4>
+            <h4 className="text-gray-800 text-[17px] font-semibold capitalize mb-[18px] flex items-center gap-2">Quick Links</h4>
             <ul className="list-none p-0 m-0 flex flex-col gap-[11px]">
               <li>
                 <a href="/" className="text-[#475569] hover:text-[#102a43] text-[13.5px] transition-all hover:translate-x-1 inline-flex items-center gap-1.5">
