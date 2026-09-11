@@ -1,17 +1,18 @@
 import NavigationMenu from './navigation-menu';
+import SponsorBanner from './sponsor-banner';
 
 export function SiteHeader() {
   return (
     <>
-      {/* <SponsorBanner /> */}
+      <SponsorBanner/>
       <div className="bg-[#102a43] text-[#e3c176] py-1.5 text-xs font-medium border-b border-[#e3c176]/30 tracking-wide hidden">
-        <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 flex items-center justify-between ">
+        <div className="container px-4 sm:px-8 flex items-center justify-between ">
           <span>בס״ד</span>
           <span className="hidden sm:inline">Promoting awareness and observance of Hilchos Ribbis</span>
           <a href="/contact" className="hover:text-white transition-colors">Contact Kav Haribis</a>
         </div>
       </div>
-      <header className="h-[92px] w-full flex items-center justify-between bg-white sticky top-0 z-30 shadow-[0_4px_24px_#12263a12] z-50">
+      <header className="h-[80px] md:h-[92px] w-full flex items-center justify-between bg-white sticky top-0 z-50 shadow-[0_4px_24px_#12263a12]">
         <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 flex items-center justify-between relative w-full">
           <a className="flex items-center gap-3 shrink-0" href="/">
             <img src={'/logos/logo.png'} alt="logo" className='w-[200px] md:w-[220px] h-auto object-contain' />

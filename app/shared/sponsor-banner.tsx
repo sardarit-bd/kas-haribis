@@ -78,8 +78,8 @@ export default function SponsorBanner() {
     return (
       <button
         key={key}
-        className={`w-[150px] sm:w-[170px] shrink-0 flex flex-col items-center text-center p-3 transition-all duration-300 group ${
-          clickable ? 'cursor-pointer hover:bg-white/90' : 'cursor-default'
+        className={`min-w-[150px] w-fit sm:min-w-[250px] sm:w-fit shrink-0 flex items-center text-center gap-2 py-1 transition-all duration-300 group ${
+          clickable ? 'cursor-pointer' : 'cursor-default'
         }`}
         disabled={!clickable}
         onClick={() => {
@@ -98,12 +98,12 @@ export default function SponsorBanner() {
         }
       >
         {/* Circle Logo Container */}
-        <div className="w-[72px] h-[72px] sm:w-[84px] sm:h-[84px] bg-white   flex items-center justify-center p-2 transition-all duration-300 overflow-hidden mb-2.5">
+        <div className="w-[48px] h-[48px] sm:w-[60px] sm:h-[60px] bg-white flex items-center justify-center transition-all duration-300 overflow-hidden rounded-sm">
           {sponsor.image_key ? (
             <img
               src={sponsor.image_key}
               alt={sponsor.company_name}
-              className="w-full h-full object-contain rounded-full"
+              className="w-full h-full object-contain rounded-sm"
             />
           ) : (
             <span className="text-[#102a43] font-serif font-bold text-lg sm:text-xl">
@@ -113,12 +113,15 @@ export default function SponsorBanner() {
         </div>
 
         {/* Item Title Below Logo */}
-        <b className="text-md sm:text-lg font-medium text-gray-800 max-w-[160px] truncate leading-tight mb-0.5">
+        <div className='flex flex-col items-start'>
+           <b className="text-md sm:text-lg font-medium text-gray-800 max-w-[260px] truncate leading-tight mb-0.5">
           {sponsor.company_name}
         </b>
-        <small className="text-md text-gray-500">
-          {clickable ? 'Click for details' : 'Proud Supporter'}
+        <small className="text-xs font-normal text-gray-500 max-w-[200px] truncate">
+          {sponsor?.description}
+          {/* {clickable ? 'Click for details' : 'Proud Supporter'} */}
         </small>
+        </div>
       </button>
     );
   };
@@ -126,25 +129,22 @@ export default function SponsorBanner() {
   return (
     <>
       <section
-        className="py-10 sm:py-14 px-4 sm:px-8 bg-white  relative overflow-hidden"
+        className="px-4 sm:px-8 bg-[#F8FAFC]  relative overflow-hidden flex items-center justify-center gap-1 sm:gap-3"
         aria-label="Supporters of Kav Haribis"
       >
         {/* Section Header */}
-        <div className="max-w-3xl mx-auto text-center mb-6 sm:mb-8">
-          <span className="text-[#c69b46] font-bold text-xs uppercase tracking-widest block mb-1.5 hidden">
-            Community Support & Partnerships
-          </span>
-          <h2 className="text-2xl sm:text-4xl font-serif font-bold text-[#102a43] mb-2 sm:mb-3">
-            Our Proud Sponsors
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-xs sm:text-md font-serif font-semibold text-[#102a43]">
+            Our Proud<br/>Sponsors
           </h2>
-          <p className="text-[#637282] text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
+          <p className="text-[#637282] text-xs sm:text-sm max-w-xl mx-auto leading-relaxed hidden">
             We express our sincere appreciation to the generous businesses and donors whose support<br className="hidden sm:inline" />
             enables Kav Haribis to provide vital Torah education and community services worldwide.
           </p>
         </div>
 
         {/* Continuous Right-to-Left Sliding Conveyor */}
-        <div className="topSponsorConveyor py-2 mb-6">
+        <div className="topSponsorConveyor py-1 sm:py-2">
           <div className="topSponsorTrack">
             <div className="topSponsorGroup">
               {baseSponsors.map((sponsor, index) =>
@@ -160,14 +160,18 @@ export default function SponsorBanner() {
         </div>
 
         {/* Bottom CTA Button */}
-        <div className="text-center pt-6">
+        <div className="text-center">
           <a
           style={{color:"white!important"}}
-            className="inline-flex items-center gap-2 px-6 py-2.5 sm:px-8 sm:py-3 bg-[#102a43] hover:bg-[#173f5f] text-white font-bold text-xs sm:text-sm  shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+            className="hidden items-center gap-2 px-1 sm:px-3 py-2.5 sm:py-3 bg-[#102a43] hover:bg-[#173f5f] text-white font-bold text-xs sm:text-sm  shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
             href="/contact"
           >
             <span className='text-white'>Become a Sponsor</span>
-            <span className="text-white text-base leading-none">→</span>
+          </a>
+          <a href="/contact">
+            <h2 className="text-xs  sm:text-md font-serif font-semibold text-[#102a43]">
+            Become a<br/>Sponsor
+          </h2>
           </a>
         </div>
       </section>

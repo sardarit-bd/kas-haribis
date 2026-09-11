@@ -1,6 +1,5 @@
 import BottomCTA from '../componnent/BottomCTA';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
-import SponsorBanner from '../shared/sponsor-banner';
 
 export const metadata = {
   title: 'About Us | Kav Haribis',
@@ -83,8 +82,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
-      <SponsorBanner/>
 
       {/* Rabbinic Leadership & Advisory Banner */}
       <section className="bg-gradient-to-br from-[#071728] to-[#102a43] text-white border-t-2 border-[#c69b46] border-b border-[#102a43]">
