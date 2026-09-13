@@ -5,8 +5,8 @@
   mask-image: linear-gradient(
     90deg,
     transparent,
-    #000 3%,
-    #000 97%,
+    #000 15%,
+    #000000 85%,
     transparent
   );
 }
