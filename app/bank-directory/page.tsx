@@ -13,16 +13,16 @@ export default async function BankDirectory() {
       <SiteHeader />
       <div className="overflow-x-hidden">
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#071728] via-[#102a43] to-[#0e304b] text-white border-b-2 border-[#c69b46]">
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#071728] via-[#102a43] to-[#0e304b] text-white">
           <div className="container px-4 sm:px-8 py-[80px] grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-[50px] items-center relative z-10">
             <div className="relative z-10">
-              <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1">
+              <p className="text-[#c69b46] font-meduim text-sm tracking-widest uppercase mb-1">
                 KOSHER BANK RESEARCH CENTER
               </p>
-              <h1 className="text-white font-serif font-bold text-3xl sm:text-4xl md:text-5xl lg:text-[58px] leading-[1.1] my-3">
+              <h1 className="text-white font-serif font-meduim text-3xl sm:text-4xl md:text-5xl lg:text-[58px] leading-[1.1] my-3">
                 Kosher Bank Directory
               </h1>
-              <p className="text-[#cbd5e1] text-base sm:text-[17px] leading-[1.8] max-w-[640px]">
+              <p className="text-[#cbd5e1] text-base sm:text-[18px] leading-[1.8] max-w-[640px]">
                 Search the Kav Haribis research directory for banks, lenders and
                 financial institutions. Review the listed status and open each
                 record for additional information.

@@ -56,11 +56,11 @@ export default async function Page() {
                   {x.verification_status || 'Listed service'}
                 </div>
 
-                <h3 className="text-xl font-serif font-bold text-[#102a43] leading-snug">{x.name}</h3>
+                <h3 className="text-3xl font-serif font-meduim text-[#102a43] leading-snug">{x.name}</h3>
 
-                {x.service_type && <b className="block text-xs font-extrabold text-[#c69b46] uppercase tracking-wider">{x.service_type}</b>}
+                {x.service_type && <b className="block text-base text-[#c69b46] uppercase tracking-wider">{x.service_type}</b>}
 
-                <p className="text-sm text-[#475569] leading-relaxed">{x.description}</p>
+                <p className="text-base text-gray-600 leading-relaxed">{x.description}</p>
 
                 {x.specialties && (
                   <p className="text-xs text-[#64748b]">
@@ -69,33 +69,33 @@ export default async function Page() {
                 )}
 
                 {x.rabbinical_oversight && (
-                  <div className="p-3 bg-[#f8fafc] rounded-xl border border-[#e2e8f0]">
-                    <small className="block text-[10px] font-bold text-[#c69b46] uppercase tracking-wider">RABBINICAL OVERSIGHT</small>
-                    <b className="text-xs text-[#102a43] font-semibold block mt-0.5">{x.rabbinical_oversight}</b>
+                  <div className="p-3 bg-[#f8fafc] border border-[#e2e8f0]">
+                    <small className="block text-sm font-meduim text-[#c69b46] uppercase tracking-wider">RABBINICAL OVERSIGHT</small>
+                    <b className="text-md text-[#102a43] font-medium block mt-0.5">{x.rabbinical_oversight}</b>
                   </div>
                 )}
 
                 {x.kosher_details && (
-                  <p className="p-3 bg-[#e9f4eb]/60 border-l-4 border-[#367448] rounded-r-xl text-xs text-[#294b34] leading-relaxed">{x.kosher_details}</p>
+                  <p className="p-3 bg-[#e9f4eb]/60 border-l-4 border-[#367448] text-sm text-[#294b34] leading-relaxed">{x.kosher_details}</p>
                 )}
 
                 <dl className="grid grid-cols-[110px_1fr] gap-2 text-xs py-2 border-y border-[#f1f5f9]">
                   {x.contact_name && (
                     <>
-                      <dt className="font-bold text-[#9b762e] uppercase tracking-wider text-[10px]">Contact</dt>
-                      <dd className="m-0 text-[#405469] font-medium">{x.contact_name}</dd>
+                      <dt className="font-semibold text-[#9b762e] uppercase tracking-wider text-[12px]">Contact</dt>
+                      <dd className="m-0 text-[#405469] text-sm font-medium">{x.contact_name}</dd>
                     </>
                   )}
                   {(x.city || x.state) && (
                     <>
-                      <dt className="font-bold text-[#9b762e] uppercase tracking-wider text-[10px]">Location</dt>
-                      <dd className="m-0 text-[#405469] font-medium">{[x.city, x.state].filter(Boolean).join(', ')}</dd>
+                      <dt className="font-semibold text-[#9b762e] uppercase tracking-wider text-[12px]">Location</dt>
+                      <dd className="m-0 text-[#405469] text-sm font-medium">{[x.city, x.state].filter(Boolean).join(', ')}</dd>
                     </>
                   )}
                   {x.service_area && (
                     <>
-                      <dt className="font-bold text-[#9b762e] uppercase tracking-wider text-[10px]">Service area</dt>
-                      <dd className="m-0 text-[#405469] font-medium">{x.service_area}</dd>
+                      <dt className="font-semibold text-[#9b762e] uppercase tracking-wider text-[12px]">Service area</dt>
+                      <dd className="m-0 text-[#405469] text-sm font-medium">{x.service_area}</dd>
                     </>
                   )}
                 </dl>
@@ -116,7 +116,7 @@ export default async function Page() {
 
               <div className="flex items-center gap-3 pt-4 border-t border-[#f1f5f9] text-xs font-bold text-[#c69b46] flex-wrap">
                 {x.phone && (
-                  <a className="px-4 py-2 bg-[#102a43] hover:bg-[#1a385c] text-white rounded-lg transition-colors text-xs font-bold shadow-sm" href={`tel:${x.phone}`}>
+                  <a className="px-4 py-2 bg-[#102a43] hover:bg-[#1a385c] text-white transition-colors text-sm font-meduim shadow-sm" href={`tel:${x.phone}`}>
                     Call {x.phone}
                   </a>
                 )}
@@ -130,7 +130,7 @@ export default async function Page() {
                     }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:underline ml-auto"
+                    className="hover:underline ml-auto text-sm font-meduim"
                   >
                     Visit website ↗
                   </a>

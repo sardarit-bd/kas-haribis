@@ -131,7 +131,7 @@ export default function OfferingsGrid() {
         <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-3 hidden">
           KAV HARIBIS OFFERINGS
         </p>
-        <h2 className="text-white text-3xl sm:text-5xl font-bold leading-tight">
+        <h2 className="text-white text-3xl sm:text-5xl font-meduim leading-tight">
           Everything we offer—alive, clear, and easy to explore.
         </h2>
       </header>
@@ -147,11 +147,11 @@ export default function OfferingsGrid() {
               <div className="mb-3 transition-transform duration-300 group-hover:scale-105">
                 {item.icon}
               </div>
-              <h3 className="font-bold text-[#1e293b] text-base sm:text-lg leading-snug">
+              <h3 className="font-meduim text-[#1e293b] text-base sm:text-xl leading-snug">
                 {item.title}
               </h3>
               {item.subtitle && (
-                <p className="text-[#64748b] text-xs sm:text-sm mt-1 font-medium">
+                <p className="text-[#64748b] text-xs sm:text-base mt-1 font-medium">
                   {item.subtitle}
                 </p>
               )}

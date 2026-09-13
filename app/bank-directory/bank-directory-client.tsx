@@ -223,10 +223,10 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                     />
                   ) : null}
                   <div className="flex-1 min-w-0">
-                    <b className="text-lg font-serif font-bold text-[#102a43] group-hover:text-[#c69b46] transition-colors block truncate">
+                    <b className="text-xl font-serif font-meduim text-[#102a43] transition-colors block truncate">
                       {bank.title}
                     </b>
-                    <small className="text-xs text-[#64748b] block mt-0.5">
+                    <small className="text-base text-[#64748b] block mt-2">
                       {bank.institution_type ? `${bank.institution_type} · ` : ''}
                       {bank.last_updated
                         ? `Last updated ${new Date(`${bank.last_updated}T00:00:00`).toLocaleDateString('en-US')}`
@@ -268,7 +268,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
             </div>
 
             {open === bank.id && (
-              <div className="p-5 bg-[#f8fafc] border-t border-[#e2e8f0] text-sm text-[#334155] space-y-4">
+              <div className="p-5 bg-white border-t border-[#e2e8f0] text-sm text-[#334155] space-y-4">
                 {bank.last_updated && (
                   <p className="text-xs text-[#64748b]">
                     <b className="font-semibold text-[#102a43]">Last updated:</b>{' '}
@@ -283,14 +283,14 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                     </time>
                   </p>
                 )}
-                <p className="leading-relaxed">
+                <p className="leading-relaxed text-base text-gray-600">
                   {bank.summary ||
                     'The current directory lists this institution under the status shown above. Contact Kav Haribis for details before relying on the listing.'}
                 </p>
                 {bank.comment && (
                   <div className="p-3.5 bg-white border border-[#cbd5e1] text-xs">
                     <b className="text-[#102a43] block mb-1">Kav Haribis comment</b>
-                    <p className="text-[#475569] leading-relaxed">{bank.comment}</p>
+                    <p className="text-[#475569] text-base leading-relaxed">{bank.comment}</p>
                   </div>
                 )}
                 {bank.website && (
@@ -303,7 +303,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                     Institution website ↗
                   </a>
                 )}
-                <p className="p-3 text-xs text-[#876622] bg-[#fff7e5] border border-[#f3e4bc]">
+                <p className="p-3 text-sm text-[#876622] bg-[#fff7e5] border border-[#f3e4bc]">
                   Information may change. Confirm the current status with the
                   Bais Horaah before making a financial decision.
                 </p>

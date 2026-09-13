@@ -51,13 +51,13 @@ export default async function BusinessesPage() {
                   {item.verification_status || 'LISTED WITH A HETER ISKA'}
                 </div>
 
-                <h3 className="text-xl font-serif font-bold text-[#102a43] leading-snug" dir={/[֐-׿]/.test(item.name) ? 'rtl' : 'ltr'}>{item.name}</h3>
+                <h3 className="text-3xl font-serif font-meduim text-[#102a43] leading-snug" dir={/[֐-׿]/.test(item.name) ? 'rtl' : 'ltr'}>{item.name}</h3>
 
                 {item.category && (
-                  <small className="block text-xs font-extrabold text-[#c69b46] uppercase tracking-wider">{item.category}</small>
+                  <small className="block text-base font-extrabold text-[#c69b46] uppercase tracking-wider">{item.category}</small>
                 )}
 
-                <p className="text-sm text-[#475569] leading-relaxed">
+                <p className="text-base font-meduim text-gray-500 leading-relaxed">
                   {item.description ||
                     'Listed in the Kav Haribis Heter Iska business directory.'}
                 </p>

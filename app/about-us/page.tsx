@@ -18,7 +18,7 @@ export default function AboutPage() {
             <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1 hidden">
               ABOUT KAV HARIBIS
             </p>
-            <h1 className="text-white font-serif font-bold text-3xl sm:text-4xl md:text-5xl lg:text-[58px] leading-[1.12] mt-3.5 mb-5">
+            <h1 className="text-white font-serif font-meduim text-3xl sm:text-4xl md:text-5xl lg:text-[58px] leading-[1.12] mt-3.5 mb-5">
               Clarity in Hilchos Ribbis.
               <em className="text-[#e5c474] not-italic block mt-1">Guidance for everyday life.</em>
             </h1>
@@ -68,7 +68,7 @@ export default function AboutPage() {
             <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-2 hidden">
               WELCOME TO KAV HARIBIS
             </p>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#102a43] leading-tight mb-6">
+            <h2 className="font-serif text-3xl sm:text-4xl font-meduim text-[#102a43] leading-tight mb-6">
               A center for awareness, education, and practical halachic guidance
             </h2>
             <div className="space-y-4">
@@ -97,7 +97,7 @@ export default function AboutPage() {
             <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-2 hidden">
               RABBINIC GUIDANCE
             </p>
-            <h2 className="font-serif font-bold text-2xl sm:text-4xl lg:text-[44px] leading-[1.15] text-white mt-2.5 mb-5">
+            <h2 className="font-serif font-meduim text-2xl sm:text-4xl lg:text-[44px] leading-[1.15] text-white mt-2.5 mb-5">
               Rooted in Torah. Responsive to modern financial life.
             </h2>
             <p className="text-[#cbd5e1] text-base leading-[1.8] mb-4">
@@ -123,7 +123,7 @@ export default function AboutPage() {
           <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1.5 hidden">
             OUR MISSION &amp; PILLARS
           </p>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#102a43]">
+          <h2 className="text-3xl sm:text-4xl font-meduim text-[#102a43]">
             Helping Klal Yisroel navigate financial life responsibly
           </h2>
         </div>
@@ -133,10 +133,10 @@ export default function AboutPage() {
             <div className="w-[48px] h-[48px] rounded-full bg-[#102a43] text-[#e2c071] font-serif font-bold text-base grid place-items-center mb-[22px] group-hover:bg-[#c69b46] group-hover:text-[#071d31] transition-colors duration-300">
               01
             </div>
-            <h3 className="font-serif font-bold text-xl sm:text-[22px] text-[#102a43] mb-3">
+            <h3 className="font-serif font-meduim text-xl sm:text-[25px] text-[#102a43] mb-3">
               Awareness &amp; Education
             </h3>
-            <p className="text-[#526879] text-sm leading-[1.7]">
+            <p className="text-[#526879] text-baes leading-[1.7]">
               Shiurim, articles, alerts, and community programs that bring Hilchos Ribbis into everyday conversation and financial decision-making.
             </p>
           </article>
@@ -145,10 +145,10 @@ export default function AboutPage() {
             <div className="w-[48px] h-[48px] rounded-full bg-[#102a43] text-[#e2c071] font-serif font-bold text-base grid place-items-center mb-[22px] group-hover:bg-[#c69b46] group-hover:text-[#071d31] transition-colors duration-300">
               02
             </div>
-            <h3 className="font-serif font-bold text-xl sm:text-[22px] text-[#102a43] mb-3">
+            <h3 className="font-serif font-meduim text-xl sm:text-[25px] text-[#102a43] mb-3">
               Practical Guidance
             </h3>
-            <p className="text-[#526879] text-sm leading-[1.7]">
+            <p className="text-[#526879] text-base leading-[1.7]">
               Clear educational resources and direct access to experienced Rabbanim for personal, commercial, and institutional questions.
             </p>
           </article>
@@ -157,10 +157,10 @@ export default function AboutPage() {
             <div className="w-[48px] h-[48px] rounded-full bg-[#102a43] text-[#e2c071] font-serif font-bold text-base grid place-items-center mb-[22px] group-hover:bg-[#c69b46] group-hover:text-[#071d31] transition-colors duration-300">
               03
             </div>
-            <h3 className="font-serif font-bold text-xl sm:text-[22px] text-[#102a43] mb-3">
+            <h3 className="font-serif font-meduim text-xl sm:text-[25px] text-[#102a43] mb-3">
               Research &amp; Resources
             </h3>
-            <p className="text-[#526879] text-sm leading-[1.7]">
+            <p className="text-[#526879] text-base leading-[1.7]">
               Careful financial research, kosher bank directories, custom Heter Iska documents, and tools designed for practical everyday use.
             </p>
           </article>
@@ -174,7 +174,7 @@ export default function AboutPage() {
             <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-2 hidden">
               OUR WORK IN ACTION
             </p>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#102a43] mb-4">
+            <h2 className="font-serif text-3xl sm:text-5xl font-meduim text-[#102a43] mb-4">
               Education that reaches every part of the community
             </h2>
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-6">

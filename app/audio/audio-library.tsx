@@ -190,14 +190,14 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
                       {String(globalIndex + 1).padStart(2, '0')}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <small className="text-gray-500 text-[11px] font-bold block mb-1">
+                      <small className="text-gray-500 text-[12px] font-normal block mb-1 hidden">
                         {item.series === 'general-shiurim'
                           ? 'GENERAL SHIURIM'
                           : item.series === 'video-shiurim'
                             ? 'VIDEO SHIURIM'
                             : `5-MINUTE ${seriesLabels[item.series] || 'AUDIO'} SERIES`}
                       </small>
-                      <h3 className="text-base font-bold text-[#102a43] mb-3 leading-snug truncate" title={item.title}>{item.title}</h3>
+                      <h3 className="text-2xl font-meduim text-[#102a43] mb-3 leading-snug truncate" title={item.title}>{item.title}</h3>
                       {item.series === 'video-shiurim' ? (
                         <VideoPlayer url={item.audioUrl} title={item.title} />
                       ) : (

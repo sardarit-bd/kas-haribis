@@ -57,16 +57,16 @@ export default async function EducationalCenter() {
                 </figure>
                 <div className="p-6 flex-1 flex flex-col justify-between bg-white">
                   <div>
-                    <small className="text-gray-400 text-xs font-semibold tracking-wider uppercase block mb-1.5 ">
+                    <small className="text-gray-400 text-md font-meduim tracking-wider block mb-1.5 ">
                       {item.audience || 'All learners'}
                     </small>
-                    <h3 className="text-xl font-serif font-bold text-gray-700 mb-2 leading-snug">{item.title}</h3>
-                    <p className="text-slate-600 text-sm mb-6 leading-relaxed line-clamp-3">{item.description}</p>
+                    <h3 className="text-xl font-serif font-semibold text-gray-700 mb-2 leading-snug">{item.title}</h3>
+                    <p className="text-slate-600 text-base pt-1 mb-6 leading-relaxed line-clamp-3">{item.description}</p>
                   </div>
                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-4 mt-auto">
                     <a
                     style={{color:"white"}}
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-[#c69b46] hover:bg-[#b58a35] text-white font-bold text-xs tracking-wide transition"
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-[#c69b46] hover:bg-[#b58a35] text-white font-meduim text-base tracking-wide transition"
                       href={src}
                       target="_blank"
                       rel="noreferrer"
@@ -75,7 +75,7 @@ export default async function EducationalCenter() {
                     </a>
                     <a
                     style={{color:"white"}}
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-slate-200 hover:text-white font-medium text-xs transition bg-slate-800/40"
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-slate-200 hover:text-white font-meduim text-base transition bg-slate-800/40"
                       href={`${src}${src.includes('?') ? '&' : '?'}download=1`}
                       download={item.file_name}
                     >

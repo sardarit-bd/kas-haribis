@@ -13,9 +13,9 @@ export default function ContactPage() {
       <section className="w-full bg-[#f7f3ea] py-12 md:py-20">
         <div className="container px-4 sm:px-8 lg:px-12 grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-16 items-start">
           <div className="md:col-span-5 space-y-6">
-            <p className="text-[#a37828] text-xs font-bold tracking-widest uppercase mb-1 hidden">GET IN TOUCH</p>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-[#102a43] leading-tight">How can we help?</h2>
-            <p className="text-slate-600 text-base leading-relaxed">
+            <p className="text-[#a37828] text-xs font-meduim tracking-widest uppercase mb-1 hidden">GET IN TOUCH</p>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-meduim text-[#102a43] leading-tight">How can we help?</h2>
+            <p className="text-slate-600 text-lg leading-relaxed">
               Choose the most convenient way to contact us. For a personal
               question in Hilchos Ribbis, please use the dedicated Bais Horaah
               form so the correct details reach the rabbinical team.

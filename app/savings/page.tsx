@@ -18,7 +18,7 @@ export default async function SavingsPage() {
       
 
 
-      <section className=" p-6 sm:p-10 bg-[#f7f3ea]">
+      <section className=" py-8 bg-[#f7f3ea]">
         <div className="container flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-10 pb-6">
           <div>
             <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase hidden">AVAILABLE ACCOUNTS</p>
@@ -30,7 +30,7 @@ export default async function SavingsPage() {
           </div>
           
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="container grid grid-cols-1 md:grid-cols-2 gap-6">
           {items.map((x) => {
             const link = safeLink(x.open_account_url);
             return (
@@ -41,7 +41,7 @@ export default async function SavingsPage() {
                 key={x.id}
               >
                 <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-[88px_1fr_auto] gap-4 items-center pb-4 border-b border-[#e5e8e9]">
+                  <div className="grid grid-cols-1 sm:grid-cols-[88px_1fr_auto] gap-4 items-center pb-4">
                     {x.logo_url ? (
                       <img
                         src={x.logo_url}
@@ -56,11 +56,11 @@ export default async function SavingsPage() {
                       </span>
                     )}
                     <div>
-                      <small className="block text-[10px] font-bold text-[#3f7a50] uppercase tracking-wider">
+                      <small className="block text-[13px] font-meduim text-[#3f7a50] uppercase tracking-wider">
                         {x.kosher_status || 'Review available'}
                       </small>
-                      <h3 className="text-xl font-serif font-bold text-[#102a43] leading-snug">{x.institution_name}</h3>
-                      <b className="text-xs text-[#9a742d] font-semibold block mt-0.5">{x.account_name || 'High-Yield Savings Account'}</b>
+                      <h3 className="text-3xl font-serif font-meduim text-[#102a43] leading-snug">{x.institution_name}</h3>
+                      <b className="text-base text-[#9a742d] font-meduim block mt-0.5">{x.account_name || 'High-Yield Savings Account'}</b>
                     </div>
                     {x.apy && (
                       <em className="not-italic min-w-[82px] text-center p-3 bg-[#f5f1e7] rounded-xl border border-[#e2dacd] block shrink-0 sm:self-start">
@@ -70,12 +70,12 @@ export default async function SavingsPage() {
                     )}
                   </div>
 
-                  <p className="text-sm text-[#475569] leading-relaxed">
+                  <p className="text-base text-[#475569] leading-relaxed">
                     {x.description ||
                       'Savings-account information reviewed by Kav Haribis.'}
                   </p>
 
-                  <dl className="grid grid-cols-[140px_1fr] gap-2 text-xs py-2 border-y border-[#f1f5f9]">
+                  <dl className="grid grid-cols-[140px_1fr] gap-2 text-xs py-2">
                     {x.minimum_deposit && (
                       <>
                         <dt className="font-bold text-[#9b762e] uppercase tracking-wider text-[10px]">Minimum deposit</dt>
@@ -111,9 +111,9 @@ export default async function SavingsPage() {
                   </dl>
 
                   {x.kosher_details && (
-                    <div className="p-4 bg-[#f1f5f2] border-l-4 border-[#4f8a60] rounded-r-xl space-y-1">
-                      <small className="block text-[9px] font-bold text-[#39734a] uppercase tracking-wider">KOSHER ACCOUNT INFORMATION</small>
-                      <p className="text-xs text-[#425d4a] leading-relaxed m-0">{x.kosher_details}</p>
+                    <div className="p-4 bg-[#f1f5f2] border-l-4 border-[#4f8a60] space-y-1">
+                      <small className="block text-[13px] font-meduim text-[#39734a] uppercase tracking-wider">KOSHER ACCOUNT INFORMATION</small>
+                      <p className="text-md text-[#425d4a]/70 leading-relaxed m-0">{x.kosher_details}</p>
                     </div>
                   )}
 
@@ -122,7 +122,7 @@ export default async function SavingsPage() {
                   )}
                 </div>
 
-                <div className="flex items-center gap-3 pt-4 border-t border-[#e5e8e9] text-xs font-bold text-[#c69b46] flex-wrap">
+                <div className="flex items-center gap-3 pt-4 border-t border-[#e5e8e9] text-xs font-meduim text-[#c69b46] flex-wrap">
                   {link ? (
                     <a
                       className="px-4 py-2 bg-[#102a43] hover:bg-[#1a385c] text-white rounded-lg transition-colors text-xs font-bold shadow-sm"
@@ -133,7 +133,7 @@ export default async function SavingsPage() {
                       Open an Account ↗
                     </a>
                   ) : (
-                    <span className="text-[#7b8790] font-semibold">Account-opening link coming soon</span>
+                    <span className="text-[#7b8790]/80 text-base">Account-opening link coming soon</span>
                   )}
                   {safeLink(x.website) && x.website !== link && (
                     <a

@@ -70,7 +70,7 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
               </select>
             </label>
           </div>
-          <div className="flex items-center justify-between md:justify-end gap-4 shrink-0 pt-2 md:pt-0">
+          <div className="flex items-center justify-between md:justify-end gap-4 shrink-0 pt-2 md:pt-0 hidden">
             <b className="text-slate-600 text-sm font-medium">{filtered.length} titles</b>
             <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#102a43] hover:bg-[#102a43]/90 text-white font-bold text-sm transition shadow-sm cursor-pointer" style={{ color: 'white' }} onClick={() => setCartOpen(true)}>
               Cart <span className="bg-[#c69b46] text-[#102a43] text-xs font-bold px-2 py-0.5 rounded-full">{totalCount}</span>
@@ -78,7 +78,7 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
           </div>
         </div>
         {notice && (
-          <p className="bg-[#102a43] text-white border border-[#c69b46]/50 p-4 rounded-xl mb-6 flex items-center justify-between gap-4 text-sm shadow-sm" style={{ color: 'white' }}>
+          <p className="hidden bg-[#102a43] text-white border border-[#c69b46]/50 p-4 rounded-xl mb-6 flex items-center justify-between gap-4 text-sm shadow-sm" style={{ color: 'white' }}>
             <span>✓ {notice}</span>
             <button className="text-[#c69b46] hover:underline font-bold text-xs uppercase cursor-pointer" onClick={() => setCartOpen(true)}>View cart</button>
           </p>
@@ -108,11 +108,11 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
                       <span className="bg-sky-50 border border-sky-200 text-sky-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">PDF DOWNLOAD</span>
                     )}
                   </div>
-                  <h2 className="text-xl font-serif font-bold text-[#102a43] mb-2 leading-snug">{book.title}</h2>
-                  <div className="flex gap-4 text-sm font-semibold text-[#a37828] mb-3">
+                  <h2 className="text-2xl font-serif font-meduim text-[#102a43] mb-2 leading-snug">{book.title}</h2>
+                  <div className="flex gap-4 text-base font-semibold text-[#a37828] mb-3">
                     {book.available && (
                       <span className="flex items-center gap-1">
-                        <small className="text-slate-500 text-xs font-normal">Book</small>${book.price.toFixed(2)}
+                        <small className="text-slate-500 text-base font-normal">Book</small>${book.price.toFixed(2)}
                       </span>
                     )}
                     {book.pdf_available && (
@@ -121,12 +121,12 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
                       </span>
                     )}
                   </div>
-                  <p className="text-slate-600 text-sm mb-6 leading-relaxed line-clamp-3">{book.description}</p>
+                  <p className="text-slate-600/90 text-base font-meduim mb-6 leading-relaxed line-clamp-3">{book.description}</p>
                 </div>
                 <div className="flex justify-between gap-2 pt-3">
                   <div className="flex flex-col sm:flex-row gap-2">
                     {book.available && (
-                      <button className="flex-1 py-2.5 px-3 bg-[#a37828] hover:bg-[#8c651f] text-white font-bold text-xs transition cursor-pointer shadow-sm" style={{ color: 'white' }} onClick={() => add(book, 'book')}>
+                      <button className="flex-1 py-2.5 px-3 bg-black hover:bg-[#8c651f] text-white font-bold text-xs transition cursor-pointer shadow-sm" style={{ color: 'white' }} onClick={() => add(book, 'book')}>
                         Add Book to Cart
                       </button>
                     )}

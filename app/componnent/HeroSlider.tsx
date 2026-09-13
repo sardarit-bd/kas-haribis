@@ -85,21 +85,22 @@ export default function HeroSlider() {
               <p className="text-[#c69b46] font-bold text-xs sm:text-sm tracking-widest uppercase mb-3 hidden">
                 {slide.eyebrow}
               </p>
-              <h1 className="text-3xl sm:text-5xl text-center md:text-left leading-tight font-serif font-bold mb-4">
+              <h1 className="text-3xl sm:text-5xl text-center md:text-left leading-tight font-serif font-meduim mb-4">
                 {slide.title}
               </h1>
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6 py-8 text-center md:text-left">
+              <p className="text-slate-300 text-base sm:text-lg leading-relaxed font-normal mb-6 py-6 text-center md:text-left ">
                 {slide.description}
               </p>
+
               <div className="flex flex-wrap items-center gap-4 justify-center md:justify-start">
                 <a
-                  className="px-6 py-3.5 bg-[#c69b46] hover:bg-[#b58a35] text-[#102a43] font-bold text-sm shadow-lg transition-all transform hover:-translate-y-0.5"
+                  className="px-6 py-3.5 bg-[#c69b46] hover:bg-[#b58a35] text-[#102a43] font-meduim text-base shadow-lg transition-all transform hover:-translate-y-0.5"
                   href={slide.primaryCta.href}
                 >
                   {slide.primaryCta.text}
                 </a>
                 <a
-                  className="hidden md:block px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-sm border border-white/20 transition-colors"
+                  className="hidden md:block px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white font-meduim text-base border border-white/20 transition-colors"
                   href={slide.secondaryCta.href}
                 >
                   {slide.secondaryCta.text}

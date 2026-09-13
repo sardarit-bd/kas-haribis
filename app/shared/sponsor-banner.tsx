@@ -114,10 +114,10 @@ export default function SponsorBanner() {
 
         {/* Item Title Below Logo */}
         <div className='flex flex-col items-start'>
-           <b className="text-md sm:text-lg font-medium text-gray-800 max-w-[260px] truncate leading-tight mb-0.5">
+           <b className="text-md sm:text-base font-medium text-gray-800 max-w-[260px] truncate leading-tight mb-0.5">
           {sponsor.company_name}
         </b>
-        <small className="text-xs font-normal text-gray-500 max-w-[200px] truncate">
+        <small className="text-sm font-normal text-gray-500 max-w-[200px] truncate">
           {sponsor?.description}
           {/* {clickable ? 'Click for details' : 'Proud Supporter'} */}
         </small>
@@ -129,12 +129,12 @@ export default function SponsorBanner() {
   return (
     <>
       <section
-        className="px-4 sm:px-8 bg-[#F8FAFC]  relative overflow-hidden flex items-center justify-center gap-1 sm:gap-3"
+        className="px-4 sm:px-8 bg-[#F8FAFC] relative overflow-hidden flex items-center justify-center gap-1 sm:gap-3"
         aria-label="Supporters of Kav Haribis"
       >
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-xs sm:text-md font-serif font-semibold text-[#102a43]">
+          <h2 className="text-xs sm:text-base font-serif font-semibold text-[#102a43]/80">
             Our Proud<br/>Sponsors
           </h2>
           <p className="text-[#637282] text-xs sm:text-sm max-w-xl mx-auto leading-relaxed hidden">
@@ -169,7 +169,7 @@ export default function SponsorBanner() {
             <span className='text-white'>Become a Sponsor</span>
           </a>
           <a href="/contact">
-            <h2 className="text-xs  sm:text-md font-serif font-semibold text-[#102a43]">
+            <h2 className="text-xs  sm:text-base font-serif font-semibold text-[#102a43]/80">
             Become a<br/>Sponsor
           </h2>
           </a>

@@ -65,7 +65,7 @@ export default function CommunityImpact() {
           <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-2 hidden">
             KAV HARIBIS IN ACTION
           </p>
-          <h2 className="text-3xl sm:text-4xl font-semibold text-[#102a43] mb-3">
+          <h2 className="text-3xl sm:text-4xl font-meduim text-gray-800 mb-3">
             Community Impact &amp; Gallery
           </h2>
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
@@ -89,12 +89,12 @@ export default function CommunityImpact() {
               </div>
               <div className="p-5 flex flex-col flex-1 justify-between gap-3">
                 <div>
-                  <h3 className="font-bold text-[#102a43] text-base">
+                  <h3 className="font-semibold text-xl text-gray-600 text-base">
                     {item.title}
                   </h3>
-                  <p className="text-sm text-slate-500 mt-1">{item.subtitle}</p>
+                  <p className="text-base font-meduim text-slate-500 mt-1">{item.subtitle}</p>
                 </div>
-                <span className="text-sm font-semibold text-gray-500 pt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
+                <span className="text-base font-semibold text-gray-500 pt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
                   <span className="">Explore program</span>
                   <span className="">→</span>
                 </span>
@@ -106,7 +106,7 @@ export default function CommunityImpact() {
         <div className="text-center">
           <a
             href="/contact"
-            className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#102a43] hover:bg-[#173f5f] text-white font-bold text-sm shadow-md transition-colors"
+            className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#102a43] hover:bg-[#173f5f] text-white font-semibold text-base shadow-md transition-colors"
           >
             <span className="text-white">Request a Program</span>
             <span className="text-white">→</span>

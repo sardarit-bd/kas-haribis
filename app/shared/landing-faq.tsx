@@ -54,7 +54,7 @@ export default function LandingFaq() {
         {/* Centered Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
           <p className="eyebrow gold mb-1.5 hidden">COMMON QUESTIONS &amp; HALACHA</p>
-          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[#102a43] mb-3">
+          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-meduim text-[#102a43] mb-3">
             Frequently Asked Questions About Hilchos Ribbis
           </h2>
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
@@ -82,10 +82,10 @@ export default function LandingFaq() {
                   aria-expanded={isOpen}
                 >
                   <div className="space-y-1">
-                    <span className="text-sm font-semibold text-gray-500 block">
+                    <span className="text-md font-meduim text-gray-500 block">
                       {faq.category}
                     </span>
-                    <h3 className="text-base sm:text-lg font-semibold text-gray-700">
+                    <h3 className="text-base sm:text-xl font-meduim text-gray-700">
                       {faq.question}
                     </h3>
                   </div>
@@ -102,11 +102,11 @@ export default function LandingFaq() {
 
                 {isOpen && (
                   <div className="pt-6 px-5 pb-5 sm:px-6 sm:pb-6 text-sm text-slate-600 leading-relaxed border-t border-[#eee7d8] pt-4 space-y-3">
-                    <p>{faq.answer}</p>
+                    <p className='text-base'>{faq.answer}</p>
                     <div className="pt-4 flex items-center gap-4 text-md font-medium">
                       <a
                         href="/bais-horaah"
-                        className="text-gray-600 text-md underline underline-offset-3"
+                        className="text-gray-600 text-lg underline underline-offset-3"
                       >
                         Ask Bais Horaah about your situation →
                       </a>

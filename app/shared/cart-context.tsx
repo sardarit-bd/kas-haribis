@@ -131,15 +131,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
                   <TiShoppingCart className='text-4xl text-gray-600'/>
                 </span>
                 <div>
-                  <h3 className="font-serif text-lg font-bold text-[#102a43]">Shopping Cart</h3>
-                  <span className="text-gray-500 font-meduim text-[14px]">
+                  <h3 className="font-serif text-xl font-meduim text-[#102a43]">Shopping Cart</h3>
+                  <span className="text-gray-500 font-meduim text-[15px]">
                     {totalCount} {totalCount === 1 ? 'item' : 'items'}
                   </span>
                 </div>
               </div>
               <button
                 onClick={() => setCartOpen(false)}
-                className="w-8 h-8 bg-slate-100 text-slate-400 hover:text-slate-700 hover:bg-slate-200 font-bold flex items-center justify-center text-sm transition cursor-pointer"
+                className="w-8 h-8 bg-slate-200 text-slate-700 hover:text-slate-700 hover:bg-slate-200 font-bold flex items-center justify-center text-sm transition cursor-pointer"
                 aria-label="Close cart drawer"
               >
                 ✕
@@ -147,7 +147,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             </div>
 
             {/* Cart Items List */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-3.5">
+            <div className="flex-1 overflow-y-auto p-5 space-y-3.5 divide-y divide-gray-100">
               {cart.length === 0 ? (
                 <div className="py-24 text-center space-y-3">
                   <span className="text-5xl block opacity-60">🛒</span>
@@ -162,7 +162,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
                   return (
                     <div
                       key={`${item.book.id}-${item.format}`}
-                      className="bg-white border border-[#eee8dc] p-3.5 flex gap-3.5 items-center"
+                      className="bg-white  p-3.5 flex gap-3.5 items-center"
                     >
                       {/* Thumbnail Container */}
                       <div className="w-16 h-20 bg-slate-50 rounded-lg border border-slate-100 p-1 flex items-center justify-center shrink-0">
@@ -176,12 +176,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
                       {/* Info & Controls */}
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-start gap-2">
-                          <h4 className="font-serif text-sm font-bold text-[#102a43] truncate">
+                          <h4 className="font-serif text-md font-semibold text-[#102a43] truncate">
                             {item.book.title}
                           </h4>
                           <button
                             onClick={() => removeFromCart(idx)}
-                            className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition cursor-pointer shrink-0"
+                            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition cursor-pointer shrink-0"
                             title="Remove item"
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -190,14 +190,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
                           </button>
                         </div>
 
-                        <span className="text-[11px] font-semibold text-gray-500 inline-block mb-2">
+                        <span className="text-[14px] font-meduim text-gray-500 inline-block mb-2">
                           {item.format === 'pdf' ? 'PDF Download' : 'Printed Book'}
                         </span>
 
                         <div className="flex items-center justify-between">
                           {/* Quantity Selector */}
                           {item.format === 'book' ? (
-                            <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-white shadow-2xs">
+                            <div className="flex items-center border border-slate-200 overflow-hidden bg-white">
                               <button
                                 onClick={() => updateQuantity(idx, item.quantity - 1)}
                                 className="px-2 py-0.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900 text-xs font-bold transition"
@@ -219,7 +219,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
                           )}
 
                           {/* Price */}
-                          <span className="font-bold text-sm text-[#102a43]">
+                          <span className="font-meduim text-lg text-[#102a43]">
                             ${(unitPrice * item.quantity).toFixed(2)}
                           </span>
                         </div>
@@ -234,7 +234,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             <div className="p-5 border-t border-slate-100 bg-white space-y-3 shadow-xl">
               {/* Subtotal */}
               <div className="flex justify-between items-center pb-1">
-                <span className="text-sm font-semibold text-slate-500">Subtotal</span>
+                <span className="text-base font-semibold text-slate-500">Subtotal</span>
                 <span className="font-serif font-bold text-2xl text-[#102a43]">
                   ${subtotal.toFixed(2)}
                 </span>

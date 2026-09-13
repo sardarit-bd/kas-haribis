@@ -15,15 +15,6 @@ export default function HeterLibrary() {
   const [selected, setSelected] = useState<DocumentRow | null>(null);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const checkoutRef = useRef<HTMLDivElement | null>(null);
-
-
-
-
-  
-
-
-
-
   
 
   useEffect(() => {
@@ -93,17 +84,17 @@ export default function HeterLibrary() {
                     <span className="font-mono text-md font-bold text-[#94a3b8]">
                       {String(index + 1).padStart(2, '0')}
                     </span>
-                    <span className="px-2.5 py-0.5 bg-[#e9f4eb] text-[#367448] rounded-full text-[11px] font-bold">Available</span>
+                    <span className="px-2.5 py-0.5 bg-[#e9f4eb] text-[#367448] rounded-full text-[12px] font-meduim">Available</span>
                   </div>
                   <div className="flex gap-4 items-start">
-                    <div className="w-16 h-20 bg-[#071728] text-white p-2 flex flex-col justify-between items-center shrink-0 shadow-inner">
-                      <span className="text-[10px] text-[#c69b46]">בס״ד</span>
-                      <b className="font-serif text-xs font-bold text-center leading-tight">היתר עיסקא</b>
-                      <small className="text-[7px] text-[#cbd5e1] font-mono">KAV</small>
+                    <div className="w-16 h-20 bg-gray-200 text-white p-2 flex flex-col justify-between items-center shrink-0 shadow-inner">
+                      <span className="text-[11px] text-[#c69b46]">בס״ד</span>
+                      <b className="font-serif text-base text-gray-800 font-meduim text-center leading-tight">היתר עיסקא</b>
+                      <small className="text-[10px] text-black font-meduim">KAV</small>
                     </div>
                     <div className="space-y-1 flex-1 min-w-0">
-                      <h2 className="text-lg font-serif font-bold text-[#102a43] leading-snug">{item.title}</h2>
-                      <p className="text-md pt-3 text-[#475569] leading-relaxed line-clamp-3">
+                      <h2 className="text-xl font-serif font-meduim text-[#102a43] leading-snug">{item.title}</h2>
+                      <p className="text-lg pt-3 text-[#475569]/80 leading-relaxed line-clamp-3">
                         {item.description ||
                           'Review this Heter Iska before purchasing a protected copy.'}
                       </p>

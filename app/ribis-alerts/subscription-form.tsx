@@ -42,10 +42,10 @@ export default function SubscriptionForm() {
       <div className="bg-[#102a43] text-white p-8 sm:p-12 md:p-[50px] text-center">
         {/* Header */}
         <p className="eyebrow gold mb-2">SUBSCRIBE TO OUR NEWSLETTER</p>
-        <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-100 mb-3">
+        <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-meduim text-gray-100 mb-3">
           Stay Updated with Ribbis Alerts &amp; Releases
         </h2>
-        <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mb-8">
+        <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mb-8 pt-2 leading-relaxed font-normal">
           Get urgent halachic warnings, official Kav Haribis alerts, and directory updates delivered straight to your inbox.
         </p>
 

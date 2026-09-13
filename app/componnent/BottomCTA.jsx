@@ -9,7 +9,7 @@ const BottomCTA = ({ eyebrow, title, discription, link, linktext, link2, link2te
             </p>
           )}
           {title && (
-            <h2 className="text-white text-2xl sm:text-4xl font-bold mb-4">
+            <h2 className="text-white text-2xl sm:text-4xl font-medium mb-4">
               {title}
             </h2>
           )}
@@ -24,7 +24,7 @@ const BottomCTA = ({ eyebrow, title, discription, link, linktext, link2, link2te
           {link && (
             <a
               href={link}
-              className="px-5 py-3.5 bg-[#c69b46] hover:bg-[#b08738] text-white font-extrabold text-sm text-center transition-colors shadow-sm"
+              className="px-5 py-3.5 bg-[#c69b46] hover:bg-[#b08738] text-white font-semibold text-sm text-center transition-colors shadow-sm"
             >
               {linktext}
             </a>
@@ -33,7 +33,7 @@ const BottomCTA = ({ eyebrow, title, discription, link, linktext, link2, link2te
           {link2 && (
             <a
               href={link2}
-              className="px-5 py-3.5 text-[#e9e9e9] hover:text-white border border-[#747474] hover:border-slate-400 font-extrabold text-sm text-center transition-colors"
+              className="px-5 py-3.5 text-[#e9e9e9] hover:text-white border border-[#747474] hover:border-slate-400 font-semibold text-sm text-center transition-colors"
             >
               {link2text}
             </a>

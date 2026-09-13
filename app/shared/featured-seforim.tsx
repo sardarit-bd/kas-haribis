@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import type { Sefer } from '../seforim/seforim-catalog';
 import { useCart } from './cart-context';
 
@@ -51,7 +52,9 @@ const featuredBooks: Sefer[] = [
 ];
 
 export default function FeaturedSeforim() {
+
   const { addToCart } = useCart();
+  const router = useRouter();
 
   return (
     <section className="py-16 bg-[#f7f3ea]">
@@ -59,7 +62,7 @@ export default function FeaturedSeforim() {
         {/* Centered Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
           <p className="eyebrow gold mb-1.5">SEFORIM &amp; PUBLICATIONS</p>
-          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[#102a43]">
+          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-meduim text-[#102a43]">
             Featured Torah Seforim &amp; Guides
           </h2>
         </div>
@@ -68,6 +71,7 @@ export default function FeaturedSeforim() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {featuredBooks.map((book) => (
             <article
+            onClick={()=>{router.push('/seforim')}}
               key={book.id}
               className="bg-white p-5 flex flex-col justify-between transition-all duration-300 group"
             >
@@ -82,10 +86,10 @@ export default function FeaturedSeforim() {
                 </div>
 
                 {/* Title & Description */}
-                <h3 className="font-serif text-lg font-bold text-[#102a43] mb-1.5 line-clamp-1">
+                <h3 className="font-serif text-xl font-meduim text-gray-800 mb-1.5 line-clamp-1">
                   {book.title}
                 </h3>
-                <p className="text-xs text-slate-600 line-clamp-2 mb-4 leading-relaxed">
+                <p className="text-base font-meduim text-slate-500 line-clamp-2 mb-4 leading-relaxed">
                   {book.description}
                 </p>
               </div>
@@ -93,12 +97,12 @@ export default function FeaturedSeforim() {
               {/* Price & Add to Cart */}
               <div className="pt-3 flex items-center justify-between gap-2">
                 <div>
-                  <span className="text-xs text-slate-400 block font-medium">Price</span>
-                  <span className="font-bold text-lg text-[#102a43]">${book.price}</span>
+                  <span className="text-sm text-slate-400 block font-medium">Price</span>
+                  <span className="font-bold text-2xl text-gray-600">${book.price}</span>
                 </div>
                 <button
                   onClick={() => addToCart(book, 'book')}
-                  className="bg-[#102a43] hover:bg-[#c69b46] text-white hover:text-[#071d31] font-bold text-xs px-4 py-2.5 transition duration-200 flex items-center gap-1.5 cursor-pointer shadow-sm"
+                  className="bg-[#102a43] hover:bg-[#c69b46] text-white hover:text-[#071d31] font-meduim text-xs px-4 py-2.5 transition duration-200 flex items-center gap-1.5 cursor-pointer shadow-sm hidden"
                 >
                   <span>🛒 Add to Cart</span>
                 </button>
@@ -112,10 +116,10 @@ export default function FeaturedSeforim() {
           <a
             href="/seforim"
             style={{ color: 'white' }}
-            className="inline-flex items-center gap-2 bg-[#102a43] hover:bg-[#173f5f] text-white font-bold py-3.5 px-8 text-sm transition shadow-lg hover:shadow-xl"
+            className="inline-flex items-center gap-2 bg-[#102a43] hover:bg-[#173f5f] text-white font-semibold py-3.5 px-8 text-base transition shadow-lg hover:shadow-xl"
           >
             <span>View Full Catalog</span>
-            <span className="text-base font-bold">→</span>
+            <span className="">→</span>
           </a>
         </div>
       </div>
