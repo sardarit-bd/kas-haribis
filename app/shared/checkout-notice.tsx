@@ -307,7 +307,7 @@ export default function CheckoutNotice({
           {status?.ready ? (
             <>
               <div className="font-serif text-2xl text-[#102a43] font-bold mb-1.5 flex items-center gap-2.5">
-                <span>🔒</span> Payment Details
+                <span></span> Payment Details
               </div>
               <p className="text-xs sm:text-sm text-[#627d98] mb-7">
                 Please enter your details below to complete your secure payment.
@@ -495,14 +495,14 @@ export default function CheckoutNotice({
 
                 <button
                   type="submit"
-                  className="w-full py-4 px-6 bg-gradient-to-r from-[#102a43] to-[#173f5f] text-white border-none rounded-xl text-base font-extrabold tracking-wide cursor-pointer transition-all shadow-[0_8px_20px_rgba(16,42,67,0.25)] hover:enabled:from-[#173f5f] hover:enabled:to-[#0b1d30] hover:enabled:shadow-[0_12px_28px_rgba(16,42,67,0.35)] hover:enabled:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 mt-6"
+                  className="w-full py-4 px-6 bg-gradient-to-r from-[#102a43] to-[#173f5f] text-white border-none text-base font-extrabold tracking-wide cursor-pointer transition-all shadow-[0_8px_20px_rgba(16,42,67,0.25)] hover:enabled:from-[#173f5f] hover:enabled:to-[#0b1d30] hover:enabled:shadow-[0_12px_28px_rgba(16,42,67,0.35)] hover:enabled:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 mt-6"
                   disabled={working}
                 >
                   {working ? (
                     <>⏳ PROCESSING SECURELY…</>
                   ) : (
                     <>
-                      <span>🔒</span> PROCESS SECURE PAYMENT — ${Number.isFinite(total) ? total.toFixed(2) : '0.00'}
+                      <span></span> PROCESS SECURE PAYMENT — ${Number.isFinite(total) ? total.toFixed(2) : '0.00'}
                     </>
                   )}
                 </button>

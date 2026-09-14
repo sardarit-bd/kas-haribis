@@ -19,7 +19,7 @@ export default function Page() {
         title={"Your question may depend on details not shown here."}
         discription={"Send the Bais Horaah the parties, amounts, timing, documents, and complete background for review."}
         link="/bais-horaah"
-        linktext="Ask the Bais Horaah →"
+        linktext="Ask the Bais Horaah"
         link2=""
         link2text=""
       />

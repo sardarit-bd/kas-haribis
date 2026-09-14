@@ -20,7 +20,7 @@ export default async function AudioPage() {
       />
 
       {/* CTA Section Banner */}
-      <BottomCTA eyebrow={"SCHOOLS AND EDUCATORS"} title={"Want a Ribbis curriculum for your school?"} discription={"Reach out and see what we can do for you. We can explore age-appropriate lessons, workshops, and educational materials designed for your students."} link="/bais-horaah" linktext="Start a conversation →" link2="" link2text=""/>
+      <BottomCTA eyebrow={"SCHOOLS AND EDUCATORS"} title={"Want a Ribbis curriculum for your school?"} discription={"Reach out and see what we can do for you. We can explore age-appropriate lessons, workshops, and educational materials designed for your students."} link="/bais-horaah" linktext="Start a conversation" link2="" link2text=""/>
 
     <SiteFooter/>
     </>

@@ -71,7 +71,7 @@ export default async function EducationalCenter() {
                       target="_blank"
                       rel="noreferrer"
                     >
-                      View material <b className="font-sans">↗</b>
+                      View material <b className="font-sans"></b>
                     </a>
                     <a
                     style={{color:"white"}}
@@ -79,7 +79,7 @@ export default async function EducationalCenter() {
                       href={`${src}${src.includes('?') ? '&' : '?'}download=1`}
                       download={item.file_name}
                     >
-                      Download &amp; print <b className="font-sans">↓</b>
+                      Download &amp; print <b className="font-sans"></b>
                     </a>
                   </div>
                 </div>
@@ -95,7 +95,7 @@ export default async function EducationalCenter() {
       </section>
 
       {/* CTA Section Banner */}
-      <BottomCTA eyebrow={"SCHOOLS AND EDUCATORS"} title={"Want a Ribbis curriculum for your school?"} discription={"Reach out and see what we can do for you. We can explore age-appropriate lessons, workshops, and educational materials designed for your students."} link="/bais-horaah" linktext="Start a conversation →" link2="" link2text=""/>
+      <BottomCTA eyebrow={"SCHOOLS AND EDUCATORS"} title={"Want a Ribbis curriculum for your school?"} discription={"Reach out and see what we can do for you. We can explore age-appropriate lessons, workshops, and educational materials designed for your students."} link="/bais-horaah" linktext="Start a conversation" link2="" link2text=""/>
 
       <SiteFooter />
     </main>

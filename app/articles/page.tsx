@@ -84,7 +84,7 @@ export default async function ArticlesPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Open PDF ↗
+                    Open PDF
                   </a>
                 </div>
               </div>
@@ -94,7 +94,7 @@ export default async function ArticlesPage() {
       </section>
 
       {/* CTA Section Banner */}
-      <BottomCTA eyebrow={"STAY INFORMED"} title={"Receive publication updates"} discription={"Receive the complete Kav Haribis collection of concise publications on practical questions in Hilchos Ribbis."} link="/contact" linktext="Receive publication updates →" link2="" link2text=""/>
+      <BottomCTA eyebrow={"STAY INFORMED"} title={"Receive publication updates"} discription={"Receive the complete Kav Haribis collection of concise publications on practical questions in Hilchos Ribbis."} link="/contact" linktext="Receive publication updates" link2="" link2text=""/>
       <SiteFooter/>
     </>
   );

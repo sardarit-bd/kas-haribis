@@ -12,7 +12,7 @@ export default function AboutPage() {
       <SiteHeader />
 
       {/* Hero Banner Section */}
-      <section className="min-h-[540px] bg-gradient-to-br from-[#071728] via-[#102a43] to-[#0e304b] text-white relative overflow-hidden border-b-2 border-[#c69b46]">
+      <section className="min-h-[540px] bg-gradient-to-br from-[#071728] via-[#102a43] to-[#0e304b] text-white relative overflow-hidden">
         <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-16 md:py-20 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-[50px] items-center">
           <div className="flex flex-col">
             <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1 hidden">
@@ -28,17 +28,15 @@ export default function AboutPage() {
             <div className="flex items-center gap-5 flex-wrap">
               <a
                 href="/bais-horaah"
-                className="bg-[#c69b46] hover:bg-[#b08738] text-white font-extrabold py-3.5 px-7 text-sm transition-colors shadow-md inline-flex items-center gap-2"
+                className="bg-[#c69b46] hover:bg-[#b08738] text-white font-semibold py-3.5 px-7 text-sm transition-colors shadow-md inline-flex items-center gap-2"
               >
                 <span>Ask the Bais Horaah</span>
-                <span>→</span>
               </a>
               <a
                 href="/programs"
-                className="border border-[#c69b46]/50 hover:border-[#c69b46] text-[#e5c474] font-extrabold py-3.5 px-6 text-sm transition-colors inline-flex items-center gap-2 bg-white/5 hover:bg-white/10"
+                className="border border-[#c69b46]/30 hover:border-[#c69b46] text-[#e5c474] font-semibold py-3.5 px-6 text-sm transition-colors inline-flex items-center gap-2 bg-white/5 hover:bg-white/10"
               >
                 <span>Explore Programs</span>
-                <span>→</span>
               </a>
             </div>
           </div>
@@ -84,7 +82,7 @@ export default function AboutPage() {
       </section>
 
       {/* Rabbinic Leadership & Advisory Banner */}
-      <section className="bg-gradient-to-br from-[#071728] to-[#102a43] text-white border-t-2 border-[#c69b46] border-b border-[#102a43]">
+      <section className="bg-gradient-to-br from-[#071728] to-[#102a43] text-white">
         <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-16 md:py-[90px] grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-[60px] items-center">
           <div className="rounded-[20px]px] sm:h-[400px]">
             <img
@@ -185,7 +183,6 @@ export default function AboutPage() {
               className="inline-flex items-center gap-2 bg-[#102a43] hover:bg-[#173f5f] text-white font-bold py-3 px-6 text-sm transition shadow-md"
             >
               <span className='text-white'>See All Programs</span>
-              <span className='text-white'>→</span>
             </a>
           </div>
 
@@ -221,9 +218,9 @@ export default function AboutPage() {
         title={"Bring your question, program, or research need to Kav Haribis."}
         discription={"Whether you have a personal question, need halachic guidance for a financial product, or would like to invite Kav Haribis to present a program, we are here to help."}
         link="/contact"
-        linktext="Contact Kav Haribis →"
+        linktext="Contact Kav Haribis"
         link2="/contact"
-        link2text="Contact Kav Haribis →"
+        link2text="Contact Kav Haribis"
       />
 
       <SiteFooter showHeterNotice />

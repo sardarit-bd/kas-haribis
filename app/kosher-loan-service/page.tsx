@@ -148,7 +148,7 @@ export default async function Page() {
       </section>
 
       {/* CTA Section Banner */}
-      <BottomCTA eyebrow={"IMPORTANT"} title={"Every loan must be reviewed individually"} discription={"A listed broker or service does not automatically make every transaction permissible. The lender, funding source, documents, and Heter Iska must be appropriate for the specific loan."} link="/bais-horaah" linktext="Review your loan with the Bais Horaah →" link2="" link2text=""/>
+      <BottomCTA eyebrow={"IMPORTANT"} title={"Every loan must be reviewed individually"} discription={"A listed broker or service does not automatically make every transaction permissible. The lender, funding source, documents, and Heter Iska must be appropriate for the specific loan."} link="/bais-horaah" linktext="Review your loan with the Bais Horaah" link2="" link2text=""/>
       <SiteFooter/>
     </>
   );

@@ -69,7 +69,6 @@ export default function SubscriptionForm() {
               ) : (
                 <>
                   <span>Subscribe</span>
-                  <span>→</span>
                 </>
               )}
             </button>

@@ -30,7 +30,6 @@ export default function OurMission() {
                 className="inline-flex items-center gap-2 px-6 py-2.5 sm:px-8 sm:py-3 bg-[#102a43] hover:bg-[#173f5f] text-white font-bold text-xs sm:text-sm  shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
               >
                 <span className="text-white font-meduim">Learn about the organization</span>
-                <span className="text-white">→</span>
               </a>
             </div>
           </div>

@@ -94,7 +94,7 @@ export default function CommunityImpact() {
                   </h3>
                   <p className="text-base font-meduim text-slate-500 mt-1">{item.subtitle}</p>
                 </div>
-                <span className="text-base font-semibold text-gray-500 pt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
+                <span className="text-base font-meduim text-gray-500 pt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
                   <span className="">Explore program</span>
                   <span className="">→</span>
                 </span>
@@ -109,7 +109,6 @@ export default function CommunityImpact() {
             className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#102a43] hover:bg-[#173f5f] text-white font-semibold text-base shadow-md transition-colors"
           >
             <span className="text-white">Request a Program</span>
-            <span className="text-white">→</span>
           </a>
         </div>
       </div>

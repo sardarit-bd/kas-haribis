@@ -98,7 +98,7 @@ export default function SponsorBanner() {
         }
       >
         {/* Circle Logo Container */}
-        <div className="w-[48px] h-[48px] sm:w-[60px] sm:h-[60px] bg-white flex items-center justify-center transition-all duration-300 overflow-hidden rounded-sm">
+        <div className="w-[48px] h-[48px] sm:w-[52px] sm:h-[52px] bg-white flex items-center justify-center transition-all duration-300 overflow-hidden rounded-sm">
           {sponsor.image_key ? (
             <img
               src={sponsor.image_key}
@@ -117,7 +117,7 @@ export default function SponsorBanner() {
            <b className="text-md sm:text-base font-medium text-gray-800 max-w-[260px] truncate leading-tight mb-0.5">
           {sponsor.company_name}
         </b>
-        <small className="text-sm font-normal text-gray-500 max-w-[200px] truncate">
+        <small className="text-xs font-normal text-gray-500/70 max-w-[200px] truncate">
           {sponsor?.description}
           {/* {clickable ? 'Click for details' : 'Proud Supporter'} */}
         </small>
@@ -134,7 +134,7 @@ export default function SponsorBanner() {
       >
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-xs sm:text-base font-serif font-semibold text-[#102a43]/80">
+          <h2 className="text-xs sm:text-base font-serif font-semibold text-[#102a43]/60 leading-5.5">
             Our Proud<br/>Sponsors
           </h2>
           <p className="text-[#637282] text-xs sm:text-sm max-w-xl mx-auto leading-relaxed hidden">
@@ -144,7 +144,7 @@ export default function SponsorBanner() {
         </div>
 
         {/* Continuous Right-to-Left Sliding Conveyor */}
-        <div className="topSponsorConveyor py-1 sm:py-2">
+        <div className="topSponsorConveyor py-1 sm:py-1">
           <div className="topSponsorTrack">
             <div className="topSponsorGroup">
               {baseSponsors.map((sponsor, index) =>
@@ -169,7 +169,7 @@ export default function SponsorBanner() {
             <span className='text-white'>Become a Sponsor</span>
           </a>
           <a href="/contact">
-            <h2 className="text-xs  sm:text-base font-serif font-semibold text-[#102a43]/80">
+            <h2 className="text-xs  sm:text-base font-serif font-semibold text-[#102a43]/60 leading-5.5">
             Become a<br/>Sponsor
           </h2>
           </a>
@@ -186,7 +186,7 @@ export default function SponsorBanner() {
           onClick={() => setSelected(null)}
         >
           <section
-            className="relative w-full max-w-[720px] bg-white rounded-[10px] p-6 sm:p-[38px] shadow-2xl"
+            className="relative w-full max-w-[720px] bg-white p-6 sm:p-[38px] shadow-2xl"
             onClick={(event) => event.stopPropagation()}
           >
             <button
@@ -214,22 +214,22 @@ export default function SponsorBanner() {
                   {selected.company_name}
                 </h2>
                 
-                <span className="block text-[#42515d] text-sm leading-[1.7] pt-8">
+                <span className="block text-[#42515d]/90 text-base leading-[1.7] pt-4">
                   {selected.description ||
                     'We thank this business for supporting the Torah education and community work of Kav Haribis.'}
                 </span>
               </div>
             </div>
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-[25px] pt-[20px] text-[#344756] text-sm">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-[25px] pt-[20px] text-[#344756] text-md">
               {selected.phone ? (
                 <>
-                  <span>
+                  <span className=''>
                     Telephone: <b className="text-[#102a43]">{selected.phone}</b>
                   </span>
                   <a
                   style={{color:"white"}}
                     href={phoneHref(selected.phone)}
-                    className="w-full sm:w-auto px-[20px] py-[12px] bg-[#102a43] hover:bg-[#173f5f] text-white font-bold rounded-[4px] text-center transition-colors text-white"
+                    className="w-full sm:w-auto px-[20px] py-[12px] bg-[#102a43] hover:bg-[#173f5f] text-white font-bold text-sm text-center transition-colors text-white"
                   >
                     Call Sponsor
                   </a>

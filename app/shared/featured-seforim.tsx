@@ -119,7 +119,6 @@ export default function FeaturedSeforim() {
             className="inline-flex items-center gap-2 bg-[#102a43] hover:bg-[#173f5f] text-white font-semibold py-3.5 px-8 text-base transition shadow-lg hover:shadow-xl"
           >
             <span>View Full Catalog</span>
-            <span className="">→</span>
           </a>
         </div>
       </div>

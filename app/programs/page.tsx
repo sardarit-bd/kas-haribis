@@ -155,7 +155,7 @@ export default function ProgramsPage() {
         title={"Let’s build the right presentation for your audience."}
         discription={"Tell us about your school, business, organization, or community and what you would like the program to address."}
         link="/contact?topic=Program%20request"
-        linktext="Request a Kav Haribis program →"
+        linktext="Request a Kav Haribis program"
         link2=""
         link2text=""
       />

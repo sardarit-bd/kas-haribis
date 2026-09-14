@@ -33,7 +33,7 @@ const BottomCTA = ({ eyebrow, title, discription, link, linktext, link2, link2te
           {link2 && (
             <a
               href={link2}
-              className="px-5 py-3.5 text-[#e9e9e9] hover:text-white border border-[#747474] hover:border-slate-400 font-semibold text-sm text-center transition-colors"
+              className="px-5 py-3.5 text-[#e9e9e9] hover:text-white border border-[#747474]/60 hover:border-slate-400 font-semibold text-sm text-center transition-colors"
             >
               {link2text}
             </a>

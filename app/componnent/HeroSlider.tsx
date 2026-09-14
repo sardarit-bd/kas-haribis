@@ -15,7 +15,7 @@ const heroSlides = [
       href: '/bank-directory',
     },
     secondaryCta: {
-      text: 'Ask the Bais Horaah →',
+      text: 'Ask the Bais Horaah',
       href: '/bais-horaah',
     },
   },
@@ -32,7 +32,7 @@ const heroSlides = [
       href: '/bank-directory',
     },
     secondaryCta: {
-      text: 'Heter Iska Library →',
+      text: 'Heter Iska Library',
       href: '/heter-iska',
     },
   },
@@ -49,7 +49,7 @@ const heroSlides = [
       href: '/bais-horaah',
     },
     secondaryCta: {
-      text: 'Listen to Shiurim →',
+      text: 'Listen to Shiurim',
       href: '/audio',
     },
   },
@@ -100,7 +100,7 @@ export default function HeroSlider() {
                   {slide.primaryCta.text}
                 </a>
                 <a
-                  className="hidden md:block px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white font-meduim text-base border border-white/20 transition-colors"
+                  className="hidden md:block px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white font-meduim text-base border border-white/10 transition-colors"
                   href={slide.secondaryCta.href}
                 >
                   {slide.secondaryCta.text}
@@ -116,8 +116,8 @@ export default function HeroSlider() {
         {heroSlides.map((slide, index) => (
           <button
             key={slide.id}
-            className={`w-3 h-3 rounded-full transition-all ${
-              index === currentSlide ? 'bg-[#c69b46] w-8 z-10' : 'bg-white/40 hover:bg-white/70'
+            className={`w-2.5 h-2.5 rounded-full transition-all ${
+              index === currentSlide ? 'bg-[#c69b46] w-2.5 z-10' : 'bg-white/40 hover:bg-white/70'
             }`}
             onClick={() => setCurrentSlide(index)}
             aria-label={`Go to slide ${index + 1}`}

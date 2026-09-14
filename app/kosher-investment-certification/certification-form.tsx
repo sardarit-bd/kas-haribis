@@ -294,7 +294,7 @@ export default function CertificationForm() {
 
       <button
         type="submit"
-        className="w-full h-12 bg-[#102a43] hover:bg-[#1a385c] text-white font-medium text-sm rounded-xl transition-all shadow-sm hover:shadow active:scale-[0.99] disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
+        className="w-fit px-8 h-12 bg-[#102a43] hover:bg-[#1a385c] text-white font-medium text-sm transition-all shadow-sm hover:shadow active:scale-[0.99] disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
         disabled={busy}
       >
         {busy ? 'Submitting securely...' : 'Submit Application'}

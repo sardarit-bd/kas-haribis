@@ -121,7 +121,7 @@ export default function MembershipPage() {
           "Register, choose your preferences, and begin building your Kav Haribis member history."
         }
         link="/membership/account"
-        linktext="Create or open your account →"
+        linktext="Create or open your account"
         link2=""
         link2text=""
       />

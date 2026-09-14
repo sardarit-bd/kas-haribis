@@ -184,7 +184,7 @@ export default async function Page() {
       </section>
 
       {/* CTA Section Banner */}
-      <BottomCTA eyebrow={"PLEASE NOTE"} title={"Halachic review and financial due diligence are both essential"} discription={"Investment opportunities involve risk, including possible loss of principal. Confirm all current terms, investigate the sponsor independently, review offering documents with your advisers, and ask a qualified Rav about your circumstances."} link="/bais-horaah" linktext="Ask a halachic question →" link2="" link2text=""/>
+      <BottomCTA eyebrow={"PLEASE NOTE"} title={"Halachic review and financial due diligence are both essential"} discription={"Investment opportunities involve risk, including possible loss of principal. Confirm all current terms, investigate the sponsor independently, review offering documents with your advisers, and ask a qualified Rav about your circumstances."} link="/bais-horaah" linktext="Ask a halachic question" link2="" link2text=""/>
       <SiteFooter/>
 
     </>

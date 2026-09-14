@@ -287,16 +287,16 @@ export default function BankResearchForm() {
               </div>
 
               <button
-                className="w-full h-12 bg-[#102a43] hover:bg-[#173f5f] text-white font-semibold text-sm rounded-xl transition-all shadow-sm hover:shadow-md cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full h-12 bg-[#102a43] hover:bg-[#173f5f] text-white font-semibold text-sm transition-all shadow-sm hover:shadow-md cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
                 disabled={busy}
               >
                 {busy ? (
                   <>
-                    <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent animate-spin" />
                     Submitting securely…
                   </>
                 ) : (
-                  'Submit to Research Team →'
+                  'Submit to Research Team'
                 )}
               </button>
 

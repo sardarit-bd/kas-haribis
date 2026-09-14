@@ -112,7 +112,7 @@ export default async function BusinessesPage() {
         </div>
       </section>
     {/* CTA Section Banner */}
-      <BottomCTA eyebrow={"IMPORTANT GUIDANCE"} title={"Verify before relying on a listing"} discription={"A listing is educational information and does not guarantee that every transaction is covered. Confirm that the business’s Heter Iska is current, properly executed, and applicable to the specific arrangement."} link="/bais-horaah" linktext="Ask the Bais Horaah →" link2="" link2text=""/>
+      <BottomCTA eyebrow={"IMPORTANT GUIDANCE"} title={"Verify before relying on a listing"} discription={"A listing is educational information and does not guarantee that every transaction is covered. Confirm that the business’s Heter Iska is current, properly executed, and applicable to the specific arrangement."} link="/bais-horaah" linktext="Ask the Bais Horaah" link2="" link2text=""/>
     <SiteFooter/>
      </>
   );

@@ -153,7 +153,7 @@ export default async function SavingsPage() {
       </section>
   
       <BottomCTA eyebrow={"IMPORTANT"} title={"Confirm terms before depositing funds"} discription={"Interest rates, fees, eligibility, and account structures can change. Review the institution’s current disclosures and ask a qualified Rav when a personal halachic question applies."}
-       link="/bais-horaah" linktext="Ask a Ribbis question →" link2="" link2text=""/>
+       link="/bais-horaah" linktext="Ask a Ribbis question" link2="" link2text=""/>
       <SiteFooter/> 
     </>
   );
