@@ -1,110 +1,205 @@
-# vinext-starter
+# Kav Haribis (קַו הַרִבִּית) — Official Web Platform
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+Welcome to the **Kav Haribis** repository. This is a full-stack Next.js/Vinext web application built for Halachic financial services, Kosher bank & investment research, Heter Iska frameworks, Rabbinical consultation (Bais Horaah), Ribbis alerts, educational media, and Seforim distribution.
 
-## Prerequisites
+---
 
-- Node.js `>=22.13.0`
-- Linux with `flock`, `curl`, and GNU `timeout`
+## 📋 Table of Contents
 
-## Sites Lifecycle
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Tech Stack](#-tech-stack)
+- [Project Architecture](#-project-architecture)
+- [Database & Schema](#-database--schema)
+- [Getting Started](#-getting-started)
+- [Available Scripts](#-available-scripts)
+- [Deployment & Cloudflare Setup](#-deployment--cloudflare-setup)
+- [License & Credits](#-license--credits)
 
-The Sites lifecycle CLI runs the locked dependency install before returning this checkout. Edit the source under `app/`, then checkpoint when a coherent milestone is ready to inspect or share. The remote Sites builder runs `npm run build` against the pushed commit. Do not repeat install or build as a normal pre-checkpoint step.
+---
 
-This starter does not use `wrangler.jsonc`.
+## 🌟 Overview
 
-`install:ci` is intentionally a single, non-retrying `npm ci`. It refuses a concurrent install for the same project, consumes a matching image-seeded npm cache with `--prefer-offline` while retaining registry fallback for a missing cache object, otherwise downloads and verifies the complete vinext tarball recorded in `package-lock.json`, limits npm to one socket, and terminates a stalled install. `build` applies a short timeout and then validates the Sites artifact. These helpers target Linux and use GNU `timeout`; they are not native macOS scripts.
+**Kav Haribis** is dedicated to educating, reviewing, certifying, and guiding individuals, businesses, lenders, and financial institutions on the Halachos of *Ribbis* (prohibition of interest). The platform bridges traditional Halachic authority with modern digital tools, providing searchable directories, automated document workflows, public alerts, and administration portals.
 
-Scripts that need writable project-scoped home, npm, XDG, and temporary paths use `scripts/sites-env.sh`. The `dev` and `start` scripts honor the caller's runtime environment and keep Wrangler logs inside the checkout. The generated `.sites-runtime/` directory is disposable and ignored by Git.
+---
 
-## Included Shape
+## 🚀 Key Features
 
-- edit site code under `app/`
-- `app/chatgpt-auth.ts` provides optional dispatch-owned ChatGPT sign-in helpers
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/index.ts` reads the D1 binding from the Cloudflare Worker environment
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
+### 🏦 Kosher Bank & Investment Research
+* **Bank Directory**: Searchable directory of banks and financial institutions categorized by their Halachic status and Heter Iska compliance.
+* **Bank Research Portal**: Multi-stage workflow for researchers and reviewers to submit, inspect, and approve institutional reports.
+* **High-Yield Savings & Investment Directories**: Comparisons of Halachically reviewed savings accounts and verified investment opportunities.
 
-## Workspace Auth Headers
+### 📜 Heter Iska & Business Verification
+* **Heter Iska Advisory**: Educational materials, templates, and guidance on choosing and executing a valid Heter Iska.
+* **Personalized Heter Iska Service**: Form-based request system for custom corporate and personal Heter Iska documents.
+* **Directory of Verified Businesses**: Searchable list of businesses operating with an active, verified Heter Iska under Rabbinical oversight.
 
-OpenAI workspace sites can read the current user's email from
-`oai-authenticated-user-email`.
+### 🛡️ Kosher Investment & Lender Certification
+* **Institutional Assessment**: Comprehensive Halachic review of ownership, economic structure, loan products, agreements, and servicing.
+* **Certification Application & Review**: Structured submission system for investment sponsors, mortgage companies, and direct lenders.
+* **Verification Badges & Reports**: Publicly verifiable certification seals and downloadable determination reports.
 
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
+### ⚖️ Bais Horaah (Rabbinical Inquiry Hub)
+* **Confidential Q&A**: Direct submission form for complex Ribbis inquiries with reference tracking and email updates.
+* **Admin Review Queue**: Rabbinical response management dashboard.
 
-Treat the full name as optional and fall back to email when it is absent:
+### 🔔 Ribbis Alerts & Tip Submissions
+* **Community Alerts**: Real-time notifications on financial product updates, institutional changes, and Ribbis advisories.
+* **Tip Line**: Secure submission form for users to report potential Ribbis concerns or institutional updates.
+* **Subscriber System**: Email notification management for subscribers.
 
-```tsx
-import { headers } from 'next/headers';
+### 📚 Educational Center & Seforim Store
+* **Articles & Gilyonos**: PDF viewer and digital download library for published Halachic papers and newsletters.
+* **Educational Downloads**: Media, coloring pages, and learning guides for families and institutions.
+* **Seforim Store**: Online bookstore with physical & digital format selection, shopping cart, and checkout workflow.
 
-export default async function Home() {
-  const requestHeaders = await headers();
-  const email = requestHeaders.get('oai-authenticated-user-email');
-  const encodedFullName = requestHeaders.get(
-    'oai-authenticated-user-full-name',
-  );
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get('oai-authenticated-user-full-name-encoding') ===
-      'percent-encoded-utf-8'
-      ? decodeURIComponent(encodedFullName)
-      : null;
+### 🔒 Administration & Access Control
+* **Role-Based Admin Panel**: Granular permissions for admins, staff, researchers, and reviewers.
+* **Submissions & Order Management**: Central management for questions, donations, certifications, alerts, and member orders.
 
-  const displayName = fullName ?? email;
-  // ...
-}
+---
+
+## 🛠️ Tech Stack
+
+* **Framework & Engine**: [Next.js](https://nextjs.org/) (App Router format), powered by [Vinext](https://github.com/cloudflare/vinext) & [Vite](https://vitejs.dev/)
+* **Runtime**: [Cloudflare Workers](https://workers.cloudflare.com/) Edge Runtime
+* **Frontend**: React 19, TypeScript, Tailwind CSS v4, Lucide Icons, React Icons
+* **Database & ORM**: Cloudflare D1 (SQLite) with [Drizzle ORM](https://orm.drizzle.team/) & Drizzle Kit
+* **Storage & Media**: Cloudflare R2 / Local Static Storage with PDF processing via `pdf-lib`
+* **Email & Payments**: Nodemailer, Cardknox/Sola API integration
+* **Testing & Tools**: Node.js test runner (`node --test`), ESLint, Prettier, Wrangler CLI
+
+---
+
+## 📂 Project Architecture
+
+```text
+├── app/                              # Next.js App Router source
+│   ├── (public pages)/               # Home, About, Contact, Donate, Membership
+│   ├── bank-directory/               # Kosher bank directory & reports
+│   ├── kosher-investment-certification/ # Investment & lender certification
+│   ├── heter-iska/                   # Heter Iska guidance & resources
+│   ├── personalized-heter-iska/      # Custom Heter Iska request workflow
+│   ├── businesses-with-a-heter-iska/ # Directory of verified businesses
+│   ├── bais-horaah/                  # Rabbinical consultation Q&A
+│   ├── ribis-alerts/                 # Ribbis alerts & tip submission portal
+│   ├── savings/                      # High-yield kosher savings comparison
+│   ├── kosher-investment-opportunities/ # Kosher investments directory
+│   ├── seforim/                      # Online Seforim bookstore & cart
+│   ├── articles/                     # Digital article PDFs & reader
+│   ├── educational-center/           # Educational downloads & media
+│   ├── admin/                        # Secure administration dashboard
+│   ├── api/                          # Backend API routes & Cloudflare worker handlers
+│   └── shared/                       # Shared components (Header, Footer, Navigation)
+├── db/                               # Database schema definition (Drizzle ORM)
+├── drizzle/                          # SQL migration files
+├── public/                           # Static brand assets, images, and documents
+├── scripts/                          # Build, Wrangler sync, and migration helper scripts
+├── tests/                            # Automated end-to-end and HTML integration tests
+├── vite.config.ts                    # Vite configuration with Cloudflare / React plugins
+├── drizzle.config.ts                 # Drizzle Kit migration configuration
+└── wrangler.jsonc                    # Cloudflare Worker & D1 binding configuration
 ```
 
-## Optional Dispatch-Owned ChatGPT Sign-In
+---
 
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
+## 🗄️ Database & Schema
 
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
+The application uses **Drizzle ORM** over **Cloudflare D1**. Key tables defined in [`db/schema.ts`](file:///c:/Users/Win%2011/OneDrive/Desktop/Kav-Haribis-Developer-Source/db/schema.ts):
 
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
+- `questions`: Bais Horaah inquiries and rabbinical answers.
+- `donations`: Supporter contributions and dedications.
+- `banks` & `bank_research_submissions`: Kosher bank directory data and multi-step research workflow.
+- `businesses`: Verified Heter Iska business directory listings.
+- `loan_services`: Certified lending companies and kosher loan service directory.
+- `savings_accounts`: Kosher high-yield savings directory.
+- `investment_opportunities`: Halachically reviewed investment offerings.
+- `ribbis_alerts` & `alert_tips`: Public alerts and user-submitted tip reports.
+- `articles` & `educational_resources`: Digital library items and downloads.
+- `members` & `member_orders`: Seforim orders and user accounts.
+- `admin_staff_access` & `bank_researchers`: Role-based permissions and access tokens.
 
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
+---
 
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
+## 💻 Getting Started
 
-## Diagnostic Commands
+### Prerequisites
 
-- `npm run install:ci`: perform the one bounded lockfile install
-- `npm run dev`: start the Vite/Vinext development server
-- `npm run build`: build and validate the deployable Sites artifact
-- `npm run start`: start the built Vinext application
-- `npm test`: build, validate, and verify the rendered development-preview metadata
-- `npm run validate:artifact`: recheck an existing artifact's manifest and ESM `default.fetch` export
-- `npm run db:generate`: generate Drizzle migrations after schema changes
+* **Node.js**: `>= 22.13.0`
+* **npm**: `>= 10.0.0`
+* **Git** & **Bash** (for script execution)
 
-Use build and validation commands for targeted diagnosis after a remote failure, not as part of the normal checkpoint path.
+### Installation
 
-The timeout defaults can be overridden for a controlled canary with `SITES_INSTALL_TIMEOUT`, `SITES_INSTALL_KILL_AFTER`, `SITES_BUILD_TIMEOUT`, and `SITES_BUILD_KILL_AFTER`. A timeout fails the command; the helpers never retry an unchanged install or build.
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/sardarit-bd/kas-haribis.git
+   cd kas-haribis
+   ```
 
-## Learn More
+2. **Install dependencies**:
+   ```bash
+   npm ci
+   ```
 
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+3. **Set up local environment variables**:
+   Copy `.env.example` to `.env.local` and configure your credentials:
+   ```bash
+   cp env.example .env.local
+   ```
+
+4. **Run database migrations (Local D1)**:
+   ```bash
+   npm run db:migrate:local
+   ```
+
+5. **Start development server**:
+   ```bash
+   npm run dev
+   ```
+   Open `http://localhost:5173` (or the URL shown in terminal) to view the app.
+
+---
+
+## 📜 Available Scripts
+
+| Command | Description |
+| :--- | :--- |
+| `npm run dev` | Starts the Vite local development server with Wrangler config sync |
+| `npm run build` | Builds the production artifact via `vinext` |
+| `npm run start` | Previews the production build locally |
+| `npm run test` | Builds and runs automated HTML integration tests (`tests/rendered-html.test.mjs`) |
+| `npm run db:generate` | Generates new SQL migrations from `db/schema.ts` |
+| `npm run db:migrate:local` | Applies pending migrations to local Cloudflare D1 database |
+| `npm run db:migrate:remote` | Applies pending migrations to production Cloudflare D1 database |
+| `npm run deploy` | Deploys the project to Cloudflare Workers |
+
+---
+
+## ☁️ Deployment & Cloudflare Setup
+
+This application is designed for seamless deployment on **Cloudflare Workers**.
+
+1. **Wrangler Configuration**:
+   Ensure `wrangler.jsonc` is configured with your Cloudflare D1 database bindings and environment variables.
+
+2. **Remote Migration**:
+   Before deploying, apply database schema migrations to the remote D1 instance:
+   ```bash
+   npm run db:migrate:remote
+   ```
+
+3. **Deploy to Cloudflare**:
+   ```bash
+   npm run deploy
+   ```
+
+---
+
+## 📄 License & Contact
+
+Copyright © **Kav Haribis**. All rights reserved.
+
+For inquiries, rabbinical guidance, or institutional certification requests, please visit the website or contact **kavharibis@gmail.com**.
