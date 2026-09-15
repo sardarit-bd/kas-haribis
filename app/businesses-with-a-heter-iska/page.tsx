@@ -27,7 +27,7 @@ export default async function BusinessesPage() {
           </div>
           <div className="min-w-[160px] text-center p-4 bg-white shrink-0">
             <strong className="block text-3xl sm:text-4xl font-serif font-bold text-[#c69b46]">{businesses.length}</strong>
-            <span className="block text-[11px] font-bold text-[#64748b] uppercase tracking-wider mt-1">businesses currently listed</span>
+            <span className="block text-base font-medium text-[#64748b]/80 tracking-wider mt-1">businesses currently listed</span>
           </div>
         </div>
 
@@ -46,7 +46,7 @@ export default async function BusinessesPage() {
                   <small className="font-mono text-xs font-bold text-[#94a3b8]">{String(index + 1).padStart(2, '0')}</small>
                 </div>
 
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#e9f4eb] text-[#367448] border border-[#c5e1cd] rounded-full text-xs font-bold w-max">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#e9f4eb] text-[#367448] border border-[#c5e1cd] rounded-full text-sm font-medium w-max">
                   <i className="not-italic font-bold">✓</i>{' '}
                   {item.verification_status || 'LISTED WITH A HETER ISKA'}
                 </div>

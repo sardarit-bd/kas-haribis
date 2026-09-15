@@ -12,9 +12,6 @@ export default function PersonalizedHeterIskaPage() {
       />
       <section className="max-w-[1380px] mx-auto px-[5vw] py-[55px] pb-[70px] min-[651px]:px-[6vw] min-[651px]:pt-[82px] min-[651px]:pb-[100px] grid grid-cols-1 min-[951px]:grid-cols-[0.85fr_1.15fr] gap-[7vw] items-start bg-[linear-gradient(135deg,#fff_0%,#fff_55%,#f8f3e8_100%)]">
         <div className="static min-[951px]:sticky min-[951px]:top-[125px]">
-          <p className="text-[15px] tracking-[0.10em] font-bold text-[#a67c2c] mb-5 capitalize hidden">
-            TAILORED REVIEW
-          </p>
           <h2 className="my-[8px] mt-2 mb-[18px] text-[#102a43] font-serif font-medium text-[clamp(32px,4vw,48px)] leading-[1.15]">
             Request a Personalized Heter Iska
           </h2>
@@ -25,7 +22,7 @@ export default function PersonalizedHeterIskaPage() {
             be needed.
           </p>
           <div className="my-[28px] p-[27px] border border-[#d5b468] border-t-4 border-t-[#c69b46] rounded-[9px] bg-white shadow-[0_18px_50px_#102a4315]">
-            <small className="text-[#8d6924] text-[9px] font-extrabold tracking-[0.16em] uppercase">
+            <small className="text-[#8d6924] text-[13px] font-semibold tracking-[0.16em]">
               STANDARD SERVICE FEE
             </small>
             <strong className="block my-[7px] text-[#102a43] font-serif text-[52px] leading-none font-medium">
@@ -43,7 +40,7 @@ export default function PersonalizedHeterIskaPage() {
             <li>Existing Heter Iska or supporting documents</li>
             <li>Direct follow-up from Kav Haribis</li>
           </ul>
-          <small className="block text-[#7a8892] leading-[1.6] text-md mt-4">
+          <small className="block text-[#7a8892] leading-[1.6] text-base mt-6">
             Submitting this form is a request for service. Payment and any
             additional information will be arranged after the request is
             reviewed.

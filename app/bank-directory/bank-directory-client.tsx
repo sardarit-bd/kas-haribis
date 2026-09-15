@@ -110,7 +110,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
     <section className="container px-4 sm:px-8 py-10 md:py-14">
       {/* Directory Tools */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[minmax(200px,1fr)_minmax(150px,0.7fr)_minmax(130px,0.6fr)_auto_auto] gap-4 items-end mb-8 bg-[#f7f3ea] p-5 sm:p-6">
-        <label className="flex flex-col gap-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
+        <label className="flex flex-col gap-1.5 text-md font-semibold text-[#102a43]/80">
           Search financial institutions
           <input
             value={query}
@@ -119,7 +119,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
             className="h-[43px] px-3.5 bg-white border border-[#cbd5da] text-sm text-[#102a43] font-normal normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
           />
         </label>
-        <label className="flex flex-col gap-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
+        <label className="flex flex-col gap-1.5 text-md font-semibold text-[#102a43]/80">
           Status
           <select
             value={status}
@@ -134,7 +134,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
             ))}
           </select>
         </label>
-        <label className="flex flex-col gap-1.5 text-xs font-bold text-[#102a43] uppercase tracking-wider">
+        <label className="flex flex-col gap-1.5 text-md font-semibold text-[#102a43]/80">
           Reports per page
           <select
             value={perPage}
@@ -153,7 +153,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
             <option value="all">All</option>
           </select>
         </label>
-        <b className="self-center py-2 text-sm font-bold text-[#102a43] whitespace-nowrap" aria-live="polite">
+        <b className="self-center py-2  text-md font-semibold text-[#102a43]/80 whitespace-nowrap" aria-live="polite">
           {filtered.length} banks listed
         </b>
         <div

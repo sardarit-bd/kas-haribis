@@ -62,26 +62,26 @@ export default function ContactForm() {
           administrator inbox.
         </p>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2 pt-5">
         <label className="block text-md font-semibold text-slate-500 space-y-1.5">
           Full name
           <input
-            className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 rounded-xl bg-[#f8fafc] text-slate-900 text-sm focus:outline-none focus:bg-white focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition"
+            className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 bg-[#f8fafc] text-slate-900 text-sm focus:outline-none focus:bg-white focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition"
             name="name"
             autoComplete="name"
             required
-            placeholder="Your name"
+            // placeholder="Your name"
           />
         </label>
         <label className="block text-md font-semibold text-slate-500 space-y-1.5">
           Email address
           <input
-            className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 rounded-xl bg-[#f8fafc] text-slate-900 text-sm focus:outline-none focus:bg-white focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition"
+            className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 bg-[#f8fafc] text-slate-900 text-sm focus:outline-none focus:bg-white focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition"
             name="email"
             type="email"
             autoComplete="email"
             required
-            placeholder="you@example.com"
+            // placeholder="you@example.com"
           />
         </label>
       </div>
@@ -89,26 +89,26 @@ export default function ContactForm() {
         <label className="block text-md font-semibold text-slate-500 space-y-1.5">
           Phone number <em className="text-slate-400 font-normal not-italic">optional</em>
           <input
-            className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 rounded-xl bg-[#f8fafc] text-slate-900 text-sm focus:outline-none focus:bg-white focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition"
+            className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 bg-[#f8fafc] text-slate-900 text-sm focus:outline-none focus:bg-white focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition"
             name="phone"
             type="tel"
             autoComplete="tel"
-            placeholder="(000) 000-0000"
+            // placeholder="(000) 000-0000"
           />
         </label>
         <label className="block text-md font-semibold text-slate-500 space-y-1.5">
           Organization <em className="text-slate-400 font-normal not-italic">optional</em>
           <input
-            className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 rounded-xl bg-[#f8fafc] text-slate-900 text-sm focus:outline-none focus:bg-white focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition"
+            className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 bg-[#f8fafc] text-slate-900 text-sm focus:outline-none focus:bg-white focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition"
             name="organization"
-            placeholder="Business, school, or organization"
+            // placeholder="Business, school, or organization"
           />
         </label>
       </div>
       <label className="block text-md font-semibold text-slate-500 space-y-1.5">
         What is this about?
         <select
-          className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 rounded-xl bg-[#f8fafc] text-slate-900 text-sm focus:outline-none focus:bg-white focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition cursor-pointer"
+          className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 bg-[#f8fafc] text-slate-900 text-sm focus:outline-none focus:bg-white focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition cursor-pointer"
           name="topic"
           required
           value={topic}
@@ -169,14 +169,16 @@ export default function ContactForm() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <label className="block text-md font-semibold text-slate-500 space-y-1.5">
               Location
-              <input className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 rounded-xl bg-white text-slate-900 text-sm focus:outline-none focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition" name="location" placeholder="City or online" />
+              <input className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 rounded-xl bg-white text-slate-900 text-sm focus:outline-none focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition" name="location" 
+              // placeholder="City or online"
+               />
             </label>
             <label className="block text-md font-semibold text-slate-500 space-y-1.5">
               Audience
               <input
                 className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 rounded-xl bg-white text-slate-900 text-sm focus:outline-none focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition"
                 name="audience"
-                placeholder="Students, business owners, community…"
+                // placeholder="Students, business owners, community…"
               />
             </label>
           </div>
@@ -192,7 +194,9 @@ export default function ContactForm() {
             </label>
             <label className="block text-md font-semibold text-slate-500 space-y-1.5">
               Website <em className="text-slate-400 font-normal not-italic">optional</em>
-              <input className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 rounded-xl bg-white text-slate-900 text-sm focus:outline-none focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition" name="related_url" type="url" placeholder="https://…" />
+              <input className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 rounded-xl bg-white text-slate-900 text-sm focus:outline-none focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition" name="related_url" type="url"
+              //  placeholder="https://…" 
+               />
             </label>
           </div>
           <label className="block text-md font-semibold text-slate-500 space-y-1.5">
@@ -200,7 +204,7 @@ export default function ContactForm() {
             <input
               className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 rounded-xl bg-white text-slate-900 text-sm focus:outline-none focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition"
               name="request_subtype"
-              placeholder="Loan, fund, partnership, investment offering…"
+              // placeholder="Loan, fund, partnership, investment offering…"
             />
           </label>
         </fieldset>
@@ -220,7 +224,9 @@ export default function ContactForm() {
             </label>
             <label className="block text-md font-semibold text-slate-500 space-y-1.5">
               Website <em className="text-slate-400 font-normal not-italic">optional</em>
-              <input className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 rounded-xl bg-white text-slate-900 text-sm focus:outline-none focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition" name="related_url" type="url" placeholder="https://…" />
+              <input className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 rounded-xl bg-white text-slate-900 text-sm focus:outline-none focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition" name="related_url" type="url"
+              //  placeholder="https://…" 
+               />
             </label>
           </div>
         </fieldset>
@@ -228,17 +234,17 @@ export default function ContactForm() {
       <label className="block text-md font-semibold text-slate-500 space-y-1.5">
         Your message
         <textarea
-          className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 rounded-xl bg-[#f8fafc] text-slate-900 text-sm focus:outline-none focus:bg-white focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition resize-y"
+          className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 bg-[#f8fafc] text-slate-900 text-sm focus:outline-none focus:bg-white focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition resize-y"
           name="message"
           rows={7}
           required
           minLength={10}
-          placeholder="Please include the details we will need to respond…"
+          // placeholder="Please include the details we will need to respond…"
         />
       </label>
       <label className="block text-md font-semibold text-slate-500 space-y-1.5">
         Preferred response method
-        <select name="response_method" className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 rounded-xl bg-[#f8fafc] text-slate-900 text-sm focus:outline-none focus:bg-white focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition cursor-pointer">
+        <select name="response_method" className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 bg-[#f8fafc] text-slate-900 text-sm focus:outline-none focus:bg-white focus:border-[#c69b46] focus:ring-2 focus:ring-[#c69b46]/20 transition cursor-pointer">
           <option>Email</option>
           <option>Phone</option>
           <option>Either email or phone</option>
@@ -247,7 +253,7 @@ export default function ContactForm() {
       <label className="block text-md font-semibold text-slate-500 space-y-1.5">
         Supporting document <em className="text-slate-400 font-normal not-italic">optional</em>
         <input
-          className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 rounded-xl bg-[#f8fafc] text-slate-900 text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#102a43] file:text-white cursor-pointer"
+          className="w-full mt-1.5 px-3.5 py-3 border border-slate-300 bg-[#f8fafc] text-slate-900 text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#102a43] file:text-white cursor-pointer"
           name="attachment"
           type="file"
           accept="application/pdf,image/png,image/jpeg,image/webp,.doc,.docx"
@@ -255,7 +261,7 @@ export default function ContactForm() {
         <small className="block text-[10px] font-medium text-slate-400 mt-1">PDF, Word document, JPG, PNG, or WEBP up to 10 MB.</small>
       </label>
       <button className="w-fit px-4 mt-3 py-3.5 px-6 bg-[#102a43] hover:bg-[#102a43]/90 text-white font-bold text-sm tracking-wide transition shadow-sm cursor-pointer disabled:opacity-50" style={{ color: 'white' }} type="submit" disabled={busy}>
-        {busy ? 'Submitting…' : 'Submit Message →'}
+        {busy ? 'Submitting…' : 'Submit Message'}
       </button>
       {notice && (
         <p className="p-3.5 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl" aria-live="polite">

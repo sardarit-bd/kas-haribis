@@ -73,24 +73,24 @@ export default function GenealogyRequestForm() {
 
   return (
     <form
-      className="p-6 sm:p-8 bg-gray-50 border border-gray-100 space-y-6"
+      className="p-6 sm:p-8 bg-gray-50 border border-gray-100 space-y-6 "
       onSubmit={submit}
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-md font-semibold text-slate-700">
             Full name <span className="text-red-500">*</span>
           </label>
           <input
             name="name"
             autoComplete="name"
             required
-            placeholder="e.g. David Cohen"
-            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
+            // placeholder="e.g. David Cohen"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
         </div>
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-md font-semibold text-slate-700">
             Email address <span className="text-red-500">*</span>
           </label>
           <input
@@ -98,15 +98,15 @@ export default function GenealogyRequestForm() {
             type="email"
             autoComplete="email"
             required
-            placeholder="you@example.com"
-            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
+            // placeholder="you@example.com"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-md font-semibold text-slate-700">
             Phone number <span className="text-red-500">*</span>
           </label>
           <input
@@ -114,31 +114,31 @@ export default function GenealogyRequestForm() {
             type="tel"
             autoComplete="tel"
             required
-            placeholder="(555) 000-0000"
-            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
+            // placeholder="(555) 000-0000"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
         </div>
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-md font-semibold text-slate-700">
             Organization <span className="text-xs font-normal text-slate-400">(optional)</span>
           </label>
           <input
             name="organization"
-            placeholder="Company or institution name"
-            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
+            // placeholder="Company or institution name"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
         </div>
       </div>
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-md font-semibold text-slate-700">
           Research purpose <span className="text-red-500">*</span>
         </label>
         <select
           name="request_subtype"
           required
           defaultValue=""
-          className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all cursor-pointer"
+          className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all cursor-pointer"
         >
           <option value="" disabled>
             Choose the purpose
@@ -152,42 +152,42 @@ export default function GenealogyRequestForm() {
       </div>
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-md font-semibold text-slate-700">
           Person, family, business, or institution being researched <span className="text-red-500">*</span>
         </label>
         <input
           name="related_name"
           required
-          placeholder="Name or entity to investigate"
-          className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
+          // placeholder="Name or entity to investigate"
+          className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
         />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-md font-semibold text-slate-700">
             Relevant locations <span className="text-xs font-normal text-slate-400">(optional)</span>
           </label>
           <input
             name="location"
-            placeholder="Cities, states, or countries"
-            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
+            // placeholder="Cities, states, or countries"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
         </div>
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-md font-semibold text-slate-700">
             Approximate years or generations <span className="text-xs font-normal text-slate-400">(optional)</span>
           </label>
           <input
             name="audience"
-            placeholder="e.g. 1920–present"
-            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
+            // placeholder="e.g. 1920–present"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
         </div>
       </div>
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-md font-semibold text-slate-700">
           What needs to be investigated? <span className="text-red-500">*</span>
         </label>
         <textarea
@@ -195,13 +195,13 @@ export default function GenealogyRequestForm() {
           rows={6}
           minLength={20}
           required
-          placeholder="Please explain the question, what facts you already know, and the results you are trying to clarify..."
-          className="w-full p-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all leading-relaxed"
+          // placeholder="Please explain the question, what facts you already know, and the results you are trying to clarify..."
+          className="w-full p-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all leading-relaxed"
         />
       </div>
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-md font-semibold text-slate-700">
           Preferred response method
         </label>
         <select
@@ -215,7 +215,7 @@ export default function GenealogyRequestForm() {
       </div>
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-md font-semibold text-slate-700">
           Supporting records <span className="text-xs font-normal text-slate-400">(optional)</span>
         </label>
         <div className="p-3 bg-white border border-dashed border-slate-300 rounded-xl text-xs text-slate-600">

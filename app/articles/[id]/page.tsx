@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
-import { InteriorPage } from '../../shared/site-shell';
+import { MdKeyboardBackspace } from "react-icons/md";
 import { ensureArticles } from '../../lib/directories';
+import { InteriorPage, SiteFooter, SiteHeader } from '../../shared/site-shell';
 export const dynamic = 'force-dynamic';
 export default async function Page({
   params,
@@ -25,14 +26,20 @@ export default async function Page({
       )
     : [];
   return (
+    <>
+    <SiteHeader/>
     <InteriorPage
       eyebrow="KAV HARIBIS PUBLICATION"
       title={x.title}
       intro={x.summary || 'A concise publication on practical Hilchos Ribbis.'}
-    >
+    />
       <section className="articleReader">
         <div className="readerHeading">
           <div>
+            <a className='flex items-center gap-2' href="/articles">
+              <MdKeyboardBackspace />
+              <b className=''>All articles</b>
+            </a>
             <span>
               {sourceMismatch
                 ? '1 page available'
@@ -49,7 +56,7 @@ export default async function Page({
             <b>{x.author || 'Kav Haribis'}</b>
           </div>
           <div>
-            <a href="/articles">← All articles</a>
+            
             {!sourceMismatch && (
               <a
                 className="primary"
@@ -84,6 +91,7 @@ export default async function Page({
           <iframe title={x.title} src={`${x.pdf_url}#view=FitH&toolbar=1`} />
         )}
       </section>
-    </InteriorPage>
+      <SiteFooter/>
+    </>
   );
 }

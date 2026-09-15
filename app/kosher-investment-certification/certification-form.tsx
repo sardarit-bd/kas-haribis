@@ -77,46 +77,46 @@ export default function CertificationForm() {
           <span className="w-1.5 h-1.5 rounded-full bg-[#c69b46] hidden"></span>
           Confidential Initial Application
         </div>
-        <h3 className="text-xl sm:text-2xl font-serif font-semibold text-[#102a43] pt-1">
+        <h3 className="text-xl sm:text-3xl font-serif font-semibold text-[#102a43] pt-1">
           Institution or Investment Details
         </h3>
-        <p className="text-xs text-slate-500">
+        <p className="text-md text-slate-500">
           Please provide initial details regarding your entity, financial structure, and contact information.
         </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-md font-medium text-slate-700">
             Company, bank, or sponsor name <span className="text-red-500">*</span>
           </label>
           <input
             name="company_name"
             required
-            placeholder="e.g. Acme Capital Partners"
-            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
+            // placeholder="e.g. Acme Capital Partners"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
         </div>
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-md font-medium text-slate-700">
             Offering, product, or institution name
           </label>
           <input
             name="offering_name"
-            placeholder="e.g. Real Estate Debt Fund I"
-            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
+            // placeholder="e.g. Real Estate Debt Fund I"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-md font-medium text-slate-700">
             Review type
           </label>
           <select
             name="investment_type"
-            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all cursor-pointer"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all cursor-pointer"
           >
             <option>Bank certification</option>
             <option>Mortgage company certification</option>
@@ -132,31 +132,31 @@ export default function CertificationForm() {
           </select>
         </div>
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-md font-medium text-slate-700">
             Minimum investment or loan amount
           </label>
           <input
             name="minimum_investment"
-            placeholder="e.g. $100,000 (if applicable)"
-            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
+            // placeholder="e.g. $100,000 (if applicable)"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
         </div>
       </div>
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-md font-medium text-slate-700">
           Website <span className="text-xs font-normal text-slate-400">(optional)</span>
         </label>
         <input
           name="website"
           type="url"
-          placeholder="https://example.com"
-          className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
+          // placeholder="https://example.com"
+          className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
         />
       </div>
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-md font-medium text-slate-700">
           Financial structure description <span className="text-red-500">*</span>
         </label>
         <textarea
@@ -164,31 +164,31 @@ export default function CertificationForm() {
           minLength={20}
           rows={5}
           required
-          placeholder="Please explain the ownership structure, funding sources, returns or interest rates, repayment terms, guarantees, fees, distributions, and involved parties..."
-          className="w-full p-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all leading-relaxed"
+          // placeholder="Please explain the ownership structure, funding sources, returns or interest rates, repayment terms, guarantees, fees, distributions, and involved parties..."
+          className="w-full p-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all leading-relaxed"
         />
       </div>
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-md font-medium text-slate-700">
           Intended investors or borrowers
         </label>
         <textarea
           name="investor_profile"
           rows={3}
-          placeholder="e.g. Individual retail investors, accredited investors, institutional clients, homeowners..."
-          className="w-full p-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all leading-relaxed"
+          // placeholder="e.g. Individual retail investors, accredited investors, institutional clients, homeowners..."
+          className="w-full p-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all leading-relaxed"
         />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-md font-medium text-slate-700">
             Current Heter Iska status
           </label>
           <select
             name="current_heter_iska"
-            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all cursor-pointer"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all cursor-pointer"
           >
             <option>No Heter Iska yet</option>
             <option>Existing Heter Iska available</option>
@@ -196,22 +196,22 @@ export default function CertificationForm() {
           </select>
         </div>
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-md font-medium text-slate-700">
             Desired timeline
           </label>
           <input
             name="desired_timeline"
-            placeholder="e.g. Next 2-3 weeks / Before Q4 launch"
-            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
+            // placeholder="e.g. Next 2-3 weeks / Before Q4 launch"
+            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
         </div>
       </div>
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-md font-medium text-slate-700">
           Principal agreement or supporting document <span className="text-xs font-normal text-slate-400">(optional)</span>
         </label>
-        <div className="p-3 bg-slate-50/70 border border-dashed border-slate-300 rounded-xl text-xs text-slate-600">
+        <div className="p-3 bg-slate-50/70 border border-dashed border-slate-300 text-xs text-slate-600">
           <input
             name="attachment"
             type="file"
@@ -223,54 +223,54 @@ export default function CertificationForm() {
       </div>
 
       <div className="pt-2">
-        <div className="p-4 sm:p-5 bg-slate-50/60 border border-slate-200/80 rounded-xl space-y-4">
-          <h4 className="text-xs font-semibold text-[#102a43] uppercase tracking-wider">
+        <div className="p-4 sm:p-5 bg-slate-50/60 border border-slate-200/80 space-y-4">
+          <h4 className="text-sm font-semibold text-[#102a43] uppercase tracking-wider">
             Contact Information
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-slate-700">
+              <label className="block text-sm font-medium text-slate-700">
                 Contact name <span className="text-red-500">*</span>
               </label>
               <input
                 name="contact_name"
                 required
-                placeholder="Full name"
-                className="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
+                // placeholder="Full name"
+                className="w-full h-10 px-3 bg-white border border-slate-200 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-slate-700">
+              <label className="block text-sm font-medium text-slate-700">
                 Email address <span className="text-red-500">*</span>
               </label>
               <input
                 name="email"
                 type="email"
                 required
-                placeholder="name@company.com"
-                className="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
+                // placeholder="name@company.com"
+                className="w-full h-10 px-3 bg-white border border-slate-200 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
               />
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-slate-700">
+              <label className="block text-sm font-medium text-slate-700">
                 Phone number
               </label>
               <input
                 name="phone"
                 type="tel"
-                placeholder="(555) 000-0000"
-                className="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
+                // placeholder="(555) 000-0000"
+                className="w-full h-10 px-3 bg-white border border-slate-200 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-slate-700">
+              <label className="block text-sm font-medium text-slate-700">
                 Preferred response method
               </label>
               <select
                 name="response_method"
-                className="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all cursor-pointer"
+                className="w-full h-10 px-3 bg-white border border-slate-200 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all cursor-pointer"
               >
                 <option>Email</option>
                 <option>Phone</option>
@@ -281,7 +281,7 @@ export default function CertificationForm() {
         </div>
       </div>
 
-      <label className="flex items-start gap-3 text-xs text-slate-600 leading-relaxed cursor-pointer select-none">
+      <label className="flex items-start gap-3 text-sm text-slate-600 leading-relaxed cursor-pointer select-none">
         <input
           type="checkbox"
           required

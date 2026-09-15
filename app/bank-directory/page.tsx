@@ -16,8 +16,8 @@ export default async function BankDirectory() {
         <section className="relative overflow-hidden bg-gradient-to-br from-[#071728] via-[#102a43] to-[#0e304b] text-white">
           <div className="container px-4 sm:px-8 py-[80px] grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-[50px] items-center relative z-10">
             <div className="relative z-10">
-              <p className="text-[#c69b46] font-meduim text-sm tracking-widest uppercase mb-1">
-                KOSHER BANK RESEARCH CENTER
+              <p className="text-[#c69b46] font-meduim text-base mb-1">
+                Kosher Bank Research Center
               </p>
               <h1 className="text-white font-serif font-meduim text-3xl sm:text-4xl md:text-5xl lg:text-[58px] leading-[1.1] my-3">
                 Kosher Bank Directory

@@ -53,7 +53,6 @@ export default function PersonalizedHeterForm() {
   return (
     <form className="p-[27px_18px] min-[651px]:p-[38px] border border-[#e0e5e7] border-t-4 border-t-[#c69b46] rounded-[10px] bg-white shadow-[0_25px_70px_#17364c1c]" onSubmit={submit}>
       <div className="mb-4">
-        <small className="text-[#9a752d] text-[9px] font-extrabold tracking-[0.15em] uppercase">SECURE REQUEST FORM</small>
         <h2 className="my-[8px] text-[#102a43] font-serif font-medium text-[29px] min-[651px]:text-[35px] leading-[1.15]">Tell us about your lending structure</h2>
         <p className="text-[#637282] leading-[1.6]">
           Please provide enough information for an initial review. Do not
@@ -73,26 +72,26 @@ export default function PersonalizedHeterForm() {
         }
       />
       <div className="grid grid-cols-1 min-[651px]:grid-cols-2 gap-[16px]">
-        <label className="block my-[16px] text-[#344c5e] text-[12px] font-extrabold">
+        <label className="block my-[16px] text-[#344c5e] text-md font-semibold">
           Full name
           <input className="block w-full mt-[8px] p-[13px_14px] border border-[#ccd6dc] rounded-[5px] bg-[#fcfdfd] text-[#172431] font-normal outline-none focus:border-[#c69b46] focus:ring-3 focus:ring-[#c69b4618]" name="name" required autoComplete="name" />
         </label>
-        <label className="block my-[16px] text-[#344c5e] text-[12px] font-extrabold">
+        <label className="block my-[16px] text-[#344c5e] text-md font-semibold">
           Email address
           <input className="block w-full mt-[8px] p-[13px_14px] border border-[#ccd6dc] rounded-[5px] bg-[#fcfdfd] text-[#172431] font-normal outline-none focus:border-[#c69b46] focus:ring-3 focus:ring-[#c69b4618]" name="email" type="email" required autoComplete="email" />
         </label>
       </div>
       <div className="grid grid-cols-1 min-[651px]:grid-cols-2 gap-[16px]">
-        <label className="block my-[16px] text-[#344c5e] text-[12px] font-extrabold">
+        <label className="block my-[16px] text-[#344c5e] text-md font-semibold">
           Phone number
           <input className="block w-full mt-[8px] p-[13px_14px] border border-[#ccd6dc] rounded-[5px] bg-[#fcfdfd] text-[#172431] font-normal outline-none focus:border-[#c69b46] focus:ring-3 focus:ring-[#c69b4618]" name="phone" type="tel" required autoComplete="tel" />
         </label>
-        <label className="block my-[16px] text-[#344c5e] text-[12px] font-extrabold">
+        <label className="block my-[16px] text-[#344c5e] text-md font-semibold">
           Institution or lender name
           <input className="block w-full mt-[8px] p-[13px_14px] border border-[#ccd6dc] rounded-[5px] bg-[#fcfdfd] text-[#172431] font-normal outline-none focus:border-[#c69b46] focus:ring-3 focus:ring-[#c69b4618]" name="organization" required />
         </label>
       </div>
-      <label className="block my-[16px] text-[#344c5e] text-[12px] font-extrabold">
+      <label className="block my-[16px] text-[#344c5e] text-md font-semibold">
         Type of institution or lending activity
         <select className="block w-full mt-[8px] p-[13px_14px] border border-[#ccd6dc] rounded-[5px] bg-[#fcfdfd] text-[#172431] font-normal outline-none focus:border-[#c69b46] focus:ring-3 focus:ring-[#c69b4618]" name="related_name" required defaultValue="">
           <option value="" disabled>
@@ -107,7 +106,7 @@ export default function PersonalizedHeterForm() {
           <option>Other</option>
         </select>
       </label>
-      <label className="block my-[16px] text-[#344c5e] text-[12px] font-extrabold">
+      <label className="block my-[16px] text-[#344c5e] text-md font-semibold">
         Describe the ownership, products, agreements, and lending structure
         <textarea
           className="block w-full mt-[8px] p-[13px_14px] border border-[#ccd6dc] rounded-[5px] bg-[#fcfdfd] text-[#172431] font-normal outline-none focus:border-[#c69b46] focus:ring-3 focus:ring-[#c69b4618] resize-y"
@@ -115,10 +114,10 @@ export default function PersonalizedHeterForm() {
           rows={7}
           minLength={20}
           required
-          placeholder="Describe who lends, who borrows, the types of loans or financing offered, and any special terms…"
+          // placeholder="Describe who lends, who borrows, the types of loans or financing offered, and any special terms…"
         />
       </label>
-      <label className="block my-[16px] text-[#344c5e] text-[12px] font-extrabold">
+      <label className="block my-[16px] text-[#344c5e] text-md font-semibold">
         Preferred response method
         <select className="block w-full mt-[8px] p-[13px_14px] border border-[#ccd6dc] rounded-[5px] bg-[#fcfdfd] text-[#172431] font-normal outline-none focus:border-[#c69b46] focus:ring-3 focus:ring-[#c69b4618]" name="response_method">
           <option>Email</option>
@@ -126,7 +125,7 @@ export default function PersonalizedHeterForm() {
           <option>Either email or phone</option>
         </select>
       </label>
-      <label className="block my-[16px] text-[#344c5e] text-[12px] font-extrabold">
+      <label className="block my-[16px] text-[#344c5e] text-md font-semibold">
         Supporting document <em className="not-italic text-[#88949c] font-normal">optional</em>
         <input
           className="block w-full mt-[8px] p-[13px_14px] border border-[#ccd6dc] rounded-[5px] bg-[#fcfdfd] text-[#172431] font-normal outline-none focus:border-[#c69b46] focus:ring-3 focus:ring-[#c69b4618]"
@@ -148,12 +147,12 @@ export default function PersonalizedHeterForm() {
         />
         <span className="flex flex-col gap-[6px] text-[#344c5e] font-normal text-[14px]">Check this box if you would like the discounted $120 price.</span>
       </label>
-      <div className="flex items-center justify-between -mt-[8px] mb-[18px] p-[14px_18px] rounded-[6px] bg-[#102a43] text-white">
-        <span className="text-[11px] font-extrabold tracking-[0.1em] uppercase">Requested price</span>
+      <div className="flex items-center justify-between -mt-[8px] mb-[18px] p-[14px_18px] rounded-[6px] text-white">
+        <span className="text-xl font-semibold text-black tracking-[0.1em]">Requested price</span>
         <strong className="text-[#efd18b] font-serif text-[30px] font-bold">{discount ? '$120' : '$250'}</strong>
       </div>
-      <button className="w-full inline-flex justify-center items-center p-[15px] rounded-[5px] border-0 bg-[#c69b46] hover:bg-[#b58a35] text-white font-bold cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled={busy}>
-        {busy ? 'Submitting…' : 'Submit Personalized Heter Iska Request →'}
+      <button className="w-full px-8 inline-flex justify-center items-center p-[15px] rounded-[5px] border-0 bg-[#c69b46] hover:bg-[#b58a35] text-white font-bold cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled={busy}>
+        {busy ? 'Submitting…' : 'Submit Personalized Heter Iska Request'}
       </button>
       {error && (
         <p className="text-[#a52d2d] bg-[#fff0f0] p-[10px] rounded-[4px] mt-3 text-sm" role="alert">

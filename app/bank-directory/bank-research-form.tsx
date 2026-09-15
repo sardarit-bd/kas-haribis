@@ -44,32 +44,32 @@ export default function BankResearchForm() {
         {/* Intro Side */}
         <div className="lg:col-span-5 space-y-6">
           <div>
-            <h2 className="text-[#102a43] font-serif font-bold text-2xl sm:text-3xl lg:text-4xl leading-tight">
+            <h2 className="text-[#102a43] font-serif font-meduim text-2xl sm:text-3xl lg:text-4xl leading-tight">
               Help strengthen the directory
             </h2>
           </div>
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+          <p className="text-slate-600 text-sm sm:text-base">
             Know something about a bank, lender, mortgage company, credit union,
             or financing provider? Request new research or securely share
             information with Kav Haribis.
           </p>
           <div className="space-y-3 pt-2">
-            <div className="flex items-center gap-3.5 p-3.5 bg-white text-xs sm:text-sm font-medium text-[#102a43] border border-gray-100">
+            <div className="flex items-center gap-3.5 p-3.5 bg-white text-xs sm:text-base font-semibold text-[#102a43] border border-gray-100">
               <span className="w-7 h-7 rounded-lg bg-[#102a43]/10 text-[#102a43] flex items-center justify-center text-xs shrink-0 font-bold">01</span>
               <span>Request research on an unlisted lender</span>
             </div>
-            <div className="flex items-center gap-3.5 p-3.5 bg-white border-gray-100 text-xs sm:text-sm font-medium text-[#102a43]">
+            <div className="flex items-center gap-3.5 p-3.5 bg-white border-gray-100 text-xs sm:text-base font-semibold text-[#102a43]">
               <span className="w-7 h-7 rounded-lg bg-[#102a43]/10 text-[#102a43] flex items-center justify-center text-xs shrink-0 font-bold">02</span>
               <span>Share new documents or information</span>
             </div>
-            <div className="flex items-center gap-3.5 p-3.5 bg-white border-gray-100 text-xs sm:text-sm font-medium text-[#102a43]">
+            <div className="flex items-center gap-3.5 p-3.5 bg-white border-gray-100 text-xs sm:text-base font-semibold text-[#102a43]">
               <span className="w-7 h-7 rounded-lg bg-[#102a43]/10 text-[#102a43] flex items-center justify-center text-xs shrink-0 font-bold">03</span>
               <span>Request an update to an existing listing</span>
             </div>
           </div>
           <aside className="p-4 bg-slate-50 border-l-4 border-[#102a43] rounded-r-xl space-y-1">
-            <strong className="text-xs font-semibold text-[#102a43] block">Privacy Reminder</strong>
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <strong className="text-base font-semibold text-[#102a43] block">Privacy Reminder</strong>
+            <p className="text-sm text-slate-600 leading-relaxed">
               Never upload account numbers, passwords, card details, or other
               private financial credentials.
             </p>
@@ -92,7 +92,7 @@ export default function BankResearchForm() {
                 </p>
               </div>
 
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200/80 max-w-sm mx-auto space-y-1">
+              <div className="bg-slate-50 p-4  border border-slate-200/80 max-w-sm mx-auto space-y-1">
                 <span className="text-xs text-slate-500 font-medium block">Your Reference Number</span>
                 <strong className="text-xl font-mono text-[#a37828] block">{reference}</strong>
               </div>
@@ -102,7 +102,7 @@ export default function BankResearchForm() {
               </p>
 
               <button
-                className="mt-2 px-6 py-2.5 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-semibold rounded-xl transition-all shadow-sm cursor-pointer"
+                className="mt-2 px-6 py-2.5 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-semibold  transition-all shadow-sm cursor-pointer"
                 onClick={() => setReference('')}
               >
                 Submit Another Lender
@@ -111,20 +111,20 @@ export default function BankResearchForm() {
           ) : (
             <form onSubmit={submit} className="p-6 sm:p-8 bg-white border border-gray-100 space-y-6">
               <div className="border-b border-slate-100 pb-4">
-                <h3 className="text-xl font-serif font-bold text-[#102a43]">
+                <h3 className="text-3xl font-serif font-bold text-[#102a43]">
                   Submit Information
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+                <p className="text-xs sm:text-base text-slate-500 mt-0.5">
                   Select a request type and fill in the details for our research team.
                 </p>
               </div>
 
               {/* Segmented Request Mode Selector */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700 block">
+                <label className="text-base font-semibold text-slate-700/90 block">
                   Request Type <span className="text-rose-500">*</span>
                 </label>
-                <div className="bg-slate-100/80 p-1 rounded-xl grid grid-cols-1 sm:grid-cols-3 gap-1 border border-slate-200/60">
+                <div className="bg-slate-100/80 p-1  grid grid-cols-1 sm:grid-cols-3 gap-1 border border-slate-200/60">
                   {[
                     'Request research on a lender',
                     'Share new lender information',
@@ -136,9 +136,9 @@ export default function BankResearchForm() {
                         key={choice}
                         type="button"
                         onClick={() => setMode(choice)}
-                        className={`py-2 px-3 rounded-lg text-xs font-medium transition-all text-center cursor-pointer ${
+                        className={`py-2 px-2 text-sm font-medium transition-all text-center cursor-pointer ${
                           isSelected
-                            ? 'bg-white text-[#102a43] font-semibold shadow-sm border border-slate-200/80'
+                            ? 'bg-yellow-500 text-white font-semibold shadow-sm'
                             : 'text-slate-600 hover:text-slate-900'
                         }`}
                       >
@@ -151,37 +151,37 @@ export default function BankResearchForm() {
 
               {/* Institution Name */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700 flex items-center justify-between">
+                <label className="text-base font-semibold text-slate-700/90 flex items-center justify-between">
                   <span>Bank, Lender, or Institution Name <span className="text-rose-500">*</span></span>
                 </label>
                 <input
                   name="related_name"
                   required
-                  placeholder="e.g. Chase Bank, Rocket Mortgage"
-                  className="w-full h-11 px-3.5 bg-[#f8fafc] focus:bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
+                  // placeholder="e.g. Chase Bank, Rocket Mortgage"
+                  className="w-full h-11 px-3.5 bg-[#f8fafc] focus:bg-white border border-slate-100 hover:border-slate-300  text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
                 />
               </div>
 
               {/* Website & Relationship row */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-700 flex items-center justify-between">
+                  <label className="text-base font-semibold text-slate-700/90 flex items-center justify-between">
                     <span>Website <span className="text-slate-400 font-normal">(optional)</span></span>
                   </label>
                   <input
                     name="related_url"
                     type="url"
-                    placeholder="https://..."
-                    className="w-full h-11 px-3.5 bg-[#f8fafc] focus:bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
+                    // placeholder="https://..."
+                    className="w-full h-11 px-3.5 bg-[#f8fafc] focus:bg-white border border-slate-100 hover:border-slate-300  text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-700 flex items-center justify-between">
+                  <label className="text-base font-semibold text-slate-700/90 flex items-center justify-between">
                     <span>Your Relationship <span className="text-slate-400 font-normal">(optional)</span></span>
                   </label>
                   <select
                     name="organization"
-                    className="w-full h-11 px-3.5 bg-[#f8fafc] focus:bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-sm text-slate-800 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
+                    className="w-full h-11 px-3.5 bg-[#f8fafc] focus:bg-white border border-slate-100 hover:border-slate-300  text-sm text-slate-800 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
                   >
                     <option value="">Select relationship</option>
                     <option>Customer or borrower</option>
@@ -195,7 +195,7 @@ export default function BankResearchForm() {
 
               {/* Textarea */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700 block">
+                <label className="text-base font-semibold text-slate-700/90 block">
                   Information or Details <span className="text-rose-500">*</span>
                 </label>
                 <textarea
@@ -203,21 +203,21 @@ export default function BankResearchForm() {
                   rows={4}
                   minLength={10}
                   required
-                  placeholder={
-                    mode === 'Request research on a lender'
-                      ? 'Describe what lender or financing product you would like researched...'
-                      : 'Provide details about the information, document, or listing update...'
-                  }
-                  className="w-full p-3.5 bg-[#f8fafc] focus:bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
+                  // placeholder={
+                  //   mode === 'Request research on a lender'
+                  //     ? 'Describe what lender or financing product you would like researched...'
+                  //     : 'Provide details about the information, document, or listing update...'
+                  // }
+                  className="w-full p-3.5 bg-[#f8fafc] focus:bg-white border border-slate-100 hover:border-slate-300  text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
                 />
               </div>
 
               {/* Supporting document */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700 flex items-center justify-between">
+                <label className="text-base font-semibold text-slate-700/90 flex items-center justify-between">
                   <span>Supporting Document <span className="text-slate-400 font-normal">(optional)</span></span>
                 </label>
-                <div className="bg-[#f8fafc] border border-slate-200 hover:border-slate-300 rounded-xl p-3 flex items-center gap-3">
+                <div className="bg-[#f8fafc] border border-slate-200 hover:border-slate-300  p-3 flex items-center gap-3">
                   <input
                     type="file"
                     name="attachment"
@@ -231,19 +231,19 @@ export default function BankResearchForm() {
               {/* User Name & Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-700 block">
+                  <label className="text-base font-semibold text-slate-700/90 block">
                     Your Name <span className="text-rose-500">*</span>
                   </label>
                   <input
                     name="name"
                     autoComplete="name"
                     required
-                    placeholder="Full name"
-                    className="w-full h-11 px-3.5 bg-[#f8fafc] focus:bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
+                    // placeholder="Full name"
+                    className="w-full h-11 px-3.5 bg-[#f8fafc] focus:bg-white border border-slate-100 hover:border-slate-300  text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-700 block">
+                  <label className="text-base font-semibold text-slate-700/90 block">
                     Email Address <span className="text-rose-500">*</span>
                   </label>
                   <input
@@ -251,8 +251,8 @@ export default function BankResearchForm() {
                     type="email"
                     autoComplete="email"
                     required
-                    placeholder="email@example.com"
-                    className="w-full h-11 px-3.5 bg-[#f8fafc] focus:bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
+                    // placeholder="email@example.com"
+                    className="w-full h-11 px-3.5 bg-[#f8fafc] focus:bg-white border border-slate-100 hover:border-slate-300 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
                   />
                 </div>
               </div>
@@ -260,24 +260,24 @@ export default function BankResearchForm() {
               {/* Phone & Response method */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-700 flex items-center justify-between">
+                  <label className="text-base font-semibold text-slate-700/90 flex items-center justify-between">
                     <span>Phone <span className="text-slate-400 font-normal">(optional)</span></span>
                   </label>
                   <input
                     name="phone"
                     type="tel"
                     autoComplete="tel"
-                    placeholder="(555) 000-0000"
-                    className="w-full h-11 px-3.5 bg-[#f8fafc] focus:bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
+                    // placeholder="(555) 000-0000"
+                    className="w-full h-11 px-3.5 bg-[#f8fafc] focus:bg-white border border-slate-100 hover:border-slate-300 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-700 block">
+                  <label className="text-base font-semibold text-slate-700/90 block">
                     Preferred Response Method
                   </label>
                   <select
                     name="response_method"
-                    className="w-full h-11 px-3.5 bg-[#f8fafc] focus:bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-sm text-slate-800 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
+                    className="w-full h-11 px-3.5 bg-[#f8fafc] focus:bg-white border border-slate-100 hover:border-slate-300 text-sm text-slate-800 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
                   >
                     <option>Email</option>
                     <option>Phone</option>
@@ -287,7 +287,7 @@ export default function BankResearchForm() {
               </div>
 
               <button
-                className="w-full h-12 bg-[#102a43] hover:bg-[#173f5f] text-white font-semibold text-sm transition-all shadow-sm hover:shadow-md cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-fit px-8 h-12 bg-[#102a43] hover:bg-[#173f5f] text-white text-base transition-all shadow-sm hover:shadow-md cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
                 disabled={busy}
               >
                 {busy ? (
@@ -301,7 +301,7 @@ export default function BankResearchForm() {
               </button>
 
               {error && (
-                <p className="text-xs text-rose-700 bg-rose-50 p-3.5 rounded-xl border border-rose-200 text-center">
+                <p className="text-xs text-rose-700 bg-rose-50 p-3.5  border border-rose-200 text-center">
                   ⚠️ {error}
                 </p>
               )}

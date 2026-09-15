@@ -79,26 +79,26 @@ export default function BaisHoraahQuestionForm() {
         <h2 className="text-xl sm:text-2xl font-serif font-semibold text-[#102a43]">
           Ask the Bais Horaah
         </h2>
-        <p className="text-xs text-slate-500">
+        <p className="text-md text-slate-500">
           Submit your Halachic inquiry confidentially. Required fields are marked with an asterisk (<span className="text-red-500">*</span>).
         </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-md font-semibold text-slate-700/80">
             Full name <span className="text-red-500">*</span>
           </label>
           <input
             name="name"
             autoComplete="name"
             required
-            placeholder="e.g. David Cohen"
-            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
+            // placeholder="e.g. David Cohen"
+            className="w-full h-11 px-3.5 bg-white border border-slate-100 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
         </div>
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-md font-semibold text-slate-700/80">
             Email address <span className="text-red-500">*</span>
           </label>
           <input
@@ -106,32 +106,32 @@ export default function BaisHoraahQuestionForm() {
             type="email"
             autoComplete="email"
             required
-            placeholder="you@example.com"
-            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
+            // placeholder="you@example.com"
+            className="w-full h-11 px-3.5 bg-white border border-slate-100 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-md font-semibold text-slate-700/80">
             Phone number
           </label>
           <input
             name="phone"
             type="tel"
             autoComplete="tel"
-            placeholder="(555) 000-0000"
-            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
+            // placeholder="(555) 000-0000"
+            className="w-full h-11 px-3.5 bg-white border border-slate-100 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all"
           />
         </div>
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-md font-semibold text-slate-700/80">
             Preferred response method
           </label>
           <select
             name="preferred"
-            className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all cursor-pointer"
+            className="w-full h-11 px-3.5 bg-white border border-slate-100 text-sm font-normal text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all cursor-pointer"
           >
             <option>Email</option>
             <option>Phone call</option>
@@ -141,12 +141,12 @@ export default function BaisHoraahQuestionForm() {
       </div>
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-md font-semibold text-slate-700/80">
           Question category
         </label>
         <select
           name="topic"
-          className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all cursor-pointer"
+          className="w-full h-11 px-3.5 bg-white border border-slate-100 text-sm font-normal text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all cursor-pointer"
         >
           <option>Loan or repayment</option>
           <option>Heter Iska</option>
@@ -159,19 +159,19 @@ export default function BaisHoraahQuestionForm() {
       </div>
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-md font-semibold text-slate-700/80">
           Your question <span className="text-red-500">*</span>
         </label>
         <textarea
           name="question"
           required
           rows={6}
-          placeholder="Please describe the arrangement, the parties involved, what money or benefit is being given or received, and any relevant deadlines or context..."
-          className="w-full p-3.5 bg-slate-50/50 border border-slate-200 rounded-xl text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all leading-relaxed"
+          // placeholder="Please describe the arrangement, the parties involved, what money or benefit is being given or received, and any relevant deadlines or context..."
+          className="w-full p-3.5 bg-white border border-slate-100 text-sm font-normal text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] focus:bg-white transition-all leading-relaxed"
         />
       </div>
 
-      <label className="flex items-start gap-3 text-xs text-slate-600 leading-relaxed cursor-pointer select-none">
+      <label className="flex items-start gap-3 text-md text-slate-600 leading-relaxed cursor-pointer select-none">
         <input
           type="checkbox"
           required

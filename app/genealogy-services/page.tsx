@@ -77,25 +77,27 @@ export default function GenealogyServicesPage() {
 
 
       {/* Request Form Container */}
-      <section className="container bg-gray-200 py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start" id="genealogy-request">
-        <div className="lg:col-span-5 space-y-6">
-          <div>
-            <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1 hidden">REQUEST GENEALOGY RESEARCH</p>
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#102a43]">Tell us what you need investigated</h2>
+      <section className='container pb-12'>
+        <section className="container bg-gray-200 py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start" id="genealogy-request">
+          <div className="lg:col-span-5 space-y-6">
+            <div>
+              <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1 hidden">REQUEST GENEALOGY RESEARCH</p>
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#102a43]">Tell us what you need investigated</h2>
+            </div>
+            <p className="text-md text-[#64748b] leading-relaxed">
+              Include as much helpful background as possible. Do not submit Social
+              Security numbers, account numbers, passwords, or other highly
+              sensitive personal information.
+            </p>
+            <div className="p-4 bg-[#f8fafc] border-l-4 border-[#102a43] rounded-r-xl space-y-1">
+              <b className="text-md font-bold text-[#102a43] block">Pricing is determined after review.</b>
+              <span className="text-md text-[#64748b] block">Submitting this form does not obligate you to proceed.</span>
+            </div>
           </div>
-          <p className="text-md text-[#64748b] leading-relaxed">
-            Include as much helpful background as possible. Do not submit Social
-            Security numbers, account numbers, passwords, or other highly
-            sensitive personal information.
-          </p>
-          <div className="p-4 bg-[#f8fafc] border-l-4 border-[#102a43] rounded-r-xl space-y-1">
-            <b className="text-md font-bold text-[#102a43] block">Pricing is determined after review.</b>
-            <span className="text-md text-[#64748b] block">Submitting this form does not obligate you to proceed.</span>
+          <div className="lg:col-span-7">
+            <GenealogyRequestForm />
           </div>
-        </div>
-        <div className="lg:col-span-7">
-          <GenealogyRequestForm />
-        </div>
+        </section>
       </section>
       <SiteFooter />
     </main>
