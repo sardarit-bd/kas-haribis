@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     'SELECT MAX(sort_order) AS value FROM banks',
   ).first()) as any;
   await runtime.DB.prepare(
-    'INSERT INTO banks(id,title,status,summary,comment,last_updated,full_report,institution_type,website,researcher,source_urls,ownership_details,iska_details,internal_notes,sort_order,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+    'INSERT INTO banks(id,title,status,summary,comment,last_updated,full_report,institution_type,website,logo_url,researcher,source_urls,ownership_details,iska_details,internal_notes,sort_order,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
   )
     .bind(
       id,
@@ -54,6 +54,7 @@ export async function POST(request: Request) {
       fullReport,
       clean(body.institution_type, 150),
       clean(body.website, 1000),
+      clean(body.logo_url, 1000),
       clean(body.researcher, 250),
       clean(body.source_urls, 10000),
       clean(body.ownership_details, 10000),
@@ -91,7 +92,7 @@ export async function PUT(request: Request) {
   if (!existing)
     return Response.json({ error: 'Bank not found.' }, { status: 404 });
   await runtime.DB.prepare(
-    'UPDATE banks SET title=?,status=?,summary=?,comment=?,last_updated=?,full_report=?,institution_type=?,website=?,researcher=?,source_urls=?,ownership_details=?,iska_details=?,internal_notes=?,sort_order=? WHERE id=?',
+    'UPDATE banks SET title=?,status=?,summary=?,comment=?,last_updated=?,full_report=?,institution_type=?,website=?,logo_url=?,researcher=?,source_urls=?,ownership_details=?,iska_details=?,internal_notes=?,sort_order=? WHERE id=?',
   )
     .bind(
       title,
@@ -102,6 +103,7 @@ export async function PUT(request: Request) {
       clean(body.full_report, 30000),
       clean(body.institution_type, 150),
       clean(body.website, 1000),
+      clean(body.logo_url, 1000),
       clean(body.researcher, 250),
       clean(body.source_urls, 10000),
       clean(body.ownership_details, 10000),

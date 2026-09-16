@@ -14,24 +14,45 @@ export default async function Page() {
       title="Kosher Loan Services"
       intro="Reliable brokers. Kosher deals. Peace of mind. Connect with professionals who understand the importance of arranging financing in accordance with Hilchos Ribbis."
     />
-     
+
+      {/* Join the Revolution Section */}
+      <section className="bg-white py-16 sm:py-20">
+        <div className="container max-w-[1320px] mx-auto px-6 sm:px-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          <div className="lg:col-span-6 space-y-5 text-left">
+            <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-bold text-slate-900 leading-[1.2] tracking-tight">
+              Join the Revolution in Helping Klal Yisroel Avoid Ribis
+            </h2>
+            <p className="text-base sm:text-lg text-slate-400 font-medium leading-relaxed">
+              We’re here to connect you with professionals who uphold and respect halachic financial guidelines.
+            </p>
+            <p className="text-sm sm:text-base text-slate-800 font-semibold leading-relaxed pt-1">
+              Navigating the world of loans while staying fully within halacha can be complex. That’s why we’ve partnered with trusted brokers who understand the importance of working only with truly kosher loan structures — including proper heter iska where needed.
+            </p>
+          </div>
+          <div className="lg:col-span-6 flex justify-center lg:justify-end">
+            <div className="relative w-full max-w-[560px] overflow-hidden shadow-lg border border-slate-100">
+              <img
+                src="/loan-approved-office.jpg"
+                alt="Loan Approved - Join the Revolution in Helping Klal Yisroel Avoid Ribis"
+                className="w-full h-auto object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="p-6 sm:p-10 bg-[#f7f3ea]" id="loan-services">
-        <div className="container flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-10 pb-6">
+        <div className="container px-8 flex flex-col md:flex-row items-center md:items-center justify-center gap-6 mb-10 pb-6 text-center">
           <div className="max-w-2xl space-y-2">
-            <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase hidden">TRUSTED PROFESSIONALS</p>
             <h2 className="text-[#102a43] font-serif font-bold text-3xl sm:text-4xl">Featured loan services</h2>
             <p className="text-[#64748b] text-sm sm:text-base leading-relaxed">
               Each listing includes the information currently available to Kav
               Haribis. Always verify the details before relying on a listing.
             </p>
           </div>
-          <strong className="min-w-[150px] text-center p-4 bg-white shrink-0 block font-serif text-3xl font-bold text-[#102a43]">
-            {items.length}
-            <small className="block text-[10px] font-mono font-normal uppercase tracking-widest text-[#64748b] mt-1">services listed</small>
-          </strong>
         </div>
 
-        <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-8">
           {items.map((x, i) => (
             <article
               className={`p-6 bg-white flex flex-col justify-between space-y-4 ${
@@ -116,7 +137,7 @@ export default async function Page() {
 
               <div className="flex items-center gap-3 pt-4 border-t border-[#f1f5f9] text-xs font-bold text-[#c69b46] flex-wrap">
                 {x.phone && (
-                  <a className="px-4 py-2 bg-[#102a43] hover:bg-[#1a385c] text-white transition-colors text-sm font-meduim shadow-sm" href={`tel:${x.phone}`}>
+                  <a style={{color:"white"}} className="px-4 py-2 bg-[#102a43] hover:bg-[#1a385c] text-white transition-colors text-sm font-meduim shadow-sm" href={`tel:${x.phone}`}>
                     Call {x.phone}
                   </a>
                 )}

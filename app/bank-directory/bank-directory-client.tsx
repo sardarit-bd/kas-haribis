@@ -1,6 +1,7 @@
 'use client';
 import { useMemo, useState } from 'react';
 import BankReportUnlock from './bank-report-unlock';
+import BankResearchForm from './bank-research-form';
 
 type Bank = {
   id: string | number;
@@ -15,6 +16,7 @@ type Bank = {
   website: string;
   logo_url: string;
 };
+
 const labels: Record<string, string> = {
   kosher: 'Kosher',
   mehudar: 'Mehudar',
@@ -41,10 +43,10 @@ function getPageNumbers(current: number, total: number) {
 export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('all');
-  const [open, setOpen] = useState<string | number | null>(null);
   const [unlock, setUnlock] = useState<Bank | null>(null);
-  const [view, setView] = useState<'list' | 'grid'>('list');
-  const [perPage, setPerPage] = useState<number | 'all'>(16);
+  const [detailBank, setDetailBank] = useState<Bank | null>(null);
+  const [requestUpdateBank, setRequestUpdateBank] = useState<Bank | null>(null);
+  const [perPage, setPerPage] = useState<number | 'all'>(12);
   const [currentPage, setCurrentPage] = useState(1);
 
   const filtered = useMemo(
@@ -52,7 +54,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
       banks.filter(
         (bank) =>
           (status === 'all' || bank.status === status) &&
-          (bank.title + ' ' + bank.comment)
+          (bank.title + ' ' + bank.comment + ' ' + bank.summary)
             .toLowerCase()
             .includes(query.toLowerCase()),
       ),
@@ -94,37 +96,38 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
     switch (statusKey) {
       case 'kosher':
       case 'mehudar':
-        return 'bg-[#e9f4eb] text-[#367448] border-[#c5e1cd]';
+        return 'bg-[#38a169] text-white border-[#2f855a]';
       case 'only-kosher-with-iska':
       case 'case-by-case':
-        return 'bg-[#fff7e5] text-[#876622] border-[#f3e4bc]';
+        return 'bg-[#d69e2e] text-white border-[#b7791f]';
       case 'questionable':
       case 'no-good':
-        return 'bg-[#fde8e8] text-[#9b1c1c] border-[#f8b4b4]';
+        return 'bg-[#e53e3e] text-white border-[#c53030]';
       default:
-        return 'bg-[#f1f5f9] text-[#475569] border-[#cbd5e1]';
+        return 'bg-[#4a5568] text-white border-[#2d3748]';
     }
   };
+
 
   return (
     <section className="container px-4 sm:px-8 py-10 md:py-14">
       {/* Directory Tools */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[minmax(200px,1fr)_minmax(150px,0.7fr)_minmax(130px,0.6fr)_auto_auto] gap-4 items-end mb-8 bg-[#f7f3ea] p-5 sm:p-6">
-        <label className="flex flex-col gap-1.5 text-md font-semibold text-[#102a43]/80">
-          Search financial institutions
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[minmax(200px,1fr)_minmax(150px,0.7fr)_minmax(130px,0.6fr)_auto_auto] gap-4 items-end mb-8 bg-white p-4 sm:p-5 border border-slate-200/80">
+        <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#102a43]">
+          Search financial institutions within  {filtered.length} Bank List
           <input
             value={query}
             onChange={(event) => handleQueryChange(event.target.value)}
             placeholder="Bank or lender name…"
-            className="h-[43px] px-3.5 bg-white border border-[#cbd5da] text-sm text-[#102a43] font-normal normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+            className="h-[43px] px-3.5 bg-white border border-[#cbd5da] rounded-lg text-sm text-[#102a43] font-normal normal-case focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
           />
         </label>
-        <label className="flex flex-col gap-1.5 text-md font-semibold text-[#102a43]/80">
+        <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#102a43]">
           Status
           <select
             value={status}
             onChange={(event) => handleStatusChange(event.target.value)}
-            className="h-[43px] px-3.5 bg-white border border-[#cbd5da] text-sm text-[#102a43] font-normal normal-case cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+            className="h-[43px] px-3.5 bg-white border border-[#cbd5da] rounded-lg text-sm text-[#102a43] font-normal normal-case cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
           >
             <option value="all">All statuses</option>
             {Object.entries(labels).map(([value, label]) => (
@@ -134,7 +137,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
             ))}
           </select>
         </label>
-        <label className="flex flex-col gap-1.5 text-md font-semibold text-[#102a43]/80">
+        <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#102a43]">
           Reports per page
           <select
             value={perPage}
@@ -145,55 +148,18 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                   : Number(event.target.value);
               handlePerPageChange(val);
             }}
-            className="h-[43px] px-3.5 bg-white border border-[#cbd5da] text-sm text-[#102a43] font-normal normal-case cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
+            className="h-[43px] px-3.5 bg-white border border-[#cbd5da] rounded-lg text-sm text-[#102a43] font-normal normal-case cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#102a43]/20 focus:border-[#102a43]"
           >
-            <option value={16}>16 per page</option>
-            <option value={25}>25 per page</option>
-            <option value={50}>50 per page</option>
+            <option value={12}>12 per page</option>
+            <option value={24}>24 per page</option>
+            <option value={48}>48 per page</option>
             <option value="all">All</option>
           </select>
         </label>
-        <b className="self-center py-2  text-md font-semibold text-[#102a43]/80 whitespace-nowrap" aria-live="polite">
-          {filtered.length} banks listed
-        </b>
-        <div
-          className="inline-flex items-center self-end border border-[#cbd5da] overflow-hidden bg-white w-full sm:w-auto"
-          role="group"
-          aria-label="Choose directory layout"
-        >
-          <button
-            className={`h-[43px] px-4 border-r border-[#dce3e7] text-[11px] font-extrabold flex-1 sm:flex-none flex items-center justify-center gap-1.5 transition-colors ${
-              view === 'list'
-                ? 'bg-[#102a43] text-white'
-                : 'bg-white text-[#60717d] hover:bg-[#f7f9fa]'
-            }`}
-            onClick={() => setView('list')}
-            aria-pressed={view === 'list'}
-          >
-            <span className="text-base">☷</span> List
-          </button>
-          <button
-            className={`h-[43px] px-4 text-[11px] font-extrabold flex-1 sm:flex-none flex items-center justify-center gap-1.5 transition-colors ${
-              view === 'grid'
-                ? 'bg-[#102a43] text-white'
-                : 'bg-white text-[#60717d] hover:bg-[#f7f9fa]'
-            }`}
-            onClick={() => setView('grid')}
-            aria-pressed={view === 'grid'}
-          >
-            <span className="text-base">▦</span> Grid
-          </button>
-        </div>
       </div>
 
-      {/* Directory Grid / List View */}
-      <div
-        className={
-          view === 'grid'
-            ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 items-start'
-            : 'flex flex-col gap-4'
-        }
-      >
+      {/* Directory Grid View */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
         {filtered.length === 0 && (
           <p className="col-span-full p-6 text-center text-sm font-semibold text-[#876622] bg-[#fff7e5] border border-[#f3e4bc]">
             No banks match this search. Clear the search or choose All statuses.
@@ -202,120 +168,91 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
         {paginatedBanks.map((bank) => (
           <article
             key={bank.id}
-            className="bg-white border border-gray-100 overflow-hidden"
+            className="bg-white border border-slate-200 p-5 transition-all flex flex-col justify-between h-full"
           >
-            <div
-              className={`p-5 flex flex-col justify-between gap-4 ${
-                view === 'grid' ? 'min-h-[220px]' : ''
-              }`}
-            >
-              <button
-                className="w-full text-left flex items-start justify-between gap-3 group focus:outline-none"
-                onClick={() => setOpen(open === bank.id ? null : bank.id)}
-                aria-expanded={open === bank.id}
-              >
-                <div className="flex items-start gap-3.5 flex-1 min-w-0">
-                  {bank.logo_url ? (
-                    <img
-                      className="w-12 h-12 object-contain rounded-lg p-1 bg-[#f8fafc] border border-[#e2e8f0] shrink-0"
-                      src={bank.logo_url}
-                      alt=""
-                    />
-                  ) : null}
-                  <div className="flex-1 min-w-0">
-                    <b className="text-xl font-serif font-meduim text-[#102a43] transition-colors block truncate">
-                      {bank.title}
-                    </b>
-                    <small className="text-base text-[#64748b] block mt-2">
-                      {bank.institution_type ? `${bank.institution_type} · ` : ''}
-                      {bank.last_updated
-                        ? `Last updated ${new Date(`${bank.last_updated}T00:00:00`).toLocaleDateString('en-US')}`
-                        : 'Update date not entered'}
-                    </small>
-                  </div>
-                </div>
-                <div className="flex flex-col items-end gap-2 shrink-0">
-                  <strong className="text-xl font-bold text-[#64748b] group-hover:text-[#102a43]">
-                    {open === bank.id ? '−' : '+'}
-                  </strong>
-                </div>
-              </button>
-
-              <div className="flex items-center justify-between gap-3 pt-2 border-t border-[#f1f5f9]">
-                <i
-                  className={`not-italic px-3 py-1 text-xs font-bold rounded-full border ${getStatusBadgeStyle(
+            <div className="w-full">
+              {/* Bank Logo Container with Status Badge Overlay */}
+              <div className="relative w-full h-40 flex items-center justify-center mb-7">
+                {/* Status Badge Overlap */}
+                <span
+                  className={`absolute top-2 right-2 z-10 px-2.5 py-0.5 text-xs font-bold text-white rounded-lg ${getStatusBadgeStyle(
                     bank.status,
                   )}`}
                 >
                   {labels[bank.status] || bank.status}
-                </i>
-                {Boolean(bank.has_full_report) ? (
-                  <button
-                    className="px-3.5 py-1.5 text-xs font-bold text-white bg-[#102a43] hover:bg-[#1a385c] rounded-lg transition-colors shadow-sm"
-                    onClick={() => setUnlock(bank)}
-                  >
-                    View Full Report <span className="text-[#c69b46]">— $15</span>
-                  </button>
+                </span>
+
+                {Boolean(bank.has_full_report) && (
+                  <span className="absolute top-2 right-2 z-10 text-[10px] font-extrabold uppercase px-2 py-0.5 bg-amber-100 text-amber-900 border border-amber-300">
+                    $15 Report
+                  </span>
+                )}
+
+                {bank.logo_url ? (
+                  <img
+                    className="max-h-full max-w-full object-cover w-full h-full"
+                    src={bank.logo_url}
+                    alt={bank.title}
+                  />
                 ) : (
-                  <button
-                    className="px-3 py-1.5 text-xs font-medium text-[#94a3b8] bg-[#f8fafc] rounded-lg border border-[#e2e8f0] cursor-not-allowed"
-                    disabled
-                  >
-                    Full report not available yet
-                  </button>
+                  <div></div>
                 )}
               </div>
+            
+
+              {/* Last Updated Date */}
+              <p className="text-xs sm:text-sm font-semibold text-slate-800/80 mb-1">
+                {bank.last_updated
+                  ? new Date(`${bank.last_updated}T00:00:00`).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })
+                  : 'Date not specified'}
+              </p>
+
+              {/* Title & Institution Type */}
+              <h3 className="text-base sm:text-xl py-3 font-serif font-bold text-[#102a43] leading-snug mb-1">
+                {bank.title}
+              </h3>
+              {bank.institution_type && (
+                <p className="text-xs text-slate-500 font-medium mb-3">
+                  {bank.institution_type}
+                </p>
+              )}
+
+              {/* Summary description */}
+              <p className="text-md text-slate-500 line-clamp-2 mb-4">
+                {bank.summary || bank.comment || 'The current directory lists this institution under the status shown above.'}
+              </p>
+
+
             </div>
 
-            {open === bank.id && (
-              <div className="p-5 bg-white border-t border-[#e2e8f0] text-sm text-[#334155] space-y-4">
-                {bank.last_updated && (
-                  <p className="text-xs text-[#64748b]">
-                    <b className="font-semibold text-[#102a43]">Last updated:</b>{' '}
-                    <time dateTime={bank.last_updated}>
-                      {new Date(
-                        `${bank.last_updated}T00:00:00`,
-                      ).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}
-                    </time>
-                  </p>
-                )}
-                <p className="leading-relaxed text-base text-gray-600">
-                  {bank.summary ||
-                    'The current directory lists this institution under the status shown above. Contact Kav Haribis for details before relying on the listing.'}
-                </p>
-                {bank.comment && (
-                  <div className="p-3.5 bg-white border border-[#cbd5e1] text-xs">
-                    <b className="text-[#102a43] block mb-1">Kav Haribis comment</b>
-                    <p className="text-[#475569] text-base leading-relaxed">{bank.comment}</p>
-                  </div>
-                )}
-                {bank.website && (
-                  <a
-                    className="inline-flex items-center text-xs font-bold text-[#c69b46] hover:underline"
-                    href={bank.website}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Institution website ↗
-                  </a>
-                )}
-                <p className="p-3 text-sm text-[#876622] bg-[#fff7e5] border border-[#f3e4bc]">
-                  Information may change. Confirm the current status with the
-                  Bais Horaah before making a financial decision.
-                </p>
-              </div>
-            )}
+            {/* Bottom Buttons */}
+            <div className="grid grid-cols-2 gap-2.5 pt-3 w-full">
+              <button
+                type="button"
+                onClick={() => setDetailBank(bank)}
+                className="w-full py-1 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer"
+              >
+                Full Report
+              </button>
+              <button
+                type="button"
+                onClick={() => setRequestUpdateBank(bank)}
+                className="w-full py-1 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-meduim transition-colors text-center cursor-pointer"
+              >
+                Request Update
+              </button>
+            </div>
           </article>
         ))}
       </div>
 
       {/* Pagination */}
       {filtered.length > 0 && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 p-4 sm:p-5 bg-[#f7f3ea]">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 p-4 sm:p-5 bg-white">
           <div className="text-xs sm:text-sm text-[#556673]">
             Showing{' '}
             <b className="text-[#102a43]">
@@ -375,6 +312,167 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
           )}
         </div>
       )}
+
+      {/* Modal 1: Bank Full Details / Full Report Modal */}
+      {detailBank && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+          <div className="relative bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setDetailBank(null)}
+              className="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-lg transition-colors"
+              aria-label="Close modal"
+            >
+              ✕
+            </button>
+
+            {/* Modal Header */}
+            <div className="flex items-start gap-4 pr-8 border-b border-slate-100 pb-5">
+              <div className="w-28 h-28 shrink-0 flex items-center justify-center bg-[#f8fafc] border border-slate-200 rounded-xl">
+                {detailBank.logo_url ? (
+                  <img
+                    className="max-h-full max-w-full object-cover"
+                    src={detailBank.logo_url}
+                    alt={detailBank.title}
+                  />
+                ) : (
+                  <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-[#102a43] text-white font-bold text-xl">
+                    {detailBank.title.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span
+                    className={`px-2.5 py-0.5 text-xs font-bold rounded-md border ${getStatusBadgeStyle(
+                      detailBank.status,
+                    )}`}
+                  >
+                    {labels[detailBank.status] || detailBank.status}
+                  </span>
+                  {detailBank.last_updated && (
+                    <span className="text-xs text-slate-500 font-medium">
+                      Last updated:{' '}
+                      {new Date(
+                        `${detailBank.last_updated}T00:00:00`,
+                      ).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </span>
+                  )}
+                </div>
+                <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#102a43]">
+                  {detailBank.title}
+                </h2>
+                {detailBank.institution_type && (
+                  <p className="text-xs text-slate-500 font-medium mt-0.5">
+                    {detailBank.institution_type}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div className="space-y-4 text-sm text-slate-700 leading-relaxed">
+              {detailBank.summary && (
+                <div>
+                  <h4 className="font-semibold text-[#102a43] text-xs uppercase tracking-wider mb-1.5">
+                    Research Summary
+                  </h4>
+                  <p className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-slate-700 leading-relaxed">
+                    {detailBank.summary}
+                  </p>
+                </div>
+              )}
+
+              {detailBank.comment && (
+                <div>
+                  <h4 className="font-semibold text-[#102a43] text-xs uppercase tracking-wider mb-1.5">
+                    Kav Haribis Comment
+                  </h4>
+                  <p className="bg-amber-50/70 p-4 rounded-xl border border-amber-200/60 text-amber-900 leading-relaxed">
+                    {detailBank.comment}
+                  </p>
+                </div>
+              )}
+
+              {detailBank.website && (
+                <div>
+                  <a
+                    className="inline-flex items-center gap-1 text-xs font-bold text-[#c69b46] hover:underline"
+                    href={detailBank.website}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Visit Institution Website ↗
+                  </a>
+                </div>
+              )}
+
+              <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+                ⚠️ Information may change. Confirm current status with the Bais
+                Horaah before making financial decisions.
+              </div>
+
+              {/* Protected Full Report */}
+              {Boolean(detailBank.has_full_report) ? (
+                <div className="pt-4 border-t border-slate-100 flex flex-col items-center justify-center p-6 bg-[#102a43] rounded-2xl text-white text-center space-y-3">
+                  <div>
+                    <h3 className="font-serif font-bold text-lg text-white">
+                      Protected Full Report ($15)
+                    </h3>
+                    <p className="text-xs text-slate-300">
+                      Unlock the complete in-depth legal and halachic research
+                      report for this institution.
+                    </p>
+                  </div>
+                  <button
+                    className="px-6 py-2.5 bg-[#c69b46] hover:bg-[#b0883b] text-white text-xs font-bold rounded-xl transition-colors shadow-md cursor-pointer"
+                    onClick={() => {
+                      const target = detailBank;
+                      setDetailBank(null);
+                      setUnlock(target);
+                    }}
+                  >
+                    Unlock Full Report — $15
+                  </button>
+                </div>
+              ) : (
+                <div className="pt-2 text-xs text-slate-400 text-center">
+                  Full detailed report not uploaded for this institution yet.
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal 2: Request Update Modal */}
+      {requestUpdateBank && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+          <div className="relative bg-white max-w-5xl w-full p-5 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setRequestUpdateBank(null)}
+              className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-lg transition-colors"
+              aria-label="Close modal"
+            >
+              ✕
+            </button>
+
+            <div className="mb-2 pr-8 border-b pb-3 border-gray-200">
+          
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#102a43]">
+                Request Update for {requestUpdateBank.title}
+              </h2>
+            </div>
+
+            <BankResearchForm defaultBankName={requestUpdateBank.title} />
+          </div>
+        </div>
+      )}
+
+      {/* Unlock Modal */}
       {unlock && (
         <BankReportUnlock
           bankId={String(unlock.id)}

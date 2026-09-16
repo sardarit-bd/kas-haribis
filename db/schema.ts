@@ -43,6 +43,9 @@ export const banks = sqliteTable('banks', {
   comment: text('comment').notNull().default(''),
   lastUpdated: text('last_updated').notNull().default(''),
   fullReport: text('full_report').notNull().default(''),
+  institutionType: text('institution_type').notNull().default(''),
+  website: text('website').notNull().default(''),
+  logoUrl: text('logo_url').notNull().default(''),
   sortOrder: integer('sort_order').notNull().default(0),
   createdAt: text('created_at').notNull(),
 });

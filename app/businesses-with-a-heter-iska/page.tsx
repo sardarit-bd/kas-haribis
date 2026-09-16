@@ -14,8 +14,8 @@ export default async function BusinessesPage() {
       title="Businesses With a Heter Iska"
       intro="A growing directory of businesses listed by Kav Haribis as operating with a Heter Iska. Review the information and confirm that the document remains current before relying on a listing."
     />
-      <section className=" p-6 sm:p-10 bg-[#f7f3ea]" id="business-directory">
-        <div className="container flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-10 pb-6">
+      <section className=" p-6 sm:p-10 bg-gray-200" id="business-directory">
+        <div className="container flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-10 pb-6 hidden">
           <div className="max-w-2xl space-y-2">
             <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase hidden">DIRECTORY</p>
             <h2 className="text-[#102a43] font-serif font-bold text-3xl sm:text-4xl">Listed businesses</h2>
@@ -31,27 +31,25 @@ export default async function BusinessesPage() {
           </div>
         </div>
 
-        <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-8">
           {businesses.map((item, index) => (
             <article key={item.id} className="p-6 bg-white flex flex-col justify-between space-y-4">
               <div className="space-y-4">
                 <div className="flex items-center justify-between gap-4 pb-4 border-b border-[#f1f5f9]">
-                  <div className="w-16 h-14 rounded-xl p-2 bg-[#f4f6f8] border border-[#e2e8f0] flex items-center justify-center overflow-hidden shrink-0">
+                  <div className="w-full h-52 flex items-center justify-center overflow-hidden shrink-0">
                     {item.logo_url ? (
                       <img src={item.logo_url} alt={`${item.name} logo`} className="max-w-full max-h-full object-contain" />
                     ) : (
                       <span className="font-serif font-bold text-xl text-[#102a43]">{item.name.charAt(0)}</span>
                     )}
                   </div>
-                  <small className="font-mono text-xs font-bold text-[#94a3b8]">{String(index + 1).padStart(2, '0')}</small>
                 </div>
 
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#e9f4eb] text-[#367448] border border-[#c5e1cd] rounded-full text-sm font-medium w-max">
-                  <i className="not-italic font-bold">✓</i>{' '}
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#e9f4eb] text-[#367448] border border-[#c5e1cd] rounded-full text-xs font-semibold w-max">
                   {item.verification_status || 'LISTED WITH A HETER ISKA'}
                 </div>
 
-                <h3 className="text-3xl font-serif font-meduim text-[#102a43] leading-snug" dir={/[֐-׿]/.test(item.name) ? 'rtl' : 'ltr'}>{item.name}</h3>
+                <h3 className="text-2xl font-serif font-semibold text-[#102a43]/90 leading-snug" dir={/[֐-׿]/.test(item.name) ? 'rtl' : 'ltr'}>{item.name}</h3>
 
                 {item.category && (
                   <small className="block text-base font-extrabold text-[#c69b46] uppercase tracking-wider">{item.category}</small>
@@ -89,7 +87,7 @@ export default async function BusinessesPage() {
                 )}
               </div>
 
-              <div className="flex items-center gap-3 pt-4 border-t border-[#f1f5f9] text-xs font-bold text-[#c69b46] flex-wrap">
+              <div className="flex items-center gap-3 pt-4 text-xs font-bold text-[#c69b46] flex-wrap">
                 {item.phone && <a href={`tel:${item.phone}`} className="hover:underline">{item.phone}</a>}
                 {item.email && <a href={`mailto:${item.email}`} className="hover:underline">Email</a>}
                 {item.website && (

@@ -141,7 +141,7 @@ export default function Page() {
      
 
       {/* Application Form Grid */}
-      <section className='bg-gray-100 py-4'>
+      <section className='bg-gray-100 py-12'>
         <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 my-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start" id="apply-for-review">
           <div className="lg:col-span-5 space-y-6">
             <div>

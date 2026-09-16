@@ -1,20 +1,16 @@
 const BottomCTA = ({ eyebrow, title, discription, link, linktext, link2, link2text }) => {
   return (
+    <section className="bg-gray-200 py-12">
     <section className="container max-w-[1440px] mx-auto px-4 sm:px-8">
-      <div className="bg-[#102a43] text-white p-8 sm:p-12 md:p-[50px] flex flex-col items-center justify-between text-center gap-8 md:gap-[50px] my-10">
+      <div className="bg-[#102a43] text-white p-8 sm:p-12 md:p-[50px] flex flex-col items-center justify-between text-center gap-8 md:gap-[50px]">
         <div className="max-w-[880px] mx-auto">
-          {eyebrow && (
-            <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-3">
-              {eyebrow}
-            </p>
-          )}
           {title && (
-            <h2 className="text-white text-2xl sm:text-4xl font-medium mb-4">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-white leading-tight mb-4 tracking-tight">
               {title}
             </h2>
           )}
           {discription && (
-            <p className="text-[#d0dce3] text-sm sm:text-base leading-[1.75]">
+            <p className="text-slate-200 text-base sm:text-lg leading-relaxed font-normal">
               {discription}
             </p>
           )}
@@ -24,22 +20,24 @@ const BottomCTA = ({ eyebrow, title, discription, link, linktext, link2, link2te
           {link && (
             <a
               href={link}
-              className="px-5 py-3.5 bg-[#c69b46] hover:bg-[#b08738] text-white font-semibold text-sm text-center transition-colors shadow-sm"
+              style={{ color: 'black' }}
+              className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-white text-black font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
             >
-              {linktext}
+              <span>{linktext}</span>
             </a>
           )}
 
-          {link2 && (
+          {link2 && link2 !== link && (
             <a
               href={link2}
-              className="px-5 py-3.5 text-[#e9e9e9] hover:text-white border border-[#747474]/60 hover:border-slate-400 font-semibold text-sm text-center transition-colors"
+              className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-sm sm:text-base border border-white/20 transition-all duration-300"
             >
-              {link2text}
+              <span>{link2text}</span>
             </a>
           )}
         </div>
       </div>
+    </section>
     </section>
   );
 };

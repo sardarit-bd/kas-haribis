@@ -85,10 +85,29 @@ export default function BankManager({
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(data),
     });
-    const result = (await response.json()) as { error?: string };
+    const result = (await response.json()) as { id?: string; error?: string };
     if (!response.ok) {
       setMessage(result.error || 'Could not save the bank.');
       return;
+    }
+    const bankId = (data.id as string) || result.id;
+    const logoFile = (form.elements.namedItem('logo_file') as HTMLInputElement)
+      ?.files?.[0];
+    if (logoFile && bankId) {
+      setMessage('Uploading logo…');
+      const logoFd = new FormData();
+      logoFd.set('id', bankId);
+      logoFd.set('file', logoFile);
+      const logoResponse = await fetch('/api/admin/bank-logo', {
+        method: 'POST',
+        body: logoFd,
+      });
+      const logoResult = (await logoResponse.json()) as { error?: string };
+      if (!logoResponse.ok) {
+        setMessage(`Bank saved, but logo upload failed: ${logoResult.error}`);
+        await reload();
+        return;
+      }
     }
     await reload();
     form.reset();
@@ -296,12 +315,30 @@ export default function BankManager({
               />
             </label>
           </div>
-          {value.logo_url && (
-            <img
-              className="adminLogoPreview"
-              src={value.logo_url}
-              alt="Current institution logo"
+          <label className="logoUploadField" style={{ display: 'block', marginTop: '16px' }}>
+            Bank or Lender Logo / Image
+            <input
+              name="logo_file"
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
             />
+            <small style={{ display: 'block', color: '#64748b', fontSize: '12px', marginTop: '4px' }}>
+              Upload logo image (PNG, JPG, WebP, SVG). Will be displayed in admin table and public cards.
+            </small>
+          </label>
+          {value.logo_url && (
+            <div className="logoPreviewBox" style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '14px 0', padding: '12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px' }}>
+              <img
+                className="adminLogoPreview"
+                src={value.logo_url}
+                alt="Current institution logo"
+                style={{ width: '48px', height: '48px', objectFit: 'contain', background: '#fff', padding: '4px', border: '1px solid #cbd5e1', borderRadius: '6px' }}
+              />
+              <div>
+                <strong style={{ fontSize: '13px', color: '#1e293b' }}>Current Logo</strong>
+                <small style={{ display: 'block', color: '#64748b', fontSize: '11px', wordBreak: 'break-all' }}>{value.logo_url}</small>
+              </div>
+            </div>
           )}
           <div className="editFormActions">
             <button className="primary">
@@ -390,56 +427,100 @@ export default function BankManager({
             placeholder="Type a bank name…"
           />
         </label>
-        <div className="bankAdminRows">
+        <div className="bankAdminTableWrapper" style={{ overflowX: 'auto', marginTop: '16px' }}>
           {filtered.length === 0 ? (
             <div className="emptyState">
               <b>No banks found</b>
               <p>Try a different search.</p>
             </div>
           ) : (
-            filtered.map((bank) => (
-              <article key={bank.id}>
-                <div className="bankAdminIdentity">
-                  <span className="bankInitial">
-                    {bank.title.charAt(0).toUpperCase()}
-                  </span>
-                  <div>
-                    <b>{bank.title}</b>
-                    <i className={`bankStatus status-${bank.status}`}>
-                      {statuses.find(
-                        (status) => status[0] === bank.status,
-                      )?.[1] || bank.status}
-                    </i>
-                    {bank.full_report && (
-                      <small className="reportReadyBadge">
-                        $15 FULL REPORT
-                      </small>
-                    )}
-                  </div>
-                </div>
-                <div className="bankAdminComment">
-                  <small>COMMENT</small>
-                  <p>{bank.comment || 'No comment added yet.'}</p>
-                  {bank.last_updated && (
-                    <time dateTime={bank.last_updated}>
-                      Last updated:{' '}
-                      {new Date(
-                        `${bank.last_updated}T00:00:00`,
-                      ).toLocaleDateString('en-US')}
-                    </time>
-                  )}
-                </div>
-                <div className="bankRowActions">
-                  <button onClick={() => edit(bank)}>Edit</button>
-                  <button className="deleteButton" onClick={() => remove(bank)}>
-                    Remove
-                  </button>
-                </div>
-              </article>
-            ))
+            <table className="adminBankTable" style={{ width: '100%', borderCollapse: 'collapse', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '8px', overflow: 'hidden' }}>
+              <thead>
+                <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0', textAlign: 'left', fontSize: '12px', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  <th style={{ padding: '12px 16px', width: '64px' }}>Logo</th>
+                  <th style={{ padding: '12px 16px' }}>Bank / Institution</th>
+                  <th style={{ padding: '12px 16px' }}>Status</th>
+                  <th style={{ padding: '12px 16px' }}>Comment & Date</th>
+                  <th style={{ padding: '12px 16px' }}>Full Report</th>
+                  <th style={{ padding: '12px 16px', textAlign: 'right' }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((bank) => (
+                  <tr key={bank.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                    <td style={{ padding: '12px 16px', verticalAlign: 'middle' }}>
+                      {bank.logo_url ? (
+                        <img
+                          src={bank.logo_url}
+                          alt={bank.title}
+                          style={{ width: '44px', height: '44px', objectFit: 'contain', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px', padding: '2px' }}
+                        />
+                      ) : (
+                        <span
+                          style={{ display: 'inline-flex', items: 'center', justifyContent: 'center', width: '44px', height: '44px', background: '#102a43', color: '#ffffff', fontWeight: 'bold', fontSize: '18px', borderRadius: '6px' }}
+                        >
+                          {bank.title.charAt(0).toUpperCase()}
+                        </span>
+                      )}
+                    </td>
+                    <td style={{ padding: '12px 16px', verticalAlign: 'middle' }}>
+                      <b style={{ display: 'block', fontSize: '15px', color: '#0f172a' }}>{bank.title}</b>
+                      {bank.institution_type && (
+                        <span style={{ fontSize: '12px', color: '#64748b', display: 'block', marginTop: '2px' }}>
+                          {bank.institution_type}
+                        </span>
+                      )}
+                      {bank.website && (
+                        <a
+                          href={bank.website}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{ fontSize: '11px', color: '#c69b46', textDecoration: 'none', display: 'inline-block', marginTop: '2px' }}
+                        >
+                          Website ↗
+                        </a>
+                      )}
+                    </td>
+                    <td style={{ padding: '12px 16px', verticalAlign: 'middle' }}>
+                      <i className={`bankStatus status-${bank.status}`}>
+                        {statuses.find((status) => status[0] === bank.status)?.[1] || bank.status}
+                      </i>
+                    </td>
+                    <td style={{ padding: '12px 16px', verticalAlign: 'middle', maxWidth: '300px' }}>
+                      <p style={{ margin: 0, fontSize: '13px', color: '#334155', lineHeight: '1.4' }}>
+                        {bank.comment || <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>No comment added</span>}
+                      </p>
+                      {bank.last_updated && (
+                        <time style={{ display: 'block', fontSize: '11px', color: '#64748b', marginTop: '4px' }}>
+                          Updated: {new Date(`${bank.last_updated}T00:00:00`).toLocaleDateString('en-US')}
+                        </time>
+                      )}
+                    </td>
+                    <td style={{ padding: '12px 16px', verticalAlign: 'middle' }}>
+                      {bank.full_report ? (
+                        <span className="reportReadyBadge" style={{ display: 'inline-block', fontSize: '11px', fontWeight: 'bold', padding: '4px 8px', background: '#fef3c7', color: '#92400e', border: '1px solid #fde68a', borderRadius: '4px' }}>
+                          $15 FULL REPORT
+                        </span>
+                      ) : (
+                        <span style={{ fontSize: '12px', color: '#94a3b8' }}>—</span>
+                      )}
+                    </td>
+                    <td style={{ padding: '12px 16px', verticalAlign: 'middle', textAlign: 'right' }}>
+                      <div className="bankRowActions" style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                        <button onClick={() => edit(bank)}>Edit</button>
+                        <button className="deleteButton" onClick={() => remove(bank)}>
+                          Remove
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           )}
         </div>
       </section>
     </div>
   );
 }
+

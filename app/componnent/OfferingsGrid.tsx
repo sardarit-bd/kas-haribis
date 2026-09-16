@@ -1,163 +1,229 @@
-const offeringsGridItems = [
+const offeringsItems = [
   {
-    title: 'Kosher Bank Directory',
-    subtitle: 'Research banks and lenders',
+    id: 1,
+    title: 'Kosher Banking & Lender Directory',
+    category: 'Directories',
     href: '/bank-directory',
-    icon: (
-      <svg className="w-10 h-10 text-[#c69b46]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 26L32 14L52 26" />
-        <path d="M8 26H56V30H8V26Z" />
-        <circle cx="32" cy="22" r="2.5" />
-        <path d="M16 30V46" />
-        <path d="M26.6 30V46" />
-        <path d="M37.3 30V46" />
-        <path d="M48 30V46" />
-        <path d="M10 46H54V50H10V46Z" />
-      </svg>
-    ),
+    image: '/kav-brand/bank-research.png',
+    description:
+      'Comprehensive halachic research on hundreds of commercial banks, mortgage lenders, and financial institutions with verified Heter Iska statuses and full Rabbinic reports.',
+    cta: 'Explore Bank Directory',
   },
   {
+    id: 2,
     title: 'Businesses with a Heter Iska',
-    subtitle: 'Browse verified business directory',
+    category: 'Directories',
     href: '/businesses-with-a-heter-iska',
-    icon: (
-      <svg className="w-10 h-10 text-[#c69b46]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M14 26L18 16H46L50 26" />
-        <path d="M12 26H52V48C52 49.1 51.1 50 50 50H14C12.9 50 12 49.1 12 48V26Z" />
-        <path d="M24 34H40V50H24V34Z" />
-        <circle cx="44" cy="20" r="5" fill="white" />
-        <path d="M42 20L43.5 21.5L46 19" strokeWidth="2" />
-      </svg>
-    ),
+    image: '/kav-impact/business-visit.jpg',
+    description:
+      'Browse verified Jewish-owned businesses, corporations, real estate partnerships, and commercial enterprises operating in full accordance with Hilchos Ribbis.',
+    cta: 'Browse Business Directory',
   },
   {
-    title: 'Kosher Loan Services',
-    subtitle: 'Find appropriate financing resources',
+    id: 3,
+    title: 'Kosher Loan & Financing Services',
+    category: 'Directories',
     href: '/kosher-loan-service',
-    icon: (
-      <svg className="w-10 h-10 text-[#c69b46]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 42C12 42 18 40 22 40C26 40 30 44 36 44C42 44 46 41 50 41" />
-        <path d="M12 42V52H52V47" />
-        <path d="M24 24C24 20 27 18 30 18C33 18 36 20 36 24C38 25 40 28 39 34C38 38 34 40 30 40C26 40 22 38 21 34C20 28 22 25 24 24Z" fill="white" />
-        <path d="M27 22H33" />
-        <path d="M30 27V35M28.5 29.5C28.5 29.5 29.3 28.5 30 28.5C30.7 28.5 31.5 29.5 31.5 30.5C31.5 32 28.5 32 28.5 33.5C28.5 34.5 29.3 35.5 30 35.5C30.7 35.5 31.5 34.5 31.5 34.5" />
-      </svg>
-    ),
+    image: '/kav-impact/heter-iska-presentation.jpg',
+    description:
+      'Find appropriate financing platforms, commercial loan providers, and personal credit resources structured under continuous Rabbinical oversight.',
+    cta: 'View Kosher Loan Services',
   },
   {
-    title: 'Investment Opportunities',
-    subtitle: 'Review kosher investment models',
+    id: 4,
+    title: 'Kosher Investment Opportunities',
+    category: 'Directories',
     href: '/kosher-investment-opportunities',
-    icon: (
-      <svg className="w-10 h-10 text-[#c69b46]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 50V18C12 16.8954 12.8954 16 14 16H32C33.1046 16 34 16.8954 34 18V50" />
-        <rect x="17" y="22" width="4" height="4" rx="0.5" />
-        <rect x="25" y="22" width="4" height="4" rx="0.5" />
-        <rect x="17" y="30" width="4" height="4" rx="0.5" />
-        <rect x="25" y="30" width="4" height="4" rx="0.5" />
-        <circle cx="44" cy="38" r="9" fill="white" />
-        <path d="M44 33V43M42 36C42 36 43 35 44 35C45 35 46 36 46 37C46 38.5 42 38.5 42 40C42 41 43 42 44 42C45 42 46 41 46 41" />
-        <line x1="8" y1="50" x2="56" y2="50" />
-      </svg>
-    ),
+    image: '/kav-brand/investments-hero.png',
+    description:
+      'Review pre-vetted investment models, real estate syndications, and joint ventures designed to comply with Torah laws on profit sharing and interest.',
+    cta: 'Explore Investments',
   },
   {
-    title: 'High-Yield Savings',
-    subtitle: 'Compare savings-account information',
+    id: 5,
+    title: 'High-Yield Kosher Savings Accounts',
+    category: 'Directories',
     href: '/savings',
-    icon: (
-      <svg className="w-10 h-10 text-[#c69b46]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="12" y="18" width="40" height="32" rx="4" />
-        <circle cx="32" cy="34" r="8" />
-        <path d="M32 26V42M24 34H40" />
-        <circle cx="44" cy="24" r="2" fill="currentColor" />
-      </svg>
-    ),
+    image: '/kav-impact/financial-outreach.jpg',
+    description:
+      'Compare high-yield savings options, interest-bearing accounts, and money market funds structured to avoid Ribbis concerns.',
+    cta: 'Compare Savings Options',
   },
   {
-    title: 'Heter Iska Library',
-    subtitle: 'Preview and obtain documents',
-    href: '/heter-iska',
-    icon: (
-      <svg className="w-10 h-10 text-[#c69b46]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M16 14H40L50 24V50C50 51.1 49.1 52 48 52H16C14.9 52 14 51.1 14 50V16C14 14.9 14.9 14 16 14Z" />
-        <path d="M38 14V26H50" />
-        <path d="M22 34H42M22 40H38M22 46H32" />
-      </svg>
-    ),
+    id: 6,
+    title: 'Hilchos Ribbis Educational Center',
+    category: 'Learning & Resources',
+    href: '/educational-center',
+    image: '/kav-impact/student-shiur.jpg',
+    description:
+      'Access a comprehensive learning portal featuring structured curriculum materials, source sheets, and step-by-step guides for individuals, schools, and yeshivos.',
+    cta: 'Visit Educational Center',
   },
   {
-    title: 'Bais Horaah Consultation',
-    subtitle: 'Submit a Ribbis question',
-    href: '/bais-horaah',
-    icon: (
-      <svg className="w-10 h-10 text-[#c69b46]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M32 12V48M16 22H48M16 22L10 36H22L16 22ZM48 22L42 36H54L48 22Z" />
-        <path d="M22 48H42" />
-      </svg>
-    ),
-  },
-  {
-    title: 'Audio & Video Shiurim',
-    subtitle: 'Listen and learn anytime',
+    id: 7,
+    title: 'Audio Shiurim & Lectures',
+    category: 'Learning & Resources',
     href: '/audio',
-    icon: (
-      <svg className="w-10 h-10 text-[#c69b46]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="32" cy="32" r="20" />
-        <path d="M27 22L42 32L27 42V22Z" fill="#c69b46" />
-      </svg>
-    ),
+    image: '/kav-brand/audio-hero.png',
+    description:
+      'Listen to daily audio Shiurim, audio series, and recorded lectures on Hilchos Ribbis presented by leading Rabbonim and Posekim.',
+    cta: 'Listen to Shiurim',
   },
   {
-    title: 'Articles & Gilyonos',
-    subtitle: 'Read practical Torah guidance',
+    id: 8,
+    title: 'Halachic Articles & Research Publications',
+    category: 'Learning & Resources',
     href: '/articles',
-    icon: (
-      <svg className="w-10 h-10 text-[#c69b46]" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="14" y="12" width="36" height="42" rx="3" />
-        <line x1="20" y1="20" x2="44" y2="20" />
-        <line x1="20" y1="28" x2="44" y2="28" />
-        <line x1="20" y1="36" x2="36" y2="36" />
-        <line x1="20" y1="44" x2="32" y2="44" />
-      </svg>
-    ),
+    image: '/kav-brand/articles-hero.png',
+    description:
+      'Read practical Torah guidance, contemporary halachic journal articles, and practical briefs addressing modern business challenges.',
+    cta: 'Read Articles & Guides',
+  },
+  {
+    id: 9,
+    title: 'Common Questions & Halachic Q&A',
+    category: 'Learning & Resources',
+    href: '/questions',
+    image: '/kav-impact/community-event.jpg',
+    description:
+      'Browse educational answers to frequently asked questions on late fees, business partnerships, credit card points, mortgages, and everyday loans.',
+    cta: 'View Common Questions',
+  },
+  {
+    id: 10,
+    title: 'Torah Seforim & Publications Store',
+    category: 'Learning & Resources',
+    href: '/seforim',
+    image: '/kav-brand/seforim-hero.png',
+    description:
+      'Order authoritative Seforim, practical guidebooks, and gilyonos published by Kav Haribis, including the renowned Bris Pinchos series.',
+    cta: 'Browse Seforim Store',
+  },
+  {
+    id: 11,
+    title: 'Communal Reading Circle & Chavrusa Network',
+    category: 'Learning & Resources',
+    href: '/reading-circle',
+    image: '/kav-impact/student-shiur.jpg',
+    description:
+      'Join communal learning initiatives, weekly review cycles, and chavrusas studying practical Hilchos Ribbis in communities around the world.',
+    cta: 'Join Reading Circle',
+  },
+  {
+    id: 12,
+    title: 'Kav Haribis Supporter Membership',
+    category: 'Learning & Resources',
+    href: '/membership',
+    image: '/kav-brand/rate-certified.png',
+    description:
+      'Become an official member to receive full database access, exclusive research reports, and directly support Rabbinic research worldwide.',
+    cta: 'Become a Member',
+  },
+  {
+    id: 13,
+    title: 'Heter Iska Consultation & Custom Documents',
+    category: 'Services & Programs',
+    href: '/heter-iska',
+    image: '/kav-brand/heter-iska.png',
+    description:
+      'Obtain custom Heter Iska legal frameworks, agreement reviews, and tailored advice for business partnerships, loans, and commercial ventures.',
+    cta: 'Get Heter Iska Guidance',
+  },
+  {
+    id: 14,
+    title: 'Bais Horaah Rabbinic Consultations',
+    category: 'Services & Programs',
+    href: '/bais-horaah',
+    image: '/kav-brand/bais-horaah.png',
+    description:
+      'Submit confidential halachic queries directly to experienced Dayanim and Rabbanim for definitive rulings on Ribbis matters.',
+    cta: 'Consult Bais Horaah',
+  },
+  {
+    id: 15,
+    title: 'Genealogy & Historical Rabbinic Services',
+    category: 'Services & Programs',
+    href: '/genealogy-services',
+    image: '/genealogy-hero.png',
+    description:
+      'Trace Rabbinic lineage, verify traditional family heritage, and access historical Rabbinical records through specialized research services.',
+    cta: 'Explore Genealogy Services',
+  },
+  {
+    id: 16,
+    title: 'Community Programs & Kehilla Outreach',
+    category: 'Services & Programs',
+    href: '/programs',
+    image: '/kav-impact/recognition-event.jpg',
+    description:
+      'Request customized educational seminars, Rabbinical conferences, and community awareness programs for your shul, yeshiva, or organization.',
+    cta: 'Request Community Program',
+  },
+  {
+    id: 17,
+    title: 'Kosher Investment & Venture Certification',
+    category: 'Services & Programs',
+    href: '/kosher-investment-certification',
+    image: '/kav-impact/heter-iska-presentation-2.jpg',
+    description:
+      'Receive Rabbinical audit and certification for financial funds, private equity, real estate ventures, and commercial investment vehicles.',
+    cta: 'Apply for Certification',
+  },
+  {
+    id: 18,
+    title: 'Ribbis Halachic Warning & Alert System',
+    category: 'Services & Programs',
+    href: '/ribis-alerts',
+    image: '/kav-brand/mission-visual-v2.png',
+    description:
+      'Subscribe to urgent Rabbinic warnings, commercial bank policy changes, and financial product alerts to ensure ongoing Halachic compliance.',
+    cta: 'Subscribe to Ribbis Alerts',
   },
 ];
 
 export default function OfferingsGrid() {
   return (
-    <section className="bg-[#102a43] py-20 px-4 sm:px-8">
-      <header className="text-center max-w-3xl mx-auto mb-14">
-        <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-3 hidden">
-          KAV HARIBIS OFFERINGS
-        </p>
-        <h2 className="text-white text-3xl sm:text-5xl font-meduim leading-tight">
-          Everything we offer—alive, clear, and easy to explore.
-        </h2>
-      </header>
-
-      <div className="max-w-[1240px] mx-auto px-4 sm:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-7">
-          {offeringsGridItems.map((item) => (
-            <a
-              key={item.title}
-              href={item.href}
-              className="bg-white p-6 sm:p-7 flex flex-col items-center justify-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 min-h-[165px] group border border-white/10"
+    <section className="bg-white py-20 px-4 sm:px-8 overflow-hidden">
+     
+      {/* 18 Alternating Rows Layout (Matching Reference Design) */}
+      <div className="max-w-[1140px] mx-auto space-y-16 sm:space-y-24">
+        {offeringsItems.map((item, index) => {
+          const isEven = index % 2 === 0;
+          return (
+            <div
+              key={item.id}
+              className={`flex flex-col lg:flex-row items-center gap-8 sm:gap-12 lg:gap-16 ${
+                isEven ? '' : 'lg:flex-row-reverse'
+              }`}
             >
-              <div className="mb-3 transition-transform duration-300 group-hover:scale-105">
-                {item.icon}
+              {/* Image Container */}
+              <div className="w-full lg:w-1/2 overflow-hidden shadow-lg border border-slate-200/80 group relative bg-slate-100">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-[260px] sm:h-[340px] lg:h-[380px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+                
               </div>
-              <h3 className="font-meduim text-[#1e293b] text-base sm:text-xl leading-snug">
-                {item.title}
-              </h3>
-              {item.subtitle && (
-                <p className="text-[#64748b] text-xs sm:text-base mt-1 font-medium">
-                  {item.subtitle}
+
+              {/* Content Container */}
+              <div className="w-full lg:w-1/2 flex flex-col items-start text-left">
+                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#102a43] tracking-tight leading-tight mb-4">
+                  {item.title}
+                </h3>
+                <p className="text-slate-600 text-base sm:text-lg leading-relaxed font-normal mb-6">
+                  {item.description}
                 </p>
-              )}
-            </a>
-          ))}
-        </div>
+                <a
+                  href={item.href}
+                  className="inline-flex items-center gap-2.5 px-5 py-3.5 bg-[#102a43] hover:bg-[#173f5f] text-white font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+                >
+                  <span className="text-white">{item.cta}</span>
+                </a>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

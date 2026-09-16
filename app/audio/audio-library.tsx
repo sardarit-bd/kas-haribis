@@ -118,11 +118,80 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
   return (
     <section className="w-full bg-[#f7f3ea] py-10 sm:py-14" ref={libraryRef}>
       <div className="container max-w-[1440px] mx-auto px-4 sm:px-8">
-        <div className="text-center mb-8 hidden">
-          <div className="mx-auto text-center mb-6">
-            <span className="text-[#a37828] text-xs font-bold tracking-widest uppercase block mb-1">NOW BROWSING</span>
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#102a43]">{selected.title}</h2>
-          </div>
+        {/* Collection Series Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4.5 sm:gap-5 mb-10 sm:mb-12">
+          {seriesDetails.map((item, index) => {
+            const count = audios.filter(
+              (audio) => audio.series === item.value,
+            ).length;
+            const isSelected = series === item.value;
+            const cardNumber = String(index + 1).padStart(2, '0');
+
+            return (
+              <div
+                key={item.value}
+                onClick={() => chooseSeries(item.value)}
+                className={`relative overflow-hidden p-6 sm:p-7 rounded-2xl transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-[310px] group ${
+                  isSelected
+                    ? 'border-2 border-[#b8860b] shadow-xl ring-2 ring-[#b8860b]/15 bg-gradient-to-br from-white via-white to-[#fdfbf6] -translate-y-1.5'
+                    : 'border border-slate-200/90 shadow-md hover:shadow-xl hover:border-slate-300 bg-white hover:-translate-y-1'
+                }`}
+              >
+                {/* Rotated SELECTED Badge Banner */}
+                {isSelected && (
+                  <div className="absolute top-5 -right-9 rotate-45 bg-[#b8860b] text-white text-[9px] font-extrabold tracking-widest px-9 py-1 shadow-sm uppercase pointer-events-none z-10">
+                    SELECTED
+                  </div>
+                )}
+
+                {/* Monogram Circle */}
+                <div>
+                  <div className="w-14 h-14 rounded-full bg-[#0d2238] text-white flex items-center justify-center font-serif text-lg font-bold shadow-md mb-5 shrink-0 group-hover:scale-105 transition-transform duration-200">
+                    {item.value === 'video-shiurim' ? (
+                      <svg
+                        className="w-5 h-5 fill-current translate-x-0.5"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    ) : (
+                      <span>{item.monogram}</span>
+                    )}
+                  </div>
+
+                  {/* Category Header with dynamic count */}
+                  <span className="text-[#a37828] text-[11px] font-extrabold tracking-widest uppercase block mb-1.5">
+                    {item.language.toUpperCase()} · {count} SHIURIM
+                  </span>
+
+                  {/* Title */}
+                  <h3 className="text-xl sm:text-[22px] font-serif font-bold text-[#102a43] leading-snug mb-3.5">
+                    {item.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-slate-600 text-xs sm:text-[13px] leading-relaxed font-normal">
+                    {item.description}
+                  </p>
+                </div>
+
+                {/* Footer Link & Watermark Number */}
+                <div className="mt-6 pt-2 flex items-center justify-between relative z-1">
+                  <span className="text-[#102a43] font-bold text-xs sm:text-sm flex items-center gap-1 group-hover:text-[#a37828] transition-colors">
+                    Explore series{' '}
+                    <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">
+                      →
+                    </span>
+                  </span>
+
+                  {/* Huge low-opacity watermark number */}
+                  <span className="absolute right-0 -bottom-3 text-6xl font-serif font-extrabold text-[#102a43]/[0.05] pointer-events-none select-none z-0">
+                    {cardNumber}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         {/* Filter controls bar */}

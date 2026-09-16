@@ -1,7 +1,7 @@
 'use client';
 import { FormEvent, useState } from 'react';
 
-export default function BankResearchForm() {
+export default function BankResearchForm({ defaultBankName }: { defaultBankName?: string } = {}) {
   const [mode, setMode] = useState('Request research on a lender');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -39,10 +39,10 @@ export default function BankResearchForm() {
   }
 
   return (
-    <section className="container px-4 sm:px-8 py-12 border-t border-[#e2e8f0]" id="submit-bank-information">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+    <section className="container px-4 sm:px-6 py-6" id="submit-bank-information">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
         {/* Intro Side */}
-        <div className="lg:col-span-5 space-y-6">
+        {/* <div className="lg:col-span-5 space-y-6 hidden">
           <div>
             <h2 className="text-[#102a43] font-serif font-meduim text-2xl sm:text-3xl lg:text-4xl leading-tight">
               Help strengthen the directory
@@ -74,12 +74,12 @@ export default function BankResearchForm() {
               private financial credentials.
             </p>
           </aside>
-        </div>
+        </div> */}
 
         {/* Form Side */}
-        <div className="lg:col-span-7">
+        <div className="lg:col-span-12">
           {reference ? (
-            <div className="p-8 sm:p-10 bg-white border border-slate-200/80 shadow-sm text-center space-y-5">
+            <div className="p-8 sm:p-10 bg-white text-center space-y-5">
               <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center text-2xl mx-auto font-bold border border-emerald-200">
                 ✓
               </div>
@@ -109,15 +109,8 @@ export default function BankResearchForm() {
               </button>
             </div>
           ) : (
-            <form onSubmit={submit} className="p-6 sm:p-8 bg-white border border-gray-100 space-y-6">
-              <div className="border-b border-slate-100 pb-4">
-                <h3 className="text-3xl font-serif font-bold text-[#102a43]">
-                  Submit Information
-                </h3>
-                <p className="text-xs sm:text-base text-slate-500 mt-0.5">
-                  Select a request type and fill in the details for our research team.
-                </p>
-              </div>
+            <form onSubmit={submit} className="space-y-6">
+              
 
               {/* Segmented Request Mode Selector */}
               <div className="space-y-1.5">
@@ -157,7 +150,7 @@ export default function BankResearchForm() {
                 <input
                   name="related_name"
                   required
-                  // placeholder="e.g. Chase Bank, Rocket Mortgage"
+                  defaultValue={defaultBankName || ''}
                   className="w-full h-11 px-3.5 bg-[#f8fafc] focus:bg-white border border-slate-100 hover:border-slate-300  text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#102a43]/15 focus:border-[#102a43] transition-all"
                 />
               </div>

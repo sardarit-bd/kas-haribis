@@ -1,3 +1,7 @@
+'use client';
+
+import { useRef } from 'react';
+
 const impactGalleryItems = [
   {
     title: 'Student Education',
@@ -58,58 +62,87 @@ const impactGalleryItems = [
 ];
 
 export default function CommunityImpact() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const scrollAmount = direction === 'left' ? -340 : 340;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <section className="py-16 md:py-16 bg-slate-50">
+    <section className="py-16 md:py-12 bg-white relative overflow-hidden">
       <div className="container max-w-[1440px] mx-auto px-4 sm:px-8">
+        {/* Centered Header & Subtitle */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-2 hidden">
-            KAV HARIBIS IN ACTION
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-meduim text-gray-800 mb-3">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-[#102a43]/80 mb-3 tracking-tight">
             Community Impact &amp; Gallery
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+          <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-normal mt-2">
             Promoting Hilchos Ribbis education, commercial advisory, and rabbinical guidance across kehillos and businesses worldwide.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {impactGalleryItems.map((item, idx) => (
-            <a
-              href={item.link}
-              className="bg-white overflow-hidden transition-all duration-300 group flex flex-col"
-              key={idx}
-            >
-              <div className="h-48 overflow-hidden relative">
-                <img
-                  src={item.src}
-                  alt={item.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-              <div className="p-5 flex flex-col flex-1 justify-between gap-3">
-                <div>
-                  <h3 className="font-semibold text-xl text-gray-600 text-base">
-                    {item.title}
-                  </h3>
-                  <p className="text-base font-meduim text-slate-500 mt-1">{item.subtitle}</p>
-                </div>
-                <span className="text-base font-meduim text-gray-500 pt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
-                  <span className="">Explore program</span>
-                  <span className="">→</span>
-                </span>
-              </div>
-            </a>
-          ))}
-        </div>
-
-        <div className="text-center">
-          <a
-            href="/contact"
-            className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#102a43] hover:bg-[#173f5f] text-white font-semibold text-base shadow-md transition-colors"
+        {/* Relative Slider Container with Side Navigation Buttons */}
+        <div className="relative group px-2 sm:px-4">
+          {/* Left Side Navigation Button */}
+          <button
+            onClick={() => scroll('left')}
+            className="absolute left-0 sm:-left-3 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 bg-white border border-slate-300/90 shadow-md text-[#102a43] hover:bg-[#102a43] hover:border-[#102a43] hover:text-white rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer"
+            aria-label="Previous slide"
           >
-            <span className="text-white">Request a Program</span>
-          </a>
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          {/* Right Side Navigation Button */}
+          <button
+            onClick={() => scroll('right')}
+            className="absolute right-0 sm:-right-3 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 bg-white border border-slate-300/90 shadow-md text-[#102a43] hover:bg-[#102a43] hover:border-[#102a43] hover:text-white rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer"
+            aria-label="Next slide"
+          >
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          {/* Single Row Horizontal Scroll Container */}
+          <div
+            ref={scrollRef}
+            className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-6 pt-1 scroll-smooth"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {impactGalleryItems.map((item, idx) => (
+              <a
+                href={item.link}
+                className="w-[280px] sm:w-[320px] md:w-[340px] shrink-0 snap-start bg-white transition-all duration-300 group flex flex-col justify-between"
+                key={idx}
+              >
+                <div>
+                  {/* Image Container with Zoom */}
+                  <div className="h-76 overflow-hidden relative bg-slate-100">
+                    <img
+                      src={item.src}
+                      alt={item.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* Content */}
+                  <div className="py-6 px-2">
+                    <h3 className="font-semibold text-lg sm:text-xl text-[#102a43] tracking-tight leading-snug">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm font-normal text-slate-500 mt-2 leading-relaxed">
+                      {item.subtitle}
+                    </p>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </section>

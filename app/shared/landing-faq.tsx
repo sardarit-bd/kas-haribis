@@ -49,12 +49,12 @@ export default function LandingFaq() {
   };
 
   return (
-    <section className="py-16 bg-[#f2f2f2]">
+    <section className="py-16 bg-gray-100">
       <div className="max-w-4xl mx-auto px-4">
         {/* Centered Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
           <p className="eyebrow gold mb-1.5 hidden">COMMON QUESTIONS &amp; HALACHA</p>
-          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-meduim text-[#102a43] mb-3">
+          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#102a43]/80 mb-3">
             Frequently Asked Questions About Hilchos Ribbis
           </h2>
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed">

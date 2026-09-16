@@ -18,8 +18,8 @@ export default async function SavingsPage() {
       
 
 
-      <section className=" py-8 bg-[#f7f3ea]">
-        <div className="container flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-10 pb-6 pt-4">
+      <section className=" py-8 bg-gray-200">
+        <div className="container flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-10 pb-6 pt-4 px-8">
           <div>
             <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase hidden">AVAILABLE ACCOUNTS</p>
             <h2 className="text-[#102a43] font-serif font-bold text-3xl sm:text-4xl">Compare high-yield savings options</h2>
@@ -30,7 +30,7 @@ export default async function SavingsPage() {
           </div>
           
         </div>
-        <div className="container grid grid-cols-1 md:grid-cols-2 gap-6 pb-4">
+        <div className="container grid grid-cols-1 md:grid-cols-2 gap-6 pb-4 px-8">
           {items.map((x) => {
             const link = safeLink(x.open_account_url);
             return (

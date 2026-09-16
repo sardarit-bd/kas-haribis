@@ -65,7 +65,7 @@ export default function NavigationMenu() {
           absolute lg:static top-[92px] left-0 w-full lg:w-auto
           bg-white lg:bg-transparent p-6 lg:p-0
           border-b lg:border-b-0 border-slate-200 shadow-xl lg:shadow-none
-          z-40 text-base font-meduim text-gray-700
+          z-40 text-base font-medium text-gray-700
         `}
       >
         <a
@@ -152,7 +152,7 @@ export default function NavigationMenu() {
 
           <a
           style={{color:"white!important"}}
-            className="inline-flex items-center justify-center bg-[#c69b46] hover:bg-[#b58a35] text-white px-5 py-2.5 font-semibold text-base transition-all shadow-md shadow-[#c69b46]/20"
+            className="inline-flex items-center justify-center bg-[#102a43] hover:bg-[#b58a35] text-white px-5 py-2.5 font-semibold text-base transition-all shadow-md shadow-[#c69b46]/20"
             href="/donate"
             onClick={closeMenu}
           >

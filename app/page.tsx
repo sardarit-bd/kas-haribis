@@ -18,7 +18,7 @@ export default function HomePage() {
       <CommunityImpact />
       <LandingFaq />
       <SubscriptionForm />
-      <SiteFooter showHeterNotice />
+      <SiteFooter />
     </main>
   );
 }

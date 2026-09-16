@@ -35,123 +35,154 @@ export default async function Page() {
         </aside>
       </section>
       </div>
-      <section className="py-6 sm:py-10 bg-[#f7f3ea]" id="investment-opportunities">
-        <div className="container flex items-end justify-between gap-6 mb-10 pb-6">
-          <div>
-            <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase hidden">CURRENT LISTINGS</p>
-            <h2 className="text-[#102a43] font-serif font-bold text-3xl sm:text-4xl">Available opportunities</h2>
-          </div>
-          <strong className="min-w-[145px] text-center p-4 bg-white block font-serif text-3xl font-bold text-[#c69b46]">
-            {items.length}
-            <small className="block text-[10px] font-mono font-normal uppercase tracking-widest text-[#64748b] mt-1">published</small>
-          </strong>
-        </div>
+      <section className="py-6 sm:py-10 bg-gray-200" id="investment-opportunities">
         {items.length ? (
-          <div className="container grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="container max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:px-8">
             {items.map((x) => (
               <article
-                className={`p-6 bg-white border border-gray-100 hover:shadow-md transition-shadow flex flex-col justify-between space-y-4 ${
-                  x.featured ? 'border-t-4 border-t-[#c69b46]' : ''
+                className={`bg-white border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group ${
+                  x.featured ? 'border-2 border-[#c69b46]' : ''
                 }`}
                 key={x.id}
               >
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-[72px_1fr_auto] gap-4 items-center pb-2">
+                <div>
+                  {/* Full-width Image Header */}
+                  <div className="relative w-full h-48 sm:h-52 bg-[#0d2238] overflow-hidden border-b border-slate-100 flex items-center justify-center shrink-0">
                     {x.logo_url ? (
                       <img
                         src={x.logo_url}
                         alt={`${x.sponsor_name || x.opportunity_name} logo`}
-                        className="w-[72px] h-[64px] object-contain p-1 bg-[#f3f5f3] border border-[#e2e8f0]"
+                        className="w-full h-full object-cover scale-105 transition-transform duration-500"
                       />
                     ) : (
-                      <span className="w-[72px] h-[64px] bg-[#102a43] text-[#e4c373] font-serif text-2xl font-bold flex items-center justify-center">
-                        {String(x.sponsor_name || x.opportunity_name || 'IO')
-                          .slice(0, 2)
-                          .toUpperCase()}
-                      </span>
+                      <div>
+                      </div>
                     )}
-                    <div>
-                      <small className="block text-md font-semibold text-gray-600 tracking-wider">
-                        {x.investment_type || 'Investment opportunity'}
-                      </small>
-                      <h3 className="text-2xl font-serif font-meduim text-[#102a43] leading-snug">{x.opportunity_name}</h3>
-                      {x.sponsor_name && <b className="text-base text-[#657383] font-medium block mt-0.5">Presented by {x.sponsor_name}</b>}
-                    </div>
-                    <em className="not-italic px-3 py-1 bg-[#e9f4eb] text-[#367448] rounded-full text-xs font-meduim tracking-wider w-max sm:self-start">
+
+                    {/* Minimal Badges */}
+                    <em className="absolute top-3 right-3 not-italic px-2.5 py-0.5 bg-[#102a43]/85 backdrop-blur-md text-white text-[11px] font-semibold tracking-wider rounded-xl">
                       {x.availability_status || 'Open'}
                     </em>
-                  </div>
-                  <p className="text-base py-2 text-[#475569] leading-relaxed">
-                    {x.description ||
-                      'Opportunity details are available from the sponsor.'}
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 my-4">
-                    {x.minimum_investment && (
-                      <div className="p-3 bg-[#f5f3ed]">
-                        <small className="block text-xs font-meduim text-[#9a742d] uppercase tracking-wider">MINIMUM</small>
-                        <strong className="block text-md font-bold text-[#102a43] mt-2">{x.minimum_investment}</strong>
-                      </div>
-                    )}
-                    {x.return_information && (
-                      <div className="p-3 bg-[#f5f3ed]">
-                        <small className="block text-xs font-meduim text-[#9a742d] uppercase tracking-wider">RETURN INFORMATION</small>
-                        <strong className="block text-md font-bold text-[#102a43] mt-2">{x.return_information}</strong>
-                      </div>
-                    )}
-                    {x.investment_term && (
-                      <div className="p-3 bg-[#f5f3ed]">
-                        <small className="block text-xs font-meduim text-[#9a742d] uppercase tracking-wider">TERM</small>
-                        <strong className="block text-md font-bold text-[#102a43] mt-2">{x.investment_term}</strong>
-                      </div>
-                    )}
-                    {x.location && (
-                      <div className="p-3 bg-[#f5f3ed]">
-                        <small className="block text-xs font-meduim text-[#9a742d] uppercase tracking-wider">LOCATION</small>
-                        <strong className="block text-md font-bold text-[#102a43] mt-2">{x.location}</strong>
-                      </div>
+                    {x.featured && (
+                      <span className="absolute top-3 left-3 bg-[#c69b46] text-white px-2.5 py-0.5 text-[10px] font-bold tracking-widest uppercase">
+                        FEATURED
+                      </span>
                     )}
                   </div>
-                  <div className="p-4 bg-[#f0f5f1] border-l-4 border-[#4c895d] rounded-r-xl space-y-2">
-                    <div className="flex items-center gap-3">
-                      <span className="w-6 h-6 rounded-full bg-[#4d895e] text-white flex items-center justify-center text-xs font-bold shrink-0">✓</span>
-                      <p className="flex-1 m-0">
-                        <small className="block text-sm font-meduim text-[#39734a] tracking-wider">{x.kosher_status || 'REVIEWED'}</small>
-                        <b className="text-md font-meduim text-[#294b34] block">
-                          {x.rabbinical_oversight ||
-                            'Kosher investment information'}
-                        </b>
-                      </p>
-                      {x.last_reviewed && (
-                        <time className="text-[10px] text-[#63736a]">
-                          {new Date(
-                            `${x.last_reviewed}T00:00:00`,
-                          ).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                          })}
-                        </time>
+
+                  {/* Card Body */}
+                  <div className="p-5 sm:p-6 space-y-3.5">
+                    <div>
+                      <span className="text-[#c69b46] font-meduim text-[15px] block mb-1">
+                        {x.investment_type || 'Investment opportunity'}
+                      </span>
+                      <h3 className="text-lg sm:text-3xl font-serif font-bold text-[#102a43] leading-snug group-hover:text-[#a37828] transition-colors">
+                        {x.opportunity_name}
+                      </h3>
+                      {x.sponsor_name && (
+                        <span className="text-xs text-slate-500 font-medium block mt-1">
+                          Presented by {x.sponsor_name}
+                        </span>
                       )}
                     </div>
-                    {x.kosher_details && <p className="text-xs text-[#405d48] leading-relaxed pt-1">{x.kosher_details}</p>}
+
+                    <p className="text-xs sm:text-base text-slate-600 leading-relaxed line-clamp-2">
+                      {x.description ||
+                        'Opportunity details are available from the sponsor.'}
+                    </p>
+
+                    {/* Clean Key Metrics Divider Grid (Lightweight, No Bulky Boxes) */}
+                    <div className="border-t border-b border-slate-100 py-3 grid grid-cols-2 gap-x-4 gap-y-2.5 text-xs my-2">
+                      {x.minimum_investment && (
+                        <div>
+                          <span className="text-[13px] font-semibold text-slate-400 block">
+                            Minimum
+                          </span>
+                          <strong className="font-bold text-[#102a43] text-xs block truncate" title={x.minimum_investment}>
+                            {x.minimum_investment}
+                          </strong>
+                        </div>
+                      )}
+                      {x.return_information && (
+                        <div>
+                          <span className="text-[13px] font-semibold text-slate-400 block">
+                            Return
+                          </span>
+                          <strong className="font-bold text-[#102a43] text-xs block truncate" title={x.return_information}>
+                            {x.return_information}
+                          </strong>
+                        </div>
+                      )}
+                      {x.investment_term && (
+                        <div>
+                          <span className="text-[13px] font-semibold text-slate-400 block">
+                            Term
+                          </span>
+                          <strong className="font-bold text-[#102a43] text-xs block truncate" title={x.investment_term}>
+                            {x.investment_term}
+                          </strong>
+                        </div>
+                      )}
+                      {x.location && (
+                        <div>
+                          <span className="text-[13px] font-semibold text-slate-400 block">
+                            Location
+                          </span>
+                          <strong className="font-bold text-[#102a43] text-xs block truncate" title={x.location}>
+                            {x.location}
+                          </strong>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Natural Halachic Review Bar */}
+                    <div className="flex items-start gap-2.5 text-xs bg-[#f4f8f5] p-3 border-l-2 border-[#4c895e]">
+                      <span className="text-[#367448] font-bold text-sm leading-none shrink-0 mt-0.5">✓</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <strong className="font-bold text-[11px] uppercase text-[#367448] tracking-wider">
+                            {x.kosher_status || 'REVIEWED'}
+                          </strong>
+                          {x.last_reviewed && (
+                            <span className="text-[10px] text-slate-400">
+                              {new Date(`${x.last_reviewed}T00:00:00`).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                              })}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs font-medium text-slate-700 mt-0.5 leading-snug">
+                          {x.rabbinical_oversight || 'Kosher investment information'}
+                        </p>
+                      </div>
+                    </div>
+
+                    {x.public_notes && (
+                      <p className="p-2.5 bg-[#fffdf5] border-l-2 border-[#c69b46] text-xs text-[#876622] leading-relaxed">
+                        {x.public_notes}
+                      </p>
+                    )}
+
+                    {x.risk_disclosure && (
+                      <details className="border-t border-slate-100 pt-2 group/disclosure">
+                        <summary className="text-xs font-bold text-slate-500 hover:text-[#102a43] cursor-pointer flex items-center justify-between py-1">
+                          <span>Important risk disclosure</span>
+                          <span className="text-[10px] group-open/disclosure:rotate-180 transition-transform">▼</span>
+                        </summary>
+                        <p className="pt-2 text-xs text-slate-500 leading-relaxed border-t border-slate-100 mt-1">
+                          {x.risk_disclosure}
+                        </p>
+                      </details>
+                    )}
                   </div>
-                  {x.public_notes && (
-                    <p className="p-3 bg-[#fff7e5] border-l-4 border-[#c69b46] rounded-r-xl text-xs text-[#876622]">{x.public_notes}</p>
-                  )}
-                  {x.risk_disclosure && (
-                    <details className="mt-3 border border-[#e0e3e4] rounded-xl overflow-hidden group">
-                      <summary className="p-3 text-xs font-bold text-[#7f6024] cursor-pointer bg-[#f8fafc] group-open:border-b border-[#e0e3e4]">
-                        Important risk disclosure
-                      </summary>
-                      <p className="p-3.5 text-xs text-[#626d78] leading-relaxed">{x.risk_disclosure}</p>
-                    </details>
-                  )}
                 </div>
 
-                <div className="flex items-center gap-3 pt-4 text-xs font-bold text-[#c69b46] flex-wrap">
+                {/* Footer Action Bar */}
+                <div className="p-5 sm:p-6 pt-0 space-y-2.5">
                   {link(x.opportunity_url) ? (
                     <a
-                      className="px-4 py-2 bg-[#102a43] hover:bg-[#1a385c] text-white rounded-lg transition-colors text-xs font-bold shadow-sm"
+                      className="block w-full text-center py-2.5 bg-[#102a43] hover:bg-[#1a385c] text-white transition-all text-xs font-bold shadow-sm"
                       href={x.opportunity_url}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -159,20 +190,30 @@ export default async function Page() {
                       View Opportunity ↗
                     </a>
                   ) : (
-                    <span className="text-[#7c8790] font-medium text-[16px]">Details link coming soon</span>
+                    <div className="text-center py-2 text-slate-400 text-xs bg-slate-50 border border-slate-100">
+                      Details link coming soon
+                    </div>
                   )}
-                  {x.email && <a href={`mailto:${x.email}`} className="hover:underline">Contact sponsor</a>}
-                  {x.phone && (
-                    <a href={`tel:${x.phone.replace(/[^+\d]/g, '')}`} className="hover:underline ml-auto">
-                      {x.phone}
-                    </a>
+                  {(x.email || x.phone) && (
+                    <div className="flex items-center justify-between text-xs text-[#c69b46] font-semibold pt-1">
+                      {x.email ? (
+                        <a href={`mailto:${x.email}`} className="hover:underline">
+                          Contact sponsor
+                        </a>
+                      ) : <span />}
+                      {x.phone && (
+                        <a href={`tel:${x.phone.replace(/[^+\d]/g, '')}`} className="hover:underline ml-auto">
+                          {x.phone}
+                        </a>
+                      )}
+                    </div>
                   )}
                 </div>
               </article>
             ))}
           </div>
         ) : (
-          <div className="p-12 text-center bg-white border border-dashed border-[#cbd5e1] rounded-2xl max-w-md mx-auto space-y-3">
+          <div className="p-12 text-center bg-white border border-dashed border-[#cbd5e1] max-w-md mx-auto space-y-3">
             <span className="text-4xl text-[#c69b46] block">◆</span>
             <h2 className="text-xl font-serif font-bold text-[#102a43]">Opportunities will appear here</h2>
             <p className="text-sm text-[#64748b]">

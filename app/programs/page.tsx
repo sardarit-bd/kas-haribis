@@ -78,9 +78,8 @@ export default function ProgramsPage() {
       </section>
 
       {/* Program Types */}
-      <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 my-12 space-y-8">
+      <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 my-12 space-y-8 py-12">
         <div className="">
-          <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1">PROGRAMS FOR EVERY AUDIENCE</p>
           <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#102a43]">Education shaped around real needs</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -112,7 +111,7 @@ export default function ProgramsPage() {
       </section>
 
       {/* Gallery Section */}
-      <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 my-12 space-y-8" id="program-gallery">
+      <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 my-12 space-y-8 pb-12" id="program-gallery">
         <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 pb-6 border-b border-[#e2e8f0] hidden">
           <div>
             <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase">KAV HARIBIS IN ACTION</p>
@@ -139,9 +138,8 @@ export default function ProgramsPage() {
                 className="w-full h-64 sm:h-72 object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#071728] via-[#071728]/40 to-transparent p-6 flex flex-col justify-end text-white">
-                <small className="text-[10px] font-mono font-bold text-[#c69b46] uppercase tracking-widest block mb-1">KAV HARIBIS</small>
-                <h3 className="text-lg font-serif font-bold text-white mb-1">{item.title}</h3>
-                <p className="text-xs text-[#cbd5e1] leading-relaxed line-clamp-2">{item.text}</p>
+                <h3 className="text-xl font-serif font-bold text-white mb-1">{item.title}</h3>
+                <p className="text-sm text-[#cbd5e1] leading-relaxed line-clamp-2">{item.text}</p>
               </div>
             </figure>
           ))}

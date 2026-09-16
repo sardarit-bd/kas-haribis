@@ -98,12 +98,12 @@ export default function SponsorBanner() {
         }
       >
         {/* Circle Logo Container */}
-        <div className="w-[48px] h-[48px] sm:w-[52px] sm:h-[52px] bg-white flex items-center justify-center transition-all duration-300 overflow-hidden rounded-sm">
+        <div className="w-[44px] h-[44px] sm:w-[48px] sm:h-[48px] bg-white flex items-center justify-center transition-all duration-300 overflow-hidden rounded-sm">
           {sponsor.image_key ? (
             <img
               src={sponsor.image_key}
               alt={sponsor.company_name}
-              className="w-full h-full object-contain rounded-sm"
+              className="w-full h-full object-cover rounded-sm"
             />
           ) : (
             <span className="text-[#102a43] font-serif font-bold text-lg sm:text-xl">
@@ -129,14 +129,14 @@ export default function SponsorBanner() {
   return (
     <>
       <section
-        className="px-4 sm:px-8 bg-[#F8FAFC] relative overflow-hidden flex items-center justify-center gap-1 sm:gap-3"
+        className="px-4 sm:px-8 bg-gray-200 relative overflow-hidden flex items-center justify-center gap-1 sm:gap-3"
         aria-label="Supporters of Kav Haribis"
       >
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-xs sm:text-base font-serif font-semibold text-[#102a43]/60 leading-5.5">
+          <span className="text-xs sm:text-base font-serif font-semibold text-[#102a43]/60 leading-5.5">
             Our Proud<br/>Sponsors
-          </h2>
+          </span>
           <p className="text-[#637282] text-xs sm:text-sm max-w-xl mx-auto leading-relaxed hidden">
             We express our sincere appreciation to the generous businesses and donors whose support<br className="hidden sm:inline" />
             enables Kav Haribis to provide vital Torah education and community services worldwide.
@@ -169,9 +169,9 @@ export default function SponsorBanner() {
             <span className='text-white'>Become a Sponsor</span>
           </a>
           <a href="/contact">
-            <h2 className="text-xs  sm:text-base font-serif font-semibold text-[#102a43]/60 leading-5.5">
+            <span className="text-xs  sm:text-base font-serif font-semibold text-[#102a43]/60 leading-5.5">
             Become a<br/>Sponsor
-          </h2>
+          </span>
           </a>
         </div>
       </section>
