@@ -57,7 +57,7 @@ export default function BaisHoraahPage() {
     </section>
 
   
-      <section className="my-12 container grid grid-cols-1 lg:grid-cols-12 gap-8 items-start" id="submit-question">
+      <section className="my-12 container grid grid-cols-1 lg:grid-cols-12 gap-8 items-start py-8 px-8" id="submit-question">
         <div className="lg:col-span-5 space-y-6">
           <div>
             <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1 hidden">SUBMIT YOUR QUESTION</p>
@@ -102,11 +102,11 @@ export default function BaisHoraahPage() {
      
 
        <section className=" p-6 sm:p-10 bg-[#f7f3ea] space-y-6">
-        <div className='container'>
+        <div className='container px-8'>
           <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1 hidden">WHAT HAPPENS NEXT</p>
           <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#102a43]">A clear, confidential process</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 container">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 container px-8 pt-6">
           <article className="p-5 bg-white space-y-2">
             <b className="w-8 h-8 rounded-full bg-[#102a43] text-white flex items-center justify-center text-xs font-mono font-bold">1</b>
             <h3 className="text-base font-serif font-bold text-[#102a43]">Submit the facts</h3>
