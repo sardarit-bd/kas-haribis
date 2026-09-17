@@ -110,8 +110,88 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
   };
 
 
+  const statusCards = [
+    {
+      key: 'mehudar',
+      title: 'Mehudar',
+      desc: 'No Jewish CEO or Board Member.',
+      bg: 'bg-[#3b52c1] hover:bg-[#3144a5] text-white',
+    },
+    {
+      key: 'kosher',
+      title: 'Kosher',
+      desc: 'No Jewish shareholder who seems to have any opinion based on his stock ownership.',
+      bg: 'bg-[#38a169] hover:bg-[#2f855a] text-white',
+    },
+    {
+      key: 'only-kosher-with-iska',
+      title: 'Kosher Only With Iska',
+      desc: 'Permitted only with a valid heter iska.',
+      bg: 'bg-[#f59e0b] hover:bg-[#d97706] text-white',
+    },
+    {
+      key: 'case-by-case',
+      title: 'Case by Case',
+      desc: 'Requires individual review or specific circumstances.',
+      bg: 'bg-[#d69e2e] hover:bg-[#b7791f] text-white',
+    },
+    {
+      key: 'questionable',
+      title: 'Questionable',
+      desc: 'We have the info but there is a point that needs clarification.',
+      bg: 'bg-[#facc15] hover:bg-[#eab308] text-[#102a43]',
+    },
+    {
+      key: 'no-good',
+      title: 'Not recommended',
+      desc: 'Halachically problematic.',
+      bg: 'bg-[#e53e3e] hover:bg-[#c53030] text-white',
+    },
+    {
+      key: 'lack-of-information',
+      title: 'Lack of Information',
+      desc: 'Insufficient data to make a determination.',
+      bg: 'bg-[#718096] hover:bg-[#4a5568] text-white',
+    },
+  ];
+
   return (
     <section className="container px-4 sm:px-8 py-10 md:py-14">
+      {/* 7 Status Cards Grid (Connected with Directory Tools status filter) */}
+      <div className="mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 container justify-center">
+          {statusCards.map((card) => {
+            const isSelected = status === card.key;
+            return (
+              <button
+                key={card.key}
+                type="button"
+                onClick={() => handleStatusChange(isSelected ? 'all' : card.key)}
+                className={`p-5 text-center transition-all cursor-pointer flex flex-col justify-center items-center shadow-sm relative overflow-hidden ${
+                  card.bg
+                } ${
+                  isSelected
+                    ? 'shadow-xl'
+                    : 'opacity-95 hover:opacity-100 hover:scale-[1.01]'
+                }`}
+              >
+                <h3 className="text-lg sm:text-xl font-bold mb-1.5 leading-tight flex items-center justify-center gap-2">
+                  {card.title}
+                  {isSelected && (
+                    <span className="text-[10px] uppercase tracking-wider bg-white text-[#102a43] px-2 py-0.5 rounded-full font-extrabold shadow-sm">
+                      Active
+                    </span>
+                  )}
+                </h3>
+                <p className="text-xs sm:text-sm font-medium leading-snug opacity-90 max-w-xs">
+                  {card.desc}
+                </p>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Directory Tools */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[minmax(200px,1fr)_minmax(150px,0.7fr)_minmax(130px,0.6fr)_minmax(140px,0.5fr)] gap-4 items-end mb-8 bg-white p-4 sm:p-5 border border-slate-200/80">
         <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#102a43]">
@@ -436,6 +516,49 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
         </div>
       )}
 
+      {/* Bottom CTA Section (Matching BottomCTA component layout & styling 100%) */}
+      <div className="mt-16 sm:mt-12 -mx-4 sm:-mx-8">
+        <section className="bg-gray-200">
+          <section className="container max-w-[1440px] mx-auto px-4 sm:px-8">
+            <div className="bg-[#102a43] text-white p-8 sm:p-12 md:p-[50px] flex flex-col items-center justify-between text-center gap-8 md:gap-[50px]">
+              <div className="max-w-[880px] mx-auto">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-white leading-tight mb-4 tracking-tight">
+                  Don’t see what you’re looking for?
+                </h2>
+                <p className="text-slate-200 text-base sm:text-lg leading-relaxed font-normal">
+                  Have info on any bank or lender that may be useful?
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-5">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setRequestUpdateBank({
+                      id: 'general',
+                      title: 'Bank / Lender Directory Inquiry',
+                      status: 'all',
+                      summary: '',
+                      comment: '',
+                      last_updated: '',
+                      has_full_report: 0,
+                      source: '',
+                      institution_type: '',
+                      website: '',
+                      logo_url: '',
+                    })
+                  }
+                  style={{ color: 'white' }}
+                  className="inline-flex items-center gap-2.5 px-6 py-3.5 pBG text-white font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 cursor-pointer"
+                >
+                  <span>Please reach out !</span>
+                </button>
+              </div>
+            </div>
+          </section>
+        </section>
+      </div>
+
       {/* Modal 1: Bank Full Details / Full Report Modal */}
       {detailBank && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
@@ -603,6 +726,8 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
           onClose={() => setUnlock(null)}
         />
       )}
+
+
     </section>
   );
 }

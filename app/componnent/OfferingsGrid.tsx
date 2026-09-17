@@ -347,7 +347,7 @@ export default function OfferingsGrid() {
   return (
     <section className="bg-[#f8f5ef]/40 py-20 px-4 sm:px-8 overflow-hidden">
       {/* Programs Style Layout (Inspired by ribis.netlify.app/programs) */}
-      <div className="container max-w-7xl mx-auto space-y-20 sm:space-y-28">
+      <div className="container max-w-7xl mx-auto space-y-20 sm:space-y-28 px-8">
         {offeringsItems.map((item, index) => {
           const isEven = index % 2 === 0;
           return (
