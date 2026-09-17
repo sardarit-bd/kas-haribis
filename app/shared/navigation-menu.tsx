@@ -152,7 +152,7 @@ export default function NavigationMenu() {
 
           <a
           style={{color:"white!important"}}
-            className="inline-flex items-center justify-center bg-[#102a43] hover:bg-[#b58a35] text-white px-5 py-2.5 font-semibold text-base transition-all shadow-md shadow-[#c69b46]/20"
+            className="inline-flex items-center justify-center pBG hover:bg-[#b58a35] text-white px-5 py-2.5 font-semibold text-base transition-all shadow-md shadow-[#c69b46]/20"
             href="/donate"
             onClick={closeMenu}
           >

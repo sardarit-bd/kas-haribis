@@ -25,14 +25,14 @@ export default function AboutPage() {
             <div className="flex items-center gap-5 flex-wrap">
               <a
                 href="/bais-horaah"
-                style={{ color: 'black' }}
-                className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-white text-black font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+                style={{ color: 'white' }}
+                className="inline-flex items-center gap-2.5 px-6 py-3.5 pBG text-white font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
               >
                 <span>Ask the Bais Horaah</span>
               </a>
               <a
                 href="/programs"
-                className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-sm sm:text-base border border-white/20 transition-all duration-300"
+                className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-white/10 hover:bg-white/20 text-gray-300 font-semibold text-sm sm:text-base border border-white/20 transition-all duration-300"
               >
                 <span>Explore Programs</span>
               </a>
@@ -167,7 +167,7 @@ export default function AboutPage() {
             </p>
             <a
               href="/programs"
-              className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#102a43] hover:bg-[#173f5f] text-white font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-300"
+              className="inline-flex items-center gap-2.5 px-6 py-3.5 pBG text-white font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-300"
             >
               <span className="text-white">See All Programs</span>
             </a>

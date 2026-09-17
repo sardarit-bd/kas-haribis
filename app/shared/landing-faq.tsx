@@ -123,7 +123,7 @@ export default function LandingFaq() {
           <a
             href="/questions"
             style={{ color: 'white' }}
-            className="inline-flex items-center gap-2 bg-[#102a43] hover:bg-[#173f5f] text-white font-bold py-3.5 px-8 text-sm transition shadow-md border border-[#c69b46]/30"
+            className="inline-flex items-center gap-2 pBG text-white font-bold py-3.5 px-8 text-sm transition shadow-md border border-[#c69b46]/30"
           >
             <span>View All Common Questions</span>
           </a>

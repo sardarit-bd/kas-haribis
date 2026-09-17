@@ -20,8 +20,8 @@ const BottomCTA = ({ eyebrow, title, discription, link, linktext, link2, link2te
           {link && (
             <a
               href={link}
-              style={{ color: 'black' }}
-              className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-white text-black font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+              style={{ color: 'white' }}
+              className="inline-flex items-center gap-2.5 px-6 py-3.5 pBG text-white font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
             >
               <span>{linktext}</span>
             </a>

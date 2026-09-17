@@ -25,7 +25,7 @@ export default function OurMission() {
             <div className="pt-2 flex justify-center md:justify-start">
               <a
                 href="/about-us"
-                className="inline-flex items-center gap-2.5 px-5 py-3.5 bg-[#102a43] hover:bg-[#173f5f] text-white font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2.5 px-5 py-3.5 pBG hover:bg-[#173f5f] text-white font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
               >
                 <span className="text-white">Learn about the organization</span>
               </a>

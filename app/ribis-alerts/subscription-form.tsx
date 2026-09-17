@@ -39,7 +39,7 @@ export default function SubscriptionForm() {
 
   return (
     <section className='bg-gray-200'>
-    <section className="w-full py-10 container">
+    <section className="w-full py-10 container px-8">
       <div className="bg-[#102a43] text-white p-8 sm:p-12 md:p-[50px] text-center">
         {/* Header */}
         <p className="eyebrow gold mb-2">SUBSCRIBE TO OUR NEWSLETTER</p>
@@ -63,7 +63,7 @@ export default function SubscriptionForm() {
             <button
               type="submit"
               disabled={busy}
-              className="bg-[#102a43] hover:bg-[#173f5f] text-white font-bold px-7 py-3 transition duration-200 flex items-center justify-center gap-2 shrink-0 disabled:opacity-50 cursor-pointer text-sm"
+              className="pBG text-white font-bold px-7 py-3 transition duration-200 flex items-center justify-center gap-2 shrink-0 disabled:opacity-50 cursor-pointer text-sm"
             >
               {busy ? (
                 <span>Subscribing…</span>

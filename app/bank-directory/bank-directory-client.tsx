@@ -48,6 +48,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
   const [requestUpdateBank, setRequestUpdateBank] = useState<Bank | null>(null);
   const [perPage, setPerPage] = useState<number | 'all'>(12);
   const [currentPage, setCurrentPage] = useState(1);
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
   const filtered = useMemo(
     () =>
@@ -112,7 +113,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
   return (
     <section className="container px-4 sm:px-8 py-10 md:py-14">
       {/* Directory Tools */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[minmax(200px,1fr)_minmax(150px,0.7fr)_minmax(130px,0.6fr)_auto_auto] gap-4 items-end mb-8 bg-white p-4 sm:p-5 border border-slate-200/80">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[minmax(200px,1fr)_minmax(150px,0.7fr)_minmax(130px,0.6fr)_minmax(140px,0.5fr)] gap-4 items-end mb-8 bg-white p-4 sm:p-5 border border-slate-200/80">
         <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#102a43]">
           Search financial institutions within  {filtered.length} Bank List
           <input
@@ -156,99 +157,221 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
             <option value="all">All</option>
           </select>
         </label>
+        <div className="flex flex-col gap-1.5 text-sm font-semibold text-[#102a43]">
+          View Mode
+          <div className="flex items-center h-[43px] border border-[#cbd5da] rounded-lg p-1 bg-slate-50">
+            <button
+              type="button"
+              onClick={() => setViewMode('list')}
+              className={`flex-1 h-full flex items-center justify-center gap-1.5 px-3 rounded text-xs font-bold transition-all cursor-pointer ${
+                viewMode === 'list'
+                  ? 'bg-[#102a43] text-white shadow-sm'
+                  : 'text-slate-600 hover:text-[#102a43]'
+              }`}
+              title="List View"
+              aria-label="List View"
+            >
+              <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
+                <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+              </svg>
+              List
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('grid')}
+              className={`flex-1 h-full flex items-center justify-center gap-1.5 px-3 rounded text-xs font-bold transition-all cursor-pointer ${
+                viewMode === 'grid'
+                  ? 'bg-[#102a43] text-white shadow-sm'
+                  : 'text-slate-600 hover:text-[#102a43]'
+              }`}
+              title="Grid View"
+              aria-label="Grid View"
+            >
+              <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
+                <path d="M4 4h7v7H4zm9 0h7v7h-7zm0 9h7v7h-7zm-9 0h7v7H4z"/>
+              </svg>
+              Grid
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Directory Grid View */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
-        {filtered.length === 0 && (
-          <p className="col-span-full p-6 text-center text-sm font-semibold text-[#876622] bg-[#fff7e5] border border-[#f3e4bc]">
-            No banks match this search. Clear the search or choose All statuses.
-          </p>
-        )}
-        {paginatedBanks.map((bank) => (
-          <article
-            key={bank.id}
-            className="bg-white border border-slate-200 p-5 transition-all flex flex-col justify-between h-full"
-          >
-            <div className="w-full">
-              {/* Bank Logo Container with Status Badge Overlay */}
-              <div className="relative w-full h-40 flex items-center justify-center mb-7">
-                {/* Status Badge Overlap */}
-                <span
-                  className={`absolute top-2 right-2 z-10 px-2.5 py-0.5 text-xs font-bold text-white rounded-lg ${getStatusBadgeStyle(
-                    bank.status,
-                  )}`}
-                >
-                  {labels[bank.status] || bank.status}
-                </span>
-
-                {Boolean(bank.has_full_report) && (
-                  <span className="absolute top-2 right-2 z-10 text-[10px] font-extrabold uppercase px-2 py-0.5 bg-amber-100 text-amber-900 border border-amber-300">
-                    $15 Report
+      {/* Directory Cards (Grid / List View) */}
+      {filtered.length === 0 ? (
+        <p className="p-6 text-center text-sm font-semibold text-[#876622] bg-[#fff7e5] border border-[#f3e4bc]">
+          No banks match this search. Clear the search or choose All statuses.
+        </p>
+      ) : viewMode === 'grid' ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+          {paginatedBanks.map((bank) => (
+            <article
+              key={bank.id}
+              className="bg-white border border-slate-200 p-5 transition-all flex flex-col justify-between h-full"
+            >
+              <div className="w-full">
+                {/* Bank Logo Container with Status Badge Overlay */}
+                <div className="relative w-full h-40 flex items-center justify-center mb-7">
+                  {/* Status Badge Overlap */}
+                  <span
+                    className={`absolute top-2 right-2 z-10 px-2.5 py-0.5 text-xs font-bold text-white rounded-lg ${getStatusBadgeStyle(
+                      bank.status,
+                    )}`}
+                  >
+                    {labels[bank.status] || bank.status}
                   </span>
+
+                  {Boolean(bank.has_full_report) && (
+                    <span className="absolute top-2 right-2 z-10 text-[10px] font-extrabold uppercase px-2 py-0.5 bg-amber-100 text-amber-900 border border-amber-300">
+                      $15 Report
+                    </span>
+                  )}
+
+                  {bank.logo_url ? (
+                    <img
+                      className="max-h-full max-w-full object-cover w-full h-full"
+                      src={bank.logo_url}
+                      alt={bank.title}
+                    />
+                  ) : (
+                    <div></div>
+                  )}
+                </div>
+
+                {/* Last Updated Date */}
+                <p className="text-xs sm:text-sm font-semibold text-slate-800/80 mb-1">
+                  {bank.last_updated
+                    ? new Date(`${bank.last_updated}T00:00:00`).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })
+                    : 'Date not specified'}
+                </p>
+
+                {/* Title & Institution Type */}
+                <h3 className="text-base sm:text-xl py-3 font-serif font-bold text-[#102a43] leading-snug mb-1">
+                  {bank.title}
+                </h3>
+                {bank.institution_type && (
+                  <p className="text-xs text-slate-500 font-medium mb-3">
+                    {bank.institution_type}
+                  </p>
                 )}
 
+                {/* Summary description */}
+                <p className="text-md text-slate-500 line-clamp-2 mb-4">
+                  {bank.summary || bank.comment || 'The current directory lists this institution under the status shown above.'}
+                </p>
+              </div>
+
+              {/* Bottom Buttons */}
+              <div className="grid grid-cols-2 gap-2.5 pt-3 w-full">
+                <button
+                  type="button"
+                  onClick={() => setDetailBank(bank)}
+                  className="w-full py-1 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer"
+                >
+                  Full Report
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRequestUpdateBank(bank)}
+                  className="w-full py-1 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-meduim transition-colors text-center cursor-pointer"
+                >
+                  Request Update
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        /* List View */
+        <div className="flex flex-col gap-4">
+          {paginatedBanks.map((bank) => (
+            <article
+              key={bank.id}
+              className="bg-white border border-slate-200 p-4 sm:p-5 transition-all flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-sm"
+            >
+              {/* Left: Logo container */}
+              <div className="w-full md:w-48 h-32 md:h-36 shrink-0 flex items-center justify-center p-3 bg-slate-50 border border-slate-100 rounded-lg relative overflow-hidden">
                 {bank.logo_url ? (
                   <img
-                    className="max-h-full max-w-full object-cover w-full h-full"
+                    className="max-h-full max-w-full object-contain"
                     src={bank.logo_url}
                     alt={bank.title}
                   />
                 ) : (
-                  <div></div>
+                  <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-[#102a43] text-white font-bold text-lg">
+                    {bank.title.charAt(0).toUpperCase()}
+                  </div>
                 )}
               </div>
-            
 
-              {/* Last Updated Date */}
-              <p className="text-xs sm:text-sm font-semibold text-slate-800/80 mb-1">
-                {bank.last_updated
-                  ? new Date(`${bank.last_updated}T00:00:00`).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })
-                  : 'Date not specified'}
-              </p>
+              {/* Middle: Details */}
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-center gap-2 mb-2">
+                  <span
+                    className={`px-2.5 py-0.5 text-xs font-bold text-white rounded-lg border ${getStatusBadgeStyle(
+                      bank.status,
+                    )}`}
+                  >
+                    {labels[bank.status] || bank.status}
+                  </span>
 
-              {/* Title & Institution Type */}
-              <h3 className="text-base sm:text-xl py-3 font-serif font-bold text-[#102a43] leading-snug mb-1">
-                {bank.title}
-              </h3>
-              {bank.institution_type && (
-                <p className="text-xs text-slate-500 font-medium mb-3">
-                  {bank.institution_type}
+                  {Boolean(bank.has_full_report) && (
+                    <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 bg-amber-100 text-amber-900 border border-amber-300 rounded-sm">
+                      $15 Report
+                    </span>
+                  )}
+
+                  <span className="text-xs text-slate-500 font-medium ml-auto sm:ml-0">
+                    Updated:{' '}
+                    {bank.last_updated
+                      ? new Date(`${bank.last_updated}T00:00:00`).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })
+                      : 'Date not specified'}
+                  </span>
+                </div>
+
+                <h3 className="text-lg sm:text-xl font-serif font-bold text-[#102a43] leading-snug mb-1">
+                  {bank.title}
+                </h3>
+
+                {bank.institution_type && (
+                  <p className="text-xs text-slate-500 font-medium mb-2">
+                    {bank.institution_type}
+                  </p>
+                )}
+
+                <p className="text-sm text-slate-600 line-clamp-3">
+                  {bank.summary || bank.comment || 'The current directory lists this institution under the status shown above.'}
                 </p>
-              )}
+              </div>
 
-              {/* Summary description */}
-              <p className="text-md text-slate-500 line-clamp-2 mb-4">
-                {bank.summary || bank.comment || 'The current directory lists this institution under the status shown above.'}
-              </p>
-
-
-            </div>
-
-            {/* Bottom Buttons */}
-            <div className="grid grid-cols-2 gap-2.5 pt-3 w-full">
-              <button
-                type="button"
-                onClick={() => setDetailBank(bank)}
-                className="w-full py-1 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer"
-              >
-                Full Report
-              </button>
-              <button
-                type="button"
-                onClick={() => setRequestUpdateBank(bank)}
-                className="w-full py-1 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-meduim transition-colors text-center cursor-pointer"
-              >
-                Request Update
-              </button>
-            </div>
-          </article>
-        ))}
-      </div>
+              {/* Right: Action Buttons */}
+              <div className="w-full md:w-44 shrink-0 flex flex-col sm:flex-row md:flex-col gap-2.5 justify-center pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setDetailBank(bank)}
+                  className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-sm"
+                >
+                  Full Report
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRequestUpdateBank(bank)}
+                  className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-medium transition-colors text-center cursor-pointer rounded-sm"
+                >
+                  Request Update
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
 
       {/* Pagination */}
       {filtered.length > 0 && (

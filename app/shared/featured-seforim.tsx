@@ -58,7 +58,7 @@ export default function FeaturedSeforim() {
 
   return (
     <section className="py-16 bg-gray-200">
-      <div className="container max-w-7xl mx-auto px-4">
+      <div className="container max-w-7xl mx-auto px-8">
         {/* Centered Header */}
         <div className="text-center max-w-2xl mx-auto mb-12 hidden">
           <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#102a43]/80">
@@ -114,7 +114,7 @@ export default function FeaturedSeforim() {
         <div className="mt-12 text-center">
           <a
             href="/seforim"
-            className="inline-flex items-center gap-2 bg-[#102a43] hover:bg-[#173f5f] text-white font-semibold py-3.5 px-8 text-sm sm:text-base transition shadow-md hover:shadow-lg"
+            className="inline-flex items-center gap-2 pBG text-white font-semibold py-3.5 px-8 text-sm sm:text-base transition shadow-md hover:shadow-lg"
           >
             <span className='text-white'>View Full Catalog</span>
           </a>
