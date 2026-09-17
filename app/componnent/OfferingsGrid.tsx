@@ -349,7 +349,7 @@ export default function OfferingsGrid() {
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="h-[300px] sm:h-[380px] lg:h-[500px] w-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                    className="h-[300px] sm:h-[380px] lg:h-[500px] w-full object-cover transition-transform duration-700 ease-out"
                   />
                 </div>
               </div>
