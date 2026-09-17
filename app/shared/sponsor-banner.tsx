@@ -129,7 +129,7 @@ export default function SponsorBanner() {
   return (
     <>
       <section
-        className="px-4 sm:px-8 bg-gray-200 relative overflow-hidden flex items-center justify-center gap-1 sm:gap-3"
+        className="px-4 sm:px-8 bg-gray-100 relative overflow-hidden flex items-center justify-center gap-1 sm:gap-3"
         aria-label="Supporters of Kav Haribis"
       >
         {/* Section Header */}

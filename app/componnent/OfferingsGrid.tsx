@@ -4,7 +4,7 @@ const offeringsItems = [
     title: 'Kosher Banking & Lender Directory',
     category: 'Directories',
     href: '/bank-directory',
-    image: '/kav-brand/bank-research.png',
+    image: '/934.jpg',
     description: [
       'Comprehensive halachic research on hundreds of commercial banks and mortgage lenders.',
       'Verified Heter Iska statuses with full Rabbinic reports and documentation.',
@@ -23,7 +23,7 @@ const offeringsItems = [
     title: 'Businesses with a Heter Iska',
     category: 'Directories',
     href: '/businesses-with-a-heter-iska',
-    image: '/kav-impact/business-visit.jpg',
+    image: '/kav-impact/heter-iska-presentation.jpg',
     description: [
       'Browse verified Jewish-owned businesses, corporations, and real estate partnerships.',
       'Operating in full accordance with Hilchos Ribbis and Rabbinical oversight.',
@@ -42,7 +42,7 @@ const offeringsItems = [
     title: 'Kosher Loan & Financing Services',
     category: 'Directories',
     href: '/kosher-loan-service',
-    image: '/kav-impact/heter-iska-presentation.jpg',
+    image: '/2147916483-768x768.webp',
     description: [
       'Find appropriate financing platforms, commercial loan providers, and credit resources.',
       'Structured under continuous Rabbinical oversight and legal Halachic frameworks.',
@@ -61,7 +61,7 @@ const offeringsItems = [
     title: 'Kosher Investment Opportunities',
     category: 'Directories',
     href: '/kosher-investment-opportunities',
-    image: '/kav-brand/investments-hero.png',
+    image: '/2148803904.jpg',
     description: [
       'Review pre-vetted investment models, real estate syndications, and joint ventures.',
       'Designed to comply with Torah laws on profit sharing and interest.',
@@ -80,7 +80,7 @@ const offeringsItems = [
     title: 'High-Yield Kosher Savings Accounts',
     category: 'Directories',
     href: '/savings',
-    image: '/kav-impact/financial-outreach.jpg',
+    image: '/2148317885.jpg',
     description: [
       'Compare high-yield savings options, interest-bearing accounts, and money market funds.',
       'Structured to avoid Ribbis concerns with complete transparency.',
@@ -137,7 +137,7 @@ const offeringsItems = [
     title: 'Halachic Articles & Research Publications',
     category: 'Learning & Resources',
     href: '/articles',
-    image: '/kav-brand/articles-hero.png',
+    image: '/stylish-mature-male-reading-newspaper-2048x2048.jpg',
     description: [
       'Read practical Torah guidance and contemporary halachic journal articles.',
       'Practical briefs addressing modern business and commercial challenges.',
@@ -175,7 +175,7 @@ const offeringsItems = [
     title: 'Torah Seforim & Publications Store',
     category: 'Learning & Resources',
     href: '/seforim',
-    image: '/kav-brand/seforim-hero.png',
+    image: '/hands-woman-black-clothes-holding-opened-book-2048x2048.jpg',
     description: [
       'Order authoritative Seforim, practical guidebooks, and gilyonos published by Kav Haribis.',
       'Includes the renowned Bris Pinchos series and halachic reference works.',
@@ -190,30 +190,11 @@ const offeringsItems = [
     cta: 'Browse Seforim Store',
   },
   {
-    id: 11,
-    title: 'Communal Reading Circle & Chavrusa Network',
-    category: 'Learning & Resources',
-    href: '/reading-circle',
-    image: '/kav-impact/student-shiur.jpg',
-    description: [
-      'Join communal learning initiatives and weekly review cycles.',
-      'Connect with chavrusas studying practical Hilchos Ribbis in communities worldwide.',
-    ],
-    subhead: 'Program Focus',
-    subheaditem: [
-      'Weekly Review Cycles',
-      'Chavrusa Pairing',
-      'Community Circles',
-      'Global Learning',
-    ],
-    cta: 'Join Reading Circle',
-  },
-  {
     id: 12,
     title: 'Kav Haribis Supporter Membership',
     category: 'Learning & Resources',
     href: '/membership',
-    image: '/kav-brand/rate-certified.png',
+    image: '/Membership.jpg',
     description: [
       'Become an official member to receive full database access and exclusive research reports.',
       'Directly support Rabbinic research and halachic clarification worldwide.',
@@ -251,7 +232,7 @@ const offeringsItems = [
     title: 'Bais Horaah Rabbinic Consultations',
     category: 'Services & Programs',
     href: '/bais-horaah',
-    image: '/kav-brand/bais-horaah.png',
+    image: '/rabi-consaltant.jpg',
     description: [
       'Submit confidential halachic queries directly to experienced Dayanim and Rabbanim.',
       'Receive definitive rulings and guidance on complex Ribbis matters.',
@@ -289,7 +270,7 @@ const offeringsItems = [
     title: 'Community Programs & Kehilla Outreach',
     category: 'Services & Programs',
     href: '/programs',
-    image: '/kav-impact/recognition-event.jpg',
+    image: '/kav-impact/community-event.jpg',
     description: [
       'Request customized educational seminars and Rabbinical conferences.',
       'Organize community awareness programs for your shul, yeshiva, or organization.',
@@ -308,7 +289,7 @@ const offeringsItems = [
     title: 'Kosher Investment & Venture Certification',
     category: 'Services & Programs',
     href: '/kosher-investment-certification',
-    image: '/kav-impact/heter-iska-presentation-2.jpg',
+    image: '/kav-brand/rate-certified.png',
     description: [
       'Receive Rabbinical audit and certification for financial funds and private equity.',
       'Clearance for real estate ventures and commercial investment vehicles.',
@@ -327,7 +308,7 @@ const offeringsItems = [
     title: 'Ribbis Halachic Warning & Alert System',
     category: 'Services & Programs',
     href: '/ribis-alerts',
-    image: '/kav-brand/mission-visual-v2.png',
+    image: '/2151546403.webp',
     description: [
       'Subscribe to urgent Rabbinic warnings and commercial bank policy changes.',
       'Receive financial product alerts to ensure ongoing Halachic compliance.',

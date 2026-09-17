@@ -72,52 +72,55 @@ export default function HeterLibrary() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {documents.map((item, index) => (
-              <article
-                className={`p-6 bg-white border border-gray-100 flex flex-col justify-between space-y-5 ${
-                  checkoutOpen && selected?.id === item.id ? 'ring-2 ring-[#102a43] border-[#102a43]' : ''
-                }`}
-                key={item.id}
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between pb-3">
-                    <span className="font-mono text-md font-bold text-[#94a3b8]">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                    <span className="px-2.5 py-0.5 bg-[#e9f4eb] text-[#367448] rounded-full text-[12px] font-meduim">Available</span>
-                  </div>
-                  <div className="flex gap-4 items-start">
-                    <div className="w-16 h-20 bg-gray-200 text-white p-2 flex flex-col justify-between items-center shrink-0 shadow-inner">
-                      <span className="text-[11px] text-[#c69b46]">בס״ד</span>
-                      <b className="font-serif text-base text-gray-800 font-meduim text-center leading-tight">היתר עיסקא</b>
-                      <small className="text-[10px] text-black font-meduim">KAV</small>
-                    </div>
-                    <div className="space-y-1 flex-1 min-w-0">
-                      <h2 className="text-xl font-serif font-meduim text-[#102a43] leading-snug">{item.title}</h2>
-                      <p className="text-lg pt-3 text-[#475569]/80 leading-relaxed line-clamp-3">
+            {documents.map((item, index) => {
+              const isSelected = checkoutOpen && selected?.id === item.id;
+              return (
+                <article
+                  key={item.id}
+                  className={`p-6 bg-[#172036] text-white border flex flex-col justify-between space-y-6 shadow-xl transition-all duration-300 relative overflow-hidden ${
+                    isSelected
+                      ? 'border-[#c69b46] ring-2 ring-[#c69b46] bg-[#0F2538]'
+                      : 'border-slate-800'
+                  }`}
+                >
+                  <div className="space-y-5">
+              
+                    {/* Document Icon / Emblem */}
+                    <div className="flex flex-col items-center pt-2">
+                      <div className="relative w-32 h-32 mb-5 bg-gradient-to-b from-slate-800/90 to-slate-900 border border-slate-700/80 rounded-xl p-2.5 flex flex-col justify-between items-center shrink-0 shadow-lg group-hover:border-[#c69b46]/80 transition-colors">
+                        <img src={'/agreement (1).webp'} alt='icon'/>
+                      </div>
+
+                      {/* Title & Description */}
+                      <h2 className="text-xl font-serif font-bold text-white text-center leading-snug group-hover:text-[#c69b46] transition-colors">
+                        {item.title}
+                      </h2>
+                      <p className="text-sm text-slate-300 text-center leading-relaxed line-clamp-3 mt-2">
                         {item.description ||
                           'Review this Heter Iska before purchasing a protected copy.'}
                       </p>
                     </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-3 pt-4 text-md font-meduim">
-                  <a
-                    className="px-3.5 py-2 bg-white border border-gray-200 text-[#102a43] text-center"
-                    href={`/heter-iska/preview?id=${item.id}`}
-                  >
-                    Preview document
-                  </a>
-                  <button
-                    type="button"
-                    className="flex-1 px-3.5 py-2 bg-[#102a43] text-white text-center cursor-pointer"
-                    onClick={() => openCheckout(item)}
-                  >
-                    Continue — $25
-                  </button>
-                </div>
-              </article>
-            ))}
+
+                  {/* Actions Footer */}
+                  <div className="flex items-center gap-2.5 pt-4 border-t border-slate-800/80">
+                    <a
+                      className="flex-1 px-3 py-2.5 bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-slate-200 hover:text-white text-xs font-bold transition-all text-center"
+                      href={`/heter-iska/preview?id=${item.id}`}
+                    >
+                      Preview document
+                    </a>
+                    <button
+                      type="button"
+                      className="flex-1 text-white px-3 py-2.5 bg-[#c69b46] hover:bg-[#b0883b] text-[#0B1C2C] text-xs font-bold transition-all shadow-md text-center cursor-pointer hover:shadow-lg"
+                      onClick={() => openCheckout(item)}
+                    >
+                      Continue — $25
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </section>

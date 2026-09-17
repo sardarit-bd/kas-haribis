@@ -33,8 +33,8 @@ export default function GenealogyServicesPage() {
 
 
       {/* Uses / Services Grid */}
-      <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 my-12 space-y-8">
-        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 pb-6">
+      <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 my-12 space-y-8 ">
+        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 pb-6 py-10">
           <div>
             <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase hidden">HOW WE MAY HELP</p>
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#102a43]">Research built around your question</h2>
@@ -47,7 +47,7 @@ export default function GenealogyServicesPage() {
           
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-10">
           <article className="p-6 bg-white border border-gray-100 space-y-3">
             <span className="font-mono text-md font-bold text-[#c69b46]">01</span>
             <h3 className="text-xl font-serif pt-3 font-bold text-[#102a43]">Ownership clarification</h3>
@@ -77,8 +77,8 @@ export default function GenealogyServicesPage() {
 
 
       {/* Request Form Container */}
-      <section className='container pb-12'>
-        <section className="container bg-gray-200 py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start" id="genealogy-request">
+      <section className='container pb-12 px-8'>
+        <section className="container bg-gray-200 py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start p-6" id="genealogy-request">
           <div className="lg:col-span-5 space-y-6">
             <div>
               <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1 hidden">REQUEST GENEALOGY RESEARCH</p>

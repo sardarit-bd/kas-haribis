@@ -76,7 +76,7 @@ export default function FeaturedSeforim() {
             >
               <div>
                 {/* Book Cover Image */}
-                <div className="h-56 w-full overflow-hidden bg-white p-3 mb-4 flex items-center justify-center group-hover:scale-105 transition duration-300">
+                <div className="h-60 w-full overflow-hidden bg-white mb-4 flex items-center justify-center group-hover:scale-105 transition duration-300">
                   <img
                     src={book.image}
                     alt={book.title}
@@ -85,10 +85,10 @@ export default function FeaturedSeforim() {
                 </div>
 
                 {/* Title & Description */}
-                <h3 className="text-xl font-semibold text-[#102a43] mb-1.5 line-clamp-1 tracking-tight">
+                <h3 className="pt-4 text-xl font-semibold text-[#102a43] mb-1.5 line-clamp-1 tracking-tight">
                   {book.title}
                 </h3>
-                <p className="text-sm font-normal text-slate-500 line-clamp-2 mb-4 leading-relaxed hidden">
+                <p className="text-base font-normal text-slate-500 line-clamp-2 mb-4 leading-relaxed">
                   {book.description}
                 </p>
               </div>
