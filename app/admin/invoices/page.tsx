@@ -1,8 +1,8 @@
-import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
+import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
+import { canAccessSection } from "../../lib/admin-access";
 import { ensureInvoices } from '../../lib/invoices';
 import InvoiceManager from './invoice-manager';
-import { canAccessSection } from "../../lib/admin-access";
 export const dynamic = 'force-dynamic';
 
 const breadcrumbs = [
