@@ -3,7 +3,7 @@ import HeterLibrary from './heter-library';
 
 export default function HeterIska() {
   return (
-    <main className="min-h-screen bg-[#fbfaf7]">
+    <main className="min-h-screen bg-gray-200">
       <SiteHeader/>
       <InteriorPage
       eyebrow="AVAILABLE DOCUMENTS"
@@ -12,12 +12,12 @@ export default function HeterIska() {
             required only for the protected PDF download."
       />
       <section className="relative overflow-hidden bg-red-800 text-white shadow-lg">
-        <div className="container py-12 lg:py-16 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 lg:gap-12 relative z-10">
+        <div className="container px-8 py-12 lg:py-16 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 lg:gap-12 relative z-10">
           <div className="max-w-[820px]">
-            <span className="text-[#e7c272] text-xs sm:text-[13px] font-bold tracking-[0.15em] uppercase block mb-2">
+            <span className="text-[#e7c272] text-xs sm:text-[13px] font-bold tracking-[0.15em] block mb-2">
               BANKS &amp; PROFESSIONAL LENDERS
             </span>
-            <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-serif font-medium text-white leading-tight mb-3.5">
+            <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-serif font-semibold text-white leading-tight  my-4.5">
               A standard Heter Iska may not be sufficient for your lending structure.
             </h2>
             <p className="text-[#d7e2e8] text-base sm:text-lg leading-relaxed font-normal">

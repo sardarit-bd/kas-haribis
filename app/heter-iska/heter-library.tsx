@@ -77,7 +77,7 @@ export default function HeterLibrary() {
               return (
                 <article
                   key={item.id}
-                  className={`p-6 bg-[#172036] text-white border flex flex-col justify-between space-y-6 shadow-xl transition-all duration-300 relative overflow-hidden ${
+                  className={`p-6 bg-white text-white flex flex-col justify-between space-y-6 shadow-xl transition-all duration-300 relative overflow-hidden ${
                     isSelected
                       ? 'border-[#c69b46] ring-2 ring-[#c69b46] bg-[#0F2538]'
                       : 'border-slate-800'
@@ -92,10 +92,10 @@ export default function HeterLibrary() {
                       </div>
 
                       {/* Title & Description */}
-                      <h2 className="text-xl font-serif font-bold text-white text-center leading-snug group-hover:text-[#c69b46] transition-colors">
+                      <h2 className="text-xl font-serif font-bold text-black text-center leading-snug group-hover:text-[#c69b46] transition-colors">
                         {item.title}
                       </h2>
-                      <p className="text-sm text-slate-300 text-center leading-relaxed line-clamp-3 mt-2">
+                      <p className="text-sm text-slate-700 text-center leading-relaxed line-clamp-3 mt-2">
                         {item.description ||
                           'Review this Heter Iska before purchasing a protected copy.'}
                       </p>
@@ -103,7 +103,7 @@ export default function HeterLibrary() {
                   </div>
 
                   {/* Actions Footer */}
-                  <div className="flex items-center gap-2.5 pt-4 border-t border-slate-800/80">
+                  <div className="flex items-center gap-2.5 pt-4">
                     <a
                       className="flex-1 px-3 py-2.5 bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-slate-200 hover:text-white text-xs font-bold transition-all text-center"
                       href={`/heter-iska/preview?id=${item.id}`}
@@ -125,10 +125,11 @@ export default function HeterLibrary() {
         )}
       </section>
       {checkoutOpen && selected && (
-        <div
+        <section className='container px-8'>
+          <div
           id="purchase"
           ref={checkoutRef}
-          className="container max-w-4xl mx-auto px-4 sm:px-8 my-10 p-6 sm:p-8 bg-[#f7f3ea] border border-[#e2dacd] rounded-2xl space-y-6 shadow-md"
+          className=" px-4 sm:px-8 my-10 p-6 sm:p-8 bg-[#f7f3ea] border border-[#e2dacd] space-y-6 shadow-md"
           tabIndex={-1}
         >
           <div className="p-4 bg-white border border-[#ded7c9] rounded-xl flex items-center justify-between gap-4">
@@ -150,6 +151,7 @@ export default function HeterLibrary() {
             documentId={selected.id}
           />
         </div>
+        </section>
       )}
     </>
   );
