@@ -17,7 +17,7 @@ export default async function ArticlesPage() {
     />
      
       <section className="w-full bg-[#f7f3ea] py-10">
-        <div className="mb-10 container">
+        <div className="container px-8">
           <div>
             <p className="text-[#c69b46] text-xs font-bold tracking-widest uppercase mb-2 hidden">COMPLETE ARCHIVE</p>
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-700 tracking-tight mb-2">Latest publications</h2>
@@ -27,7 +27,7 @@ export default async function ArticlesPage() {
             cropping.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 container">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 container px-8 pt-10">
           {items.map((x, index) => (
             <article className={`bg-white overflow-hidden transition-all flex flex-col ${x.featured ? 'border-[#c69b46] ring-1 ring-[#c69b46]/40' : 'border-slate-200/90'}`} key={x.id}>
               <a

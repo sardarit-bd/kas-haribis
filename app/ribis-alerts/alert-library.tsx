@@ -77,7 +77,7 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
         {/* Featured Alert Banner */}
         {featured && (
           <article
-            className={` p-6 sm:p-8 bg-red-100 border space-y-4 ${
+            className={` p-6 sm:p-8 bg-red-100 rounded-4xl border-2 space-y-4 ${
               featured.severity?.toLowerCase() === 'high'
                 ? 'border-[#9b1c1c]'
                 : 'border-[#c69b46]'
@@ -162,7 +162,7 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((x) => (
             <article
-              className="p-6 bg-gray-50 border border-gray-200 flex flex-col justify-between space-y-4"
+              className="p-6 bg-white border border-gray-200 flex flex-col justify-between space-y-4"
               key={x.id}
               id={`alert-${x.id}`}
             >
@@ -231,7 +231,7 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
       {/* Modal Popup */}
       {selected && (
         <div
-          className="fixed inset-0 z-50 bg-[#071728]/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
+          className="alertModal fixed inset-0 z-50 bg-[#071728]/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
           role="dialog"
           aria-modal="true"
           aria-label={selected.title}
@@ -241,7 +241,7 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
         >
           <article className="relative w-full max-w-2xl bg-white border border-[#e2e8f0] shadow-2xl p-6 sm:p-8 space-y-5 my-8">
             <button
-              className="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#e2e8f0] hover:bg-[#e2e8f0] text-[#102a43] font-bold text-xl flex items-center justify-center transition-colors cursor-pointer"
+              className="alertModalClose no-print absolute top-4 right-4 w-9 h-9 rounded-full bg-[#e2e8f0] hover:bg-[#e2e8f0] text-[#102a43] font-bold text-xl flex items-center justify-center transition-colors cursor-pointer"
               onClick={() => setSelected(null)}
               aria-label="Close"
             >
@@ -282,7 +282,7 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-3 pt-3 border-t border-[#f1f5f9] flex-wrap text-xs font-bold">
+            <div className="modalActions no-print flex items-center gap-3 pt-3 border-t border-[#f1f5f9] flex-wrap text-xs font-bold">
               {action(selected.action_url) && (
                 <a style={{color:'white'}} className="px-5 py-2.5 bg-[#102a43] hover:bg-[#1a385c] transition-colors shadow-sm" href={selected.action_url}>
                   {selected.action_label || 'Learn more'}

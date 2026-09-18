@@ -49,7 +49,7 @@ export default function TipForm() {
 
   return (
     <section className="w-full py-8 bg-slate-50/50">
-      <div className="container max-w-4xl mx-auto px-4 sm:px-6">
+      <div className="container max-w-4xl mx-auto px-4 sm:px-8">
         <div className="bg-white shadow-[0_15px_45px_rgba(16,42,67,0.06)] border border-slate-200/80 overflow-hidden transition-all">
           {/* Header Toggle Bar */}
           <button

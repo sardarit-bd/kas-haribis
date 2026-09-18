@@ -18,8 +18,10 @@ export default async function Page() {
       title="Know before you sign, lend, borrow, or invest"
       intro="Timely warnings, updated guidance, and directory changes from Kav Haribis—organized so you can quickly understand what deserves attention."
     />
-    <section className='container mt-10'>
-      <section className="p-6 sm:p-10 bg-[#f7f3ea] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+
+    
+    <section className='bg-[#f7f3ea]'>
+      <section className="container p-6 sm:p-10 bg-[#f7f3ea] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         <div className="lg:col-span-8 space-y-3">
           <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase hidden">COMMUNITY AWARENESS</p>
           <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#102a43]">A professional alert center for practical financial concerns</h2>
@@ -40,9 +42,13 @@ export default async function Page() {
         </aside>
       </section>
     </section>
-      <div className={hasFeatured ? 'my-8' : 'my-8'}>
-        <AlertLibrary items={items} />
-      </div>
+      <section className='bg-gray-200'>
+        <div className={`container px-8 py-10 ${hasFeatured ? 'my-8' : 'my-8'}`}>
+          <div className='container'>
+            <AlertLibrary items={items} />
+          </div>
+        </div>
+      </section>
 
       <TipForm/>
 
