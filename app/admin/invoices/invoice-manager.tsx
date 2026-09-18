@@ -226,7 +226,7 @@ export default function InvoiceManager({
           </div>
         </div>
         {!editing && (
-          <>
+          <div className='hidden'>
             <div className="receiptIntro">
               <b>
                 {isReceipt
@@ -250,7 +250,7 @@ export default function InvoiceManager({
               Complete the fields below, create the preview, review it, and
               download only when it is correct.
             </p>
-          </>
+          </div>
         )}
         <div className="invoiceFormRow">
           <label>
