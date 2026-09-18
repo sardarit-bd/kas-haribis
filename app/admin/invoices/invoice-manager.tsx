@@ -79,9 +79,32 @@ export default function InvoiceManager({
   }
   async function save(event: FormEvent) {
     event.preventDefault();
-    setBusy(true);
     setNotice('');
     setLastReceipt(null);
+
+    const name = String(form.customer_name || '').trim();
+    const email = String(form.customer_email || '').trim();
+    const desc = String(form.description || '').trim();
+    const amt = Number(form.amount);
+
+    if (!name) {
+      setNotice(isReceipt ? 'Donor name is required.' : 'Customer name is required.');
+      return;
+    }
+    if (!isReceipt && !email) {
+      setNotice('Customer email address is required for invoices.');
+      return;
+    }
+    if (!desc) {
+      setNotice(isReceipt ? 'Donation purpose/description is required.' : 'Invoice description is required.');
+      return;
+    }
+    if (!Number.isFinite(amt) || amt <= 0) {
+      setNotice('Please enter a valid amount greater than $0.00.');
+      return;
+    }
+
+    setBusy(true);
     try {
       const response = await fetch('/api/admin/invoices', {
           method: editing ? 'PUT' : 'POST',
@@ -202,18 +225,26 @@ export default function InvoiceManager({
             </h2>
           </div>
         </div>
-        {isReceipt && (
+        {!editing && (
           <>
             <div className="receiptIntro">
-              <b>Official donation acknowledgment</b>
+              <b>
+                {isReceipt
+                  ? 'Official donation acknowledgment'
+                  : 'Invoice details & payment terms'}
+              </b>
               <span>
-                The PDF includes Congregation Kav Haribis Inc., EIN 33-3357711,
-                the donation details, and the required goods-or-services
-                statement.
+                {isReceipt
+                  ? 'The PDF includes Congregation Kav Haribis Inc., EIN 33-3357711, the donation details, and the required goods-or-services statement.'
+                  : 'The PDF includes payment instructions for Zelle and credit card, issue date, and Heter Iska terms.'}
               </span>
             </div>
             <button type="submit" className="receiptTopSubmit" disabled={busy}>
-              {busy ? 'Creating preview…' : 'Create Receipt Preview'}
+              {busy
+                ? 'Creating preview…'
+                : isReceipt
+                  ? 'Create Receipt Preview'
+                  : 'Create Invoice Preview'}
             </button>
             <p className="receiptButtonHint">
               Complete the fields below, create the preview, review it, and
@@ -412,7 +443,7 @@ export default function InvoiceManager({
               type="button"
               onClick={() => {
                 setEditing(null);
-                setForm(blank());
+                setForm(blank(form.document_type));
               }}
             >
               Cancel edit

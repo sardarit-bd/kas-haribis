@@ -1,5 +1,5 @@
-import { getRequestEmail, isOwnerRequest } from '../../../lib/request-auth';
-import { isOwnerEmail } from '../../../lib/admin-access';
+import { getRequestEmail } from '../../../lib/request-auth';
+import { canAccessSection } from '../../../lib/admin-access';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { ensureInvoices } from '../../../lib/invoices';
 
@@ -24,12 +24,11 @@ function lines(text: string, max = 72) {
   return out;
 }
 export async function GET(request: Request) {
-  if (
-    !(await isOwnerRequest(request))
-  )
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const { env } = await import('cloudflare:workers');
   await ensureInvoices(env.DB);
+  const email = await getRequestEmail(request);
+  if (!(await canAccessSection(env.DB, email, 'invoices')))
+    return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const id = new URL(request.url).searchParams.get('id') || '',
     invoice = (await env.DB.prepare('SELECT * FROM invoices WHERE id=?')
       .bind(id)
@@ -310,14 +309,15 @@ export async function GET(request: Request) {
     );
   }
   if (invoice.notes) {
+    const notesHeaderY = Math.max(138, paymentTop - 135);
     page.drawText('NOTES', {
       x: 42,
-      y: paymentTop - 135,
+      y: notesHeaderY,
       size: 8,
       font: bold,
       color: gold,
     });
-    let noteY = paymentTop - 152;
+    let noteY = notesHeaderY - 14;
     for (const line of lines(invoice.notes, 92).slice(0, 2)) {
       page.drawText(line, {
         x: 42,

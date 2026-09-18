@@ -1,6 +1,6 @@
-import { isOwnerRequest } from '../../../lib/request-auth';
-import { isOwnerEmail } from '../../../lib/admin-access';
+import { canAccessSection } from '../../../lib/admin-access';
 import { ensureInvoices } from '../../../lib/invoices';
+import { getRequestEmail } from '../../../lib/request-auth';
 
 const clean = (value: unknown, max = 5000) =>
   String(value ?? '')
@@ -11,6 +11,10 @@ async function runtime() {
   await ensureInvoices(env.DB);
   return env;
 }
+async function isAuthorized(request: Request, db: any) {
+  const email = await getRequestEmail(request);
+  return canAccessSection(db, email, 'invoices');
+}
 function documentNumber(type: string) {
   const year = new Date().getFullYear(),
     part = crypto.randomUUID().replace(/-/g, '').slice(0, 6).toUpperCase();
@@ -18,16 +22,17 @@ function documentNumber(type: string) {
 }
 
 export async function GET(request: Request) {
-  if (!(await isOwnerRequest(request)))
+  const env = await runtime();
+  if (!(await isAuthorized(request, env.DB)))
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  const env = await runtime(),
-    result = await env.DB.prepare(
+  const result = await env.DB.prepare(
       'SELECT * FROM invoices ORDER BY created_at DESC',
     ).all();
   return Response.json({ invoices: result.results });
 }
 export async function POST(request: Request) {
-  if (!(await isOwnerRequest(request)))
+  const env = await runtime();
+  if (!(await isAuthorized(request, env.DB)))
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const body = (await request.json()) as any,
     name = clean(body.customer_name, 200),
@@ -54,8 +59,7 @@ export async function POST(request: Request) {
       },
       { status: 400 },
     );
-  const env = await runtime(),
-    id = crypto.randomUUID(),
+  const id = crypto.randomUUID(),
     now = new Date().toISOString(),
     number = documentNumber(type),
     status = type === 'Donation Receipt' ? 'Issued' : 'Draft';
@@ -90,10 +94,10 @@ export async function POST(request: Request) {
   return Response.json({ invoice });
 }
 export async function PUT(request: Request) {
-  if (!(await isOwnerRequest(request)))
+  const env = await runtime();
+  if (!(await isAuthorized(request, env.DB)))
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const body = (await request.json()) as any,
-    env = await runtime(),
     id = clean(body.id, 100),
     amount = Number(body.amount),
     type =
@@ -142,10 +146,10 @@ export async function PUT(request: Request) {
   return Response.json({ invoice });
 }
 export async function DELETE(request: Request) {
-  if (!(await isOwnerRequest(request)))
+  const env = await runtime();
+  if (!(await isAuthorized(request, env.DB)))
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  const env = await runtime(),
-    id = clean(new URL(request.url).searchParams.get('id'), 100);
+  const id = clean(new URL(request.url).searchParams.get('id'), 100);
   await env.DB.prepare('DELETE FROM invoices WHERE id=?').bind(id).run();
   return Response.json({ deleted: true });
 }
