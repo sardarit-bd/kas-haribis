@@ -1,157 +1,340 @@
 import BottomCTA from '../componnent/BottomCTA';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
 
-const gallery = [
-  {
-    src: '/kav-impact/student-shiur.jpg',
-    title: 'Student education',
-    text: 'Practical presentations introducing the next generation to everyday Hilchos Ribbis.',
-    className: 'wide',
-  },
-  {
-    src: '/kav-impact/heter-iska-presentation.jpg',
-    title: 'Heter Iska outreach',
-    text: 'Bringing properly prepared Heter Iska resources directly to businesses.',
-  },
-  {
-    src: '/kav-impact/financial-outreach.jpg',
-    title: 'Financial-industry outreach',
-    text: 'Meeting professionals and institutions where modern financial questions arise.',
-  },
-  {
-    src: '/kav-impact/community-event.jpg',
-    title: 'Community gatherings',
-    text: 'Supporting broad awareness through public events and organized learning.',
-    className: 'wide',
-  },
-  {
-    src: '/kav-impact/business-visit.jpg',
-    title: 'Business visits',
-    text: 'Personal outreach that helps businesses recognize and address practical concerns.',
-  },
-  {
-    src: '/kav-impact/recognition-event.jpg',
-    title: 'Torah leadership',
-    text: 'Sharing Kav Haribis educational materials with Rabbanim and community leaders.',
-  },
-  {
-    src: '/kav-impact/heter-iska-presentation-2.jpg',
-    title: 'Practical implementation',
-    text: 'Helping translate awareness into responsible business practice.',
-  },
+const schoolsServed = [
+  'Kamenitz',
+  'Klausenberg',
+  'Lakewood Cheder School',
+  'Shaagas Aryeh',
+  'Tashbar',
+  'Toras Aharon',
+  'Toras Menachem',
+  'Toras Zev',
+  'Yeshiva Nachlei Torah',
+  'Yeshiva Yesodei HaTorah',
 ];
 
 export default function ProgramsPage() {
   return (
-    <main className="min-h-screen bg-[#fbfaf7]">
+    <main className="min-h-screen bg-[#f8f5ef]">
       <SiteHeader />
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#071728] via-[#102a43] to-[#0e304b] text-white">
-        <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-16 md:py-20 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
-          <div className="lg:col-span-7 space-y-6">
-            <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase hidden">EDUCATION &amp; OUTREACH</p>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-white leading-tight">
-              Bringing Hilchos Ribbis into everyday life.
+
+      {/* Hero Section */}
+      <section className="relative overflow-hidden py-24">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(200,162,26,0.10),transparent_30%)]"></div>
+        <div className="absolute -top-24 right-0 h-80 w-80 rounded-full bg-[#c8a21a]/10 blur-3xl"></div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="max-w-4xl">
+            <div className="mb-5 inline-flex items-center rounded-full border border-[#e8dfcf] bg-white/70 px-4 py-2 text-sm font-medium text-[#9b7b16] backdrop-blur">
+              Education • Outreach • Compliance
+            </div>
+            <h1 className="text-5xl font-bold leading-tight tracking-tight text-[#051933] sm:text-6xl">
+              Our <span className="text-[#c8a21a]">Programs</span>
             </h1>
-            <p className="text-[#cbd5e1] text-base sm:text-lg leading-relaxed max-w-xl">
-              Kav Haribis works with schools, communities, businesses, financial
-              professionals, and Rabbanim to turn awareness into practical,
-              responsible action.
+            <p className="mt-8 max-w-4xl text-lg leading-8 text-[#5f6b7a]">
+              Kav Haribis develops practical awareness of hilchos ribis across all levels—from students and community members to business owners and organizations.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 pt-2">
-              <a className="px-6 py-3.5 bg-[#c69b46] hover:bg-[#b0883b] text-[#102a43] text-md font-meduim transition-colors shadow-md text-center" href="/contact?topic=Program%20request">
-                Request a program
-              </a>
-              <a className="px-6 py-3.5 bg-white/10 border border-white/20 hover:bg-white/20 text-white text-md font-meduim transition-colors text-center" href="#program-gallery">
-                See our work
-              </a>
+            <p className="mt-5 max-w-4xl text-base leading-8 text-[#7b8794]">
+              Through shiurim, outreach, and hands-on business guidance, we equip both today’s decision-makers and the next generation to understand and navigate real-world financial situations in full alignment with halacha and Torah values.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 1. School & Community Shiurim */}
+      <section className="pb-24 scroll-mt-28" id="school-program">
+        <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2 lg:px-8">
+          <div className="relative">
+            <div className="absolute -left-8 top-10 h-40 w-40 rounded-full bg-[#c8a21a]/15 blur-3xl"></div>
+            <div className="overflow-hidden rounded-[32px] border border-[#eadfcb] bg-white p-3 shadow-[0_20px_60px_rgba(5,25,51,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <img
+                src="/assets/classroom.jpg"
+                alt="School & Community Shiurim"
+                className="h-full w-full rounded-[24px] object-cover"
+              />
             </div>
           </div>
-          <div className="lg:col-span-5 relative overflow-hidden">
-            <img
-              src="/kav-impact/community-event.jpg"
-              alt="Kav Haribis community education event"
-              className="w-full h-72 sm:h-96 object-cover"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Program Types */}
-      <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 my-12 space-y-8 py-12">
-        <div className="">
-          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#102a43]">Education shaped around real needs</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <article className="p-6 bg-white space-y-3 border border-gray-100">
-            <span className="font-mono text-xs font-bold text-[#c69b46]">01</span>
-            <h3 className="text-xl font-serif font-bold text-[#102a43]">Schools &amp; yeshivos</h3>
-            <p className="text-xs text-[#64748b] leading-relaxed">
-              Age-appropriate learning that builds awareness early and makes
-              practical halachos understandable.
-            </p>
-          </article>
-          <article className="p-6 bg-white space-y-3 border border-gray-100">
-            <span className="font-mono text-xs font-bold text-[#c69b46]">02</span>
-            <h3 className="text-xl font-serif font-bold text-[#102a43]">Businesses &amp; professionals</h3>
-            <p className="text-xs text-[#64748b] leading-relaxed">
-              Focused presentations on contracts, financing, partnerships,
-              payment practices, and Heter Iska.
-            </p>
-          </article>
-          <article className="p-6 bg-white space-y-3 border border-gray-100">
-            <span className="font-mono text-xs font-bold text-[#c69b46]">03</span>
-            <h3 className="text-xl font-serif font-bold text-[#102a43]">Communities &amp; Rabbanim</h3>
-            <p className="text-xs text-[#64748b] leading-relaxed">
-              Shiurim, advanced training, and public-awareness programs for
-              kehillos and community leadership.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      {/* Gallery Section */}
-      <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 my-12 space-y-8 pb-12" id="program-gallery">
-        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 pb-6 border-b border-[#e2e8f0] hidden">
           <div>
-            <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase">KAV HARIBIS IN ACTION</p>
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#102a43]">Education, outreach, and implementation</h2>
+            <div className="mb-4 inline-flex rounded-full border border-[#eadfcb] bg-white px-4 py-2 text-sm font-medium text-[#9b7b16]">
+              Educational Outreach
+            </div>
+            <h2 className="text-4xl font-bold text-[#051933]">
+              School &amp; Community Shiurim
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-[#5f6b7a]">
+              We visit schools and communities to deliver engaging shiurim tailored for both students and adults.
+            </p>
+            <p className="mt-5 text-base leading-8 text-[#7b8794]">
+              Our Rabbanim incorporate real-life scenarios and interactive learning to make complex halachos clear, relevant, and practical.
+            </p>
+            <div className="mt-10 grid gap-4 sm:grid-cols-2">
+              {[
+                'Interactive Learning',
+                'Real-Life Case Studies',
+                'Student Programs',
+                'Community Shiurim',
+              ].map((item) => (
+                <div
+                  key={item}
+                  className="rounded-2xl border border-[#ece3d5] bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#c8a21a]/40 hover:shadow-md"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="h-3 w-3 rounded-full bg-[#c8a21a]"></div>
+                    <span className="text-sm font-medium text-[#051933]">
+                      {item}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <p className="max-w-md text-xs sm:text-sm text-[#64748b] leading-relaxed">
-            A look at the people, institutions, and communities reached through
-            Kav Haribis programs.
-          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {gallery.map((item) => (
-            <figure
-              className={`group relative overflow-hidden bg-[#071728] ${
-                item.className === 'wide' ? 'sm:col-span-2' : ''
-              }`}
-              key={item.src}
-            >
-              <img
-                src={item.src}
-                alt={item.title}
-                loading="lazy"
-                className="w-full h-64 sm:h-72 object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071728] via-[#071728]/40 to-transparent p-6 flex flex-col justify-end text-white">
-                <h3 className="text-xl font-serif font-bold text-white mb-1">{item.title}</h3>
-                <p className="text-sm text-[#cbd5e1] leading-relaxed line-clamp-2">{item.text}</p>
+        {/* Schools We've Served */}
+        <div className="mx-auto mt-16 max-w-7xl px-6 lg:px-8">
+          <div className="rounded-[32px] border border-[#eadfcb] bg-white p-8 shadow-sm md:p-10">
+            <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <div className="mb-3 inline-flex rounded-full border border-[#eadfcb] bg-[#faf7f2] px-4 py-2 text-sm font-medium text-[#9b7b16]">
+                  Our Reach
+                </div>
+                <h3 className="text-2xl font-bold text-[#051933] sm:text-3xl">
+                  Schools We've Served
+                </h3>
               </div>
-            </figure>
-          ))}
+              <span className="text-sm font-medium text-[#7b8794]">
+                {schoolsServed.length} institutions and counting
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {schoolsServed.map((school) => (
+                <div
+                  key={school}
+                  className="inline-flex items-center gap-2.5 rounded-full border border-[#f0e7d9] bg-[#fcfaf6] px-5 py-2.5 text-sm font-medium text-[#051933] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#c8a21a]/50 hover:bg-white hover:shadow-sm"
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#c8a21a]"></span>
+                  {school}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
+      {/* 2. Business & Organizational Outreach */}
+      <section className="pb-24 scroll-mt-28" id="rabbinical-training">
+        <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2 lg:px-8">
+          <div className="order-2 lg:order-1" id="investments">
+            <div className="mb-4 inline-flex rounded-full border border-[#eadfcb] bg-white px-4 py-2 text-sm font-medium text-[#9b7b16]">
+              Professional Guidance
+            </div>
+            <h2 className="text-4xl font-bold text-[#051933]">
+              Business &amp; Organizational Outreach
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-[#5f6b7a]">
+              We offer customized workshops and seminars for business owners, shuls, and organizations.
+            </p>
+            <p className="mt-5 text-base leading-8 text-[#7b8794]">
+              Our outreach helps ensure that contracts, partnerships, and investments are structured in full compliance with halacha.
+            </p>
+            <div className="mt-10 rounded-[28px] border border-[#eadfcb] bg-white p-7 shadow-sm">
+              <h3 className="text-xl font-semibold text-[#051933]">
+                Areas Covered
+              </h3>
+              <div className="mt-6 space-y-4">
+                {[
+                  'Contracts & Agreements',
+                  'Partnership Structures',
+                  'Investment Compliance',
+                  'Financial Halacha Training',
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-4">
+                    <div className="mt-2 h-2.5 w-2.5 rounded-full bg-[#c8a21a]"></div>
+                    <p className="text-sm leading-7 text-[#5f6b7a]">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="relative order-1 lg:order-2">
+            <div className="absolute -right-10 top-10 h-40 w-40 rounded-full bg-[#c8a21a]/15 blur-3xl"></div>
+            <div className="overflow-hidden rounded-[32px] border border-[#eadfcb] bg-white p-3 shadow-[0_20px_60px_rgba(5,25,51,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <img
+                src="/assets/businesspersons.jpg"
+                alt="Business Outreach"
+                className="h-full w-full rounded-[24px] object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Business Assessment & Compliance */}
+      <section className="pb-24">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="overflow-hidden rounded-[40px] border border-[#eadfcb] bg-white/70 p-10 shadow-[0_20px_60px_rgba(5,25,51,0.06)] backdrop-blur">
+            <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr]">
+              <div>
+                <div className="mb-4 inline-flex rounded-full border border-[#eadfcb] bg-[#faf7f2] px-4 py-2 text-sm font-medium text-[#9b7b16]">
+                  Full Compliance Review
+                </div>
+                <h2 className="text-4xl font-bold text-[#051933]">
+                  Business Assessment &amp; Compliance
+                </h2>
+                <p className="mt-6 text-lg leading-8 text-[#5f6b7a]">
+                  We provide comprehensive assessments of your business and financial structures to evaluate alignment with halacha.
+                </p>
+                <p className="mt-5 text-base leading-8 text-[#7b8794]">
+                  Our Rabbanim and research team review ownership, governance, and financial practices to identify potential ribis concerns and offer clear, practical guidance for achieving full compliance.
+                </p>
+                <p className="mt-10 text-sm font-semibold uppercase tracking-wide text-[#9b7b16]">
+                  Benefits
+                </p>
+                <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                  {[
+                    'Verified Certification',
+                    'Ongoing Training',
+                    'Community Recognition',
+                    'Rabbinic Oversight',
+                  ].map((item) => (
+                    <div
+                      key={item}
+                      className="rounded-2xl border border-[#ece3d5] bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#c8a21a]/40 hover:shadow-md"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="h-3 w-3 rounded-full bg-[#c8a21a]"></div>
+                        <span className="text-sm font-medium text-[#051933]">
+                          {item}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="relative">
+                <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-[#c8a21a]/15 blur-3xl"></div>
+                <div className="overflow-hidden rounded-[32px] border border-[#eadfcb] bg-white p-3 shadow-[0_20px_60px_rgba(5,25,51,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                  <img
+                    src="/assets/business_assessment.jpeg"
+                    alt="Business Assessment & Compliance"
+                    className="h-full w-full rounded-[24px] object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Newsletters & Gilyonos */}
+      <section className="pb-24 scroll-mt-28" id="gilyonos">
+        <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2 lg:px-8">
+          <div className="relative">
+            <div className="absolute -left-8 top-10 h-40 w-40 rounded-full bg-[#c8a21a]/15 blur-3xl"></div>
+            <div className="overflow-hidden rounded-[32px] border border-[#eadfcb] bg-white p-3 shadow-[0_20px_60px_rgba(5,25,51,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <img
+                src="/assets/newletter.jpg"
+                alt="Newsletters & Gilyonos"
+                className="h-full w-full min-h-[360px] rounded-[24px] object-cover"
+              />
+            </div>
+          </div>
+          <div>
+            <div className="mb-4 inline-flex rounded-full border border-[#eadfcb] bg-white px-4 py-2 text-sm font-medium text-[#9b7b16]">
+              Published Articles
+            </div>
+            <h2 className="text-4xl font-bold text-[#051933]">
+              Newsletters &amp; Gilyonos
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-[#5f6b7a]">
+              We publish regular newsletters and gilyonos that bring practical hilchos ribis to life—covering real-world scenarios in banking, business, and everyday finance.
+            </p>
+            <p className="mt-5 text-base leading-8 text-[#7b8794]">
+              Each publication is reviewed by our Rabbanim before release and shared with the community, giving families and businesses ongoing access to clear, practical halachic guidance.
+            </p>
+            <div className="mt-10 grid gap-4 sm:grid-cols-2">
+              {[
+                'Real-World Case Studies',
+                'Reviewed by Poskim',
+                'Distributed Community-Wide',
+                'Published on an Ongoing Basis',
+              ].map((item) => (
+                <div
+                  key={item}
+                  className="rounded-2xl border border-[#ece3d5] bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#c8a21a]/40 hover:shadow-md"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="h-3 w-3 rounded-full bg-[#c8a21a]"></div>
+                    <span className="text-sm font-medium text-[#051933]">
+                      {item}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Training Programs */}
+      <section className="pb-24 scroll-mt-28" id="training-programs">
+        <div className="mx-auto grid max-w-7xl items-stretch gap-16 px-6 lg:grid-cols-2 lg:px-8">
+          <div className="order-2 lg:order-1">
+            <div className="mb-4 inline-flex rounded-full border border-[#eadfcb] bg-white px-4 py-2 text-sm font-medium text-[#9b7b16]">
+              Professional Development
+            </div>
+            <h2 className="text-4xl font-bold text-[#051933]">
+              Training Programs
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-[#5f6b7a]">
+              Our advanced training program prepares the next generation of Talmidei Chachamim through intensive shimush under some of today's foremost Poskim. Participants receive rigorous guidance, practical experience, and the tools to develop into future halachic authorities. Graduates of the program serve communities around the world, providing leadership, education, and practical halachic guidance in the field of ribbis.
+            </p>
+            <div className="mt-10 rounded-[28px] border border-[#eadfcb] bg-white p-7 shadow-sm">
+              <h3 className="text-xl font-semibold text-[#051933]">
+                Highlights
+              </h3>
+              <div className="mt-6 space-y-4">
+                {[
+                  'Shimush Under Leading Poskim',
+                  'Advanced Halachic Training',
+                  'Practical Psak Development',
+                  'Worldwide Alumni Network',
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-4">
+                    <div className="mt-2 h-2.5 w-2.5 rounded-full bg-[#c8a21a]"></div>
+                    <p className="text-sm leading-7 text-[#5f6b7a]">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="relative order-1 mb-10 pb-6 pr-6 lg:order-2 lg:mb-0 lg:h-full lg:pb-10 lg:pr-10">
+            <div className="absolute -right-10 top-10 h-40 w-40 rounded-full bg-[#c8a21a]/15 blur-3xl"></div>
+            <div className="h-full overflow-hidden rounded-[32px] border border-[#eadfcb] bg-white p-3 shadow-[0_20px_60px_rgba(5,25,51,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <img
+                src="/assets/program.JPG"
+                alt="Rabbinical Training Programs"
+                className="h-full w-full rounded-[24px] object-cover"
+              />
+            </div>
+            <div className="absolute bottom-0 right-0 w-2/5 min-w-[140px] max-w-[220px] overflow-hidden rounded-[20px] border-4 border-[#f8f5ef] bg-white shadow-[0_20px_50px_rgba(5,25,51,0.2)] transition-transform duration-300 hover:-translate-y-1">
+              <img
+                src="/assets/rabbinical-training.jpg"
+                alt="Training Program Certification"
+                className="aspect-square w-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Bottom CTA Banner */}
       <BottomCTA
-        eyebrow={"BRING A PROGRAM TO YOUR COMMUNITY"}
-        title={"Let’s build the right presentation for your audience."}
-        discription={"Tell us about your school, business, organization, or community and what you would like the program to address."}
+        eyebrow={'BRING A PROGRAM TO YOUR COMMUNITY'}
+        title={'Let’s build the right presentation for your audience.'}
+        discription={
+          'Tell us about your school, business, organization, or community and what you would like the program to address.'
+        }
         link="/contact?topic=Program%20request"
         linktext="Request a Kav Haribis program"
         link2=""

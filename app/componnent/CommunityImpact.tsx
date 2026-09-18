@@ -143,6 +143,16 @@ export default function CommunityImpact() {
               </a>
             ))}
           </div>
+
+           {/* Centered Action Button with Styled Background */}
+        <div className="mt-6 text-center hidden">
+          <a
+            href="/seforim"
+            className="inline-flex items-center gap-2 pBG text-white font-semibold py-3.5 px-8 text-sm sm:text-base transition shadow-md hover:shadow-lg"
+          >
+            <span className='text-white'>View Full Catalog</span>
+          </a>
+        </div>
         </div>
       </div>
     </section>
