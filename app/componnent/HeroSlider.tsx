@@ -80,7 +80,7 @@ export default function HeroSlider() {
             alt={slide.alt}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#102a43]/95 via-[#102a43]/80 to-transparent "></div>
-          <div className="container px-4 sm:px-8 h-full flex items-center relative z-20 max-w-[1440px] mx-auto">
+          <div className="container px-4 sm:px-8 h-full flex items-center justify-between relative z-20 max-w-[1440px] mx-auto">
             <div className="max-w-3xl text-white">
               <p className="text-[#c69b46] font-bold text-xs sm:text-sm tracking-widest uppercase mb-3 hidden">
                 {slide.eyebrow}
@@ -107,6 +107,9 @@ export default function HeroSlider() {
                   {slide.secondaryCta.text}
                 </a>
               </div>
+            </div>
+            <div  className='w-full hidden lg:flex items-center justify-end'>
+              <img className='object-contain h-[300px]' src='/affiliate.png' alt='affiliate'/>
             </div>
           </div>
         </div>
