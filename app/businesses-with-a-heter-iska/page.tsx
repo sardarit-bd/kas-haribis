@@ -31,7 +31,7 @@ export default async function BusinessesPage() {
           </div>
         </div>
 
-        <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-8">
+        <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {businesses.map((item, index) => (
             <article key={item.id} className="p-6 bg-white flex flex-col justify-between space-y-4">
               <div className="space-y-4">

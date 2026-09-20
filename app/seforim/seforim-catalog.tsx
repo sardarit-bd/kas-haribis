@@ -44,7 +44,7 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
   }
   return (
     <section className='bg-[#f7f3ea] py-6'>
-      <section className="w-full container">
+      <section className="w-full container px-4 lg:px-8">
         <div className="bg-white  p-4 sm:p-6 mb-8 flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
           <div className="flex-1 flex flex-col md:flex-row gap-4 items-stretch md:items-center">
             <label className="flex-1 text-xs font-semibold text-slate-500 uppercase tracking-wider flex flex-col gap-1.5">

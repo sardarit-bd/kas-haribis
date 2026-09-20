@@ -23,7 +23,7 @@ export default async function EducationalCenter() {
             homes, classrooms, and community programs.
           </p>
         </header>
-        <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-8">
           {items.map((item) => {
             const src = item.file_key?.startsWith('static:')
               ? item.file_key.slice(7)

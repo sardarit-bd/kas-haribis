@@ -41,7 +41,7 @@ export default async function Page() {
         </div>
       </section>
 
-      <section className="p-6 sm:p-10 bg-[#f7f3ea]" id="loan-services">
+      <section className="py-6 sm:py-10 bg-[#f7f3ea]" id="loan-services">
         <div className="container px-8 flex flex-col md:flex-row items-center md:items-center justify-center gap-6 mb-10 pb-6 text-center">
           <div className="max-w-2xl space-y-2">
             <h2 className="text-[#102a43] font-serif font-bold text-3xl sm:text-4xl">Featured loan services</h2>
