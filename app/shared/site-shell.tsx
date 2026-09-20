@@ -31,7 +31,7 @@ export function SiteFooter({
 }) {
   return (
     <footer className="bg-white text-[#172431] pt-20 pb-[35px] relative block">
-      <div className="container lg:px-8">
+      <div className="container px-0 sm:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.8fr_repeat(4,1fr)] gap-[36px] mb-[45px]">
           <div className="flex flex-col gap-[14px]">
             <div className="inline-block w-fit">
