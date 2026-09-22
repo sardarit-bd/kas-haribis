@@ -179,6 +179,11 @@ export function SiteFooter({
                   Member Sign In
                 </a>
               </li>
+              <li>
+                <a href="/legal-disclaimer" className="text-[#475569] hover:text-[#102a43] text-base transition-all hover:translate-x-1 inline-flex items-center gap-1.5">
+                 Legal Disclaimer
+                </a>
+              </li>
             </ul>
           </div>
         </div>

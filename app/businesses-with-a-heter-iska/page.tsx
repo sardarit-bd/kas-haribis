@@ -100,7 +100,21 @@ export default async function BusinessesPage() {
             </article>
           ))}
         </div>
+
       </section>
+
+
+
+<div className="container flex flex-col md:flex-row items-start md:items-end justify-between gap-6 bg-gray-200">
+          <div className='w-full bg-white text-center py-4 px-4 md:px-10'>
+            <p className='text-black text-xl font-meduim'>
+              <b className='text-red-800'>Disclaimer:</b> Kav Haribis doesn’t take any responsibility for the validity of any of these Heter Iskas, this is for reference only. 
+            </p>
+          </div>
+        </div>
+
+
+
     {/* CTA Section Banner */}
       <BottomCTA eyebrow={"IMPORTANT GUIDANCE"} title={"Verify before relying on a listing"} discription={"A listing is educational information and does not guarantee that every transaction is covered. Confirm that the business’s Heter Iska is current, properly executed, and applicable to the specific arrangement."} link="/bais-horaah" linktext="Ask the Bais Horaah" link2="" link2text=""/>
     <SiteFooter/>
