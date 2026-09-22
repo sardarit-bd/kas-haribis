@@ -1,15 +1,14 @@
 'use client';
 import { useMemo, useState } from 'react';
 
-const categories = [
-  'All questions',
-  'Heter Iska',
-  'Loans',
-  'Business',
-  'Everyday situations',
-];
+type Question = {
+  id?: string;
+  category: string;
+  question: string;
+  answer: string;
+};
 
-const questions = [
+const DEFAULT_QUESTIONS: Question[] = [
   {
     category: 'Heter Iska',
     question: 'When is a Heter Iska needed?',
@@ -60,16 +59,30 @@ const questions = [
   },
 ];
 
-export default function CommonQuestions() {
+export default function CommonQuestions({
+  initialQuestions = [],
+}: {
+  initialQuestions?: Question[];
+}) {
+  const questions = initialQuestions.length > 0 ? initialQuestions : DEFAULT_QUESTIONS;
+
   const [category, setCategory] = useState('All questions');
-  const [open, setOpen] = useState(0);
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  const categories = useMemo(() => {
+    const set = new Set<string>();
+    questions.forEach((q) => {
+      if (q.category) set.add(q.category);
+    });
+    return ['All questions', ...Array.from(set)];
+  }, [questions]);
 
   const visible = useMemo(
     () =>
       questions.filter(
         (item) => category === 'All questions' || item.category === category,
       ),
-    [category],
+    [questions, category],
   );
 
   return (
@@ -95,7 +108,10 @@ export default function CommonQuestions() {
                 ? 'bg-[#c69b46] text-white shadow-sm'
                 : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50'
             }`}
-            onClick={() => setCategory(item)}
+            onClick={() => {
+              setCategory(item);
+              setOpenIndex(0);
+            }}
             key={item}
           >
             {item}
@@ -104,8 +120,8 @@ export default function CommonQuestions() {
       </div>
 
       <div className="max-w-3xl mx-auto flex flex-col gap-4">
-        {visible.map((item) => {
-          const active = open === questions.indexOf(item);
+        {visible.map((item, idx) => {
+          const active = openIndex === idx;
           return (
             <article
               className={`border transition duration-200 overflow-hidden shadow-sm text-center ${
@@ -113,13 +129,11 @@ export default function CommonQuestions() {
                   ? 'bg-white border-2 border-[#c69b46]'
                   : 'bg-white border border-gray-100 hover:border-slate-300'
               }`}
-              key={item.question}
+              key={item.id || item.question}
             >
               <button
                 className="w-full p-5 text-center flex flex-col items-center justify-center gap-1.5 cursor-pointer"
-                onClick={() =>
-                  setOpen(active ? -1 : questions.indexOf(item))
-                }
+                onClick={() => setOpenIndex(active ? null : idx)}
                 aria-expanded={active}
               >
                 <small className="text-[#a37828] text-xs font-semibold tracking-wider uppercase">
@@ -131,7 +145,7 @@ export default function CommonQuestions() {
               </button>
               {active && (
                 <div className="px-6 pb-6 pt-3 border-t border-slate-100 text-center">
-                  <p className="text-slate-600 text-sm leading-relaxed mb-4 max-w-xl mx-auto">
+                  <p className="text-slate-600 text-sm leading-relaxed mb-4 max-w-xl mx-auto whitespace-pre-line">
                     {item.answer}
                   </p>
                   <a

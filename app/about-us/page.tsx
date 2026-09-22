@@ -1,18 +1,50 @@
 import BottomCTA from '../componnent/BottomCTA';
+import { listAboutMembers } from '../lib/directories';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
+import MemberAvatar from './member-avatar';
 
 export const metadata = {
   title: 'About Us | Kav Haribis',
   description: 'Learn about Kav Haribis, our founders, rabbinic leadership, mission, and community programs for Hilchos Ribbis.',
 };
 
-export default function AboutPage() {
+export const dynamic = 'force-dynamic';
+
+type Member = {
+  id: string;
+  category: string;
+  name: string;
+  designation?: string;
+  description?: string;
+  image_url?: string;
+};
+
+export default async function AboutPage() {
+  let members: Member[] = [];
+  try {
+    const { env } = await import('cloudflare:workers');
+    members = (await listAboutMembers(env.DB, false)) as Member[];
+  } catch (err) {
+    console.error('Failed to load about members:', err);
+  }
+
+  // Filter members by category
+  const researchTeam = members.filter(
+    (m) => m.category === 'Kosher Bank Directory Research Team',
+  );
+  const genealogistTeam = members.filter(
+    (m) => m.category === 'Our Genealogist and Yuchasin specialist',
+  );
+  const committeeTeam = members.filter(
+    (m) => m.category === 'Committee Members',
+  );
+
   return (
     <main className="min-h-screen bg-white overflow-x-clip">
       <SiteHeader />
 
       {/* Hero Banner Section */}
-      <section className="min-h-[540px] bg-[#102a43] text-white relative overflow-hidden">
+      <section className="min-h-[540px] bg-[#102a43] text-white relative overflow-hidden hidden">
         <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-16 md:py-20 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-[50px] items-center">
           <div className="flex flex-col">
             <h1 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-semibold leading-tight tracking-tight mt-3.5 mb-5">
@@ -51,8 +83,8 @@ export default function AboutPage() {
 
       {/* Welcome & Founder Story Section */}
       <section className="bg-white border-b border-slate-100">
-        <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-16 md:py-[100px] grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-[60px] items-center">
-          <div className="overflow-hidden border border-slate-200 shadow-md h-[320px] sm:h-[380px]">
+        <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-10 md:py-[50px] grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-[60px] items-start">
+          <div className="overflow-hidden border border-slate-200 shadow-md h-[400px] md:h-[700px]">
             <img
               src="/kav-impact/heter-iska-presentation-2.jpg"
               alt="Kav Haribis educational presentation"
@@ -61,14 +93,17 @@ export default function AboutPage() {
           </div>
           <div>
             <h2 className="text-3xl sm:text-4xl font-semibold text-[#102a43] leading-tight tracking-tight mb-6">
-              A center for awareness, education, and practical halachic guidance
+              Welcome to Kav HaRibis — a halachic center dedicated to bringing clarity to the laws of ribis, with a strong focus on outreach and raising awareness in Hilchos Ribis.
             </h2>
             <div className="space-y-4">
               <p className="text-slate-600 text-base sm:text-lg leading-relaxed font-normal">
-                Kav Haribis was founded by <strong className="text-[#102a43] font-semibold">Rabbi Yaakov Yitzchok Jacob</strong> together with other talmidim of <strong className="text-[#102a43] font-semibold">Harav Pinchos Vind shlita</strong>. Inspired by Rav Vind’s worldwide network of Batei Horaah and his lifelong commitment to expanding awareness of Hilchos Ribbis, they established Kav Haribis to make these complex halachos clearer and more accessible for modern business and everyday financial life.
+                Kav haribis was founded By the talmidim of Harav Pinchos Vind shlita who were inspired by his world wide network of batei Horaah and his passion to create awareness in hilchos ribis, and work closely with him and his network of Batei Horaah to advance awareness in hilchos ribis and bring you the most up to date and accurate ruling in hilchos ribis.   
               </p>
               <p className="text-slate-600 text-base sm:text-lg leading-relaxed font-normal">
-                Kav Haribis works closely with Harav Pinchos Vind shlita and his network of Batei Horaah to advance public awareness and provide current, carefully considered guidance in Hilchos Ribbis.
+                Harav Pinchos Vind Shlita had the privilege to discuss many questions regarding hilchos ribis with Harav Yosef Shalom Elyashiv Zazal and Harav Sholmo Vozner Zatal among many other Gedolim, and has a close connection with many of the current gedolei Yisroel to help us clarify the complex questions when they arrive.
+              </p>
+              <p className="text-slate-600 text-base sm:text-lg leading-relaxed font-normal">
+                Furthermore the Rabonim of our Bais Horaah Have a connection to many of well known experts in hilchos ribis like Harav Ari Marberger Harav Shmuel Honigwachs and Harav Avrohom Moshe Levanoni amongst many other Rabonim  to bring you the the most accurate pesak based on our Mesorah.
               </p>
             </div>
           </div>
@@ -76,8 +111,8 @@ export default function AboutPage() {
       </section>
 
       {/* Rabbinic Leadership & Advisory Banner */}
-      <section className="bg-[#102a43] text-white">
-        <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-16 md:py-[90px] grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-[60px] items-center">
+      <section className="bg-[#102a43] text-white hidden">
+        <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-16 md:py-[50px] grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-[60px] items-center">
           <div className="overflow-hidden border border-white/10 shadow-lg h-[320px] sm:h-[400px]">
             <img
               src="/kav-impact/recognition-event.jpg"
@@ -107,7 +142,7 @@ export default function AboutPage() {
       </section>
 
       {/* Our Mission & Core Pillars Section */}
-      <section className="bg-gray-200 py-16 md:py-[100px]">
+      <section className="bg-gray-200 py-16 md:py-[100px] hidden">
         <div className="container max-w-[1440px] mx-auto px-4 sm:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-3xl sm:text-4xl font-semibold text-[#102a43] tracking-tight">
@@ -156,7 +191,7 @@ export default function AboutPage() {
       </section>
 
       {/* Work in Action Photo Showcase */}
-      <section className="bg-white py-16 md:py-[95px]">
+      <section className="bg-white py-16 md:py-[95px] hidden">
         <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 grid grid-cols-1 lg:grid-cols-[0.75fr_1.25fr] gap-10 lg:gap-[60px] items-center">
           <div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-[#102a43] mb-4 tracking-tight leading-tight">
@@ -198,6 +233,129 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Rabbis Hotline Section */}
+      <section className="bg-gray-200 py-12 md:py-16 border-t border-slate-100">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-[#102a43] mb-8 sm:mb-10 tracking-tight">
+            Rabbi’s who answer questions on our hotline-
+          </h2>
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-3.5 max-w-3xl mx-auto">
+            {[
+              'Rabbi Baruch Moses',
+              'Rabbi Shmuel Poltman',
+              'Rabbi Yechiel Blum',
+              'Rabbi Moskowitz',
+              'Rabbi Ginsberg',
+              'Rabbi Elenbogen',
+              'Rabbi Tzvi Smoke',
+              'Rabbi Yaakov Yitzchok Jacob',
+              'Rabbi Yehuda Framowitz',
+              'Rabbi Lipshitz',
+            ].map((name) => (
+              <span
+                key={name}
+                className="px-5 py-2.5 bg-white border border-slate-300/90 rounded-2xl text-slate-800 text-sm sm:text-base font-semibold shadow-xs hover:border-slate-400 transition"
+              >
+                {name}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Kosher Bank Directory Research Team */}
+      {researchTeam.length > 0 && (
+        <section className="bg-white py-12 md:py-16 border-t border-slate-100">
+          <div className="max-w-5xl mx-auto px-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-[#102a43] text-center mb-10 tracking-tight">
+              Kosher Bank Directory Research Team
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
+              {researchTeam.map((member) => (
+                <div key={member.id || member.name} className="flex flex-col">
+                  <MemberAvatar member={member} />
+                  <h3 className="font-bold text-[#102a43] text-sm sm:text-base mt-3.5">
+                    {member.name}
+                  </h3>
+                  {member.designation && (
+                    <p className="text-xs text-amber-700 font-semibold mt-0.5">
+                      {member.designation}
+                    </p>
+                  )}
+                  {member.description && (
+                    <p className="text-slate-500 text-xs leading-relaxed mt-1">
+                      {member.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Our Genealogist and Yuchasin specialist */}
+      {genealogistTeam.length > 0 && (
+        <section className="bg-white py-12 md:py-16 border-t border-slate-100">
+          <div className="max-w-5xl mx-auto px-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-[#102a43] text-center mb-10 tracking-tight">
+              Our Genealogist and Yuchasin specialist
+            </h2>
+            <div className="max-w-md mx-auto flex flex-col">
+              {genealogistTeam.map((member) => (
+                <div key={member.id || member.name} className="flex flex-col">
+                  <MemberAvatar member={member} />
+                  <h3 className="font-bold text-[#102a43] text-base sm:text-lg mt-4 mb-1.5">
+                    {member.name}
+                  </h3>
+                  {member.designation && (
+                    <p className="text-xs text-amber-700 font-semibold mb-1">
+                      {member.designation}
+                    </p>
+                  )}
+                  {member.description && (
+                    <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
+                      {member.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Committee Members */}
+      {committeeTeam.length > 0 && (
+        <section className="bg-white py-12 md:py-16 border-t border-slate-100">
+          <div className="max-w-6xl mx-auto px-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-[#102a43] text-center mb-10 tracking-tight">
+              Committee Members
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+              {committeeTeam.map((member) => (
+                <div key={member.id || member.name} className="flex flex-col">
+                  <MemberAvatar member={member} />
+                  <h3 className="font-bold text-[#102a43] text-sm sm:text-base mt-3.5">
+                    {member.name}
+                  </h3>
+                  {member.designation && (
+                    <p className="text-xs text-amber-700 font-semibold mt-0.5">
+                      {member.designation}
+                    </p>
+                  )}
+                  {member.description && (
+                    <p className="text-slate-500 text-xs leading-relaxed mt-1">
+                      {member.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Bottom CTA Banner */}
       <BottomCTA

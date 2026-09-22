@@ -547,3 +547,198 @@ export const ALERT_SUBSCRIBERS_TABLE = `CREATE TABLE IF NOT EXISTS alert_subscri
 export async function ensureAlertSubscribers(db: any) {
   await db.prepare(ALERT_SUBSCRIBERS_TABLE).run();
 }
+
+export const COMMON_QUESTIONS_TABLE = `CREATE TABLE IF NOT EXISTS common_questions (id TEXT PRIMARY KEY,category TEXT NOT NULL DEFAULT 'Everyday situations',question TEXT NOT NULL,answer TEXT NOT NULL,published INTEGER NOT NULL DEFAULT 1,sort_order INTEGER NOT NULL DEFAULT 0,created_at TEXT NOT NULL,updated_at TEXT NOT NULL)`;
+
+export async function ensureCommonQuestions(db: any) {
+  await db.prepare(COMMON_QUESTIONS_TABLE).run();
+  const row = (await db
+    .prepare('SELECT COUNT(*) AS count FROM common_questions')
+    .first()) as any;
+  if (Number(row?.count || 0) === 0) {
+    const now = new Date().toISOString();
+    const defaultQuestions = [
+      {
+        category: 'Heter Iska',
+        question: 'When is a Heter Iska needed?',
+        answer:
+          'A Heter Iska may be needed when a financial arrangement could create a prohibited lender-borrower relationship involving Ribbis. Whether a standard form is sufficient depends on the parties, ownership, transaction, and way the agreement is actually used.',
+      },
+      {
+        category: 'Loans',
+        question: 'Do late fees create a Ribbis concern?',
+        answer:
+          'A charge that increases because payment is delayed can raise a serious Ribbis concern. The exact wording, purpose of the charge, and relationship between the parties must be reviewed before relying on it.',
+      },
+      {
+        category: 'Business',
+        question: 'What should business partners review?',
+        answer:
+          'Partners should clarify how capital, profits, losses, guaranteed returns, management payments, and withdrawals are structured. The documents and actual business practice must agree with one another.',
+      },
+      {
+        category: 'Loans',
+        question: 'How should a private loan be structured?',
+        answer:
+          'A private loan should clearly state the principal, repayment schedule, security, fees, and any other benefit received by the lender. If a Heter Iska is required, it must be appropriate for the specific arrangement and signed correctly.',
+      },
+      {
+        category: 'Everyday situations',
+        question: 'May a borrower give the lender a gift?',
+        answer:
+          'A gift given because of a loan can be problematic even when it was not written into the agreement. Timing, normal practice, the relationship between the parties, and the reason for the gift all matter.',
+      },
+      {
+        category: 'Everyday situations',
+        question: 'Can a store charge more for a payment plan?',
+        answer:
+          'Different cash and credit prices can involve detailed halachos. The prices, timing, and customer’s commitment must be presented correctly before the sale is completed.',
+      },
+      {
+        category: 'Business',
+        question: 'Does every bank or lender need the same Heter Iska?',
+        answer:
+          'No. Ownership, funding sources, loan products, servicing arrangements, and contract language vary. A document that works for one institution may not properly address another institution’s structure.',
+      },
+      {
+        category: 'Heter Iska',
+        question: 'Can I download a standard Heter Iska and use it myself?',
+        answer:
+          'A standard template can be useful, but it may not fit every transaction. Review the document carefully and consult a qualified Rav when ownership, business entities, guarantees, or unusual payment terms are involved.',
+      },
+    ];
+
+    for (let index = 0; index < defaultQuestions.length; index++) {
+      const q = defaultQuestions[index];
+      await db
+        .prepare(
+          'INSERT INTO common_questions(id,category,question,answer,published,sort_order,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)',
+        )
+        .bind(
+          `cq-${index + 1}`,
+          q.category,
+          q.question,
+          q.answer,
+          1,
+          index,
+          now,
+          now,
+        )
+        .run();
+    }
+  }
+}
+
+export async function listCommonQuestions(db: any, includePrivate = false) {
+  await ensureCommonQuestions(db);
+  const result = await db
+    .prepare(
+      `SELECT * FROM common_questions ${includePrivate ? '' : 'WHERE published=1'} ORDER BY sort_order ASC, created_at DESC`,
+    )
+    .all();
+  return result.results as any[];
+}
+
+export const ABOUT_MEMBERS_TABLE = `CREATE TABLE IF NOT EXISTS about_members (id TEXT PRIMARY KEY,category TEXT NOT NULL,name TEXT NOT NULL,designation TEXT NOT NULL DEFAULT '',description TEXT NOT NULL DEFAULT '',image_url TEXT NOT NULL DEFAULT '/assets/avatar.webp',published INTEGER NOT NULL DEFAULT 1,sort_order INTEGER NOT NULL DEFAULT 0,created_at TEXT NOT NULL,updated_at TEXT NOT NULL)`;
+
+export async function ensureAboutMembers(db: any) {
+  await db.prepare(ABOUT_MEMBERS_TABLE).run();
+  const row = (await db
+    .prepare('SELECT COUNT(*) AS count FROM about_members')
+    .first()) as any;
+  if (Number(row?.count || 0) === 0) {
+    const now = new Date().toISOString();
+    const defaultMembers = [
+      {
+        category: 'Kosher Bank Directory Research Team',
+        name: 'Rabbi Aharon Pollack',
+        designation: 'Research Team Member',
+        description: '',
+        image_url: '/assets/avatar.webp',
+      },
+      {
+        category: 'Kosher Bank Directory Research Team',
+        name: 'Rabbi Yerucham Man',
+        designation: 'Research Team Member',
+        description: '',
+        image_url: '/assets/avatar.webp',
+      },
+      {
+        category: 'Kosher Bank Directory Research Team',
+        name: 'Rabbi Dovid Barasch',
+        designation: 'Research Team Member',
+        description: '',
+        image_url: '/assets/avatar.webp',
+      },
+      {
+        category: 'Our Genealogist and Yuchasin specialist',
+        name: 'Rabbi Aharon Hamaoui',
+        designation: 'Genealogist and Yuchasin Specialist',
+        description:
+          'Our rabbinical guidance specifically for the Kosher Bank research center is Rabbi Ari Marberger shlita besides the regular guidance from Harav Pinchos Vind Shlita',
+        image_url: '/assets/avatar.webp',
+      },
+      {
+        category: 'Committee Members',
+        name: 'R Yosef Shneur Posen',
+        designation: 'Committee Member',
+        description: '',
+        image_url: '/assets/avatar.webp',
+      },
+      {
+        category: 'Committee Members',
+        name: 'R Shmuel Chaim Fink',
+        designation: 'Committee Member',
+        description: '',
+        image_url: '/assets/avatar.webp',
+      },
+      {
+        category: 'Committee Members',
+        name: 'R Yisroel Dovid Teren',
+        designation: 'Committee Member',
+        description: '',
+        image_url: '/assets/avatar.webp',
+      },
+      {
+        category: 'Committee Members',
+        name: 'R Baroch Dovid Moses',
+        designation: 'Committee Member',
+        description: '',
+        image_url: '/assets/avatar.webp',
+      },
+    ];
+
+    for (let i = 0; i < defaultMembers.length; i++) {
+      const m = defaultMembers[i];
+      await db
+        .prepare(
+          'INSERT INTO about_members(id,category,name,designation,description,image_url,published,sort_order,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?)',
+        )
+        .bind(
+          `am-${i + 1}`,
+          m.category,
+          m.name,
+          m.designation,
+          m.description,
+          m.image_url,
+          1,
+          i,
+          now,
+          now,
+        )
+        .run();
+    }
+  }
+}
+
+export async function listAboutMembers(db: any, includePrivate = false) {
+  await ensureAboutMembers(db);
+  const result = await db
+    .prepare(
+      `SELECT * FROM about_members ${includePrivate ? '' : 'WHERE published=1'} ORDER BY sort_order ASC, created_at ASC`,
+    )
+    .all();
+  return result.results as any[];
+}
+
+

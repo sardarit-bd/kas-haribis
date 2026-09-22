@@ -75,11 +75,6 @@ body {
 
 h1 {
   font-family: var(--font-poppins, 'Poppins'), 'Poppins', sans-serif !important;
-  font-size: clamp(28px, 4.5vw, 48px);
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.025em;
-  word-spacing: normal;
 }
 
 h2 {
@@ -3064,7 +3059,7 @@ footer, .siteFooterBig {
 }
 .stickyEditor {
   position: sticky;
-  top: 25px;
+  top: 100px;
 }
 .cancelButton {
   border: 0;
@@ -5773,7 +5768,7 @@ footer, .siteFooterBig {
 }
 .businessAdminList {
   position: sticky;
-  top: 18px;
+  top: 100px;
 }
 .businessAdminRows {
   display: grid;

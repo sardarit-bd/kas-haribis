@@ -1,0 +1,20 @@
+export async function GET(request: Request) {
+  const id = new URL(request.url).searchParams.get('id') || '';
+  if (!id) {
+    return new Response('Not found', { status: 404 });
+  }
+
+  const { env } = await import('cloudflare:workers');
+  const object = await env.BUCKET.get(`about-member-images/${id}`);
+
+  if (!object) {
+    return new Response('Not found', { status: 404 });
+  }
+
+  return new Response(object.body, {
+    headers: {
+      'content-type': object.httpMetadata?.contentType || 'image/png',
+      'cache-control': 'public, max-age=3600',
+    },
+  });
+}

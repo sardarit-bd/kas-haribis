@@ -14,20 +14,12 @@ export default async function BusinessesPage() {
       title="Businesses With a Heter Iska"
       intro="A growing directory of businesses listed by Kav Haribis as operating with a Heter Iska. Review the information and confirm that the document remains current before relying on a listing."
     />
-      <section className=" p-6 sm:p-10 bg-gray-200" id="business-directory">
-        <div className="container flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-10 pb-6 hidden">
-          <div className="max-w-2xl space-y-2">
-            <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase hidden">DIRECTORY</p>
-            <h2 className="text-[#102a43] font-serif font-bold text-3xl sm:text-4xl">Listed businesses</h2>
-            <p className="text-[#64748b] text-sm sm:text-base leading-relaxed">
-              Each listing reflects information collected by Kav Haribis.
-              Documents and business practices can change, so current
-              verification is always recommended.
+      <section className="p-6 sm:p-10 bg-gray-200" id="business-directory">
+        <div className="container flex flex-col md:flex-row items-start md:items-end justify-between gap-6 pb-6">
+          <div className='w-full bg-red-700 text-center py-4 px-4 md:px-10 rounded-2xl'>
+            <p className='text-white text-xl font-bold'>
+              "אלא הם דברי הגאון הרב משה שטרנבוך שליט"א בהקדמה לספרו קיצור דיני רבית המצויים "והנה הצורך להיתר עיסקא לחנונים ובעלי עסקים נחוץ ביותר וראוי לרבנים לתקן בארץ ובחו"ל שכל סוחר יחתום בשטר עיסקא ויתלה בחנות או בית עסק במקום בולט ..."  
             </p>
-          </div>
-          <div className="min-w-[160px] text-center p-4 bg-white shrink-0">
-            <strong className="block text-3xl sm:text-4xl font-serif font-bold text-[#c69b46]">{businesses.length}</strong>
-            <span className="block text-base font-medium text-[#64748b]/80 tracking-wider mt-1">businesses currently listed</span>
           </div>
         </div>
 

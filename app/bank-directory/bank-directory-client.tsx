@@ -157,6 +157,33 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
 
   return (
     <section className="container px-4 sm:px-8 py-10 md:py-14">
+
+
+    <div className="flex flex-col items-center mb-6 hidden">
+      <h1 className="text-3xl md:text-4xl font-semibold max-w-6xl mx-auto text-black text-center mb-3">{"Don’t see what you’re looking for?"}</h1>
+      <h1 className="text-3xl md:text-4xl font-semibold max-w-6xl mx-auto text-black text-center mb-3">{"Have info on any bank or lender that may be useful?"}</h1>
+      <button
+          type="button"
+                  onClick={() =>
+                    setRequestUpdateBank({
+                      id: 'general',
+                      title: 'Bank / Lender Directory Inquiry',
+                      status: 'all',
+                      summary: '',
+                      comment: '',
+                      last_updated: '',
+                      has_full_report: 0,
+                      source: '',
+                      institution_type: '',
+                      website: '',
+                      logo_url: '',
+                    })
+                  }
+       className="bg-black hover:bg-[#3144a5] text-white py-2 px-4 cursor-pointer my-3">Please reach out !</button>
+    </div>
+ 
+
+
       {/* 7 Status Cards Grid (Connected with Directory Tools status filter) */}
       <div className="mb-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 container justify-center">
@@ -551,7 +578,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                   style={{ color: 'white' }}
                   className="inline-flex items-center gap-2.5 px-6 py-3.5 pBG text-white font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 cursor-pointer"
                 >
-                  <span>Please reach out !</span>
+                  <span>Please Reach Out</span>
                 </button>
               </div>
             </div>

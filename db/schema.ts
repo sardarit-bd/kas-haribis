@@ -370,3 +370,29 @@ export const memberOrders = sqliteTable('member_orders', {
   status: text('status').notNull().default('Pending'),
   createdAt: text('created_at').notNull(),
 });
+
+export const commonQuestions = sqliteTable('common_questions', {
+  id: text('id').primaryKey(),
+  category: text('category').notNull().default('Everyday situations'),
+  question: text('question').notNull(),
+  answer: text('answer').notNull(),
+  published: integer('published', { mode: 'boolean' }).notNull().default(true),
+  sortOrder: integer('sort_order').notNull().default(0),
+  createdAt: text('created_at').notNull(),
+  updatedAt: text('updated_at').notNull(),
+});
+
+export const aboutMembers = sqliteTable('about_members', {
+  id: text('id').primaryKey(),
+  category: text('category').notNull(),
+  name: text('name').notNull(),
+  designation: text('designation').notNull().default(''),
+  description: text('description').notNull().default(''),
+  imageUrl: text('image_url').notNull().default('/assets/avatar.webp'),
+  published: integer('published', { mode: 'boolean' }).notNull().default(true),
+  sortOrder: integer('sort_order').notNull().default(0),
+  createdAt: text('created_at').notNull(),
+  updatedAt: text('updated_at').notNull(),
+});
+
+

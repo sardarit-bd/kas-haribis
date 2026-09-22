@@ -92,6 +92,18 @@ export const ADMIN_SECTIONS = [
     description: 'Read and organize Bais Horaah submissions',
   },
   {
+    key: 'common-questions',
+    title: 'Common questions',
+    href: '/admin/common-questions',
+    description: 'Add, update, and manage public FAQ / common questions',
+  },
+  {
+    key: 'about-members',
+    title: 'About Us Team',
+    href: '/admin/about-members',
+    description: 'Add, update, and manage About Us team members and specialists',
+  },
+  {
     key: 'heter-iska',
     title: 'Heter Iska files',
     href: '/admin/heter-iska',
