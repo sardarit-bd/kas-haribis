@@ -78,7 +78,7 @@ export default function GenealogyServicesPage() {
 
       {/* Request Form Container */}
       <section className='container pb-12 px-8'>
-        <section className="container bg-gray-200 py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start p-6" id="genealogy-request">
+        <section className="container bg-gray-200 py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start p-6 scroll-mt-[120px]" id="genealogy-request">
           <div className="lg:col-span-5 space-y-6">
             <div>
               <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1 hidden">REQUEST GENEALOGY RESEARCH</p>

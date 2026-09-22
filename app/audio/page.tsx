@@ -12,7 +12,7 @@ export default async function AudioPage() {
     <InteriorPage
       eyebrow="SHIURIM & AUDIO"
       title="Kav Haribis Audio Library"
-      intro="Listen to short, practical shiurim and discussions about Ribbis and kosher financial conduct. Search by topic or select a language series."
+      intro="Explore our collection of insightful audio shiurim and discussions on ribbis and kosher banking. Featuring expert guidance from leading Rabbanim, these recordings are here to help you stay informed, inspired, and educated—wherever you are. "
     />
 
 

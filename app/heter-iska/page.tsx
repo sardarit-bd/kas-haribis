@@ -34,7 +34,7 @@ export default function HeterIska() {
           </div>
         </div>
       </section>
-      <section id="targetid">
+      <section className="scroll-mt-[90px]" id="targetid">
         <HeterLibrary />
       </section>
       <SiteFooter/>
