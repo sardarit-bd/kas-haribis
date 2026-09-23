@@ -1,5 +1,6 @@
 'use client';
 import { useMemo, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type Question = {
   id?: string;
@@ -86,8 +87,14 @@ export default function CommonQuestions({
   );
 
   return (
-    <section className="w-full my-6 text-center">
-      <div className="max-w-2xl mx-auto mb-8 space-y-3">
+    <section className="w-full my-6 text-center overflow-hidden">
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-20px' }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="max-w-2xl mx-auto mb-8 space-y-3"
+      >
         <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#102a43]">
           Practical questions, clearly organized.
         </h2>
@@ -95,9 +102,13 @@ export default function CommonQuestions({
           Begin with a common topic, then contact the Bais Horaah when your
           situation requires an individual review.
         </p>
-      </div>
+      </motion.div>
 
-      <div
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-20px' }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="flex flex-wrap justify-center gap-2 mb-8"
         aria-label="Question categories"
       >
@@ -117,14 +128,18 @@ export default function CommonQuestions({
             {item}
           </button>
         ))}
-      </div>
+      </motion.div>
 
       <div className="max-w-3xl mx-auto flex flex-col gap-4">
         {visible.map((item, idx) => {
           const active = openIndex === idx;
           return (
-            <article
-              className={`border transition duration-200 overflow-hidden shadow-sm text-center ${
+            <motion.article
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ duration: 0.8, delay: (idx % 6) * 0.04, ease: [0.16, 1, 0.3, 1] }}
+              className={`border transition duration-200 overflow-hidden shadow-xs text-center rounded-xl ${
                 active
                   ? 'bg-white border-2 border-[#c69b46]'
                   : 'bg-white border border-gray-100 hover:border-slate-300'
@@ -143,23 +158,32 @@ export default function CommonQuestions({
                   {item.question}
                 </strong>
               </button>
-              {active && (
-                <div className="px-6 pb-6 pt-3 border-t border-slate-100 text-center">
-                  <p className="text-slate-600 text-sm leading-relaxed mb-4 max-w-xl mx-auto whitespace-pre-line">
-                    {item.answer}
-                  </p>
-                  <a
-                    className="inline-flex items-center gap-1 text-[#a37828] hover:text-[#102a43] text-xs font-bold transition"
-                    href="/bais-horaah"
+              <AnimatePresence>
+                {active && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                    className="px-6 pb-6 pt-3 border-t border-slate-100 text-center overflow-hidden"
                   >
-                    Ask about your situation →
-                  </a>
-                </div>
-              )}
-            </article>
+                    <p className="text-slate-600 text-sm leading-relaxed mb-4 max-w-xl mx-auto whitespace-pre-line">
+                      {item.answer}
+                    </p>
+                    <a
+                      className="inline-flex items-center gap-1 text-[#a37828] hover:text-[#102a43] text-xs font-bold transition"
+                      href="/bais-horaah"
+                    >
+                      Ask about your situation →
+                    </a>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.article>
           );
         })}
       </div>
     </section>
   );
 }
+

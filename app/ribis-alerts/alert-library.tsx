@@ -1,5 +1,6 @@
 'use client';
 import { useMemo, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { RxCross2 } from "react-icons/rx";
 type Alert = {
   id: string;
@@ -76,8 +77,12 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
       <section className="space-y-8 container">
         {/* Featured Alert Banner */}
         {featured && (
-          <article
-            className={` p-6 sm:p-8 bg-red-100 rounded-4xl border-2 space-y-4 ${
+          <motion.article
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-20px' }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className={` p-6 sm:p-8 bg-red-100 rounded-3xl border-2 space-y-4 shadow-md ${
               featured.severity?.toLowerCase() === 'high'
                 ? 'border-[#9b1c1c]'
                 : 'border-[#c69b46]'
@@ -108,13 +113,13 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
               <p className="text-base font-meduim text-[#475569] leading-relaxed max-w-3xl">{featured.summary}</p>
               <div className="flex items-center gap-3 pt-2">
                 <button
-                  className="px-5 py-2.5 bg-[#102a43] hover:bg-[#1a385c] text-white text-sm font-meduim tracking-wider transition-colors shadow-sm cursor-pointer"
+                  className="px-5 py-2.5 bg-[#102a43] hover:bg-[#1a385c] text-white text-sm font-meduim tracking-wider transition-colors shadow-sm cursor-pointer rounded-md"
                   onClick={() => setSelected(featured)}
                 >
                   View Full Alert
                 </button>
                 <button
-                  className="px-4 py-2.5 bg-white border border-[#cbd5da] hover:bg-[#f8fafc] text-[#102a43] text-sm font-meduim tracking-wider transition-colors cursor-pointer"
+                  className="px-4 py-2.5 bg-white border border-[#cbd5da] hover:bg-[#f8fafc] text-[#102a43] text-sm font-meduim tracking-wider transition-colors cursor-pointer rounded-md"
                   onClick={() => share(featured)}
                 >
                   Share
@@ -127,12 +132,18 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
                   : ''}
               </small>
             </div>
-          </article>
+          </motion.article>
         )}
 
         {/* Filter Tools */}
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 p-4 bg-[#f7f3ea]">
-          <label className="flex items-center gap-3 flex-1 bg-white px-3.5 py-2 focus-within:ring-2 focus-within:ring-[#102a43]/20">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-20px' }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 p-4 bg-[#f7f3ea] rounded-xl"
+        >
+          <label className="flex items-center gap-3 flex-1 bg-white px-3.5 py-2 rounded-lg focus-within:ring-2 focus-within:ring-[#102a43]/20">
             <span className="text-xs font-bold text-[#102a43] uppercase tracking-wider shrink-0">Search</span>
             <input
               value={query}
@@ -144,7 +155,7 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
             {categories.map((x) => (
               <button
-                className={`px-3 py-1.5 text-xs font-bold transition-colors whitespace-nowrap cursor-pointer ${
+                className={`px-3 py-1.5 text-xs font-bold transition-colors whitespace-nowrap cursor-pointer rounded-md ${
                   category === x
                     ? 'bg-[#102a43] text-white'
                     : 'bg-white text-[#60717d] hover:bg-[#f8fafc]'
@@ -156,13 +167,18 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
               </button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Alert Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((x) => (
-            <article
-              className="p-6 bg-white border border-gray-200 flex flex-col justify-between space-y-4"
+          {filtered.map((x, idx) => (
+            <motion.article
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ duration: 0.8, delay: (idx % 3) * 0.07, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ y: -4, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+              className="p-6 bg-white border border-gray-200 flex flex-col justify-between space-y-4 rounded-xl shadow-xs hover:shadow-md transition-all"
               key={x.id}
               id={`alert-${x.id}`}
             >
@@ -189,34 +205,34 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
 
               <div className="flex items-center gap-2 pt-3 border-t border-[#f1f5f9] text-xs font-bold flex-wrap">
                 <button
-                  className="px-3.5 py-1.5 bg-[#102a43] hover:bg-[#1a385c] text-white transition-colors text-xs font-bold shadow-sm cursor-pointer"
+                  className="px-3.5 py-1.5 bg-[#102a43] hover:bg-[#1a385c] text-white transition-colors text-xs font-bold shadow-sm cursor-pointer rounded-md"
                   onClick={() => setSelected(x)}
                 >
                   View Full Alert
                 </button>
                 <button
-                  className="px-3 py-1.5 bg-white border border-[#cbd5da] text-[#102a43] hover:bg-[#f8fafc] transition-colors cursor-pointer"
+                  className="px-3 py-1.5 bg-white border border-[#cbd5da] text-[#102a43] hover:bg-[#f8fafc] transition-colors cursor-pointer rounded-md"
                   title="Share"
                   onClick={() => share(x)}
                 >
                   Share
                 </button>
                 <button
-                  className="px-3 py-1.5 bg-white border border-[#cbd5da] text-[#102a43] hover:bg-[#f8fafc] transition-colors cursor-pointer"
+                  className="px-3 py-1.5 bg-white border border-[#cbd5da] text-[#102a43] hover:bg-[#f8fafc] transition-colors cursor-pointer rounded-md"
                   title="Copy link"
                   onClick={() => copy(x)}
                 >
                   {copied === x.id ? 'Copied' : 'Copy'}
                 </button>
                 <button
-                  className="px-3 py-1.5 bg-white border border-[#cbd5da] text-[#102a43] hover:bg-[#f8fafc] transition-colors cursor-pointer ml-auto"
+                  className="px-3 py-1.5 bg-white border border-[#cbd5da] text-[#102a43] hover:bg-[#f8fafc] transition-colors cursor-pointer ml-auto rounded-md"
                   title="Print"
                   onClick={() => printAlert(x)}
                 >
                   Print
                 </button>
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
 
@@ -229,74 +245,86 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
       </section>
 
       {/* Modal Popup */}
-      {selected && (
-        <div
-          className="alertModal fixed inset-0 z-50 bg-[#071728]/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
-          role="dialog"
-          aria-modal="true"
-          aria-label={selected.title}
-          onMouseDown={(e) => {
-            if (e.target === e.currentTarget) setSelected(null);
-          }}
-        >
-          <article className="relative w-full max-w-2xl bg-white border border-[#e2e8f0] shadow-2xl p-6 sm:p-8 space-y-5 my-8">
-            <button
-              className="alertModalClose no-print absolute top-4 right-4 w-9 h-9 rounded-full bg-[#e2e8f0] hover:bg-[#e2e8f0] text-[#102a43] font-bold text-xl flex items-center justify-center transition-colors cursor-pointer"
-              onClick={() => setSelected(null)}
-              aria-label="Close"
+      <AnimatePresence>
+        {selected && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="alertModal fixed inset-0 z-50 bg-[#071728]/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
+            role="dialog"
+            aria-modal="true"
+            aria-label={selected.title}
+            onMouseDown={(e) => {
+              if (e.target === e.currentTarget) setSelected(null);
+            }}
+          >
+            <motion.article
+              initial={{ opacity: 0, scale: 0.96, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 10 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-full max-w-2xl bg-white border border-[#e2e8f0] shadow-2xl p-6 sm:p-8 space-y-5 my-8 rounded-2xl"
             >
-              <RxCross2 />
-            </button>
-            <div className="flex items-center gap-3 text-xs text-[#64748b]">
-              <time className="font-semibold text-[#102a43]">
-                {selected.alert_date
-                  ? new Date(
-                      `${selected.alert_date}T00:00:00`,
-                    ).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })
-                  : 'Current alert'}
-              </time>
-              <span>·</span>
-              <span>{selected.category}</span>
-              <b className={`not-italic px-2.5 py-0.5 text-[10px] font-bold rounded-full border ${getSeverityStyle(selected.severity)}`}>
-                {selected.severity}
-              </b>
-            </div>
-            <h2 className="text-2xl font-serif font-bold text-[#102a43]">{selected.title}</h2>
-            <p className="p-4 bg-[#f8fafc] rounded-xl border border-[#e2e8f0] text-sm text-[#102a43] font-medium leading-relaxed">{selected.summary}</p>
-            <div className="text-sm text-[#475569] leading-relaxed space-y-3 whitespace-pre-line">
-              {selected.full_details || selected.summary}
-            </div>
-            <div className="p-4 bg-[#f7f3ea] border border-[#e2dacd] rounded-xl text-xs text-[#556673] space-y-1">
-              <b className="text-[#102a43] block">Reviewed by {selected.reviewed_by || 'Kav Haribis'}</b>
-              <span>Status: {selected.alert_status || 'Active'}</span>
-              {selected.expires_at && (
-                <span className="block">
-                  Review/expiration date:{' '}
-                  {new Date(
-                    `${selected.expires_at}T00:00:00`,
-                  ).toLocaleDateString()}
-                </span>
-              )}
-            </div>
-            <div className="modalActions no-print flex items-center gap-3 pt-3 border-t border-[#f1f5f9] flex-wrap text-xs font-bold">
-              {action(selected.action_url) && (
-                <a style={{color:'white'}} className="px-5 py-2.5 bg-[#102a43] hover:bg-[#1a385c] transition-colors shadow-sm" href={selected.action_url}>
-                  {selected.action_label || 'Learn more'}
-                </a>
-              )}
-              <button className="px-4 py-2.5 bg-white border border-[#cbd5da] text-[#102a43] hover:bg-[#f8fafc] transition-colors cursor-pointer" onClick={() => share(selected)}>Share</button>
-              <button className="px-4 py-2.5 bg-white border border-[#cbd5da] text-[#102a43] hover:bg-[#f8fafc] transition-colors cursor-pointer" onClick={() => copy(selected)}>
-                {copied === selected.id ? 'Link copied' : 'Copy link'}
+              <button
+                className="alertModalClose no-print absolute top-4 right-4 w-9 h-9 rounded-full bg-[#e2e8f0] hover:bg-[#cbd5da] text-[#102a43] font-bold text-xl flex items-center justify-center transition-colors cursor-pointer"
+                onClick={() => setSelected(null)}
+                aria-label="Close"
+              >
+                <RxCross2 />
               </button>
-              <button className="px-4 py-2.5 bg-white border border-[#cbd5da] text-[#102a43] hover:bg-[#f8fafc] transition-colors cursor-pointer ml-auto" onClick={() => window.print()}>Print</button>
-            </div>
-          </article>
-        </div>
-      )}
+              <div className="flex items-center gap-3 text-xs text-[#64748b]">
+                <time className="font-semibold text-[#102a43]">
+                  {selected.alert_date
+                    ? new Date(
+                        `${selected.alert_date}T00:00:00`,
+                      ).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })
+                    : 'Current alert'}
+                </time>
+                <span>·</span>
+                <span>{selected.category}</span>
+                <b className={`not-italic px-2.5 py-0.5 text-[10px] font-bold rounded-full border ${getSeverityStyle(selected.severity)}`}>
+                  {selected.severity}
+                </b>
+              </div>
+              <h2 className="text-2xl font-serif font-bold text-[#102a43]">{selected.title}</h2>
+              <p className="p-4 bg-[#f8fafc] rounded-xl border border-[#e2e8f0] text-sm text-[#102a43] font-medium leading-relaxed">{selected.summary}</p>
+              <div className="text-sm text-[#475569] leading-relaxed space-y-3 whitespace-pre-line">
+                {selected.full_details || selected.summary}
+              </div>
+              <div className="p-4 bg-[#f7f3ea] border border-[#e2dacd] rounded-xl text-xs text-[#556673] space-y-1">
+                <b className="text-[#102a43] block">Reviewed by {selected.reviewed_by || 'Kav Haribis'}</b>
+                <span>Status: {selected.alert_status || 'Active'}</span>
+                {selected.expires_at && (
+                  <span className="block">
+                    Review/expiration date:{' '}
+                    {new Date(
+                      `${selected.expires_at}T00:00:00`,
+                    ).toLocaleDateString()}
+                  </span>
+                )}
+              </div>
+              <div className="modalActions no-print flex items-center gap-3 pt-3 border-t border-[#f1f5f9] flex-wrap text-xs font-bold">
+                {action(selected.action_url) && (
+                  <a style={{color:'white'}} className="px-5 py-2.5 bg-[#102a43] hover:bg-[#1a385c] transition-colors shadow-sm rounded-md" href={selected.action_url}>
+                    {selected.action_label || 'Learn more'}
+                  </a>
+                )}
+                <button className="px-4 py-2.5 bg-white border border-[#cbd5da] text-[#102a43] hover:bg-[#f8fafc] transition-colors cursor-pointer rounded-md" onClick={() => share(selected)}>Share</button>
+                <button className="px-4 py-2.5 bg-white border border-[#cbd5da] text-[#102a43] hover:bg-[#f8fafc] transition-colors cursor-pointer rounded-md" onClick={() => copy(selected)}>
+                  {copied === selected.id ? 'Link copied' : 'Copy link'}
+                </button>
+                <button className="px-4 py-2.5 bg-white border border-[#cbd5da] text-[#102a43] hover:bg-[#f8fafc] transition-colors cursor-pointer ml-auto rounded-md" onClick={() => window.print()}>Print</button>
+              </div>
+            </motion.article>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
+

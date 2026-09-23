@@ -1,3 +1,7 @@
+'use client';
+
+import { motion } from 'framer-motion';
+
 const offeringsItems = [
   {
     id: 1,
@@ -338,34 +342,36 @@ export default function OfferingsGrid() {
                 isEven ? '' : 'lg:flex-row-reverse'
               }`}
             >
-              {/* Image Container (ribis.netlify.app/programs style) */}
-              <div
+              {/* Image Container with Zoom Animation */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.75 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                 className={`relative ${
                   isEven ? 'order-1 lg:order-1' : 'order-1 lg:order-2'
                 }`}
               >
                 <div className="absolute -left-6 -top-6 h-36 w-36 rounded-full bg-[#c8a21a]/15 blur-3xl" />
-                <div className="overflow-hidden border border-[#eadfcb] bg-white p-3.5 shadow-[0_20px_60px_rgba(5,25,51,0.08)] transition-transform duration-300 hover:-translate-y-1 group">
+                <div className="overflow-hidden border border-[#eadfcb] bg-white p-3.5 shadow-[0_20px_60px_rgba(5,25,51,0.08)] transition-transform duration-300 group">
                   <img
                     src={item.image}
                     alt={item.title}
                     className="h-[300px] sm:h-[380px] lg:h-[500px] w-full object-cover transition-transform duration-700 ease-out"
                   />
                 </div>
-              </div>
+              </motion.div>
 
-              {/* Content Container (ribis.netlify.app/programs style) */}
-              <div
+              {/* Content Container with Side Slide-in Animation */}
+              <motion.div
+                initial={{ opacity: 0, x: isEven ? 50 : -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
                 className={`flex flex-col items-start ${
                   isEven ? 'order-2 lg:order-2' : 'order-2 lg:order-1'
                 }`}
               >
-                {/* {item.category && (
-                  <div className="mb-4 inline-flex items-center rounded-full border border-[#eadfcb] bg-white px-4 py-1.5 text-xs font-semibold text-[#9b7b16] shadow-sm">
-                    {item.category}
-                  </div>
-                )} */}
-
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#051933] leading-tight tracking-tight mb-5">
                   {item.title}
                 </h2>
@@ -395,28 +401,31 @@ export default function OfferingsGrid() {
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {item.subheaditem.map((tag, i) => (
-                        <div
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
                           key={i}
-                          className="rounded-2xl border border-[#ece3d5] bg-white p-3.5 flex items-center gap-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#c8a21a]/50 hover:shadow-md"
+                          className="rounded-2xl border border-[#ece3d5] bg-white p-3.5 flex items-center gap-3 transition-all duration-200 hover:border-[#c8a21a]/50 hover:shadow-md"
                         >
                           <div className="h-2.5 w-2.5 rounded-full bg-[#c8a21a] shrink-0" />
                           <span className="text-sm font-semibold text-[#051933]">
                             {tag}
                           </span>
-                        </div>
+                        </motion.div>
                       ))}
                     </div>
                   </div>
                 )}
 
-                <a
+                <motion.a
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.98 }}
                   style={{color:"white"}}
                   href={item.href}
-                  className="inline-flex items-center gap-3 px-6 py-3.5 pBG text-white font-bold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 border border-[#c8a21a]/30"
+                  className="inline-flex items-center gap-3 px-6 py-3.5 pBG text-white font-bold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-300 border border-[#c8a21a]/30"
                 >
                   <span>{item.cta}</span>
-                </a>
-              </div>
+                </motion.a>
+              </motion.div>
             </div>
           );
         })}
@@ -424,3 +433,4 @@ export default function OfferingsGrid() {
     </section>
   );
 }
+

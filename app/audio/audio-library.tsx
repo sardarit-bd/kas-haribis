@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 
 type Audio = { id: number; title: string; series: string; audioUrl: string };
 
@@ -116,7 +117,7 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
   const startIndex = perPage === 'all' ? 0 : (activePage - 1) * perPage;
 
   return (
-    <section className="w-full bg-[#f7f3ea] py-10 sm:py-14" ref={libraryRef}>
+    <section className="w-full bg-[#f7f3ea] py-10 sm:py-14 overflow-hidden" ref={libraryRef}>
       <div className="container max-w-[1440px] mx-auto px-4 sm:px-8">
         {/* Collection Series Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4.5 sm:gap-5 mb-10 sm:mb-12">
@@ -128,13 +129,18 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
             const cardNumber = String(index + 1).padStart(2, '0');
 
             return (
-              <div
+              <motion.div
                 key={item.value}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-20px' }}
+                transition={{ duration: 0.8, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -4, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
                 onClick={() => chooseSeries(item.value)}
                 className={`relative overflow-hidden p-6 sm:p-7 rounded-2xl transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-[310px] group ${
                   isSelected
                     ? 'border-2 border-[#b8860b] shadow-xl ring-2 ring-[#b8860b]/15 bg-gradient-to-br from-white via-white to-[#fdfbf6] -translate-y-1.5'
-                    : 'border border-slate-200/90 shadow-md hover:shadow-xl hover:border-slate-300 bg-white hover:-translate-y-1'
+                    : 'border border-slate-200/90 shadow-md hover:shadow-xl hover:border-slate-300 bg-white'
                 }`}
               >
                 {/* Rotated SELECTED Badge Banner */}
@@ -189,13 +195,19 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
                     {cardNumber}
                   </span>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
 
         {/* Filter controls bar */}
-        <div className="bg-white p-4 sm:p-6 mb-8 flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-20px' }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="bg-white p-4 sm:p-6 mb-8 flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between rounded-xl shadow-xs"
+        >
           <label className="flex-1 text-sm font-bold text-gray-600 flex flex-col gap-1.5">
             Select Collection ({filtered.length} {filtered.length === 1 ? 'item' : 'items'})
             <select
@@ -246,7 +258,7 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
               <option value="all">All</option>
             </select>
           </label>
-        </div>
+        </motion.div>
 
         {filtered.length ? (
           <>
@@ -254,7 +266,15 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
               {paginatedAudios.map((item, index) => {
                 const globalIndex = startIndex + index;
                 return (
-                  <article key={item.id} className="bg-white p-5 hover:border-slate-300 hover:shadow-md transition-all flex items-start gap-4">
+                  <motion.article
+                    key={item.id}
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-20px' }}
+                    transition={{ duration: 0.75, delay: (index % 4) * 0.04, ease: [0.16, 1, 0.3, 1] }}
+                    whileHover={{ y: -3, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+                    className="bg-white p-5 hover:border-slate-300 hover:shadow-md transition-all flex items-start gap-4 rounded-xl shadow-xs"
+                  >
                     <div className="w-10 h-10 rounded-xl bg-[#f8fafc] border border-slate-200 text-[#102a43] font-mono text-sm font-bold flex items-center justify-center shrink-0 shadow-sm">
                       {String(globalIndex + 1).padStart(2, '0')}
                     </div>
@@ -275,7 +295,7 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
                         </audio>
                       )}
                     </div>
-                  </article>
+                  </motion.article>
                 );
               })}
             </div>
@@ -371,4 +391,5 @@ function VideoPlayer({ url, title }: { url: string; title: string }) {
     </video>
   );
 }
+
 

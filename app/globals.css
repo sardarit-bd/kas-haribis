@@ -1705,6 +1705,16 @@ footer, .siteFooterBig {
   background: #f7f3ea;
   border-left: 3px solid var(--gold);
 }
+
+
+
+.bankdirectoryherosectionbg{
+  background:linear-gradient(#102a43bd),url("../public/bank6.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+
 .paymentRecords small span {
   display: inline-block;
   padding: 5px 9px;

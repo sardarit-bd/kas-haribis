@@ -1,5 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import data from '../data/current-site.json';
+import { MotionDiv, MotionArticle } from '../shared/motion-components';
 import { InteriorPage, SiteFooter, SiteHeader } from '../shared/site-shell';
 
 const aliases: Record<string, string> = {
@@ -158,20 +159,34 @@ export default async function SectionPage({
   const source = data.sourcePages.find((item) => item.slug === section);
   return (
     <>
-    <SiteHeader/>
-    <InteriorPage eyebrow={page.eyebrow} title={page.title} intro={page.intro}/>
-      <section className="contentPage">
+      <SiteHeader/>
+      <MotionDiv
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <InteriorPage eyebrow={page.eyebrow} title={page.title} intro={page.intro}/>
+      </MotionDiv>
+      <section className="contentPage overflow-hidden">
         <div className="contentLead hidden">
           {source?.summary && <p>{source.summary}</p>}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-0">
           {page.items.map((item, index) => (
-            <article key={item} className="bg-gray-200 p-6 transition-all flex items-center gap-4">
-              <span className="w-10 h-10 bg-[#f8fafc] border border-slate-200 text-[#102a43] font-mono text-sm font-bold flex items-center justify-center shrink-0">
+            <MotionArticle
+              key={item}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ duration: 0.8, delay: index * 0.06, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ y: -4, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+              className="bg-gray-200 p-6 transition-all flex items-center gap-4 rounded-xl shadow-xs"
+            >
+              <span className="w-10 h-10 bg-[#f8fafc] border border-slate-200 text-[#102a43] font-mono text-sm font-bold flex items-center justify-center shrink-0 rounded-lg">
                 {String(index + 1).padStart(2, '0')}
               </span>
-              <h2 className="text-lg font-serif font-semibol text-gray-700 leading-snug pt-1">{item}</h2>
-            </article>
+              <h2 className="text-lg font-serif font-semibold text-gray-700 leading-snug pt-1">{item}</h2>
+            </MotionArticle>
           ))}
         </div>
         {section.includes('contact') && (
@@ -187,3 +202,4 @@ export default async function SectionPage({
     </>
   );
 }
+

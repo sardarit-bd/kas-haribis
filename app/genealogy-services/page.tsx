@@ -1,3 +1,4 @@
+import { MotionDiv, MotionArticle } from '../shared/motion-components';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
 import GenealogyRequestForm from './request-form';
 
@@ -8,7 +9,12 @@ export default function GenealogyServicesPage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#071728] via-[#102a43] to-[#0e304b] text-white">
         <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-16 md:py-20 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
-          <div className="lg:col-span-7 space-y-6">
+          <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-7 space-y-6"
+          >
             <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase hidden">GENEALOGY &amp; OWNERSHIP RESEARCH</p>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-white leading-tight">
               Clarity begins with knowing the full story.
@@ -17,68 +23,106 @@ export default function GenealogyServicesPage() {
               Kav Haribis has partnered with experienced genealogists to help
               investigate and clarify potentially problematic ownership.
             </p>
-            <a className="inline-block px-6 py-3.5 bg-[#c69b46] hover:bg-[#b0883b] text-[#102a43] text-md font-meduim transition-colors shadow-md" href="#genealogy-request">
+            <a className="inline-block px-6 py-3.5 bg-[#c69b46] hover:bg-[#b0883b] text-[#102a43] text-md font-meduim transition-all duration-300 hover:scale-105 shadow-md rounded-md" href="#genealogy-request">
               Request Research
             </a>
-          </div>
-          <div className="lg:col-span-5 relative overflow-hidden">
+          </MotionDiv>
+          <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
+            className="lg:col-span-5 relative overflow-hidden rounded-xl shadow-xl"
+          >
             <img
               src="/genealogy-hero.png"
               alt="Historical family records, a family tree, and archival genealogy research materials"
-              className="w-full h-72 sm:h-96 object-cover"
+              className="w-full h-72 sm:h-96 object-cover hover:scale-105 transition-transform duration-500"
             />
-          </div>
+          </MotionDiv>
         </div>
       </section>
 
-
       {/* Uses / Services Grid */}
-      <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 my-12 space-y-8 ">
-        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 pb-6 py-10">
+      <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 my-12 space-y-8 overflow-hidden">
+        <MotionDiv
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-20px' }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 pb-6 py-10"
+        >
           <div>
             <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase hidden">HOW WE MAY HELP</p>
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#102a43]">Research built around your question</h2>
             <p className="max-w-xl text-md text-[#64748b] leading-relaxed pt-4">
-            Every matter is different. We will first review your request,
-            determine whether the research is appropriate, and discuss pricing
-            before work begins.
-          </p>
+              Every matter is different. We will first review your request,
+              determine whether the research is appropriate, and discuss pricing
+              before work begins.
+            </p>
           </div>
-          
-        </div>
+        </MotionDiv>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-10">
-          <article className="p-6 bg-white border border-gray-100 space-y-3">
+          <MotionArticle
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-20px' }}
+            transition={{ duration: 0.8, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ y: -4, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+            className="p-6 bg-white border border-gray-100 space-y-3 rounded-xl shadow-xs hover:shadow-md transition-all"
+          >
             <span className="font-mono text-md font-bold text-[#c69b46]">01</span>
             <h3 className="text-xl font-serif pt-3 font-bold text-[#102a43]">Ownership clarification</h3>
             <p className="text-md text-[#64748b] leading-relaxed">
               Investigate individuals, families, trusts, parent companies, and
               other relationships that may affect how an entity is understood.
             </p>
-          </article>
-          <article className="p-6 bg-white border border-gray-100 space-y-3">
+          </MotionArticle>
+
+          <MotionArticle
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-20px' }}
+            transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ y: -4, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+            className="p-6 bg-white border border-gray-100 space-y-3 rounded-xl shadow-xs hover:shadow-md transition-all"
+          >
             <span className="font-mono text-md font-bold text-[#c69b46]">02</span>
             <h3 className="text-xl font-serif pt-3 font-bold text-[#102a43]">Historical records</h3>
             <p className="text-md text-[#64748b] leading-relaxed">
               Trace names, family connections, locations, and historical records
               when older information may help clarify the present situation.
             </p>
-          </article>
-          <article className="p-6 bg-white border border-gray-100 space-y-3">
+          </MotionArticle>
+
+          <MotionArticle
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-20px' }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ y: -4, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+            className="p-6 bg-white border border-gray-100 space-y-3 rounded-xl shadow-xs hover:shadow-md transition-all"
+          >
             <span className="font-mono text-md font-bold text-[#c69b46]">03</span>
             <h3 className="text-xl font-serif pt-3 font-bold text-[#102a43]">Ethical research needs</h3>
             <p className="text-md text-[#64748b] leading-relaxed">
               Our research may also assist with other legitimate and ethical
               genealogy purposes. Contact us to ask whether we can help.
             </p>
-          </article>
+          </MotionArticle>
         </div>
       </section>
 
-
       {/* Request Form Container */}
-      <section className='container pb-12 px-8'>
-        <section className="container bg-gray-200 py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start p-6 scroll-mt-[120px]" id="genealogy-request">
+      <section className='container pb-12 px-8 overflow-hidden'>
+        <MotionDiv
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-20px' }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="container bg-gray-200 py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start p-6 scroll-mt-[120px] rounded-2xl"
+          id="genealogy-request"
+        >
           <div className="lg:col-span-5 space-y-6">
             <div>
               <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1 hidden">REQUEST GENEALOGY RESEARCH</p>
@@ -97,9 +141,10 @@ export default function GenealogyServicesPage() {
           <div className="lg:col-span-7">
             <GenealogyRequestForm />
           </div>
-        </section>
+        </MotionDiv>
       </section>
       <SiteFooter />
     </main>
   );
 }
+

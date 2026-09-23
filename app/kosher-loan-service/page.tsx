@@ -1,5 +1,6 @@
 import BottomCTA from '../componnent/BottomCTA';
 import { listLoanServices } from '../lib/directories';
+import { MotionArticle, MotionDiv } from '../shared/motion-components';
 import { InteriorPage, SiteFooter, SiteHeader } from '../shared/site-shell';
 export const dynamic = 'force-dynamic';
 export default async function Page() {
@@ -18,7 +19,14 @@ export default async function Page() {
       {/* Join the Revolution Section */}
       <section className="bg-white py-16 sm:py-20">
         <div className="container max-w-[1320px] mx-auto px-6 sm:px-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-          <div className="lg:col-span-6 space-y-5 text-left">
+          {/* Text Content with Left Slide-in */}
+          <MotionDiv
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:col-span-6 space-y-5 text-left"
+          >
             <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-bold text-slate-900 leading-[1.2] tracking-tight">
               Join the Revolution in Helping Klal Yisroel Avoid Ribis
             </h2>
@@ -28,21 +36,35 @@ export default async function Page() {
             <p className="text-sm sm:text-base text-slate-800 font-semibold leading-relaxed pt-1">
               Navigating the world of loans while staying fully within halacha can be complex. That’s why we’ve partnered with trusted brokers who understand the importance of working only with truly kosher loan structures — including proper heter iska where needed.
             </p>
-          </div>
-          <div className="lg:col-span-6 flex justify-center lg:justify-end">
-            <div className="relative w-full max-w-[560px] overflow-hidden shadow-lg border border-slate-100">
+          </MotionDiv>
+
+          {/* Image Container with Scale Zoom */}
+          <MotionDiv
+            initial={{ opacity: 0, scale: 0.88 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+            className="lg:col-span-6 flex justify-center lg:justify-end"
+          >
+            <div className="relative w-full max-w-[560px] overflow-hidden shadow-lg border border-slate-100 group">
               <img
                 src="/loan-approved-office.jpg"
                 alt="Loan Approved - Join the Revolution in Helping Klal Yisroel Avoid Ribis"
-                className="w-full h-auto object-cover"
+                className="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
             </div>
-          </div>
+          </MotionDiv>
         </div>
       </section>
 
       <section className="py-6 sm:py-10 bg-[#f7f3ea]" id="loan-services">
-        <div className="container px-8 flex flex-col md:flex-row items-center md:items-center justify-center gap-6 mb-10 pb-6 text-center">
+        <MotionDiv
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.5 }}
+          className="container px-8 flex flex-col md:flex-row items-center md:items-center justify-center gap-6 mb-10 pb-6 text-center"
+        >
           <div className="max-w-2xl space-y-2">
             <h2 className="text-[#102a43] font-serif font-bold text-3xl sm:text-4xl">Featured loan services</h2>
             <p className="text-[#64748b] text-sm sm:text-base leading-relaxed">
@@ -50,12 +72,17 @@ export default async function Page() {
               Haribis. Always verify the details before relying on a listing.
             </p>
           </div>
-        </div>
+        </MotionDiv>
 
         <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-8">
           {items.map((x, i) => (
-            <article
-              className={`p-6 bg-white flex flex-col justify-between space-y-4 ${
+            <MotionArticle
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
+              whileHover={{ y: -6, transition: { duration: 0.2 } }}
+              className={`p-6 bg-white flex flex-col justify-between space-y-4 shadow-sm transition-shadow duration-300 hover:shadow-lg ${
                 x.featured ? 'border-t-4 border-t-[#c69b46]' : ''
               }`}
               key={x.id}
@@ -157,7 +184,7 @@ export default async function Page() {
                   </a>
                 )}
               </div>
-            </article>
+            </MotionArticle>
           ))}
         </div>
         {items.length === 0 && (
@@ -169,8 +196,16 @@ export default async function Page() {
       </section>
 
       {/* CTA Section Banner */}
-      <BottomCTA eyebrow={"IMPORTANT"} title={"Every loan must be reviewed individually"} discription={"A listed broker or service does not automatically make every transaction permissible. The lender, funding source, documents, and Heter Iska must be appropriate for the specific loan."} link="/bais-horaah" linktext="Review your loan with the Bais Horaah" link2="" link2text=""/>
+      <MotionDiv
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+      >
+        <BottomCTA eyebrow={"IMPORTANT"} title={"Every loan must be reviewed individually"} discription={"A listed broker or service does not automatically make every transaction permissible. The lender, funding source, documents, and Heter Iska must be appropriate for the specific loan."} link="/bais-horaah" linktext="Review your loan with the Bais Horaah" link2="" link2text=""/>
+      </MotionDiv>
       <SiteFooter/>
     </>
   );
 }
+

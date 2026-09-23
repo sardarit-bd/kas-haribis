@@ -1,5 +1,6 @@
 'use client';
 import { useMemo, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../shared/cart-context';
 
 export type Sefer = {
@@ -43,9 +44,15 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
     setSelected(null);
   }
   return (
-    <section className='bg-[#f7f3ea] py-6'>
+    <section className='bg-[#f7f3ea] py-6 overflow-hidden'>
       <section className="w-full container px-4 lg:px-8">
-        <div className="bg-white  p-4 sm:p-6 mb-8 flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-20px' }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="bg-white p-4 sm:p-6 mb-8 flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between rounded-xl shadow-xs"
+        >
           <div className="flex-1 flex flex-col md:flex-row gap-4 items-stretch md:items-center">
             <label className="flex-1 text-xs font-semibold text-slate-500 uppercase tracking-wider flex flex-col gap-1.5">
               Search the catalog
@@ -76,7 +83,7 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
               Cart <span className="bg-[#c69b46] text-[#102a43] text-xs font-bold px-2 py-0.5 rounded-full">{totalCount}</span>
             </button>
           </div>
-        </div>
+        </motion.div>
         {notice && (
           <p className="hidden bg-[#102a43] text-white border border-[#c69b46]/50 p-4 rounded-xl mb-6 flex items-center justify-between gap-4 text-sm shadow-sm" style={{ color: 'white' }}>
             <span>✓ {notice}</span>
@@ -84,8 +91,16 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
           </p>
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filtered.map((book) => (
-            <article className="bg-white overflow-hidden flex flex-col" key={book.id}>
+          {filtered.map((book, idx) => (
+            <motion.article
+              key={book.id}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ duration: 0.8, delay: (idx % 4) * 0.05, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ y: -4, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+              className="bg-white overflow-hidden flex flex-col rounded-xl shadow-xs hover:shadow-md transition-all"
+            >
               <button
                 className="w-full bg-white aspect-[4/3] flex items-center justify-center p-4 border-b border-slate-100 overflow-hidden cursor-pointer group"
                 onClick={() => setSelected(book)}
@@ -126,12 +141,12 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
                 <div className="flex justify-between gap-2 pt-3">
                   <div className="flex flex-col sm:flex-row gap-2">
                     {book.available && (
-                      <button className="flex-1 py-2.5 px-3 bg-black hover:bg-[#8c651f] text-white font-bold text-xs transition cursor-pointer shadow-sm" style={{ color: 'white' }} onClick={() => add(book, 'book')}>
+                      <button className="flex-1 py-2.5 px-3 bg-black hover:bg-[#8c651f] text-white font-bold text-xs transition cursor-pointer shadow-sm rounded-md hover:scale-[1.02]" style={{ color: 'white' }} onClick={() => add(book, 'book')}>
                         Add Book to Cart
                       </button>
                     )}
                     {book.pdf_available && (
-                      <button className="flex-1 py-2.5 px-3 bg-[#102a43] hover:bg-[#0d2238] text-white font-bold text-xs transition cursor-pointer shadow-sm" style={{ color: 'white' }} onClick={() => add(book, 'pdf')}>
+                      <button className="flex-1 py-2.5 px-3 bg-[#102a43] hover:bg-[#0d2238] text-white font-bold text-xs transition cursor-pointer shadow-sm rounded-md hover:scale-[1.02]" style={{ color: 'white' }} onClick={() => add(book, 'pdf')}>
                         Add PDF to Cart
                       </button>
                     )}
@@ -144,78 +159,88 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
                   </button>
                 </div>
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
       </section>
-      {selected && (
-        <div
-          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm p-4 sm:p-6 flex items-center justify-center overflow-y-auto"
-          role="dialog"
-          aria-modal="true"
-          onClick={() => setSelected(null)}
-        >
-          <div
-            className="bg-white border border-slate-200 rounded-2xl max-w-2xl w-full p-6 sm:p-8 relative shadow-xl grid md:grid-cols-12 gap-6 my-auto"
-            onClick={(e) => e.stopPropagation()}
+      <AnimatePresence>
+        {selected && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm p-4 sm:p-6 flex items-center justify-center overflow-y-auto"
+            role="dialog"
+            aria-modal="true"
+            onClick={() => setSelected(null)}
           >
-            <button className="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 text-xl font-bold flex items-center justify-center transition cursor-pointer" onClick={() => setSelected(null)}>
-              ×
-            </button>
-            <div className="md:col-span-5 flex items-center justify-center bg-[#f8fafc] p-4 rounded-xl border border-slate-100">
-              <img className="max-h-64 object-contain" src={selected.image} alt={`Cover of ${selected.title}`} />
-            </div>
-            <div className="md:col-span-7 flex flex-col justify-between" dir="auto">
-              <div>
-                <p className="text-[#a37828] text-xs font-bold tracking-widest uppercase mb-1">KAV HARIBIS SEFORIM</p>
-                <h2 className="text-2xl font-serif font-bold text-[#102a43] mb-3 leading-snug">{selected.title}</h2>
-                <div className="flex flex-wrap gap-2 mb-3">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 10 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="bg-white border border-slate-200 rounded-2xl max-w-2xl w-full p-6 sm:p-8 relative shadow-xl grid md:grid-cols-12 gap-6 my-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button className="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 text-xl font-bold flex items-center justify-center transition cursor-pointer" onClick={() => setSelected(null)}>
+                ×
+              </button>
+              <div className="md:col-span-5 flex items-center justify-center bg-[#f8fafc] p-4 rounded-xl border border-slate-100">
+                <img className="max-h-64 object-contain" src={selected.image} alt={`Cover of ${selected.title}`} />
+              </div>
+              <div className="md:col-span-7 flex flex-col justify-between" dir="auto">
+                <div>
+                  <p className="text-[#a37828] text-xs font-bold tracking-widest uppercase mb-1">KAV HARIBIS SEFORIM</p>
+                  <h2 className="text-2xl font-serif font-bold text-[#102a43] mb-3 leading-snug">{selected.title}</h2>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {selected.available && (
+                      <span className="bg-[#a37828]/10 border border-[#a37828]/30 text-[#a37828] text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">PRINTED BOOK</span>
+                    )}
+                    {selected.pdf_available && (
+                      <span className="bg-sky-50 border border-sky-200 text-sky-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">PDF DOWNLOAD</span>
+                    )}
+                  </div>
+                  <p className="text-slate-600 text-sm leading-relaxed mb-6">{selected.description}</p>
+                </div>
+                <div className="flex flex-col gap-3 pt-4 border-t border-slate-100">
                   {selected.available && (
-                    <span className="bg-[#a37828]/10 border border-[#a37828]/30 text-[#a37828] text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">PRINTED BOOK</span>
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="flex flex-col">
+                        <b className="text-slate-800 text-sm font-semibold">Printed Book</b>
+                        <strong className="text-[#a37828] font-mono">${selected.price.toFixed(2)}</strong>
+                      </span>
+                      <button
+                        className="px-4 py-2 rounded-xl bg-[#a37828] hover:bg-[#8c651f] text-white font-bold text-xs transition cursor-pointer shadow-sm"
+                        style={{ color: 'white' }}
+                        onClick={() => add(selected, 'book')}
+                      >
+                        Add Book to Cart
+                      </button>
+                    </div>
                   )}
                   {selected.pdf_available && (
-                    <span className="bg-sky-50 border border-sky-200 text-sky-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">PDF DOWNLOAD</span>
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="flex flex-col">
+                        <b className="text-slate-800 text-sm font-semibold">Protected PDF</b>
+                        <strong className="text-[#a37828] font-mono">${selected.pdf_price.toFixed(2)}</strong>
+                      </span>
+                      <button
+                        className="px-4 py-2 rounded-xl bg-[#102a43] hover:bg-[#0d2238] text-white font-bold text-xs transition cursor-pointer shadow-sm"
+                        style={{ color: 'white' }}
+                        onClick={() => add(selected, 'pdf')}
+                      >
+                        Add PDF to Cart
+                      </button>
+                    </div>
                   )}
                 </div>
-                <p className="text-slate-600 text-sm leading-relaxed mb-6">{selected.description}</p>
               </div>
-              <div className="flex flex-col gap-3 pt-4 border-t border-slate-100">
-                {selected.available && (
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="flex flex-col">
-                      <b className="text-slate-800 text-sm font-semibold">Printed Book</b>
-                      <strong className="text-[#a37828] font-mono">${selected.price.toFixed(2)}</strong>
-                    </span>
-                    <button
-                      className="px-4 py-2 rounded-xl bg-[#a37828] hover:bg-[#8c651f] text-white font-bold text-xs transition cursor-pointer shadow-sm"
-                      style={{ color: 'white' }}
-                      onClick={() => add(selected, 'book')}
-                    >
-                      Add Book to Cart
-                    </button>
-                  </div>
-                )}
-                {selected.pdf_available && (
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="flex flex-col">
-                      <b className="text-slate-800 text-sm font-semibold">Protected PDF</b>
-                      <strong className="text-[#a37828] font-mono">${selected.pdf_price.toFixed(2)}</strong>
-                    </span>
-                    <button
-                      className="px-4 py-2 rounded-xl bg-[#102a43] hover:bg-[#0d2238] text-white font-bold text-xs transition cursor-pointer shadow-sm"
-                      style={{ color: 'white' }}
-                      onClick={() => add(selected, 'pdf')}
-                    >
-                      Add PDF to Cart
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
+
 

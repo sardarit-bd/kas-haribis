@@ -1,3 +1,4 @@
+import { MotionDiv, MotionSection } from "../shared/motion-components";
 import { InteriorPage, SiteFooter, SiteHeader } from "../shared/site-shell";
 import HeterLibrary from './heter-library';
 
@@ -5,13 +6,24 @@ export default function HeterIska() {
   return (
     <main className="min-h-screen bg-gray-200">
       <SiteHeader/>
-      <InteriorPage
-      eyebrow="AVAILABLE DOCUMENTS"
-      title="Choose a Heter Iska"
-      intro=" Compare the available forms below. Previewing is free; payment is
-            required only for the protected PDF download."
-      />
-      <section className="relative overflow-hidden bg-red-800 text-white shadow-lg">
+      <MotionDiv
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <InteriorPage
+          eyebrow="AVAILABLE DOCUMENTS"
+          title="Choose a Heter Iska"
+          intro=" Compare the available forms below. Previewing is free; payment is required only for the protected PDF download."
+        />
+      </MotionDiv>
+      <MotionSection
+        initial={{ opacity: 0, scale: 0.96, y: 20 }}
+        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="relative overflow-hidden bg-red-800 text-white shadow-lg"
+      >
         <div className="container px-8 py-12 lg:py-16 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 lg:gap-12 relative z-10">
           <div className="max-w-[820px]">
             <span className="text-[#e7c272] text-xs sm:text-[13px] font-bold tracking-[0.15em] block mb-2">
@@ -25,15 +37,15 @@ export default function HeterIska() {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row lg:flex-col gap-3.5 w-full lg:w-auto shrink-0">
-            <a style={{color: "#000000"}} href="/personalized-heter-iska" className="inline-flex items-center justify-center w-full lg:w-[310px] h-[52px] px-6 bg-white hover:bg-gray-100 text-black font-bold shadow-md transition-all text-base text-center">
+            <a style={{color: "#000000"}} href="/personalized-heter-iska" className="inline-flex items-center justify-center w-full lg:w-[310px] h-[52px] px-6 bg-white hover:bg-gray-100 text-black font-bold shadow-md transition-all duration-300 hover:scale-[1.02] text-base text-center">
               Request a Personalized Heter Iska
             </a>
-            <a href="/heter-iska#targetid" className="inline-flex items-center justify-center w-full lg:w-[310px] h-[52px] px-6 border border-white/40 hover:border-white hover:bg-white/10 text-white font-semibold transition-all text-base text-center">
+            <a href="/heter-iska#targetid" className="inline-flex items-center justify-center w-full lg:w-[310px] h-[52px] px-6 border border-white/40 hover:border-white hover:bg-white/10 text-white font-semibold transition-all duration-300 hover:scale-[1.02] text-base text-center">
               Continue to Standard Templates
             </a>
           </div>
         </div>
-      </section>
+      </MotionSection>
       <section className="scroll-mt-[90px]" id="targetid">
         <HeterLibrary />
       </section>
@@ -41,3 +53,4 @@ export default function HeterIska() {
     </main>
   );
 }
+

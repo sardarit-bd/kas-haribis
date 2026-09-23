@@ -1,5 +1,6 @@
 import BottomCTA from '../componnent/BottomCTA';
 import { listArticles } from '../lib/directories';
+import { MotionDiv, MotionArticle } from '../shared/motion-components';
 import { InteriorPage, SiteFooter, SiteHeader } from '../shared/site-shell';
 
 export const dynamic = 'force-dynamic';
@@ -9,15 +10,27 @@ export default async function ArticlesPage() {
   const items = (await listArticles(env.DB)) as any[];
   return (
     <>
-    <SiteHeader/>
-    <InteriorPage
-      eyebrow="ARTICLES & GILYONOS"
-      title="Practical Torah guidance for modern financial life"
-      intro="Browse the complete Kav Haribis collection of concise publications on practical questions in Hilchos Ribbis."
-    />
+      <SiteHeader/>
+      <MotionDiv
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <InteriorPage
+          eyebrow="ARTICLES & GILYONOS"
+          title="Practical Torah guidance for modern financial life"
+          intro="Browse the complete Kav Haribis collection of concise publications on practical questions in Hilchos Ribbis."
+        />
+      </MotionDiv>
      
-      <section className="w-full bg-[#f7f3ea] py-10">
-        <div className="container px-8">
+      <section className="w-full bg-[#f7f3ea] py-10 overflow-hidden">
+        <MotionDiv
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-20px' }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="container px-8"
+        >
           <div>
             <p className="text-[#c69b46] text-xs font-bold tracking-widest uppercase mb-2 hidden">COMPLETE ARCHIVE</p>
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-700 tracking-tight mb-2">Latest publications</h2>
@@ -26,12 +39,20 @@ export default async function ArticlesPage() {
             Newest issues appear first. Every page is displayed without
             cropping.
           </p>
-        </div>
+        </MotionDiv>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 container px-8 pt-10">
           {items.map((x, index) => (
-            <article className={`bg-white overflow-hidden transition-all flex flex-col ${x.featured ? 'border-[#c69b46] ring-1 ring-[#c69b46]/40' : 'border-slate-200/90'}`} key={x.id}>
+            <MotionArticle
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ duration: 0.8, delay: (index % 3) * 0.07, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ y: -4, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+              className={`bg-white overflow-hidden transition-all flex flex-col rounded-xl shadow-xs hover:shadow-md ${x.featured ? 'border-[#c69b46] ring-1 ring-[#c69b46]/40' : 'border-slate-200/90'}`}
+              key={x.id}
+            >
               <a
-                className="relative bg-[#070f1e]  flex items-center justify-center text-center border-b border-slate-200 overflow-hidden group"
+                className="relative bg-[#070f1e] flex items-center justify-center text-center border-b border-slate-200 overflow-hidden group"
                 href={`/articles/${encodeURIComponent(x.id)}`}
               >
                 {x.cover_url ? (
@@ -72,14 +93,14 @@ export default async function ArticlesPage() {
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-4 mt-auto">
                   <a
                     style={{ color: 'white' }}
-                    className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-[#c69b46] hover:bg-[#b58a35] text-white font-medium text-base tracking-wide transition shadow-sm"
+                    className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-[#c69b46] hover:bg-[#b58a35] text-white font-medium text-base tracking-wide transition shadow-sm rounded-md hover:scale-[1.02]"
                     href={`/articles/${encodeURIComponent(x.id)}`}
                   >
                     Read all {x.page_count || 2} pages
                   </a>
                   <a
                     style={{ color: 'white' }}
-                    className="inline-flex items-center justify-center gap-1 px-4 py-2.5 text-slate-200 hover:text-white font-medium text-base transition bg-slate-800/40"
+                    className="inline-flex items-center justify-center gap-1 px-4 py-2.5 text-slate-200 hover:text-white font-medium text-base transition bg-slate-800/40 rounded-md hover:scale-[1.02]"
                     href={x.pdf_url}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -88,7 +109,7 @@ export default async function ArticlesPage() {
                   </a>
                 </div>
               </div>
-            </article>
+            </MotionArticle>
           ))}
         </div>
       </section>
@@ -99,4 +120,5 @@ export default async function ArticlesPage() {
     </>
   );
 }
+
 

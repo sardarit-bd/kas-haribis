@@ -1,6 +1,7 @@
 import BottomCTA from '../componnent/BottomCTA';
 import { listAboutMembers } from '../lib/directories';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
+import { MotionDiv, MotionSpan } from './animated-components';
 import MemberAvatar from './member-avatar';
 
 export const metadata = {
@@ -84,14 +85,28 @@ export default async function AboutPage() {
       {/* Welcome & Founder Story Section */}
       <section className="bg-white border-b border-slate-100">
         <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-10 md:py-[50px] grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-[60px] items-start">
-          <div className="overflow-hidden border border-slate-200 shadow-md h-[400px] md:h-[700px]">
+          {/* Image Container with Zoom Animation */}
+          <MotionDiv
+            initial={{ opacity: 0, scale: 0.88 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden border border-slate-200 shadow-md h-[400px] md:h-[700px] group"
+          >
             <img
               src="/kav-impact/heter-iska-presentation-2.jpg"
               alt="Kav Haribis educational presentation"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
-          </div>
-          <div>
+          </MotionDiv>
+
+          {/* Content Container with Right Slide-in Animation */}
+          <MotionDiv
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+          >
             <h2 className="text-3xl sm:text-4xl font-semibold text-[#102a43] leading-tight tracking-tight mb-6">
               Welcome to Kav HaRibis — a halachic center dedicated to bringing clarity to the laws of ribis, with a strong focus on outreach and raising awareness in Hilchos Ribis.
             </h2>
@@ -106,7 +121,7 @@ export default async function AboutPage() {
                 Furthermore the Rabonim of our Bais Horaah Have a connection to many of well known experts in hilchos ribis like Harav Ari Marberger Harav Shmuel Honigwachs and Harav Avrohom Moshe Levanoni amongst many other Rabonim  to bring you the the most accurate pesak based on our Mesorah.
               </p>
             </div>
-          </div>
+          </MotionDiv>
         </div>
       </section>
 
@@ -237,9 +252,17 @@ export default async function AboutPage() {
       {/* Rabbis Hotline Section */}
       <section className="bg-gray-200 py-12 md:py-16 border-t border-slate-100">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-[#102a43] mb-8 sm:mb-10 tracking-tight">
-            Rabbi’s who answer questions on our hotline-
-          </h2>
+          <MotionDiv
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-[#102a43] mb-8 sm:mb-10 tracking-tight">
+              Rabbi’s who answer questions on our hotline-
+            </h2>
+          </MotionDiv>
+
           <div className="flex flex-wrap justify-center gap-3 sm:gap-3.5 max-w-3xl mx-auto">
             {[
               'Rabbi Baruch Moses',
@@ -252,13 +275,19 @@ export default async function AboutPage() {
               'Rabbi Yaakov Yitzchok Jacob',
               'Rabbi Yehuda Framowitz',
               'Rabbi Lipshitz',
-            ].map((name) => (
-              <span
+            ].map((name, i) => (
+              <MotionSpan
                 key={name}
-                className="px-5 py-2.5 bg-white border border-slate-300/90 rounded-2xl text-slate-800 text-sm sm:text-base font-semibold shadow-xs hover:border-slate-400 transition"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.4, delay: i * 0.04 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
+                className="px-5 py-2.5 bg-white border border-slate-300/90 rounded-2xl text-slate-800 text-sm sm:text-base font-semibold shadow-xs hover:border-slate-400 transition cursor-default"
               >
                 {name}
-              </span>
+              </MotionSpan>
             ))}
           </div>
         </div>
@@ -268,12 +297,26 @@ export default async function AboutPage() {
       {researchTeam.length > 0 && (
         <section className="bg-white py-12 md:py-16 border-t border-slate-100">
           <div className="max-w-5xl mx-auto px-4">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-[#102a43] text-center mb-10 tracking-tight">
-              Kosher Bank Directory Research Team
-            </h2>
+            <MotionDiv
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.5 }}
+            >
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-[#102a43] text-center mb-10 tracking-tight">
+                Kosher Bank Directory Research Team
+              </h2>
+            </MotionDiv>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              {researchTeam.map((member) => (
-                <div key={member.id || member.name} className="flex flex-col">
+              {researchTeam.map((member, i) => (
+                <MotionDiv
+                  key={member.id || member.name}
+                  initial={{ opacity: 0, scale: 0.88, y: 20 }}
+                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-50px' }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="flex flex-col group"
+                >
                   <MemberAvatar member={member} />
                   <h3 className="font-bold text-[#102a43] text-sm sm:text-base mt-3.5">
                     {member.name}
@@ -288,7 +331,7 @@ export default async function AboutPage() {
                       {member.description}
                     </p>
                   )}
-                </div>
+                </MotionDiv>
               ))}
             </div>
           </div>
@@ -299,12 +342,26 @@ export default async function AboutPage() {
       {genealogistTeam.length > 0 && (
         <section className="bg-white py-12 md:py-16 border-t border-slate-100">
           <div className="max-w-5xl mx-auto px-4">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-[#102a43] text-center mb-10 tracking-tight">
-              Our Genealogist and Yuchasin specialist
-            </h2>
+            <MotionDiv
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.5 }}
+            >
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-[#102a43] text-center mb-10 tracking-tight">
+                Our Genealogist and Yuchasin specialist
+              </h2>
+            </MotionDiv>
             <div className="max-w-md mx-auto flex flex-col">
               {genealogistTeam.map((member) => (
-                <div key={member.id || member.name} className="flex flex-col">
+                <MotionDiv
+                  key={member.id || member.name}
+                  initial={{ opacity: 0, scale: 0.88, y: 20 }}
+                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-50px' }}
+                  transition={{ duration: 0.6 }}
+                  className="flex flex-col"
+                >
                   <MemberAvatar member={member} />
                   <h3 className="font-bold text-[#102a43] text-base sm:text-lg mt-4 mb-1.5">
                     {member.name}
@@ -319,7 +376,7 @@ export default async function AboutPage() {
                       {member.description}
                     </p>
                   )}
-                </div>
+                </MotionDiv>
               ))}
             </div>
           </div>
@@ -330,12 +387,26 @@ export default async function AboutPage() {
       {committeeTeam.length > 0 && (
         <section className="bg-white py-12 md:py-16 border-t border-slate-100">
           <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-[#102a43] text-center mb-10 tracking-tight">
-              Committee Members
-            </h2>
+            <MotionDiv
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.5 }}
+            >
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-[#102a43] text-center mb-10 tracking-tight">
+                Committee Members
+              </h2>
+            </MotionDiv>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
-              {committeeTeam.map((member) => (
-                <div key={member.id || member.name} className="flex flex-col">
+              {committeeTeam.map((member, i) => (
+                <MotionDiv
+                  key={member.id || member.name}
+                  initial={{ opacity: 0, scale: 0.88, y: 20 }}
+                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-50px' }}
+                  transition={{ duration: 0.5, delay: i * 0.08 }}
+                  className="flex flex-col"
+                >
                   <MemberAvatar member={member} />
                   <h3 className="font-bold text-[#102a43] text-sm sm:text-base mt-3.5">
                     {member.name}
@@ -350,7 +421,7 @@ export default async function AboutPage() {
                       {member.description}
                     </p>
                   )}
-                </div>
+                </MotionDiv>
               ))}
             </div>
           </div>
@@ -358,17 +429,25 @@ export default async function AboutPage() {
       )}
 
       {/* Bottom CTA Banner */}
-      <BottomCTA
-        eyebrow={"HOW CAN WE HELP?"}
-        title={"Bring your question, program, or research need to Kav Haribis."}
-        discription={"Whether you have a personal question, need halachic guidance for a financial product, or would like to invite Kav Haribis to present a program, we are here to help."}
-        link="/contact"
-        linktext="Contact Kav Haribis"
-        link2="/contact"
-        link2text="Contact Kav Haribis"
-      />
+      <MotionDiv
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+      >
+        <BottomCTA
+          eyebrow={"HOW CAN WE HELP?"}
+          title={"Bring your question, program, or research need to Kav Haribis."}
+          discription={"Whether you have a personal question, need halachic guidance for a financial product, or would like to invite Kav Haribis to present a program, we are here to help."}
+          link="/contact"
+          linktext="Contact Kav Haribis"
+          link2="/contact"
+          link2text="Contact Kav Haribis"
+        />
+      </MotionDiv>
 
       <SiteFooter />
     </main>
   );
 }
+

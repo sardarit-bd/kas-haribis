@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SubscriptionForm() {
   const [state, setState] = useState('');
@@ -60,7 +61,9 @@ export default function SubscriptionForm() {
               placeholder="Enter your email address..."
               className="flex-1 px-4 py-3 text-sm text-[#102a43] placeholder-slate-400 bg-transparent focus:outline-none"
             />
-            <button
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               type="submit"
               disabled={busy}
               className="pBG text-white font-bold px-7 py-3 transition duration-200 flex items-center justify-center gap-2 shrink-0 disabled:opacity-50 cursor-pointer text-sm"
@@ -72,21 +75,26 @@ export default function SubscriptionForm() {
                   <span>Subscribe</span>
                 </>
               )}
-            </button>
+            </motion.button>
           </div>
 
           {/* Status Alert Message */}
-          {state && (
-            <div
-              className={`p-3 rounded-xl text-xs font-semibold text-center border transition-all ${
-                isSuccess
-                  ? 'bg-emerald-50 border-emerald-300 text-emerald-800'
-                  : 'bg-rose-50 border-rose-300 text-rose-800'
-              }`}
-            >
-              {state}
-            </div>
-          )}
+          <AnimatePresence>
+            {state && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className={`p-3 rounded-xl text-xs font-semibold text-center border transition-all ${
+                  isSuccess
+                    ? 'bg-emerald-50 border-emerald-300 text-emerald-800'
+                    : 'bg-rose-50 border-rose-300 text-rose-800'
+                }`}
+              >
+                {state}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </form>
 
         <p className="text-xs text-slate-200 mt-4">
@@ -97,3 +105,4 @@ export default function SubscriptionForm() {
     </section>
   );
 }
+

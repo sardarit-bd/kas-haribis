@@ -1,5 +1,6 @@
 import BottomCTA from '../componnent/BottomCTA';
 import { listInvestments } from '../lib/directories';
+import { MotionArticle, MotionDiv } from '../shared/motion-components';
 import { InteriorPage, SiteFooter, SiteHeader } from '../shared/site-shell';
 export const dynamic = 'force-dynamic';
 const link = (x: string) => (/^https?:\/\//i.test(x || '') ? x : '');
@@ -38,9 +39,14 @@ export default async function Page() {
       <section className="py-6 sm:py-10 bg-gray-200" id="investment-opportunities">
         {items.length ? (
           <div className="container max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:px-8">
-            {items.map((x) => (
-              <article
-                className={`bg-white border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group ${
+            {items.map((x, i) => (
+              <MotionArticle
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
+                whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                className={`bg-white border border-slate-200/90 shadow-sm transition-shadow duration-300 hover:shadow-xl flex flex-col justify-between group ${
                   x.featured ? 'border-2 border-[#c69b46]' : ''
                 }`}
                 key={x.id}
@@ -52,7 +58,7 @@ export default async function Page() {
                       <img
                         src={x.logo_url}
                         alt={`${x.sponsor_name || x.opportunity_name} logo`}
-                        className="w-full h-full object-cover scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-700 ease-out"
                       />
                     ) : (
                       <div>
@@ -209,7 +215,7 @@ export default async function Page() {
                     </div>
                   )}
                 </div>
-              </article>
+              </MotionArticle>
             ))}
           </div>
         ) : (
@@ -225,9 +231,17 @@ export default async function Page() {
       </section>
 
       {/* CTA Section Banner */}
-      <BottomCTA eyebrow={"PLEASE NOTE"} title={"Halachic review and financial due diligence are both essential"} discription={"Investment opportunities involve risk, including possible loss of principal. Confirm all current terms, investigate the sponsor independently, review offering documents with your advisers, and ask a qualified Rav about your circumstances."} link="/bais-horaah" linktext="Ask a halachic question" link2="" link2text=""/>
+      <MotionDiv
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+      >
+        <BottomCTA eyebrow={"PLEASE NOTE"} title={"Halachic review and financial due diligence are both essential"} discription={"Investment opportunities involve risk, including possible loss of principal. Confirm all current terms, investigate the sponsor independently, review offering documents with your advisers, and ask a qualified Rav about your circumstances."} link="/bais-horaah" linktext="Ask a halachic question" link2="" link2text=""/>
+      </MotionDiv>
       <SiteFooter/>
 
     </>
   );
 }
+

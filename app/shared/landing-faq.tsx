@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const landingFaqs = [
   {
@@ -89,30 +90,42 @@ export default function LandingFaq() {
                       {faq.question}
                     </h3>
                   </div>
-                  <span
-                    className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0 transition-transform duration-200 ${
+                  <motion.span
+                    animate={{ rotate: isOpen ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0 transition-colors ${
                       isOpen
-                        ? 'bg-[#102a43] text-white rotate-180'
+                        ? 'bg-[#102a43] text-white'
                         : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                     }`}
                   >
                     {isOpen ? '−' : '+'}
-                  </span>
+                  </motion.span>
                 </button>
 
-                {isOpen && (
-                  <div className="pt-6 px-5 pb-5 sm:px-6 sm:pb-6 text-sm text-slate-600 leading-relaxed border-t border-[#eee7d8] pt-4 space-y-3">
-                    <p className='text-base'>{faq.answer}</p>
-                    <div className="pt-4 flex items-center gap-4 text-md font-medium">
-                      <a
-                        href="/bais-horaah"
-                        className="text-gray-600 text-lg underline underline-offset-3"
-                      >
-                        Ask Bais Horaah about your situation →
-                      </a>
-                    </div>
-                  </div>
-                )}
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-5 pb-5 sm:px-6 sm:pb-6 text-sm text-slate-600 leading-relaxed border-t border-[#eee7d8] pt-4 space-y-3">
+                        <p className="text-base">{faq.answer}</p>
+                        <div className="pt-4 flex items-center gap-4 text-md font-medium">
+                          <a
+                            href="/bais-horaah"
+                            className="text-gray-600 text-lg underline underline-offset-3"
+                          >
+                            Ask Bais Horaah about your situation →
+                          </a>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             );
           })}

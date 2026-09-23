@@ -1,4 +1,5 @@
 'use client';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import BankReportUnlock from './bank-report-unlock';
 import BankResearchForm from './bank-research-form';
@@ -158,48 +159,28 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
   return (
     <section className="container px-4 sm:px-8 py-10 md:py-14">
 
-
-    <div className="flex flex-col items-center mb-6 hidden">
-      <h1 className="text-3xl md:text-4xl font-semibold max-w-6xl mx-auto text-black text-center mb-3">{"Don’t see what you’re looking for?"}</h1>
-      <h1 className="text-3xl md:text-4xl font-semibold max-w-6xl mx-auto text-black text-center mb-3">{"Have info on any bank or lender that may be useful?"}</h1>
-      <button
-          type="button"
-                  onClick={() =>
-                    setRequestUpdateBank({
-                      id: 'general',
-                      title: 'Bank / Lender Directory Inquiry',
-                      status: 'all',
-                      summary: '',
-                      comment: '',
-                      last_updated: '',
-                      has_full_report: 0,
-                      source: '',
-                      institution_type: '',
-                      website: '',
-                      logo_url: '',
-                    })
-                  }
-       className="bg-black hover:bg-[#3144a5] text-white py-2 px-4 cursor-pointer my-3">Please reach out !</button>
-    </div>
- 
-
-
-      {/* 7 Status Cards Grid (Connected with Directory Tools status filter) */}
+      {/* 7 Status Cards Grid */}
       <div className="mb-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 container justify-center">
-          {statusCards.map((card) => {
+          {statusCards.map((card, idx) => {
             const isSelected = status === card.key;
             return (
-              <button
+              <motion.button
                 key={card.key}
                 type="button"
                 onClick={() => handleStatusChange(isSelected ? 'all' : card.key)}
-                className={`p-5 text-center transition-all cursor-pointer flex flex-col justify-center items-center shadow-sm relative overflow-hidden ${
+                initial={{ opacity: 0, scale: 0.9, y: 15 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.25, ease: 'easeOut', delay: idx * 0.05 }}
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className={`p-5 text-center transition-all cursor-pointer flex flex-col justify-center items-center shadow-sm relative overflow-hidden rounded-lg ${
                   card.bg
                 } ${
                   isSelected
-                    ? 'shadow-xl'
-                    : 'opacity-95 hover:opacity-100 hover:scale-[1.01]'
+                    ? 'shadow-xl ring-2 ring-white/60'
+                    : 'opacity-95 hover:opacity-100'
                 }`}
               >
                 <h3 className="text-lg sm:text-xl font-bold mb-1.5 leading-tight flex items-center justify-center gap-2">
@@ -213,16 +194,22 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                 <p className="text-xs sm:text-sm font-medium leading-snug opacity-90 max-w-xs">
                   {card.desc}
                 </p>
-              </button>
+              </motion.button>
             );
           })}
         </div>
       </div>
 
       {/* Directory Tools */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[minmax(200px,1fr)_minmax(150px,0.7fr)_minmax(130px,0.6fr)_minmax(140px,0.5fr)] gap-4 items-end mb-8 bg-white p-4 sm:p-5 border border-slate-200/80">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[minmax(200px,1fr)_minmax(150px,0.7fr)_minmax(130px,0.6fr)_minmax(140px,0.5fr)] gap-4 items-end mb-8 bg-white p-4 sm:p-5 border border-slate-200/80 rounded-xl shadow-xs"
+      >
         <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#102a43]">
-          Search financial institutions within  {filtered.length} Bank List
+          Search financial institutions within {filtered.length} Bank List
           <input
             value={query}
             onChange={(event) => handleQueryChange(event.target.value)}
@@ -301,26 +288,35 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Directory Cards (Grid / List View) */}
       {filtered.length === 0 ? (
-        <p className="p-6 text-center text-sm font-semibold text-[#876622] bg-[#fff7e5] border border-[#f3e4bc]">
+        <motion.p
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="p-6 text-center text-sm font-semibold text-[#876622] bg-[#fff7e5] border border-[#f3e4bc] rounded-lg"
+        >
           No banks match this search. Clear the search or choose All statuses.
-        </p>
+        </motion.p>
       ) : viewMode === 'grid' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
-          {paginatedBanks.map((bank) => (
-            <article
+          {paginatedBanks.map((bank, idx) => (
+            <motion.article
               key={bank.id}
-              className="bg-white border border-slate-200 p-5 transition-all flex flex-col justify-between h-full"
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              viewport={{ once: true, margin: '-30px' }}
+              transition={{ duration: 0.4, ease:"easeInOut", delay: (idx % 4) * 0.06 }}
+              whileHover={{ y: -6 }}
+              className="bg-white border border-slate-200 p-5 transition-all flex flex-col justify-between h-full rounded-xl shadow-xs hover:shadow-md"
             >
               <div className="w-full">
                 {/* Bank Logo Container with Status Badge Overlay */}
-                <div className="relative w-full h-40 flex items-center justify-center mb-7">
+                <div className="relative w-full h-40 flex items-center justify-center mb-7 overflow-hidden rounded-lg bg-slate-50/50 p-2">
                   {/* Status Badge Overlap */}
                   <span
-                    className={`absolute top-2 right-2 z-10 px-2.5 py-0.5 text-xs font-bold text-white rounded-lg ${getStatusBadgeStyle(
+                    className={`absolute top-2 right-2 z-10 px-2.5 py-0.5 text-xs font-bold text-white rounded-lg shadow-xs ${getStatusBadgeStyle(
                       bank.status,
                     )}`}
                   >
@@ -328,19 +324,23 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                   </span>
 
                   {Boolean(bank.has_full_report) && (
-                    <span className="absolute top-2 right-2 z-10 text-[10px] font-extrabold uppercase px-2 py-0.5 bg-amber-100 text-amber-900 border border-amber-300">
+                    <span className="absolute top-2 left-2 z-10 text-[10px] font-extrabold uppercase px-2 py-0.5 bg-amber-100 text-amber-900 border border-amber-300 rounded-sm">
                       $15 Report
                     </span>
                   )}
 
                   {bank.logo_url ? (
-                    <img
-                      className="max-h-full max-w-full object-cover w-full h-full"
+                    <motion.img
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.3 }}
+                      className="max-h-full max-w-full object-contain w-full h-full"
                       src={bank.logo_url}
                       alt={bank.title}
                     />
                   ) : (
-                    <div></div>
+                    <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-[#102a43] text-white font-bold text-xl">
+                      {bank.title.charAt(0).toUpperCase()}
+                    </div>
                   )}
                 </div>
 
@@ -376,33 +376,40 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                 <button
                   type="button"
                   onClick={() => setDetailBank(bank)}
-                  className="w-full py-1 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer"
+                  className="w-full py-1.5 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md"
                 >
                   Full Report
                 </button>
                 <button
                   type="button"
                   onClick={() => setRequestUpdateBank(bank)}
-                  className="w-full py-1 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-meduim transition-colors text-center cursor-pointer"
+                  className="w-full py-1.5 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-medium transition-colors text-center cursor-pointer rounded-md"
                 >
                   Request Update
                 </button>
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
       ) : (
         /* List View */
         <div className="flex flex-col gap-4">
-          {paginatedBanks.map((bank) => (
-            <article
+          {paginatedBanks.map((bank, idx) => (
+            <motion.article
               key={bank.id}
-              className="bg-white border border-slate-200 p-4 sm:p-5 transition-all flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-sm"
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ duration: 0.35, delay: (idx % 6) * 0.04 }}
+              whileHover={{ y: -3 }}
+              className="bg-white border border-slate-200 p-4 sm:p-5 transition-all flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-md rounded-xl"
             >
               {/* Left: Logo container */}
               <div className="w-full md:w-48 h-32 md:h-36 shrink-0 flex items-center justify-center p-3 bg-slate-50 border border-slate-100 rounded-lg relative overflow-hidden">
                 {bank.logo_url ? (
-                  <img
+                  <motion.img
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.3 }}
                     className="max-h-full max-w-full object-contain"
                     src={bank.logo_url}
                     alt={bank.title}
@@ -463,26 +470,26 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                 <button
                   type="button"
                   onClick={() => setDetailBank(bank)}
-                  className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-sm"
+                  className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md"
                 >
                   Full Report
                 </button>
                 <button
                   type="button"
                   onClick={() => setRequestUpdateBank(bank)}
-                  className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-medium transition-colors text-center cursor-pointer rounded-sm"
+                  className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-medium transition-colors text-center cursor-pointer rounded-md"
                 >
                   Request Update
                 </button>
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
       )}
 
       {/* Pagination */}
       {filtered.length > 0 && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 p-4 sm:p-5 bg-white">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 p-4 sm:p-5 bg-white rounded-xl border border-slate-200/80">
           <div className="text-xs sm:text-sm text-[#556673]">
             Showing{' '}
             <b className="text-[#102a43]">
@@ -543,8 +550,14 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
         </div>
       )}
 
-      {/* Bottom CTA Section (Matching BottomCTA component layout & styling 100%) */}
-      <div className="mt-16 sm:mt-12 -mx-4 sm:-mx-8">
+      {/* Bottom CTA Section */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 25 }}
+        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="mt-16 sm:mt-12 -mx-4 sm:-mx-8"
+      >
         <section className="bg-gray-200">
           <section className="container max-w-[1440px] mx-auto px-4 sm:px-8">
             <div className="bg-[#102a43] text-white p-8 sm:p-12 md:p-[50px] flex flex-col items-center justify-between text-center gap-8 md:gap-[50px]">
@@ -558,8 +571,10 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
               </div>
 
               <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-5">
-                <button
+                <motion.button
                   type="button"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.97 }}
                   onClick={() =>
                     setRequestUpdateBank({
                       id: 'general',
@@ -576,174 +591,199 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                     })
                   }
                   style={{ color: 'white' }}
-                  className="inline-flex items-center gap-2.5 px-6 py-3.5 pBG text-white font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 cursor-pointer"
+                  className="inline-flex items-center gap-2.5 px-6 py-3.5 pBG text-white font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
                 >
                   <span>Please Reach Out</span>
-                </button>
+                </motion.button>
               </div>
             </div>
           </section>
         </section>
-      </div>
+      </motion.div>
 
       {/* Modal 1: Bank Full Details / Full Report Modal */}
-      {detailBank && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="relative bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
-            <button
-              onClick={() => setDetailBank(null)}
-              className="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-lg transition-colors"
-              aria-label="Close modal"
+      <AnimatePresence>
+        {detailBank && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 15 }}
+              transition={{ duration: 0.25 }}
+              className="relative bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto"
             >
-              ✕
-            </button>
+              <button
+                onClick={() => setDetailBank(null)}
+                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-lg transition-colors"
+                aria-label="Close modal"
+              >
+                ✕
+              </button>
 
-            {/* Modal Header */}
-            <div className="flex items-start gap-4 pr-8 border-b border-slate-100 pb-5">
-              <div className="w-28 h-28 shrink-0 flex items-center justify-center bg-[#f8fafc] border border-slate-200 rounded-xl">
-                {detailBank.logo_url ? (
-                  <img
-                    className="max-h-full max-w-full object-cover"
-                    src={detailBank.logo_url}
-                    alt={detailBank.title}
-                  />
-                ) : (
-                  <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-[#102a43] text-white font-bold text-xl">
-                    {detailBank.title.charAt(0).toUpperCase()}
-                  </div>
-                )}
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span
-                    className={`px-2.5 py-0.5 text-xs font-bold rounded-md border ${getStatusBadgeStyle(
-                      detailBank.status,
-                    )}`}
-                  >
-                    {labels[detailBank.status] || detailBank.status}
-                  </span>
-                  {detailBank.last_updated && (
-                    <span className="text-xs text-slate-500 font-medium">
-                      Last updated:{' '}
-                      {new Date(
-                        `${detailBank.last_updated}T00:00:00`,
-                      ).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}
-                    </span>
+              {/* Modal Header */}
+              <div className="flex items-start gap-4 pr-8 border-b border-slate-100 pb-5">
+                <div className="w-28 h-28 shrink-0 flex items-center justify-center bg-[#f8fafc] border border-slate-200 rounded-xl overflow-hidden p-2">
+                  {detailBank.logo_url ? (
+                    <img
+                      className="max-h-full max-w-full object-contain"
+                      src={detailBank.logo_url}
+                      alt={detailBank.title}
+                    />
+                  ) : (
+                    <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-[#102a43] text-white font-bold text-xl">
+                      {detailBank.title.charAt(0).toUpperCase()}
+                    </div>
                   )}
                 </div>
-                <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#102a43]">
-                  {detailBank.title}
-                </h2>
-                {detailBank.institution_type && (
-                  <p className="text-xs text-slate-500 font-medium mt-0.5">
-                    {detailBank.institution_type}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Modal Content */}
-            <div className="space-y-4 text-sm text-slate-700 leading-relaxed">
-              {detailBank.summary && (
                 <div>
-                  <h4 className="font-semibold text-[#102a43] text-xs uppercase tracking-wider mb-1.5">
-                    Research Summary
-                  </h4>
-                  <p className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-slate-700 leading-relaxed">
-                    {detailBank.summary}
-                  </p>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span
+                      className={`px-2.5 py-0.5 text-xs font-bold rounded-md border ${getStatusBadgeStyle(
+                        detailBank.status,
+                      )}`}
+                    >
+                      {labels[detailBank.status] || detailBank.status}
+                    </span>
+                    {detailBank.last_updated && (
+                      <span className="text-xs text-slate-500 font-medium">
+                        Last updated:{' '}
+                        {new Date(
+                          `${detailBank.last_updated}T00:00:00`,
+                        ).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                      </span>
+                    )}
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#102a43]">
+                    {detailBank.title}
+                  </h2>
+                  {detailBank.institution_type && (
+                    <p className="text-xs text-slate-500 font-medium mt-0.5">
+                      {detailBank.institution_type}
+                    </p>
+                  )}
                 </div>
-              )}
-
-              {detailBank.comment && (
-                <div>
-                  <h4 className="font-semibold text-[#102a43] text-xs uppercase tracking-wider mb-1.5">
-                    Kav Haribis Comment
-                  </h4>
-                  <p className="bg-amber-50/70 p-4 rounded-xl border border-amber-200/60 text-amber-900 leading-relaxed">
-                    {detailBank.comment}
-                  </p>
-                </div>
-              )}
-
-              {detailBank.website && (
-                <div>
-                  <a
-                    className="inline-flex items-center gap-1 text-xs font-bold text-[#c69b46] hover:underline"
-                    href={detailBank.website}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Visit Institution Website ↗
-                  </a>
-                </div>
-              )}
-
-              <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
-                ⚠️ Information may change. Confirm current status with the Bais
-                Horaah before making financial decisions.
               </div>
 
-              {/* Protected Full Report */}
-              {Boolean(detailBank.has_full_report) ? (
-                <div className="pt-4 border-t border-slate-100 flex flex-col items-center justify-center p-6 bg-[#102a43] rounded-2xl text-white text-center space-y-3">
+              {/* Modal Content */}
+              <div className="space-y-4 text-sm text-slate-700 leading-relaxed">
+                {detailBank.summary && (
                   <div>
-                    <h3 className="font-serif font-bold text-lg text-white">
-                      Protected Full Report ($15)
-                    </h3>
-                    <p className="text-xs text-slate-300">
-                      Unlock the complete in-depth legal and halachic research
-                      report for this institution.
+                    <h4 className="font-semibold text-[#102a43] text-xs uppercase tracking-wider mb-1.5">
+                      Research Summary
+                    </h4>
+                    <p className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-slate-700 leading-relaxed">
+                      {detailBank.summary}
                     </p>
                   </div>
-                  <button
-                    className="px-6 py-2.5 bg-[#c69b46] hover:bg-[#b0883b] text-white text-xs font-bold rounded-xl transition-colors shadow-md cursor-pointer"
-                    onClick={() => {
-                      const target = detailBank;
-                      setDetailBank(null);
-                      setUnlock(target);
-                    }}
-                  >
-                    Unlock Full Report — $15
-                  </button>
+                )}
+
+                {detailBank.comment && (
+                  <div>
+                    <h4 className="font-semibold text-[#102a43] text-xs uppercase tracking-wider mb-1.5">
+                      Kav Haribis Comment
+                    </h4>
+                    <p className="bg-amber-50/70 p-4 rounded-xl border border-amber-200/60 text-amber-900 leading-relaxed">
+                      {detailBank.comment}
+                    </p>
+                  </div>
+                )}
+
+                {detailBank.website && (
+                  <div>
+                    <a
+                      className="inline-flex items-center gap-1 text-xs font-bold text-[#c69b46] hover:underline"
+                      href={detailBank.website}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Visit Institution Website ↗
+                    </a>
+                  </div>
+                )}
+
+                <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+                  ⚠️ Information may change. Confirm current status with the Bais
+                  Horaah before making financial decisions.
                 </div>
-              ) : (
-                <div className="pt-2 text-xs text-slate-400 text-center">
-                  Full detailed report not uploaded for this institution yet.
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+
+                {/* Protected Full Report */}
+                {Boolean(detailBank.has_full_report) ? (
+                  <div className="pt-4 border-t border-slate-100 flex flex-col items-center justify-center p-6 bg-[#102a43] rounded-2xl text-white text-center space-y-3">
+                    <div>
+                      <h3 className="font-serif font-bold text-lg text-white">
+                        Protected Full Report ($15)
+                      </h3>
+                      <p className="text-xs text-slate-300">
+                        Unlock the complete in-depth legal and halachic research
+                        report for this institution.
+                      </p>
+                    </div>
+                    <button
+                      className="px-6 py-2.5 bg-[#c69b46] hover:bg-[#b0883b] text-white text-xs font-bold rounded-xl transition-colors shadow-md cursor-pointer"
+                      onClick={() => {
+                        const target = detailBank;
+                        setDetailBank(null);
+                        setUnlock(target);
+                      }}
+                    >
+                      Unlock Full Report — $15
+                    </button>
+                  </div>
+                ) : (
+                  <div className="pt-2 text-xs text-slate-400 text-center">
+                    Full detailed report not uploaded for this institution yet.
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Modal 2: Request Update Modal */}
-      {requestUpdateBank && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="relative bg-white max-w-5xl w-full p-5 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <button
-              onClick={() => setRequestUpdateBank(null)}
-              className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-lg transition-colors"
-              aria-label="Close modal"
+      <AnimatePresence>
+        {requestUpdateBank && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 15 }}
+              transition={{ duration: 0.25 }}
+              className="relative bg-white max-w-5xl w-full p-5 shadow-2xl max-h-[90vh] overflow-y-auto rounded-xl"
             >
-              ✕
-            </button>
+              <button
+                onClick={() => setRequestUpdateBank(null)}
+                className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-lg transition-colors"
+                aria-label="Close modal"
+              >
+                ✕
+              </button>
 
-            <div className="mb-2 pr-8 border-b pb-3 border-gray-200">
-          
-              <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#102a43]">
-                Request Update for {requestUpdateBank.title}
-              </h2>
-            </div>
+              <div className="mb-2 pr-8 border-b pb-3 border-gray-200">
+                <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#102a43]">
+                  Request Update for {requestUpdateBank.title}
+                </h2>
+              </div>
 
-            <BankResearchForm defaultBankName={requestUpdateBank.title} />
-          </div>
-        </div>
-      )}
+              <BankResearchForm defaultBankName={requestUpdateBank.title} />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Unlock Modal */}
       {unlock && (
@@ -754,8 +794,8 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
         />
       )}
 
-
     </section>
   );
 }
+
 

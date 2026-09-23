@@ -1,3 +1,4 @@
+import { MotionDiv, MotionSection } from '../shared/motion-components';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
 import CertificationForm from './certification-form';
 
@@ -41,7 +42,12 @@ export default function Page() {
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#071728] via-[#102a43] to-[#0e304b] text-white">
         <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
-          <div className="lg:col-span-7 space-y-6">
+          <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-7 space-y-6"
+          >
             <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase hidden">KASHRUS OF FINANCIAL SERVICES</p>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-white leading-tight">
               Investment &amp; Lender Certification
@@ -52,34 +58,45 @@ export default function Page() {
               concerns and practical Halachic compliance.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
-              <a className="px-6 py-3.5 bg-[#c69b46] hover:bg-[#b0883b] text-[#102a43] text-md text-center" href="#apply-for-review">
+              <a className="px-6 py-3.5 bg-[#c69b46] hover:bg-[#b0883b] text-[#102a43] text-md text-center font-bold transition-all duration-300 hover:scale-105 rounded-md shadow-sm" href="#apply-for-review">
                 Apply for review
               </a>
-              <a className="px-6 py-3.5 bg-white/10 border border-white/20 hover:bg-white/20 text-white text-md transition-colors text-center" href="/bais-horaah">
+              <a className="px-6 py-3.5 bg-white/10 border border-white/20 hover:bg-white/20 text-white text-md transition-all duration-300 hover:scale-105 text-center rounded-md" href="/bais-horaah">
                 Ask a preliminary question
               </a>
             </div>
-          </div>
+          </MotionDiv>
         </div>
       </section>
 
 
       {/* What We Review Section */}
-      <section className="bg-[#f7f3ea]/60 py-16 md:py-24">
+      <section className="bg-[#f7f3ea]/60 py-16 md:py-24 overflow-hidden">
         <div className="container max-w-[1440px] mx-auto px-4 sm:px-8">
-          <div className="mb-10 sm:mb-14">
+          <MotionDiv
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-20px' }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-10 sm:mb-14"
+          >
             <p className="text-[#c69b46] font-bold text-sm tracking-widest mb-3">
               What We Review
             </p>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-[#102a43]">
               A practical Halachic assessment
             </h2>
-          </div>
+          </MotionDiv>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {reviewItems.map(([num, title, text]) => (
-              <div
+            {reviewItems.map(([num, title, text], idx) => (
+              <MotionDiv
                 key={num}
-                className="p-6 sm:p-8 bg-white border border-[#e2d9c8]/70 shadow-sm flex flex-col justify-between"
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-20px' }}
+                transition={{ duration: 0.8, delay: (idx % 3) * 0.07, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -4, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+                className="p-6 sm:p-8 bg-white border border-[#e2d9c8]/70 shadow-xs hover:shadow-md flex flex-col justify-between rounded-xl transition-all"
               >
                 <div>
                   <span className="text-[#c69b46] font-bold text-lg sm:text-xl font-serif block mb-2">
@@ -92,16 +109,22 @@ export default function Page() {
                     {text}
                   </p>
                 </div>
-              </div>
+              </MotionDiv>
             ))}
           </div>
         </div>
       </section>
 
       {/* Certification in Practice Section */}
-      <section className="py-16 md:py-24 bg-[#fbfaf7]">
+      <section className="py-16 md:py-24 bg-[#fbfaf7] overflow-hidden">
         <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          <div className="lg:col-span-6 space-y-6">
+          <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-20px' }}
+            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-6 space-y-6"
+          >
             <div>
               <p className="text-[#c69b46] font-bold text-xs tracking-widest mb-3">
                 CERTIFICATION IN PRACTICE
@@ -117,32 +140,43 @@ export default function Page() {
               <a
                 style={{color:'white'}}
                 href="#apply-for-review"
-                className="inline-block px-6 py-3.5 bg-[#c69b46] hover:bg-[#b0883b] text-[#102a43] font-medium text-sm sm:text-base transition-colors shadow-sm"
+                className="inline-block px-6 py-3.5 bg-[#c69b46] hover:bg-[#b0883b] text-[#102a43] font-semibold text-sm sm:text-base transition-all duration-300 hover:scale-105 shadow-sm rounded-md"
               >
                 Request institutional certification
               </a>
             </div>
-          </div>
-          <div className="lg:col-span-6">
+          </MotionDiv>
+          <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-20px' }}
+            transition={{ duration: 0.85, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-6"
+          >
             <div className="bg-[#f7f3ea]/50 border border-[#e2d9c8]/70 p-3 sm:p-4 rounded-xl shadow-sm">
               <img
                 src="/kav-brand/rate-certified.png"
                 alt="Example of a Kav Haribis-certified lending company"
-                className="w-full h-auto rounded-lg border border-[#e2d9c8]/40 shadow-sm"
+                className="w-full h-auto rounded-lg border border-[#e2d9c8]/40 shadow-sm hover:scale-[1.02] transition-transform duration-500"
               />
               <p className="text-xs text-[#64748b] mt-3 pl-1 font-sans">
                 Example of a Kav Haribis-certified lending company.
               </p>
             </div>
-          </div>
+          </MotionDiv>
         </div>
       </section>
 
-     
-
       {/* Application Form Grid */}
-      <section className='bg-gray-100 py-12'>
-        <section className="container max-w-[1440px] mx-auto px-4 sm:px-8 my-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start scroll-mt-[140px]" id="apply-for-review">
+      <section className='bg-gray-100 py-12 overflow-hidden'>
+        <MotionDiv
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-20px' }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="container max-w-[1440px] mx-auto px-4 sm:px-8 my-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start scroll-mt-[140px]"
+          id="apply-for-review"
+        >
           <div className="lg:col-span-5 space-y-6">
             <div>
               <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase hidden mb-1">APPLICATION</p>
@@ -184,53 +218,66 @@ export default function Page() {
           <div className="lg:col-span-7">
             <CertificationForm />
           </div>
-        </section>
+        </MotionDiv>
       </section>
 
-
-
-       {/* Process Section */}
-       <section className='container'>
-        <section className="px-4 sm:px-8 p-6 sm:p-10 bg-[#f7f3ea] space-y-6 my-12">
-          <div>
+      {/* Process Section */}
+      <section className='container overflow-hidden'>
+        <section className="px-4 sm:px-8 p-6 sm:p-10 bg-[#f7f3ea] space-y-6 my-12 rounded-2xl">
+          <MotionDiv
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-20px' }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
             <p className="text-[#c69b46] font-bold text-sm tracking-widest mb-1">How it Works</p>
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#102a43]">From application to written determination</h2>
-          </div>
+          </MotionDiv>
           <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 list-none m-0 p-0">
-            <li className="p-5 bg-white space-y-2">
-              <b className="w-8 h-8 rounded-full bg-[#102a43] text-white flex items-center justify-center text-xs font-mono font-bold">1</b>
-              <span className="text-xs text-[#64748b] leading-relaxed block">
-                <strong className="text-[#102a43] block text-sm font-serif font-bold mb-1">Submit the structure</strong>
-                Describe the institution or opportunity and provide the principal documents.
-              </span>
-            </li>
-            <li className="p-5 bg-white space-y-2">
-              <b className="w-8 h-8 rounded-full bg-[#102a43] text-white flex items-center justify-center text-xs font-mono font-bold">2</b>
-              <span className="text-xs text-[#64748b] leading-relaxed block">
-                <strong className="text-[#102a43] block text-sm font-serif font-bold mb-1">Initial review</strong>
-                Kav Haribis determines whether additional information or clarification is required.
-              </span>
-            </li>
-            <li className="p-5 bg-white space-y-2">
-              <b className="w-8 h-8 rounded-full bg-[#102a43] text-white flex items-center justify-center text-xs font-mono font-bold">3</b>
-              <span className="text-xs text-[#64748b] leading-relaxed block">
-                <strong className="text-[#102a43] block text-sm font-serif font-bold mb-1">Halachic analysis</strong>
-                The structure and relevant agreements are reviewed for Ribbis concerns.
-              </span>
-            </li>
-            <li className="p-5 bg-white space-y-2">
-              <b className="w-8 h-8 rounded-full bg-[#102a43] text-white flex items-center justify-center text-xs font-mono font-bold">4</b>
-              <span className="text-xs text-[#64748b] leading-relaxed block">
-                <strong className="text-[#102a43] block text-sm font-serif font-bold mb-1">Written outcome</strong>
-                You receive an approval, conditional approval, request for changes, or other determination.
-              </span>
-            </li>
+            {[
+              {
+                num: '1',
+                title: 'Submit the structure',
+                desc: 'Describe the institution or opportunity and provide the principal documents.',
+              },
+              {
+                num: '2',
+                title: 'Initial review',
+                desc: 'Kav Haribis determines whether additional information or clarification is required.',
+              },
+              {
+                num: '3',
+                title: 'Halachic analysis',
+                desc: 'The structure and relevant agreements are reviewed for Ribbis concerns.',
+              },
+              {
+                num: '4',
+                title: 'Written outcome',
+                desc: 'You receive an approval, conditional approval, request for changes, or other determination.',
+              },
+            ].map((step, idx) => (
+              <MotionDiv
+                key={step.num}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-20px' }}
+                transition={{ duration: 0.8, delay: idx * 0.07, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -4, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+                className="p-5 bg-white space-y-2 rounded-xl shadow-xs hover:shadow-md transition-all"
+              >
+                <b className="w-8 h-8 rounded-full bg-[#102a43] text-white flex items-center justify-center text-xs font-mono font-bold">{step.num}</b>
+                <span className="text-xs text-[#64748b] leading-relaxed block">
+                  <strong className="text-[#102a43] block text-sm font-serif font-bold mb-1">{step.title}</strong>
+                  {step.desc}
+                </span>
+              </MotionDiv>
+            ))}
           </ol>
         </section>
       </section>
-
 
       <SiteFooter />
     </main>
   );
 }
+

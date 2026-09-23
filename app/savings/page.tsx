@@ -1,5 +1,6 @@
 import BottomCTA from "../componnent/BottomCTA";
 import { listSavingsAccounts } from '../lib/directories';
+import { MotionArticle, MotionDiv } from '../shared/motion-components';
 import { InteriorPage, SiteFooter, SiteHeader } from '../shared/site-shell';
 export const dynamic = 'force-dynamic';
 const safeLink = (value: string) =>
@@ -17,9 +18,14 @@ export default async function SavingsPage() {
     />
       
 
-
       <section className=" py-8 bg-gray-200">
-        <div className="container flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-10 pb-6 pt-4 px-8">
+        <MotionDiv
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.5 }}
+          className="container flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-10 pb-6 pt-4 px-8"
+        >
           <div>
             <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase hidden">AVAILABLE ACCOUNTS</p>
             <h2 className="text-[#102a43] font-serif font-bold text-3xl sm:text-4xl">Compare high-yield savings options</h2>
@@ -28,14 +34,19 @@ export default async function SavingsPage() {
             financial advice or a guarantee of current rates.
           </p>
           </div>
-          
-        </div>
+        </MotionDiv>
+
         <div className="container grid grid-cols-1 md:grid-cols-2 gap-6 pb-4 px-8">
-          {items.map((x) => {
+          {items.map((x, i) => {
             const link = safeLink(x.open_account_url);
             return (
-              <article
-                className={`p-6 bg-white flex flex-col justify-between space-y-4 ${
+              <MotionArticle
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.5, delay: (i % 2) * 0.1 }}
+                whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                className={`p-6 bg-white flex flex-col justify-between space-y-4 shadow-sm transition-shadow duration-300 hover:shadow-lg ${
                   x.featured ? 'border-t-4 border-t-[#c69b46]' : ''
                 }`}
                 key={x.id}
@@ -146,15 +157,23 @@ export default async function SavingsPage() {
                     </a>
                   )}
                 </div>
-              </article>
+              </MotionArticle>
             );
           })}
         </div>
       </section>
   
-      <BottomCTA eyebrow={"IMPORTANT"} title={"Confirm terms before depositing funds"} discription={"Interest rates, fees, eligibility, and account structures can change. Review the institution’s current disclosures and ask a qualified Rav when a personal halachic question applies."}
-       link="/bais-horaah" linktext="Ask a Ribbis question" link2="" link2text=""/>
+      <MotionDiv
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+      >
+        <BottomCTA eyebrow={"IMPORTANT"} title={"Confirm terms before depositing funds"} discription={"Interest rates, fees, eligibility, and account structures can change. Review the institution’s current disclosures and ask a qualified Rav when a personal halachic question applies."}
+         link="/bais-horaah" linktext="Ask a Ribbis question" link2="" link2text=""/>
+      </MotionDiv>
       <SiteFooter/> 
     </>
   );
 }
+

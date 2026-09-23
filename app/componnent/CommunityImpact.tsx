@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { useRef } from 'react';
 
 const impactGalleryItems = [
@@ -115,9 +116,11 @@ export default function CommunityImpact() {
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {impactGalleryItems.map((item, idx) => (
-              <a
+              <motion.a
+                whileHover={{ y: -5 }}
+                transition={{ duration: 0.2 }}
                 href={item.link}
-                className="w-[280px] sm:w-[320px] md:w-[340px] shrink-0 snap-start bg-white transition-all duration-300 group flex flex-col justify-between"
+                className="w-[280px] sm:w-[320px] md:w-[340px] shrink-0 snap-start bg-white transition-shadow duration-300 group flex flex-col justify-between hover:shadow-md"
                 key={idx}
               >
                 <div>
@@ -126,7 +129,7 @@ export default function CommunityImpact() {
                     <img
                       src={item.src}
                       alt={item.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
 
@@ -140,7 +143,7 @@ export default function CommunityImpact() {
                     </p>
                   </div>
                 </div>
-              </a>
+              </motion.a>
             ))}
           </div>
 
@@ -158,3 +161,4 @@ export default function CommunityImpact() {
     </section>
   );
 }
+

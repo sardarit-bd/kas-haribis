@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import type { Sefer } from '../seforim/seforim-catalog';
 import { useCart } from './cart-context';
 
@@ -51,6 +52,25 @@ const featuredBooks: Sefer[] = [
   },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
 export default function FeaturedSeforim() {
 
   const { addToCart } = useCart();
@@ -67,12 +87,20 @@ export default function FeaturedSeforim() {
         </div>
 
         {/* 4-Column Book Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-20px' }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
           {featuredBooks.map((book) => (
-            <article
+            <motion.article
+              variants={cardVariants}
+              whileHover={{ y: -4, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
               onClick={() => { router.push('/seforim'); }}
               key={book.id}
-              className="bg-white p-5 flex flex-col justify-between transition-all duration-300 group border border-slate-200/60 hover:shadow-lg cursor-pointer"
+              className="bg-white p-5 flex flex-col justify-between transition-shadow duration-300 group border border-slate-200/60 hover:shadow-lg cursor-pointer"
             >
               <div>
                 {/* Book Cover Image */}
@@ -106,20 +134,23 @@ export default function FeaturedSeforim() {
                   <span>🛒 Add to Cart</span>
                 </button>
               </div>
-            </article>
+            </motion.article>
           ))}
-        </div>
+        </motion.div>
 
         {/* Centered Action Button with Styled Background */}
         <div className="mt-12 text-center">
-          <a
+          <motion.a
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.98 }}
             href="/seforim"
             className="inline-flex items-center gap-2 pBG text-white font-semibold py-3.5 px-8 text-sm sm:text-base transition shadow-md hover:shadow-lg"
           >
             <span className='text-white'>View Full Catalog</span>
-          </a>
+          </motion.a>
         </div>
       </div>
     </section>
   );
 }
+
