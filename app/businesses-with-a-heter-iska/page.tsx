@@ -16,7 +16,7 @@ export default async function BusinessesPage() {
       intro="A growing directory of businesses listed by Kav Haribis as operating with a Heter Iska. Review the information and confirm that the document remains current before relying on a listing."
     />
       <section className="p-6 sm:p-10 bg-gray-200" id="business-directory">
-        <div className="container flex flex-col md:flex-row items-start md:items-end justify-between gap-6 pb-6">
+        <div className="container flex flex-col md:flex-row items-start md:items-end justify-between gap-6 pb-6 px-4 md:px-8">
           <MotionDiv
             initial={{ opacity: 0, scale: 0.90, y: 20 }}
             whileInView={{ opacity: 1, scale: 1, y: 0 }}
@@ -30,7 +30,7 @@ export default async function BusinessesPage() {
           </MotionDiv>
         </div>
 
-        <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4 md:px-8">
           {businesses.map((item, index) => (
             <MotionArticle
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
