@@ -1,6 +1,6 @@
 import BottomCTA from '../componnent/BottomCTA';
 import { listEducationalResources } from '../lib/directories';
-import { MotionDiv, MotionArticle } from '../shared/motion-components';
+import { MotionArticle, MotionDiv } from '../shared/motion-components';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
 
 export const dynamic = 'force-dynamic';
@@ -9,14 +9,14 @@ export default async function EducationalCenter() {
   const { env } = await import('cloudflare:workers');
   const items = (await listEducationalResources(env.DB)) as any[];
   return (
-    <main className="overflow-x-hidden">
+    <main className="">
       <SiteHeader />
 
       <section id="resources" className="bg-[#f7f3ea] px-4 sm:px-8 py-12 md:py-16 w-full">
         <MotionDiv
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
           className="mb-10 container"
         >
           <div>
@@ -47,8 +47,7 @@ export default async function EducationalCenter() {
                 initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-20px' }}
-                transition={{ duration: 0.8, delay: (idx % 3) * 0.07, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ y: -4, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+                transition={{ duration: 0.8, delay: (idx % 3) * 0.07, ease: "easeInOut" }}
                 className="bg-[#102a43]/60 overflow-hidden hover:border-[#c69b46]/50 transition duration-300 flex flex-col rounded-xl shadow-xs hover:shadow-md"
               >
                 <figure className="relative bg-[#070f1e] aspect-[4/3] flex items-center justify-center overflow-hidden">

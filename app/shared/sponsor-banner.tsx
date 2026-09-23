@@ -43,14 +43,19 @@ export default function SponsorBanner() {
   const pathname = usePathname();
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
   const [selected, setSelected] = useState<Sponsor | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch('/api/sponsors')
       .then((response) => response.json())
-      .then((data) =>
-        setSponsors(data.sponsors?.length ? data.sponsors : [fallback]),
-      )
-      .catch(() => setSponsors([fallback]));
+      .then((data) => {
+        setSponsors(data.sponsors?.length ? data.sponsors : [fallback]);
+        setLoading(false);
+      })
+      .catch(() => {
+        setSponsors([fallback]);
+        setLoading(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -66,10 +71,10 @@ export default function SponsorBanner() {
     };
   }, [selected]);
 
-  if (pathname.startsWith('/admin') || sponsors.length === 0) return null;
+  if (pathname.startsWith('/admin')) return null;
 
   const baseSponsors = Array.from(
-    { length: Math.max(1, Math.ceil(12 / sponsors.length)) },
+    { length: Math.max(1, Math.ceil(12 / (sponsors.length || 1))) },
     () => sponsors,
   ).flat();
 
@@ -143,20 +148,40 @@ export default function SponsorBanner() {
           </p>
         </div>
 
-        {/* Continuous Right-to-Left Sliding Conveyor */}
+        {/* Continuous Right-to-Left Sliding Conveyor / Skeleton */}
         <div className="topSponsorConveyor py-1 sm:py-1">
-          <div className="topSponsorTrack">
-            <div className="topSponsorGroup">
-              {baseSponsors.map((sponsor, index) =>
-                sponsorCard(sponsor, `g1-${sponsor.id}-${index}`),
-              )}
+          {loading ? (
+            <div className="flex items-center gap-6 sm:gap-10 overflow-hidden w-full">
+              {Array.from({ length: 6 }).map((_, idx) => (
+                <div
+                  key={`skeleton-${idx}`}
+                  className="min-w-[150px] w-fit sm:min-w-[250px] sm:w-fit shrink-0 flex items-center gap-2 py-1 select-none"
+                >
+                  {/* Skeleton Logo Box */}
+                  <div className="w-[44px] h-[44px] sm:w-[48px] sm:h-[48px] bg-slate-200/90 animate-pulse rounded-sm shrink-0" />
+
+                  {/* Skeleton Title & Subtitle */}
+                  <div className="flex flex-col items-start gap-1.5 min-w-0">
+                    <div className="h-4 w-28 sm:w-36 bg-slate-200/90 animate-pulse rounded-xs" />
+                    <div className="h-3 w-16 sm:w-24 bg-slate-200/60 animate-pulse rounded-xs" />
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="topSponsorGroup" aria-hidden="true">
-              {baseSponsors.map((sponsor, index) =>
-                sponsorCard(sponsor, `g2-${sponsor.id}-${index}`),
-              )}
+          ) : (
+            <div className="topSponsorTrack">
+              <div className="topSponsorGroup">
+                {baseSponsors.map((sponsor, index) =>
+                  sponsorCard(sponsor, `g1-${sponsor.id}-${index}`),
+                )}
+              </div>
+              <div className="topSponsorGroup" aria-hidden="true">
+                {baseSponsors.map((sponsor, index) =>
+                  sponsorCard(sponsor, `g2-${sponsor.id}-${index}`),
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Bottom CTA Button */}
