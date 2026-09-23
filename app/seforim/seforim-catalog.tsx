@@ -1,6 +1,6 @@
 'use client';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../shared/cart-context';
 
 export type Sefer = {
@@ -94,12 +94,11 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
           {filtered.map((book, idx) => (
             <motion.article
               key={book.id}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 15,scale:.9 }}
+              whileInView={{ opacity: 1, y: 0,scale:1 }}
               viewport={{ once: true, margin: '-20px' }}
               transition={{ duration: 0.8, delay: (idx % 4) * 0.05, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ y: -4, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-              className="bg-white overflow-hidden flex flex-col rounded-xl shadow-xs hover:shadow-md transition-all"
+              className="bg-white overflow-hidden flex flex-col rounded-xl shadow-xs hover:shadow-md transition-shadow"
             >
               <button
                 className="w-full bg-white aspect-[4/3] flex items-center justify-center p-4 border-b border-slate-100 overflow-hidden cursor-pointer group"

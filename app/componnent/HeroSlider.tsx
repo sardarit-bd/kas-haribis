@@ -133,9 +133,13 @@ export default function HeroSlider() {
                   </motion.a>
                 </motion.div>
               </div>
-              <div className="w-full hidden lg:flex items-center justify-end">
+              <motion.div 
+                initial={{ opacity: 0, scale: .9}}
+                    animate={{ opacity: 1, scale: 1}}
+                    transition={{ duration: 0.3, delay: 0.45 }}
+              className="w-full hidden lg:flex items-center justify-end">
                 <img className="object-contain h-[300px]" src="/affiliate.png" alt="affiliate" />
-              </div>
+              </motion.div>
             </div>
           </div>
         );

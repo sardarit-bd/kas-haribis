@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import data from '../data/current-site.json';
-import { MotionDiv, MotionArticle } from '../shared/motion-components';
+import { MotionArticle, MotionDiv } from '../shared/motion-components';
 import { InteriorPage, SiteFooter, SiteHeader } from '../shared/site-shell';
 
 const aliases: Record<string, string> = {
@@ -180,7 +180,7 @@ export default async function SectionPage({
               viewport={{ once: true, margin: '-20px' }}
               transition={{ duration: 0.8, delay: index * 0.06, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ y: -4, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-              className="bg-gray-200 p-6 transition-all flex items-center gap-4 rounded-xl shadow-xs"
+              className="bg-gray-200 p-6 flex items-center gap-4 rounded-xl shadow-xs"
             >
               <span className="w-10 h-10 bg-[#f8fafc] border border-slate-200 text-[#102a43] font-mono text-sm font-bold flex items-center justify-center shrink-0 rounded-lg">
                 {String(index + 1).padStart(2, '0')}

@@ -73,7 +73,7 @@ export default function HeterLibrary() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: (index % 3) * 0.08 }}
                   whileHover={{ y: -6 }}
-                  className={`p-6 bg-white text-white flex flex-col justify-between space-y-6 shadow-xl transition-all duration-300 relative overflow-hidden rounded-xl ${
+                  className={`p-6 bg-white text-white flex flex-col justify-between space-y-6 shadow-xl relative overflow-hidden rounded-xl ${
                     isSelected
                       ? 'border-[#c69b46] ring-2 ring-[#c69b46] bg-[#0F2538]'
                       : 'border-slate-800'

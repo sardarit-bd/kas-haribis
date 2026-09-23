@@ -1,6 +1,6 @@
 'use client';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { RxCross2 } from "react-icons/rx";
 type Alert = {
   id: string;
@@ -173,12 +173,12 @@ export default function AlertLibrary({ items }: { items: Alert[] }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((x, idx) => (
             <motion.article
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 15,scale:0.9 }}
+              whileInView={{ opacity: 1, y: 0,scale:1 }}
               viewport={{ once: true, margin: '-20px' }}
               transition={{ duration: 0.8, delay: (idx % 3) * 0.07, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ y: -4, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-              className="p-6 bg-white border border-gray-200 flex flex-col justify-between space-y-4 rounded-xl shadow-xs hover:shadow-md transition-all"
+              className="p-6 bg-white border border-gray-200 flex flex-col justify-between space-y-4 rounded-xl shadow-xs hover:shadow-md transition-shadow"
               key={x.id}
               id={`alert-${x.id}`}
             >

@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useMemo, useRef, useState } from 'react';
 
 type Audio = { id: number; title: string; series: string; audioUrl: string };
 
@@ -131,13 +131,13 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
             return (
               <motion.div
                 key={item.value}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 15,scale:.9 }}
+                whileInView={{ opacity: 1, y: 0,scale:1 }}
                 viewport={{ once: true, margin: '-20px' }}
                 transition={{ duration: 0.8, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
                 whileHover={{ y: -4, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
                 onClick={() => chooseSeries(item.value)}
-                className={`relative overflow-hidden p-6 sm:p-7 rounded-2xl transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-[310px] group ${
+                className={`relative overflow-hidden p-6 sm:p-7 rounded-2xl transition-shadow duration-300 cursor-pointer flex flex-col justify-between min-h-[310px] group ${
                   isSelected
                     ? 'border-2 border-[#b8860b] shadow-xl ring-2 ring-[#b8860b]/15 bg-gradient-to-br from-white via-white to-[#fdfbf6] -translate-y-1.5'
                     : 'border border-slate-200/90 shadow-md hover:shadow-xl hover:border-slate-300 bg-white'
@@ -268,12 +268,12 @@ export default function AudioLibrary({ audios }: { audios: Audio[] }) {
                 return (
                   <motion.article
                     key={item.id}
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, y: 15,scale:.9 }}
+                    whileInView={{ opacity: 1, y: 0,scale:1 }}
                     viewport={{ once: true, margin: '-20px' }}
                     transition={{ duration: 0.75, delay: (index % 4) * 0.04, ease: [0.16, 1, 0.3, 1] }}
                     whileHover={{ y: -3, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-                    className="bg-white p-5 hover:border-slate-300 hover:shadow-md transition-all flex items-start gap-4 rounded-xl shadow-xs"
+                    className="bg-white p-5 hover:border-slate-300 hover:shadow-md transition-shadow flex items-start gap-4 rounded-xl shadow-xs"
                   >
                     <div className="w-10 h-10 rounded-xl bg-[#f8fafc] border border-slate-200 text-[#102a43] font-mono text-sm font-bold flex items-center justify-center shrink-0 shadow-sm">
                       {String(globalIndex + 1).padStart(2, '0')}

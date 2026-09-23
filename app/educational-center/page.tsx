@@ -44,11 +44,11 @@ export default async function EducationalCenter() {
             return (
               <MotionArticle
                 key={item.id}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 15,scale:.9 }}
+                whileInView={{ opacity: 1, y: 0,scale:1 }}
                 viewport={{ once: true, margin: '-20px' }}
                 transition={{ duration: 0.8, delay: (idx % 3) * 0.07, ease: "easeInOut" }}
-                className="bg-[#102a43]/60 overflow-hidden hover:border-[#c69b46]/50 transition duration-300 flex flex-col rounded-xl shadow-xs hover:shadow-md"
+                className="bg-[#102a43]/60 overflow-hidden hover:border-[#c69b46]/50 transition-shadow duration-300 flex flex-col rounded-xl shadow-xs hover:shadow-md"
               >
                 <figure className="relative bg-[#070f1e] aspect-[4/3] flex items-center justify-center overflow-hidden">
                   {item.file_type?.startsWith('image/') ? (

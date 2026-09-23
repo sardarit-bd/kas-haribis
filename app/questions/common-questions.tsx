@@ -1,6 +1,6 @@
 'use client';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 type Question = {
   id?: string;
@@ -105,8 +105,8 @@ export default function CommonQuestions({
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 15,scale:.9 }}
+        whileInView={{ opacity: 1, y: 0,scale:1 }}
         viewport={{ once: true, margin: '-20px' }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="flex flex-wrap justify-center gap-2 mb-8"
@@ -114,7 +114,7 @@ export default function CommonQuestions({
       >
         {categories.map((item) => (
           <button
-            className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition cursor-pointer ${
+            className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-bg cursor-pointer ${
               category === item
                 ? 'bg-[#c69b46] text-white shadow-sm'
                 : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50'
@@ -135,11 +135,11 @@ export default function CommonQuestions({
           const active = openIndex === idx;
           return (
             <motion.article
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 15,scale:.9 }}
+              whileInView={{ opacity: 1, y: 0,scale:1 }}
               viewport={{ once: true, margin: '-20px' }}
               transition={{ duration: 0.8, delay: (idx % 6) * 0.04, ease: [0.16, 1, 0.3, 1] }}
-              className={`border transition duration-200 overflow-hidden shadow-xs text-center rounded-xl ${
+              className={`border transition-border duration-200 overflow-hidden shadow-xs text-center rounded-xl ${
                 active
                   ? 'bg-white border-2 border-[#c69b46]'
                   : 'bg-white border border-gray-100 hover:border-slate-300'

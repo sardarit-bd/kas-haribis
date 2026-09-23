@@ -346,7 +346,7 @@ export default function OfferingsGrid() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.75 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: "-50px" }}
+                viewport={{ once: false, margin: "-90px" }}
                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                 className={`relative ${
                   isEven ? 'order-1 lg:order-1' : 'order-1 lg:order-2'

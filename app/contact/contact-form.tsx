@@ -37,7 +37,7 @@ export default function ContactForm() {
   }
   if (reference)
     return (
-      <div className="md:col-span-7 bg-white border border-slate-200 border-t-4 border-t-emerald-500 p-8 sm:p-12 text-center space-y-4">
+      <div className="w-full bg-white border border-slate-200 border-t-4 border-t-emerald-500 p-8 sm:p-12 text-center space-y-4">
         <span className="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">✓</span>
         <small className="text-[10px] font-bold tracking-widest text-[#a37828] uppercase block">MESSAGE RECEIVED</small>
         <h2 className="text-3xl font-serif font-bold text-[#102a43]">Thank you for contacting us</h2>
@@ -53,7 +53,7 @@ export default function ContactForm() {
       </div>
     );
   return (
-    <form className="md:col-span-7 bg-white border border-slate-200/90 p-6 sm:p-10 space-y-5" onSubmit={submit}>
+    <form className="w-full bg-white border border-slate-200/90 p-6 sm:p-10 space-y-5" onSubmit={submit}>
       <div>
         <small className="text-[10px] font-bold tracking-widest text-[#a37828] uppercase block mb-1 hidden">ONLINE SUBMISSION</small>
         <h2 className="text-3xl sm:text-4xl font-serif font-meduim text-[#102a43] my-2">Tell us what you need</h2>

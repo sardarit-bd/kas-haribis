@@ -1,4 +1,5 @@
 'use client';
+import { motion } from 'framer-motion';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 
 declare global {
@@ -241,7 +242,12 @@ export default function CheckoutNotice({
     <section className="py-[70px] px-[5vw] bg-white">
       <div className="container grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-8 lg:gap-12 items-start">
         {/* Left Side: Summary & Trust Info */}
-        <div className="bg-gradient-to-b from-[#f8fafc] to-[#f1f5f9] p-6 sm:p-10 lg:sticky lg:top-[110px] z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: 'easeInOut' }}
+          className="bg-gradient-to-b from-[#f8fafc] to-[#f1f5f9] p-6 sm:p-10 lg:sticky lg:top-[120px] z-10"
+        >
           <div className="border-b border-[#e2e8f0] pb-6 mb-7">
             <span className="text-[#c69b46] text-xs font-extrabold tracking-[0.08em] uppercase mb-2 block">
               SECURE CHECKOUT
@@ -300,10 +306,15 @@ export default function CheckoutNotice({
               </p>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Right Side: Payment Form Card */}
-        <div className="bg-white p-6 sm:p-10 bg-gradient-to-b from-[#f8fafc] to-[#f1f5f9]  relative">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: 'easeInOut' }}
+          className="bg-white p-6 sm:p-10 bg-gradient-to-b from-[#f8fafc] to-[#f1f5f9] relative"
+        >
           {status?.ready ? (
             <>
               <div className="font-serif text-2xl text-[#102a43] font-bold mb-1.5 flex items-center gap-2.5">
@@ -536,7 +547,7 @@ export default function CheckoutNotice({
               </a>
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

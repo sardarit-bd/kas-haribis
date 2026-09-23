@@ -175,7 +175,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                 transition={{ duration: 0.25, ease: 'easeOut', delay: idx * 0.05 }}
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className={`p-5 text-center transition-all cursor-pointer flex flex-col justify-center items-center shadow-sm relative overflow-hidden rounded-lg ${
+                className={`p-5 text-center cursor-pointer flex flex-col justify-center items-center shadow-sm relative overflow-hidden rounded-lg ${
                   card.bg
                 } ${
                   isSelected
@@ -309,7 +309,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.4, ease:"easeInOut", delay: (idx % 4) * 0.06 }}
               whileHover={{ y: -6 }}
-              className="bg-white border border-slate-200 p-5 transition-all flex flex-col justify-between h-full rounded-xl shadow-xs hover:shadow-md"
+              className="bg-white border border-slate-200 p-5 transition-shadow duration-300 flex flex-col justify-between h-full rounded-xl shadow-xs hover:shadow-md"
             >
               <div className="w-full">
                 {/* Bank Logo Container with Status Badge Overlay */}
@@ -402,7 +402,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
               viewport={{ once: true, margin: '-20px' }}
               transition={{ duration: 0.35, delay: (idx % 6) * 0.04 }}
               whileHover={{ y: -3 }}
-              className="bg-white border border-slate-200 p-4 sm:p-5 transition-all flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-md rounded-xl"
+              className="bg-white border border-slate-200 p-4 sm:p-5 transition-shadow duration-300 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-md rounded-xl"
             >
               {/* Left: Logo container */}
               <div className="w-full md:w-48 h-32 md:h-36 shrink-0 flex items-center justify-center p-3 bg-slate-50 border border-slate-100 rounded-lg relative overflow-hidden">

@@ -1,6 +1,6 @@
 import BottomCTA from '../componnent/BottomCTA';
 import { listArticles } from '../lib/directories';
-import { MotionDiv, MotionArticle } from '../shared/motion-components';
+import { MotionArticle, MotionDiv } from '../shared/motion-components';
 import { InteriorPage, SiteFooter, SiteHeader } from '../shared/site-shell';
 
 export const dynamic = 'force-dynamic';
@@ -43,12 +43,11 @@ export default async function ArticlesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 container px-8 pt-10">
           {items.map((x, index) => (
             <MotionArticle
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 15,scale:.9 }}
+              whileInView={{ opacity: 1, y: 0,scale:1 }}
               viewport={{ once: true, margin: '-20px' }}
               transition={{ duration: 0.8, delay: (index % 3) * 0.07, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ y: -4, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-              className={`bg-white overflow-hidden transition-all flex flex-col rounded-xl shadow-xs hover:shadow-md ${x.featured ? 'border-[#c69b46] ring-1 ring-[#c69b46]/40' : 'border-slate-200/90'}`}
+              className={`bg-white overflow-hidden flex flex-col rounded-xl shadow-xs hover:shadow-md ${x.featured ? 'border-[#c69b46] ring-1 ring-[#c69b46]/40' : 'border-slate-200/90'}`}
               key={x.id}
             >
               <a
