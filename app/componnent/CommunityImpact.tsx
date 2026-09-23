@@ -117,8 +117,9 @@ export default function CommunityImpact() {
           >
             {impactGalleryItems.map((item, idx) => (
               <motion.a
-                whileHover={{ y: -5 }}
-                transition={{ duration: 0.2 }}
+                initial={{opacity:0,y:10,scale:0.9}}
+                whileInView={{opacity:1,y:0,scale:1}}
+                transition={{ duration: 0.4,ease:"easeInOut" }}
                 href={item.link}
                 className="w-[280px] sm:w-[320px] md:w-[340px] shrink-0 snap-start bg-white transition-shadow duration-300 group flex flex-col justify-between hover:shadow-md"
                 key={idx}

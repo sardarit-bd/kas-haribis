@@ -1,7 +1,7 @@
 'use client';
 
+import { AnimatePresence, motion } from 'framer-motion';
 import { FormEvent, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SubscriptionForm() {
   const [state, setState] = useState('');
@@ -40,7 +40,11 @@ export default function SubscriptionForm() {
 
   return (
     <section className='bg-gray-200'>
-    <section className="w-full py-10 container px-8">
+    <motion.section 
+        initial={{opacity:0,y:10,scale:0.9}}
+                whileInView={{opacity:1,y:0,scale:1}}
+                transition={{ duration: 0.4,ease:"easeInOut" }}
+    className="w-full py-10 container px-8">
       <div className="bg-[#102a43] text-white p-8 sm:p-12 md:p-[50px] text-center">
         {/* Header */}
         <p className="eyebrow gold mb-2">SUBSCRIBE TO OUR NEWSLETTER</p>
@@ -101,7 +105,7 @@ export default function SubscriptionForm() {
            We respect your privacy. Unsubscribe at any time.
         </p>
       </div>
-    </section>
+    </motion.section>
     </section>
   );
 }

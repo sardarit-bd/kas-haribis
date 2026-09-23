@@ -1,7 +1,7 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import type { Sefer } from '../seforim/seforim-catalog';
 import { useCart } from './cart-context';
 
@@ -63,10 +63,11 @@ const containerVariants = {
 };
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 15 },
+  hidden: { opacity: 0, y: 15,scale:0.9 },
   visible: {
     opacity: 1,
     y: 0,
+    scale:1,
     transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
   },
 };
