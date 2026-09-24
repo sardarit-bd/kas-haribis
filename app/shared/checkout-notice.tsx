@@ -199,8 +199,8 @@ export default function CheckoutNotice({
 
   if (success) {
     return (
-      <section className="p-10 bg-white border">
-        <div className="bg-white border border-[#e2e8f0] rounded-2xl p-8 sm:p-10 text-center shadow-md max-w-[800px] mx-auto space-y-4">
+      <section className="p-3 lg:p-8 bg-white border">
+        <div className="bg-white border border-[#e2e8f0] rounded-2xl p-3 sm:p-8 text-center shadow-md max-w-[800px] mx-auto space-y-4">
           <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto border border-emerald-100">
             ✓
           </div>
@@ -239,7 +239,7 @@ export default function CheckoutNotice({
   }
 
   return (
-    <section className="p-10 bg-white">
+    <section className="p-2 lg:p-8 bg-white">
       <div className="container grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-8 lg:gap-8 items-start">
         {/* Left Side: Summary & Trust Info */}
         <motion.div

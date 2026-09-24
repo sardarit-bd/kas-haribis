@@ -78,8 +78,8 @@ export default function FeaturedSeforim() {
   const router = useRouter();
 
   return (
-    <section className="py-16 bg-gray-200">
-      <div className="container max-w-7xl mx-auto px-8">
+    <section className="py-8 md:py-16 bg-gray-200">
+      <div className="container max-w-7xl mx-auto px-4 lg:px-8">
         {/* Centered Header */}
         <div className="text-center max-w-2xl mx-auto mb-12 hidden">
           <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#102a43]/80">

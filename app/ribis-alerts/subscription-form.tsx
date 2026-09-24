@@ -44,7 +44,7 @@ export default function SubscriptionForm() {
         initial={{opacity:0,y:10,scale:0.9}}
                 whileInView={{opacity:1,y:0,scale:1}}
                 transition={{ duration: 0.4,ease:"easeInOut" }}
-    className="w-full py-10 container px-8">
+    className="w-full py-10 container px-4 lg:px-8">
       <div className="bg-[#102a43] text-white p-8 sm:p-12 md:p-[50px] text-center">
         {/* Header */}
         <p className="eyebrow gold mb-2">SUBSCRIBE TO OUR NEWSLETTER</p>
