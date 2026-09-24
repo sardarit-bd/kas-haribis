@@ -34,7 +34,8 @@ export function SiteFooter({
       <div className="container px-0 sm:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.8fr_repeat(4,1fr)] gap-[36px] mb-[45px]">
           <div className="flex flex-col gap-[14px]">
-            <div className="inline-block w-fit">
+            <div
+            className="inline-block w-fit">
               <img src={'/affiliate.png'} alt="Kav Haribis Logo" className="w-[240px] sm:w-[300px] h-auto block" />
             </div>
             <p className="font-bold text-[#102a43] text-[15px] tracking-tight mt-1 hidden">Torah guidance for responsible commerce.</p>

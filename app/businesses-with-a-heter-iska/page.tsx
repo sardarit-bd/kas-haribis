@@ -24,9 +24,9 @@ export default async function BusinessesPage() {
             transition={{ duration: 0.6 }}
             className="w-full bg-red-700 text-center py-4 px-4 md:px-10 rounded-2xl shadow-md"
           >
-            <p className='text-white text-xl font-bold'>
-              אלא הם דברי הגאון הרב משה שטרנבוך שליט"א בהקדמה לספרו קיצור דיני רבית המצויים והנה הצורך להיתר עיסקא לחנונים ובעלי עסקים נחוץ ביותר וראוי לרבנים לתקן בארץ ובחו"ל שכל סוחר יחתום בשטר עיסקא ויתלה בחנות או בית עסק במקום בולט"  
-            </p>
+            <p dir="rtl" className="text-white text-xl font-bold">
+  אלא הם דברי הגאון הרב משה שטרנבוך שליט"א בהקדמה לספרו קיצור דיני רבית המצויים והנה הצורך להיתר עיסקא לחנונים ובעלי עסקים נחוץ ביותר וראוי לרבנים לתקן בארץ ובחו"ל שכל סוחר יחתום בשטר עיסקא ויתלה בחנות או בית עסק במקום בולט"
+</p>
           </MotionDiv>
         </div>
 
