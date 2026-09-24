@@ -1,4 +1,4 @@
-import { MotionDiv, MotionSection } from '../shared/motion-components';
+import { MotionDiv } from '../shared/motion-components';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
 import CertificationForm from './certification-form';
 
@@ -41,7 +41,7 @@ export default function Page() {
       <SiteHeader />
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#071728] via-[#102a43] to-[#0e304b] text-white">
-        <div className="container max-w-[1440px] mx-auto px-4 sm:px-8 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
+        <div className="container px-4 sm:px-8 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
           <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -65,6 +65,13 @@ export default function Page() {
                 Ask a preliminary question
               </a>
             </div>
+          </MotionDiv>
+          <MotionDiv
+            initial={{ opacity: 0, scale: .9}}
+            animate={{ opacity: 1, scale: 1}}
+            transition={{ duration: 0.3, delay: 0.45 }}
+            className="w-full flex items-center justify-center lg:justify-end lg:col-span-5">
+            <img className="object-contain h-[350px] w-[350px] bg-white rounded-full" src="/klc-sticker.png" alt="affiliate" />
           </MotionDiv>
         </div>
       </section>

@@ -46,6 +46,24 @@ export default function HeterIska() {
           </div>
         </div>
       </MotionSection>
+
+
+
+
+    <section className="container px-4 lg:px-8 py-2 pt-10">
+      <div className="bg-blue-950 p-3 text-center text-white rounded-lg ">
+        <p className="text-base lg:text-2xl font-semibold max-w-5xl mx-auto">
+          Get a rabbinically approved Heter Iska template to use for your business or personal loan arrangements.
+        </p>
+        <p className="text-sm lg:text-lg mt-5 max-w-7xl mx-auto">
+          וזה לשון היערות דבש (דף קכד) "וכבר מצאו חז"ל נוחי נפש תקנה בעשיית שטר עיסקא אבל צריך להזהר בו ולעשות הכל כדינו כי רבו דיניה ויקצר הזמן והיריעה לדורשו ברבים, אבל מ"מ מי האיש החפץ חיים ולקום בתחיית המתים ישאל פי חכם בעשותו הלואה כזו
+        </p>
+      </div>
+    </section>
+
+
+
+
       <section className="scroll-mt-[90px]" id="targetid">
         <HeterLibrary />
       </section>

@@ -30,10 +30,10 @@ export default async function Page() {
             <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-bold text-slate-900 leading-[1.2] tracking-tight">
               Join the Revolution in Helping Klal Yisroel Avoid Ribis
             </h2>
-            <p className="text-base sm:text-lg text-slate-400 font-medium leading-relaxed">
+            <p className="text-base sm:text-xl text-slate-700 font-medium leading-relaxed">
               We’re here to connect you with professionals who uphold and respect halachic financial guidelines.
             </p>
-            <p className="text-sm sm:text-base text-slate-800 font-semibold leading-relaxed pt-1">
+            <p className="text-sm sm:text-xl text-slate-600 font-semibold leading-relaxed pt-1">
               Navigating the world of loans while staying fully within halacha can be complex. That’s why we’ve partnered with trusted brokers who understand the importance of working only with truly kosher loan structures — including proper heter iska where needed.
             </p>
           </MotionDiv>
@@ -66,7 +66,7 @@ export default async function Page() {
           className="container px-8 flex flex-col md:flex-row items-center md:items-center justify-center gap-6 mb-10 pb-6 text-center"
         >
           <div className="max-w-2xl space-y-2">
-            <h2 className="text-[#102a43] font-serif font-bold text-3xl sm:text-4xl">Featured loan services</h2>
+            <h2 className="text-[#102a43] font-serif font-bold text-3xl sm:text-4xl pb-4">Featured loan services</h2>
             <p className="text-[#64748b] text-sm sm:text-base leading-relaxed">
               Each listing includes the information currently available to Kav
               Haribis. Always verify the details before relying on a listing.

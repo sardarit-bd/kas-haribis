@@ -1,7 +1,7 @@
 'use client';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
-import BankReportUnlock from './bank-report-unlock';
+import BankReportUnlock, { UnlockMode } from './bank-report-unlock';
 import BankResearchForm from './bank-research-form';
 
 type Bank = {
@@ -45,6 +45,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('all');
   const [unlock, setUnlock] = useState<Bank | null>(null);
+  const [unlockMode, setUnlockMode] = useState<UnlockMode>('pay');
   const [detailBank, setDetailBank] = useState<Bank | null>(null);
   const [requestUpdateBank, setRequestUpdateBank] = useState<Bank | null>(null);
   const [perPage, setPerPage] = useState<number | 'all'>(12);
@@ -720,23 +721,37 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                   <div className="pt-4 border-t border-slate-100 flex flex-col items-center justify-center p-6 bg-[#102a43] rounded-2xl text-white text-center space-y-3">
                     <div>
                       <h3 className="font-serif font-bold text-lg text-white">
-                        Protected Full Report ($15)
+                        Protected Full Report
                       </h3>
                       <p className="text-xs text-slate-300">
                         Unlock the complete in-depth legal and halachic research
                         report for this institution.
                       </p>
                     </div>
-                    <button
-                      className="px-6 py-2.5 bg-[#c69b46] hover:bg-[#b0883b] text-white text-xs font-bold rounded-xl transition-colors shadow-md cursor-pointer"
-                      onClick={() => {
-                        const target = detailBank;
-                        setDetailBank(null);
-                        setUnlock(target);
-                      }}
-                    >
-                      Unlock Full Report — $15
-                    </button>
+                    <div className="flex flex-wrap items-center justify-center gap-3">
+                      <button
+                        className="px-6 py-2.5 bg-[#c69b46] hover:bg-[#b0883b] text-white text-xs font-bold rounded-xl transition-colors shadow-md cursor-pointer"
+                        onClick={() => {
+                          const target = detailBank;
+                          setDetailBank(null);
+                          setUnlockMode('pay');
+                          setUnlock(target);
+                        }}
+                      >
+                        Unlock Full Report — $15
+                      </button>
+                      <button
+                        className="px-6 py-2.5 bg-white/10 hover:bg-white/20 border border-[#c69b46]/60 hover:border-[#c69b46] text-[#e0c07d] hover:text-white text-xs font-bold rounded-xl transition-all shadow-sm cursor-pointer"
+                        onClick={() => {
+                          const target = detailBank;
+                          setDetailBank(null);
+                          setUnlockMode('membership');
+                          setUnlock(target);
+                        }}
+                      >
+                        Premium Membership
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <div className="pt-2 text-xs text-slate-400 text-center">
@@ -790,6 +805,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
         <BankReportUnlock
           bankId={String(unlock.id)}
           bankName={unlock.title}
+          initialMode={unlockMode}
           onClose={() => setUnlock(null)}
         />
       )}

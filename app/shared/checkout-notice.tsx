@@ -199,7 +199,7 @@ export default function CheckoutNotice({
 
   if (success) {
     return (
-      <section className="py-[70px] px-[5vw] bg-white">
+      <section className="p-10 bg-white border">
         <div className="bg-white border border-[#e2e8f0] rounded-2xl p-8 sm:p-10 text-center shadow-md max-w-[800px] mx-auto space-y-4">
           <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto border border-emerald-100">
             ✓
@@ -239,8 +239,8 @@ export default function CheckoutNotice({
   }
 
   return (
-    <section className="py-[70px] px-[5vw] bg-white">
-      <div className="container grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-8 lg:gap-12 items-start">
+    <section className="p-10 bg-white">
+      <div className="container grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-8 lg:gap-8 items-start">
         {/* Left Side: Summary & Trust Info */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -248,7 +248,7 @@ export default function CheckoutNotice({
           transition={{ duration: 0.8, ease: 'easeInOut' }}
           className="bg-gradient-to-b from-[#f8fafc] to-[#f1f5f9] p-6 sm:p-10 lg:sticky lg:top-[120px] z-10"
         >
-          <div className="border-b border-[#e2e8f0] pb-6 mb-7">
+          <div className="pb-3 mb-2">
             <span className="text-[#c69b46] text-xs font-extrabold tracking-[0.08em] uppercase mb-2 block">
               SECURE CHECKOUT
             </span>
