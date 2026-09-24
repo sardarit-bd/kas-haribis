@@ -40,7 +40,7 @@ export default async function ArticlesPage() {
             cropping.
           </p>
         </MotionDiv>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 container px-8 pt-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 container px-4 lg:px-8 pt-10">
           {items.map((x, index) => (
             <MotionArticle
               initial={{ opacity: 0, y: 15,scale:.9 }}

@@ -24,7 +24,7 @@ export default async function SavingsPage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
           transition={{ duration: 0.5 }}
-          className="container flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-10 pb-6 pt-4 px-8"
+          className="container flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-10 pb-6 pt-4 px-4 lg:px-8"
         >
           <div>
             <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase hidden">AVAILABLE ACCOUNTS</p>
@@ -36,7 +36,7 @@ export default async function SavingsPage() {
           </div>
         </MotionDiv>
 
-        <div className="container grid grid-cols-1 md:grid-cols-2 gap-6 pb-4 px-8">
+        <div className="container grid grid-cols-1 md:grid-cols-2 gap-6 pb-4 px-4 lg:px-8">
           {items.map((x, i) => {
             const link = safeLink(x.open_account_url);
             return (

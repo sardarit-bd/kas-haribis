@@ -15,7 +15,7 @@ export default async function BusinessesPage() {
       title="Businesses With a Heter Iska"
       intro="A growing directory of businesses listed by Kav Haribis as operating with a Heter Iska. Review the information and confirm that the document remains current before relying on a listing."
     />
-      <section className="p-6 sm:p-10 bg-gray-200" id="business-directory">
+      <section className="py-6 sm:py-10 bg-gray-200" id="business-directory">
         <div className="container flex flex-col md:flex-row items-start md:items-end justify-between gap-6 pb-6 px-4 md:px-8">
           <MotionDiv
             initial={{ opacity: 0, scale: 0.90, y: 20 }}

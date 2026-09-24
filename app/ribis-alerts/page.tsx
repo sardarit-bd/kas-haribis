@@ -59,7 +59,7 @@ export default async function Page() {
         </section>
       </section>
       <section className='bg-gray-200'>
-        <div className={`container px-8 py-10 ${hasFeatured ? 'my-8' : 'my-8'}`}>
+        <div className={`container px-4 lg:px-8 py-10 ${hasFeatured ? 'my-8' : 'my-8'}`}>
           <div className='container'>
             <AlertLibrary items={items} />
           </div>

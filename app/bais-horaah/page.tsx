@@ -1,4 +1,4 @@
-import { MotionDiv, MotionArticle } from '../shared/motion-components';
+import { MotionArticle, MotionDiv } from '../shared/motion-components';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
 import BaisHoraahQuestionForm from './question-form';
 
@@ -9,7 +9,7 @@ export default function BaisHoraahPage() {
       
       {/* Hero Section */}
       <section className='bg-[#f7f3ea] overflow-hidden'>
-        <div className="p-6 sm:p-10 container grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="px-4 lg:px-10 py-6 sm:py-10 container grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -69,7 +69,7 @@ export default function BaisHoraahPage() {
       </section>
 
       {/* Question Form Section */}
-      <section className="my-12 container grid grid-cols-1 lg:grid-cols-12 gap-8 items-start py-8 px-8 overflow-hidden" id="submit-question">
+      <section className="my-12 container grid grid-cols-1 lg:grid-cols-12 gap-8 items-start py-8 px-4 lg:px-8 overflow-hidden" id="submit-question">
         <MotionDiv
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
