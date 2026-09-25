@@ -160,6 +160,54 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
   return (
     <section className="container px-4 sm:px-8 py-10 md:py-14">
 
+      <section className="mb-10">
+        <div className="max-w-6xl mx-auto">
+          <motion.h1
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.3 }}
+           className="text-3xl md:text-4xl font-semibold max-w-6xl mx-auto text-gray-900 text-center">
+            {"Don’t see what you’re looking for?"}
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+            className="text-slate-900 text-base sm:text-lg leading-relaxed font-normal max-w-5xl mx-auto pt-3 text-center"> 
+            {'Have info on any bank or lender that may be useful?'}
+          </motion.p>
+
+          <div className="mt-5 w-full max-w-6xl mx-auto flex justify-center">
+            <motion.button
+            initial={{ opacity: 0, scale: 0.7 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.3 }}
+              onClick={() =>
+                    setRequestUpdateBank({
+                      id: 'general',
+                      title: 'Bank / Lender Directory Inquiry',
+                      status: 'all',
+                      summary: '',
+                      comment: '',
+                      last_updated: '',
+                      has_full_report: 0,
+                      source: '',
+                      institution_type: '',
+                      website: '',
+                      logo_url: '',
+                    })
+                  }
+              className='bg-black px-3 py-2 text-white font-semibold cursor-pointer'>
+              Please Reach Out
+            </motion.button>
+          </div>
+
+        </div>
+      </section>
+
       {/* 7 Status Cards Grid */}
       <div className="mb-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 container justify-center">
