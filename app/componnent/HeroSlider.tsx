@@ -12,7 +12,7 @@ const heroSlides = [
     description:
       ' Backed by Harav Pinchos Vind Shlita who leads a worldwide network of the Bais Horraah’s for Ribis Matters with the backing of with the backing of Harav Yitzchok Zilberstien Shlita, and Harav Sriel Rosenberg Shlita, Harav Menachem Mendel Shafran Shlita, Harav Naftaly Nusbaum Shlita, Harav Shamai Kehas Gross Shlita, Harav Shlomo Zafrani Shlita.',
     primaryCta: {
-      text: 'Explore the Bank Directory',
+      text: 'Explore the Bank List',
       href: '/bank-directory',
     },
     secondaryCta: {
@@ -29,7 +29,7 @@ const heroSlides = [
     description:
       ' Backed by Harav Pinchos Vind Shlita who leads a worldwide network of the Bais Horraah’s for Ribis Matters with the backing of with the backing of Harav Yitzchok Zilberstien Shlita, and Harav Sriel Rosenberg Shlita, Harav Menachem Mendel Shafran Shlita, Harav Naftaly Nusbaum Shlita, Harav Shamai Kehas Gross Shlita, Harav Shlomo Zafrani Shlita.',
     primaryCta: {
-      text: 'Search Kosher Bank Directory',
+      text: 'Search Kosher Bank List',
       href: '/bank-directory',
     },
     secondaryCta: {

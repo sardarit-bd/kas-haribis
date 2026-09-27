@@ -49,7 +49,7 @@ export function SiteFooter({
             <ul className="list-none p-0 m-0 flex flex-col gap-[12px] text-gray-700">
               <li>
                 <a href="/bank-directory" className="hover:text-[#102a43] text-base transition-all hover:translate-x-1 inline-flex items-center gap-1.5">
-                  Kosher Banks
+                  Kosher Banks List
                 </a>
               </li>
               <li>

@@ -304,7 +304,7 @@ export default async function AboutPage() {
               transition={{ duration: 0.5 }}
             >
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-[#102a43] text-center mb-10 tracking-tight">
-                Kosher Bank Directory Research Team
+                Kosher Bank List Research Team
               </h2>
             </MotionDiv>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto">

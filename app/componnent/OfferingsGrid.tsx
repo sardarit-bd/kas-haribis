@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 const offeringsItems = [
   {
     id: 1,
-    title: 'Kosher Banking & Lender Directory',
+    title: 'Kosher Banking & Lender List',
     category: 'Directories',
     href: '/bank-directory',
     image: '/934.jpg',
@@ -20,7 +20,7 @@ const offeringsItems = [
       'Heter Iska Ratings',
       'Full Halachic Reports',
     ],
-    cta: 'Explore Bank Directory',
+    cta: 'Explore Bank List',
   },
   {
     id: 2,
@@ -39,7 +39,7 @@ const offeringsItems = [
       'Commercial Enterprises',
       'Halachic Oversight',
     ],
-    cta: 'Browse Business Directory',
+    cta: 'Browse Business List',
   },
   {
     id: 3,
