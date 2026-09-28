@@ -49,7 +49,7 @@ export default function NavigationMenu() {
       {/* Mobile Menu Button */}
       <button
         type="button"
-        className="lg:hidden text-2xl text-[#102a43] p-2 rounded-lg hover:bg-slate-100 transition focus:outline-none cursor-pointer"
+        className="lg:hidden text-2xl text-[#102a43] rounded-lg hover:bg-slate-100 transition focus:outline-none cursor-pointer"
         onClick={() => setOpen(!open)}
         aria-expanded={open}
         aria-label="Open website menu"
