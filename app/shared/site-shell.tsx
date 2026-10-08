@@ -120,6 +120,11 @@ export function SiteFooter({
             <h4 className="text-gray-800 text-[20px] font-meduim capitalize mb-[18px] flex items-center gap-2">Services &amp; Programs</h4>
             <ul className="list-none p-0 m-0 flex flex-col gap-[12px] text-gray-700">
               <li>
+                <a href="/bank-ownership-research" className="text-[#475569] hover:text-[#102a43] text-base transition-all hover:translate-x-1 inline-flex items-center gap-1.5">
+                  Bank Ownership Research
+                </a>
+              </li>
+              <li>
                 <a href="/heter-iska" className="text-[#475569] hover:text-[#102a43] text-base transition-all hover:translate-x-1 inline-flex items-center gap-1.5">
                   Heter Iska Advisory
                 </a>

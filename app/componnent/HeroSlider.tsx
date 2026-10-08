@@ -8,7 +8,7 @@ const heroSlides = [
     image: '/kav-brand/home-hero.png',
     alt: 'A study desk combining Torah learning and financial research',
     eyebrow: 'A CENTER FOR HILCHOS RIBBIS',
-    title: 'Welcome to Kav Haribis the Center.',
+    title: 'Welcome to Kav Haribis the Center for creating awareness in the laws of Ribis.',
     description:
       ' Backed by Harav Pinchos Vind Shlita who leads a worldwide network of the Bais Horraah’s for Ribis Matters with the backing of with the backing of Harav Yitzchok Zilberstien Shlita, and Harav Sriel Rosenberg Shlita, Harav Menachem Mendel Shafran Shlita, Harav Naftaly Nusbaum Shlita, Harav Shamai Kehas Gross Shlita, Harav Shlomo Zafrani Shlita.',
     primaryCta: {
@@ -25,7 +25,7 @@ const heroSlides = [
     image: '/kav-brand/bank-research.png',
     alt: 'Comprehensive financial research and bank directory analysis',
     eyebrow: 'KOSHER BANKING DIRECTORY',
-    title: 'Creating awareness in the laws of Ribis.',
+    title: 'Welcome to Kav Haribis the Center for creating awareness in the laws of Ribis.',
     description:
       ' Backed by Harav Pinchos Vind Shlita who leads a worldwide network of the Bais Horraah’s for Ribis Matters with the backing of with the backing of Harav Yitzchok Zilberstien Shlita, and Harav Sriel Rosenberg Shlita, Harav Menachem Mendel Shafran Shlita, Harav Naftaly Nusbaum Shlita, Harav Shamai Kehas Gross Shlita, Harav Shlomo Zafrani Shlita.',
     primaryCta: {
@@ -42,7 +42,7 @@ const heroSlides = [
     image: '/kav-brand/bais-horaah.png',
     alt: 'Rabbinic consultations for Jewish business owners and individuals',
     eyebrow: 'FREE RABBINIC CONSULTATIONS',
-    title: 'Welcome to Kav Haribis the Center.',
+    title: 'Welcome to Kav Haribis the Center for creating awareness in the laws of Ribis.',
     description:
       ' Backed by Harav Pinchos Vind Shlita who leads a worldwide network of the Bais Horraah’s for Ribis Matters with the backing of with the backing of Harav Yitzchok Zilberstien Shlita, and Harav Sriel Rosenberg Shlita, Harav Menachem Mendel Shafran Shlita, Harav Naftaly Nusbaum Shlita, Harav Shamai Kehas Gross Shlita, Harav Shlomo Zafrani Shlita.',
     primaryCta: {

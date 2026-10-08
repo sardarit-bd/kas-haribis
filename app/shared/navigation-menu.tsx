@@ -25,6 +25,7 @@ const groups: Record<string, string[][]> = {
     ['Kav Haribis Membership', '/membership'],
   ],
   Services: [
+    ['Bank Ownership Research', '/bank-ownership-research'],
     ['Heter Iska', '/heter-iska'],
     ['Bais Horaah', '/bais-horaah'],
     ['Genealogy Services', '/genealogy-services'],

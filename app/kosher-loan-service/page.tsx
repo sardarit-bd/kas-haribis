@@ -36,6 +36,21 @@ export default async function Page() {
             <p className="text-sm sm:text-xl text-slate-600 font-semibold leading-relaxed pt-1">
               Navigating the world of loans while staying fully within halacha can be complex. That’s why we’ve partnered with trusted brokers who understand the importance of working only with truly kosher loan structures — including proper heter iska where needed.
             </p>
+
+            <div className="pt-2">
+              <div className="p-4 sm:p-5 bg-[#fbfaf7] border border-[#e2d9c8] border-l-4 border-l-[#c69b46] rounded-r-xl shadow-xs">
+                <p className="text-sm sm:text-base text-[#102a43] leading-relaxed">
+                  Want to understand why Hashgacha is important for a mortgage broker?{' '}
+                  <a
+                    href="/kosher-investment-certification#mortgage-hashgacha-article"
+                    className="text-[#c69b46] hover:text-[#9b762e] font-bold underline underline-offset-4 transition-colors"
+                  >
+                    Click here
+                  </a>{' '}
+                  to read the article.
+                </p>
+              </div>
+            </div>
           </MotionDiv>
 
           {/* Image Container with Scale Zoom */}
