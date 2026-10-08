@@ -326,6 +326,25 @@ const offeringsItems = [
     ],
     cta: 'Subscribe to Ribbis Alerts',
   },
+  {
+    id: 19,
+    title: 'Bank Ownership Research',
+    category: 'Services & Programs',
+    href: '/bank-ownership-research',
+    image: '/kav-brand/bank-research.png',
+    description: [
+      'Submit a bank or financial institution for comprehensive halachic ownership research.',
+      'Help strengthen and update the Kosher Bank List with verified research findings.',
+    ],
+    subhead: 'Research Scope',
+    subheaditem: [
+      'Commercial Banks',
+      'Mortgage Lenders',
+      'Ownership Clarification',
+      'Directory Inquiries',
+    ],
+    cta: 'Request Bank Research',
+  },
 ];
 
 export default function OfferingsGrid() {
