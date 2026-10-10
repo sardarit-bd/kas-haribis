@@ -74,23 +74,23 @@ export default function SignInForm({
   }
 
   return (
-    <div className="w-full max-w-md">
-      <div className="rounded-3xl border border-[#d9e0e7] bg-white p-8 shadow-[0_24px_60px_rgba(16,42,67,0.08)] sm:p-10">
+    <div className="w-full max-w-md lg:max-w-lg">
+      <div className="rounded-3xl border border-[#d9e0e7] bg-white p-7 sm:p-8 lg:p-8 shadow-[0_20px_50px_rgba(16,42,67,0.07)]">
         <div className="mb-6 text-center lg:text-left">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#c69b46]">
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#c69b46]">
             Sign in required
           </p>
-          <h2 className="mt-3 font-serif text-3xl text-[#102a43]">
+          <h2 className="mt-2 font-serif text-2xl sm:text-3xl font-bold text-[#102a43]">
             Continue to Kav Haribis
           </h2>
-          <p className="mt-2 text-sm leading-relaxed text-[#637282]">
+          <p className="mt-2 text-xs sm:text-sm leading-relaxed text-[#637282]">
             Sign in with your Google account or staff email and password.
           </p>
         </div>
 
         {errorMsg && (
-          <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-800 shadow-sm flex items-start gap-3">
-            <div className="w-6 h-6 rounded-full bg-red-100 border border-red-300 text-red-600 flex items-center justify-center shrink-0 font-bold text-xs mt-0.5">
+          <div className="mb-5 rounded-xl border border-red-200 bg-red-50 p-3.5 sm:p-4 text-xs sm:text-sm text-red-800 shadow-xs flex items-start gap-3">
+            <div className="w-5 h-5 rounded-full bg-red-100 border border-red-300 text-red-600 flex items-center justify-center shrink-0 font-bold text-xs mt-0.5">
               ✕
             </div>
             <div>
@@ -105,17 +105,17 @@ export default function SignInForm({
         {/* Google OAuth Option */}
         <a
           href={googleHref}
-          className="group flex w-full items-center justify-center gap-3 rounded-2xl border border-[#d5dce3] bg-white px-5 py-3.5 text-base font-semibold text-[#172431] shadow-sm transition hover:border-[#c7d0d9] hover:bg-[#fafbfc] hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c69b46]"
+          className="group flex w-full h-11 sm:h-12 items-center justify-center gap-3 rounded-xl border border-[#d5dce3] bg-white px-5 text-sm sm:text-base font-semibold text-[#172431] shadow-xs transition hover:border-[#c7d0d9] hover:bg-[#fafbfc] hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c69b46]"
         >
           <GoogleIcon />
           <span>Continue with Google</span>
         </a>
 
-        <div className="relative my-6 flex items-center justify-center">
+        <div className="relative my-5 flex items-center justify-center">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-[#e2e8f0]" />
           </div>
-          <span className="relative bg-white px-4 text-xs font-semibold uppercase tracking-wider text-[#94a3b8]">
+          <span className="relative bg-white px-3.5 text-xs font-semibold uppercase tracking-wider text-[#94a3b8]">
             Or sign in with Password
           </span>
         </div>
@@ -123,7 +123,7 @@ export default function SignInForm({
         {/* Email & Password Form */}
         <form onSubmit={handlePasswordLogin} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] mb-1">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] mb-1.5">
               Email Address
             </label>
             <input
@@ -132,12 +132,12 @@ export default function SignInForm({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="staff@email.com"
-              className="w-full rounded-xl border border-[#cbd5e1] px-4 py-3 text-sm text-[#0f172a] placeholder-[#94a3b8] focus:border-[#c69b46] focus:outline-none focus:ring-2 focus:ring-[#c69b46]/20 transition"
+              className="w-full h-11 sm:h-12 rounded-xl border border-[#cbd5e1] px-4 text-sm text-[#0f172a] placeholder-[#94a3b8] focus:border-[#c69b46] focus:outline-none focus:ring-2 focus:ring-[#c69b46]/20 transition"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] mb-1">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] mb-1.5">
               Password / Temporary Password
             </label>
             <input
@@ -146,20 +146,20 @@ export default function SignInForm({
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
-              className="w-full rounded-xl border border-[#cbd5e1] px-4 py-3 text-sm text-[#0f172a] placeholder-[#94a3b8] focus:border-[#c69b46] focus:outline-none focus:ring-2 focus:ring-[#c69b46]/20 transition"
+              className="w-full h-11 sm:h-12 rounded-xl border border-[#cbd5e1] px-4 text-sm text-[#0f172a] placeholder-[#94a3b8] focus:border-[#c69b46] focus:outline-none focus:ring-2 focus:ring-[#c69b46]/20 transition"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-[#102a43] hover:bg-[#173f5f] active:bg-[#0a2033] py-3.5 px-4 font-semibold text-white shadow-md transition disabled:opacity-50 text-sm"
+            className="w-full h-11 sm:h-12 rounded-xl bg-[#102a43] hover:bg-[#173f5f] active:bg-[#0a2033] font-semibold text-white shadow-sm transition disabled:opacity-50 text-sm tracking-wide flex items-center justify-center"
           >
             {loading ? 'Signing in…' : 'Sign in with Password'}
           </button>
         </form>
 
-        <div className="mt-6 rounded-2xl border border-[#efe7d4] bg-[#fbf7ef] px-4 py-3 text-xs leading-relaxed text-[#5f4d2d]">
+        <div className="mt-5 sm:mt-6 rounded-xl border border-[#efe7d4] bg-[#fbf7ef] p-3.5 sm:p-4 text-xs leading-relaxed text-[#5f4d2d]">
           <strong className="font-semibold text-[#102a43]">
             Authorized Staff Access:
           </strong>{' '}

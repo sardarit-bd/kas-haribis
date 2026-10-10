@@ -277,7 +277,7 @@ export async function listArticles(db: any, includePrivate = false) {
   await ensureArticles(db);
   const result = await db
     .prepare(
-      `SELECT * FROM articles ${includePrivate ? '' : 'WHERE published=1'} ORDER BY featured DESC,publication_date DESC,title COLLATE NOCASE ASC`,
+      `SELECT * FROM articles ${includePrivate ? '' : 'WHERE published=1'} ORDER BY publication_date DESC,featured DESC,title COLLATE NOCASE ASC`,
     )
     .all();
   return result.results;
