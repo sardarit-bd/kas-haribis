@@ -181,7 +181,7 @@ export function SiteFooter({
                 </a>
               </li>
               <li>
-                <a href="/sign-in" className="text-[#475569] hover:text-[#102a43] text-base transition-all hover:translate-x-1 inline-flex items-center gap-1.5">
+                <a href="/membership/account" className="text-[#475569] hover:text-[#102a43] text-base transition-all hover:translate-x-1 inline-flex items-center gap-1.5">
                   Member Sign In
                 </a>
               </li>

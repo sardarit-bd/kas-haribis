@@ -18,8 +18,14 @@ const { env, envFile } = loaded;
 
 const config = {
   $schema: 'node_modules/wrangler/config-schema.json',
-  name: requireEnv(env, 'WORKER_NAME', 'Example: kav-haribis-site'),
-  account_id: requireEnv(env, 'CLOUDFLARE_ACCOUNT_ID'),
+  name: production
+    ? requireEnv(env, 'WORKER_NAME', 'Example: kav-haribis-site')
+    : (env.WORKER_NAME?.trim() || 'kav-haribis-site'),
+  ...(production
+    ? { account_id: requireEnv(env, 'CLOUDFLARE_ACCOUNT_ID') }
+    : env.CLOUDFLARE_ACCOUNT_ID?.trim()
+      ? { account_id: env.CLOUDFLARE_ACCOUNT_ID.trim() }
+      : {}),
   compatibility_date: '2025-08-01',
   compatibility_flags: ['nodejs_compat'],
   main: './worker/index.ts',
@@ -32,24 +38,32 @@ const config = {
     binding: 'IMAGES',
   },
   vars: {
-    APP_URL: requireEnv(
-      env,
-      'APP_URL',
-      'Use http://localhost:5173 locally or your production URL.',
-    ),
+    APP_URL: production
+      ? requireEnv(
+          env,
+          'APP_URL',
+          'Use http://localhost:5173 locally or your production URL.',
+        )
+      : (env.APP_URL?.trim() || 'http://localhost:5173'),
   },
   d1_databases: [
     {
       binding: 'DB',
-      database_name: requireEnv(env, 'D1_DATABASE_NAME'),
-      database_id: requireEnv(env, 'D1_DATABASE_ID'),
+      database_name: production
+        ? requireEnv(env, 'D1_DATABASE_NAME')
+        : (env.D1_DATABASE_NAME?.trim() || 'kav_haribis_db'),
+      database_id: production
+        ? requireEnv(env, 'D1_DATABASE_ID')
+        : (env.D1_DATABASE_ID?.trim() || 'local'),
       migrations_dir: 'drizzle',
     },
   ],
   r2_buckets: [
     {
       binding: 'BUCKET',
-      bucket_name: requireEnv(env, 'R2_BUCKET_NAME'),
+      bucket_name: production
+        ? requireEnv(env, 'R2_BUCKET_NAME')
+        : (env.R2_BUCKET_NAME?.trim() || 'kav-haribis-files'),
     },
   ],
 };
