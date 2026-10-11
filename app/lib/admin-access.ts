@@ -214,7 +214,14 @@ const randomHex = (length: number) => {
   return bytesToHex(bytes);
 };
 
-async function derivePasswordHash(password: string, salt: string) {
+export const CURRENT_PBKDF2_ITERATIONS = 100000;
+export const LEGACY_PBKDF2_ITERATIONS = 120000;
+
+async function derivePasswordHash(
+  password: string,
+  salt: string,
+  iterations = CURRENT_PBKDF2_ITERATIONS,
+) {
   const key = await crypto.subtle.importKey(
     'raw',
     new TextEncoder().encode(password),
@@ -227,7 +234,7 @@ async function derivePasswordHash(password: string, salt: string) {
       name: 'PBKDF2',
       hash: 'SHA-256',
       salt: hexToBytes(salt),
-      iterations: 120000,
+      iterations,
     },
     key,
     256,
@@ -244,11 +251,16 @@ function timingSafeEqual(a: string, b: string) {
   return difference === 0;
 }
 
+export async function createStaffPasswordCredentials(password: string) {
+  const salt = randomHex(16);
+  const hash = await derivePasswordHash(password, salt, CURRENT_PBKDF2_ITERATIONS);
+  return { salt, hash };
+}
+
 export async function setStaffPassword(db: any, email: string, password: string) {
   await ensureAdminStaff(db);
   const cleanEmail = email.trim().toLowerCase();
-  const salt = randomHex(16);
-  const hash = await derivePasswordHash(password, salt);
+  const { salt, hash } = await createStaffPasswordCredentials(password);
   const now = new Date().toISOString();
   await db
     .prepare(
@@ -273,8 +285,23 @@ export async function verifyStaffPassword(db: any, email: string, password: stri
   if (row.active === 0) return false;
   if (!row.password_salt || !row.password_hash) return false;
 
-  const actualHash = await derivePasswordHash(password, String(row.password_salt));
-  return timingSafeEqual(actualHash, String(row.password_hash));
+  const actualHash = await derivePasswordHash(
+    password,
+    String(row.password_salt),
+    CURRENT_PBKDF2_ITERATIONS,
+  );
+  if (timingSafeEqual(actualHash, String(row.password_hash))) return true;
+
+  try {
+    const legacyHash = await derivePasswordHash(
+      password,
+      String(row.password_salt),
+      LEGACY_PBKDF2_ITERATIONS,
+    );
+    return timingSafeEqual(legacyHash, String(row.password_hash));
+  } catch {
+    return false;
+  }
 }
 
 export async function isActiveStaffOrOwner(db: any, email: string | null | undefined): Promise<boolean> {

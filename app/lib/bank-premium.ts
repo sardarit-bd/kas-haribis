@@ -36,7 +36,14 @@ async function sha(value: string) {
     ),
   );
 }
-async function derive(password: string, salt: string) {
+export const CURRENT_PBKDF2_ITERATIONS = 100000;
+export const LEGACY_PBKDF2_ITERATIONS = 150000;
+
+async function derive(
+  password: string,
+  salt: string,
+  iterations = CURRENT_PBKDF2_ITERATIONS,
+) {
   const key = await crypto.subtle.importKey(
     'raw',
     encoder.encode(password),
@@ -51,7 +58,7 @@ async function derive(password: string, salt: string) {
           name: 'PBKDF2',
           hash: 'SHA-256',
           salt: fromHex(salt),
-          iterations: 150000,
+          iterations,
         },
         key,
         256,
@@ -76,14 +83,21 @@ function cookieValue(headers: Headers) {
 
 export async function passwordRecord(password: string) {
   const salt = randomHex(16);
-  return { salt, hash: await derive(password, salt) };
+  return { salt, hash: await derive(password, salt, CURRENT_PBKDF2_ITERATIONS) };
 }
 export async function passwordMatches(
   password: string,
   salt: string,
   hash: string,
 ) {
-  return equal(await derive(password, salt), hash);
+  const actual = await derive(password, salt, CURRENT_PBKDF2_ITERATIONS);
+  if (equal(actual, hash)) return true;
+  try {
+    const legacy = await derive(password, salt, LEGACY_PBKDF2_ITERATIONS);
+    return equal(legacy, hash);
+  } catch {
+    return false;
+  }
 }
 export async function createPremiumSession(db: any, memberId: string) {
   const token = randomHex(32),
