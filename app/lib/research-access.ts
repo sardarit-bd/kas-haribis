@@ -47,7 +47,10 @@ async function sha256(value: string) {
   );
 }
 
-async function deriveCode(code: string, salt: string) {
+const CURRENT_PBKDF2_ITERATIONS = 100000;
+const LEGACY_PBKDF2_ITERATIONS = 120000;
+
+async function deriveCode(code: string, salt: string, iterations = CURRENT_PBKDF2_ITERATIONS) {
   const key = await crypto.subtle.importKey(
     'raw',
     new TextEncoder().encode(code),
@@ -60,7 +63,7 @@ async function deriveCode(code: string, salt: string) {
       name: 'PBKDF2',
       hash: 'SHA-256',
       salt: hexToBytes(salt),
-      iterations: 120000,
+      iterations,
     },
     key,
     256,
@@ -101,8 +104,16 @@ export async function verifyResearchAccessCode(db: any, code: string) {
     )
     .first()) as any;
   if (!row) return false;
-  const actual = await deriveCode(code, String(row.code_salt));
-  return timingSafeEqual(actual, String(row.code_hash));
+  const salt = String(row.code_salt);
+  const expectedHash = String(row.code_hash);
+  const actual = await deriveCode(code, salt, CURRENT_PBKDF2_ITERATIONS);
+  if (timingSafeEqual(actual, expectedHash)) return true;
+  try {
+    const legacy = await deriveCode(code, salt, LEGACY_PBKDF2_ITERATIONS);
+    return timingSafeEqual(legacy, expectedHash);
+  } catch {
+    return false;
+  }
 }
 
 export async function setResearcherCredential(
@@ -156,10 +167,16 @@ export async function verifyResearcherCredential(
     (!row.expires_at || String(row.expires_at) <= new Date().toISOString())
   )
     return false;
-  return timingSafeEqual(
-    await deriveCode(code, String(row.code_salt)),
-    String(row.code_hash),
-  );
+  const salt = String(row.code_salt);
+  const expectedHash = String(row.code_hash);
+  const actual = await deriveCode(code, salt, CURRENT_PBKDF2_ITERATIONS);
+  if (timingSafeEqual(actual, expectedHash)) return true;
+  try {
+    const legacy = await deriveCode(code, salt, LEGACY_PBKDF2_ITERATIONS);
+    return timingSafeEqual(legacy, expectedHash);
+  } catch {
+    return false;
+  }
 }
 
 function timingSafeEqual(a: string, b: string) {

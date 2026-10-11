@@ -1,5 +1,6 @@
 import {
   ADMIN_SECTIONS,
+  createStaffPasswordCredentials,
   ensureAdminStaff,
   isOwnerEmail,
   parsePermissions,
@@ -64,16 +65,28 @@ export async function POST(request: Request) {
       );
     }
 
+    let passwordSalt = '';
+    let passwordHash = '';
+    if (password) {
+      const creds = await createStaffPasswordCredentials(password);
+      passwordSalt = creds.salt;
+      passwordHash = creds.hash;
+    }
+
     const now = new Date().toISOString();
     await env.DB.prepare(
-      'INSERT INTO admin_staff_access(email,name,active,permissions,created_at,updated_at) VALUES(?,?,1,?,?,?)',
+      'INSERT INTO admin_staff_access(email,name,active,permissions,password_salt,password_hash,created_at,updated_at) VALUES(?,?,1,?,?,?,?,?)',
     )
-      .bind(email, name, JSON.stringify(permissions), now, now)
+      .bind(
+        email,
+        name,
+        JSON.stringify(permissions),
+        passwordSalt,
+        passwordHash,
+        now,
+        now,
+      )
       .run();
-
-    if (password) {
-      await setStaffPassword(env.DB, email, password);
-    }
 
     return Response.json({ saved: true });
   } catch (err: any) {
@@ -110,20 +123,41 @@ export async function PUT(request: Request) {
       { status: 400 },
     );
   try {
-    await env.DB.prepare(
-      'UPDATE admin_staff_access SET name=?,active=?,permissions=?,updated_at=? WHERE LOWER(email)=?',
-    )
-      .bind(
-        clean(body?.name, 200),
-        body?.active ? 1 : 0,
-        JSON.stringify(permissions),
-        new Date().toISOString(),
-        email,
-      )
-      .run();
-
+    let passwordSalt: string | null = null;
+    let passwordHash: string | null = null;
     if (password) {
-      await setStaffPassword(env.DB, email, password);
+      const creds = await createStaffPasswordCredentials(password);
+      passwordSalt = creds.salt;
+      passwordHash = creds.hash;
+    }
+
+    const now = new Date().toISOString();
+    if (password && passwordSalt && passwordHash) {
+      await env.DB.prepare(
+        'UPDATE admin_staff_access SET name=?,active=?,permissions=?,password_salt=?,password_hash=?,updated_at=? WHERE LOWER(email)=?',
+      )
+        .bind(
+          clean(body?.name, 200),
+          body?.active ? 1 : 0,
+          JSON.stringify(permissions),
+          passwordSalt,
+          passwordHash,
+          now,
+          email,
+        )
+        .run();
+    } else {
+      await env.DB.prepare(
+        'UPDATE admin_staff_access SET name=?,active=?,permissions=?,updated_at=? WHERE LOWER(email)=?',
+      )
+        .bind(
+          clean(body?.name, 200),
+          body?.active ? 1 : 0,
+          JSON.stringify(permissions),
+          now,
+          email,
+        )
+        .run();
     }
 
     return Response.json({ saved: true });
