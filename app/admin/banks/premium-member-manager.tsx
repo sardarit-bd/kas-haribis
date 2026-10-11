@@ -51,13 +51,18 @@ export default function PremiumMemberManager({
     data.active = data.active === 'on';
     try {
       const response = await fetch('/api/admin/bank-premium-members', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify(data),
-        }),
-        result = (await response.json()) as any;
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      let result: any = null;
+      try {
+        result = await response.json();
+      } catch {
+        result = null;
+      }
       if (!response.ok)
-        throw new Error(result.error || 'Could not save the member.');
+        throw new Error(result?.error || 'Could not save the member.');
       await reload();
       setEditing(null);
       form.reset();
@@ -120,6 +125,7 @@ export default function PremiumMemberManager({
       <div className="premiumAdminGrid">
         <form key={value.id || 'new'} onSubmit={save}>
           <h3>{editing ? `Edit ${editing.name}` : 'Add premium member'}</h3>
+          {editing?.id && <input type="hidden" name="id" value={editing.id} />}
           <label>
             Member name
             <input name="name" defaultValue={value.name} required />

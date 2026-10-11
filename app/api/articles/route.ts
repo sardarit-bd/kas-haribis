@@ -84,5 +84,6 @@ export async function DELETE(r: Request) {
   await ensureArticles(e.DB);
   await e.DB.prepare('DELETE FROM articles WHERE id=?').bind(id).run();
   await e.BUCKET.delete(`articles/${id}.pdf`);
+  await e.BUCKET.delete(`articles/covers/${id}.jpg`);
   return Response.json({ deleted: true });
 }

@@ -15,11 +15,11 @@ export default async function BankResearchAdmin() {
   const { env } = await import('cloudflare:workers');
   const user = await requireChatGPTUser('/admin/bank-research');
   const email = user.email.toLowerCase();
-  const owner = isOwnerEmail(email);
   await Promise.all([ensureBankResearch(env.DB), ensureResearchAccess(env.DB)]);
   
+  const canManage = await canAccessSection(env.DB, email, 'bank-research');
   const reviewer =
-    (await canAccessSection(env.DB, email, 'bank-research')) ||
+    canManage ||
     Boolean(
       await env.DB.prepare(
         'SELECT email FROM bank_research_reviewers WHERE email=? AND active=1',
@@ -40,12 +40,12 @@ export default async function BankResearchAdmin() {
     env.DB.prepare(
       "SELECT * FROM bank_research_submissions ORDER BY CASE workflow_status WHEN 'Submitted' THEN 0 WHEN 'Reviewer approved' THEN 1 WHEN 'Changes requested' THEN 2 WHEN 'Draft' THEN 3 ELSE 4 END,updated_at DESC",
     ).all(),
-    owner
+    canManage
       ? env.DB.prepare(
           'SELECT r.*,CASE WHEN c.email IS NULL THEN 0 ELSE 1 END AS code_configured,c.access_type,c.expires_at,c.updated_at AS code_updated_at FROM bank_researchers r LEFT JOIN bank_researcher_credentials c ON c.email=r.email ORDER BY r.active DESC,r.name COLLATE NOCASE,r.email COLLATE NOCASE',
         ).all()
       : Promise.resolve({ results: [] }),
-    owner
+    canManage
       ? env.DB.prepare(
           'SELECT * FROM bank_research_reviewers ORDER BY active DESC,name COLLATE NOCASE,email COLLATE NOCASE',
         ).all()
@@ -59,7 +59,7 @@ export default async function BankResearchAdmin() {
           <div>
             <h1>Bank Research Review</h1>
             <p>
-              {owner
+              {canManage
                 ? 'Review lender research, manage the research team, and control what is published live.'
                 : 'Review submitted lender research and forward completed records for final owner approval.'}
             </p>
@@ -74,7 +74,7 @@ export default async function BankResearchAdmin() {
             email,
             name: user.fullName || user.displayName || email,
           }}
-          owner={owner}
+          owner={canManage}
         />
       </div>
     </main>

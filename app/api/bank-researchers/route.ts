@@ -1,5 +1,5 @@
-import { getRequestEmail, isOwnerRequest } from '../../lib/request-auth';
-import { isOwnerEmail } from '../../lib/admin-access';
+import { getRequestEmail } from '../../lib/request-auth';
+import { canAccessSection } from '../../lib/admin-access';
 import { ensureBankResearch } from '../../lib/directories';
 import {
   ensureResearchAccess,
@@ -15,37 +15,47 @@ async function runtime() {
   await Promise.all([ensureBankResearch(env.DB), ensureResearchAccess(env.DB)]);
   return env;
 }
+async function checkAuth(request: Request, db: any) {
+  const email = await getRequestEmail(request);
+  if (!email) return false;
+  return canAccessSection(db, email, 'bank-research');
+}
 const query =
   'SELECT r.*,CASE WHEN c.email IS NULL THEN 0 ELSE 1 END AS code_configured,c.access_type,c.expires_at,c.updated_at AS code_updated_at FROM bank_researchers r LEFT JOIN bank_researcher_credentials c ON c.email=r.email ORDER BY r.active DESC,r.name COLLATE NOCASE,r.email COLLATE NOCASE';
 export async function GET(request: Request) {
-  if (!(await isOwnerRequest(request)))
+  const env = await runtime();
+  if (!(await checkAuth(request, env.DB)))
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  const env = await runtime(),
-    result = await env.DB.prepare(query).all();
+  const result = await env.DB.prepare(query).all();
   return Response.json({ researchers: result.results });
 }
 function credentialInput(b: any) {
   const code = clean(b.code, 6),
     accessType = b.access_type === 'temporary' ? 'temporary' : 'permanent',
-    rawExpiration = clean(b.expires_at, 40),
-    expiresAt =
-      accessType === 'temporary' && rawExpiration
-        ? new Date(rawExpiration).toISOString()
-        : '';
+    rawExpiration = clean(b.expires_at, 40);
+  let expiresAt = '';
   if (!/^\d{6}$/.test(code))
     throw new Error('Enter exactly six digits for this researcher.');
-  if (
-    accessType === 'temporary' &&
-    (!expiresAt || expiresAt <= new Date().toISOString())
-  )
-    throw new Error('Choose a future expiration date and time.');
+  if (accessType === 'temporary') {
+    if (!rawExpiration) {
+      throw new Error('Choose when temporary access expires.');
+    }
+    const d = new Date(rawExpiration);
+    if (isNaN(d.getTime())) {
+      throw new Error('Choose a valid expiration date and time.');
+    }
+    expiresAt = d.toISOString();
+    if (expiresAt <= new Date().toISOString()) {
+      throw new Error('Choose a future expiration date and time.');
+    }
+  }
   return { code, accessType, expiresAt };
 }
 export async function POST(request: Request) {
-  if (!(await isOwnerRequest(request)))
+  const env = await runtime();
+  if (!(await checkAuth(request, env.DB)))
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  const env = await runtime(),
-    b = (await request.json()) as any,
+  const b = (await request.json()) as any,
     email = clean(b.email).toLowerCase(),
     name = clean(b.name, 200);
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
@@ -79,10 +89,10 @@ export async function POST(request: Request) {
   }
 }
 export async function PUT(request: Request) {
-  if (!(await isOwnerRequest(request)))
+  const env = await runtime();
+  if (!(await checkAuth(request, env.DB)))
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  const env = await runtime(),
-    b = (await request.json()) as any,
+  const b = (await request.json()) as any,
     email = clean(b.email).toLowerCase();
   if (b.code) {
     try {
@@ -117,10 +127,10 @@ export async function PUT(request: Request) {
   return Response.json({ saved: true });
 }
 export async function DELETE(request: Request) {
-  if (!(await isOwnerRequest(request)))
+  const env = await runtime();
+  if (!(await checkAuth(request, env.DB)))
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  const env = await runtime(),
-    email = clean(new URL(request.url).searchParams.get('email')).toLowerCase();
+  const email = clean(new URL(request.url).searchParams.get('email')).toLowerCase();
   await env.DB.batch([
     env.DB.prepare(
       'DELETE FROM bank_researcher_credentials WHERE email=?',

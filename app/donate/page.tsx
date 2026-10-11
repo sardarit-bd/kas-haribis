@@ -123,7 +123,7 @@ export default function Donate() {
                       Name
                     </dt>
                     <dd className="font-bold text-[#102a43]">
-                      Donors Fund at Congregation Kay Haribis
+                      Donors Fund at Congregation Kav Haribis
                     </dd>
                   </div>
 

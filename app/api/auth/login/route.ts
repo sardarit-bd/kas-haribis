@@ -1,5 +1,8 @@
 import {
+  ADMIN_SECTIONS,
   isActiveStaffOrOwner,
+  isOwnerEmail,
+  staffPermissions,
   verifyStaffPassword,
 } from '../../../lib/admin-access';
 import { getAuthEnv } from '../../../lib/auth-config';
@@ -11,11 +14,34 @@ import {
   type SessionPayload,
 } from '../../../lib/auth-session';
 
+function sanitizeReturnTo(value: string): string {
+  if (!value || !value.startsWith('/') || value.startsWith('//') || value.startsWith('/\\')) {
+    return '';
+  }
+  try {
+    const url = new URL(value, 'https://app.local');
+    if (url.origin !== 'https://app.local') return '';
+    if (url.pathname === '/sign-in' || url.pathname.startsWith('/api/')) return '';
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return '';
+  }
+}
+
 export async function POST(request: Request) {
-  const body = (await request.json()) as any;
-  const email = String(body.email || '').trim().toLowerCase();
-  const password = String(body.password || '').trim();
-  const returnTo = String(body.returnTo || '/admin').trim();
+  let body: any;
+  try {
+    body = await request.json();
+  } catch {
+    return Response.json(
+      { error: 'Invalid request payload.' },
+      { status: 400 },
+    );
+  }
+
+  const email = String(body?.email || '').trim().toLowerCase();
+  const password = String(body?.password || '').trim();
+  const returnTo = String(body?.returnTo || '').trim();
 
   if (!email || !password) {
     return Response.json(
@@ -60,6 +86,43 @@ export async function POST(request: Request) {
     );
   }
 
+  const isOwner = isOwnerEmail(email);
+  const cleanReturnTo = sanitizeReturnTo(returnTo);
+  let redirectTarget = '/admin';
+
+  if (isOwner) {
+    redirectTarget = cleanReturnTo || '/admin';
+  } else {
+    const permissions = await staffPermissions(env.DB, email);
+    if (!permissions.length) {
+      return Response.json(
+        { error: 'Your account does not have permission to access any administrative sections.' },
+        { status: 403 },
+      );
+    }
+
+    let returnToAllowed = false;
+    if (cleanReturnTo) {
+      if (cleanReturnTo.startsWith('/admin/')) {
+        const sectionKey = cleanReturnTo.slice('/admin/'.length).split('/')[0]?.split('?')[0];
+        if (sectionKey && permissions.includes(sectionKey)) {
+          returnToAllowed = true;
+        }
+      } else if (!cleanReturnTo.startsWith('/admin')) {
+        returnToAllowed = true;
+      }
+    }
+
+    if (returnToAllowed && cleanReturnTo) {
+      redirectTarget = cleanReturnTo;
+    } else {
+      const firstSection = ADMIN_SECTIONS.find((section) =>
+        permissions.includes(section.key),
+      );
+      redirectTarget = firstSection ? firstSection.href : '/admin';
+    }
+  }
+
   const sessionPayload: SessionPayload = {
     email,
     name,
@@ -72,10 +135,8 @@ export async function POST(request: Request) {
   );
   const secureCookies = useSecureCookies(config.APP_URL);
 
-  const safeReturnTo = returnTo.startsWith('/') ? returnTo : '/admin';
-
   return Response.json(
-    { success: true, redirectUrl: safeReturnTo },
+    { success: true, redirectUrl: redirectTarget },
     {
       status: 200,
       headers: {

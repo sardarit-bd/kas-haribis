@@ -113,6 +113,7 @@ export async function setResearcherCredential(
   expiresAt = '',
 ) {
   await ensureResearchAccess(db);
+  const cleanEmail = email.trim().toLowerCase();
   const type = accessType === 'temporary' ? 'temporary' : 'permanent';
   if (type === 'temporary' && !expiresAt)
     throw new Error('Choose when temporary access expires.');
@@ -125,14 +126,14 @@ export async function setResearcherCredential(
         'INSERT INTO bank_researcher_credentials(email,code_salt,code_hash,access_type,expires_at,updated_at) VALUES(?,?,?,?,?,?) ON CONFLICT(email) DO UPDATE SET code_salt=excluded.code_salt,code_hash=excluded.code_hash,access_type=excluded.access_type,expires_at=excluded.expires_at,updated_at=excluded.updated_at',
       )
       .bind(
-        email,
+        cleanEmail,
         salt,
         hash,
         type,
         type === 'temporary' ? expiresAt : '',
         now,
       ),
-    db.prepare('DELETE FROM bank_research_sessions WHERE email=?').bind(email),
+    db.prepare('DELETE FROM bank_research_sessions WHERE LOWER(email)=?').bind(cleanEmail),
   ]);
 }
 
@@ -142,11 +143,12 @@ export async function verifyResearcherCredential(
   code: string,
 ) {
   await ensureResearchAccess(db);
+  const cleanEmail = email.trim().toLowerCase();
   const row = (await db
     .prepare(
-      'SELECT code_salt,code_hash,access_type,expires_at FROM bank_researcher_credentials WHERE email=?',
+      'SELECT code_salt,code_hash,access_type,expires_at FROM bank_researcher_credentials WHERE LOWER(email)=?',
     )
-    .bind(email)
+    .bind(cleanEmail)
     .first()) as any;
   if (!row) return false;
   if (
