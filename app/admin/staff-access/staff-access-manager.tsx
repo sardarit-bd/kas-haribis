@@ -39,6 +39,10 @@ export default function StaffAccessManager({
   const [selectedStaff, setSelectedStaff] = useState<Staff | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [message, setMessage] = useState('');
+  const [addModalError, setAddModalError] = useState('');
+  const [addModalBusy, setAddModalBusy] = useState(false);
+  const [editModalError, setEditModalError] = useState('');
+  const [editModalBusy, setEditModalBusy] = useState(false);
 
   async function load() {
     try {
@@ -56,33 +60,69 @@ export default function StaffAccessManager({
 
   async function add(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (addModalBusy) return;
+
     const form = event.currentTarget;
     const data = new FormData(form);
+    const email = String(data.get('email') || '').trim();
     const permissions = data.getAll('permissions');
-    setMessage('Saving staff access…');
 
-    const response = await fetch('/api/admin-staff-access', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        name: data.get('name'),
-        email: data.get('email'),
-        password: data.get('password'),
-        permissions,
-      }),
-    });
-
-    const json = (await response.json()) as any;
-    if (!response.ok) {
-      setMessage(json.error || 'Access could not be saved.');
+    if (!email) {
+      setAddModalError('Staff email address is required.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setAddModalError('Please enter a valid email address.');
+      return;
+    }
+    if (permissions.length === 0) {
+      setAddModalError('Please select at least one admin section permission.');
       return;
     }
 
-    form.reset();
-    setShowAddModal(false);
-    await load();
-    router.refresh();
-    setMessage('New staff access created successfully.');
+    setAddModalBusy(true);
+    setAddModalError('');
+
+    try {
+      const response = await fetch('/api/admin-staff-access', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          name: data.get('name'),
+          email,
+          password: data.get('password'),
+          permissions,
+        }),
+      });
+
+      let json: any = null;
+      try {
+        json = await response.json();
+      } catch {
+        json = null;
+      }
+
+      if (!response.ok) {
+        setAddModalError(
+          json?.error || `Failed to create staff access (HTTP ${response.status}).`,
+        );
+        setAddModalBusy(false);
+        return;
+      }
+
+      form.reset();
+      setAddModalBusy(false);
+      setAddModalError('');
+      setShowAddModal(false);
+      await load();
+      router.refresh();
+      setMessage('New staff access created successfully.');
+    } catch (err: any) {
+      setAddModalError(
+        err?.message || 'Network error occurred while creating staff access. Please try again.',
+      );
+      setAddModalBusy(false);
+    }
   }
 
   async function updateModalStaff(
@@ -90,34 +130,61 @@ export default function StaffAccessManager({
     person: Staff,
   ) {
     event.preventDefault();
+    if (editModalBusy) return;
+
     const data = new FormData(event.currentTarget);
     const permissions = data.getAll('permissions');
     const name = data.get('name');
     const password = data.get('password');
-    setMessage('Updating staff member…');
 
-    const response = await fetch('/api/admin-staff-access', {
-      method: 'PUT',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        email: person.email,
-        name: name,
-        active: Boolean(person.active),
-        password: password || undefined,
-        permissions,
-      }),
-    });
-
-    const json = (await response.json()) as any;
-    if (!response.ok) {
-      setMessage(json.error || 'Permissions could not be updated.');
+    if (permissions.length === 0) {
+      setEditModalError('Please select at least one admin section permission.');
       return;
     }
 
-    await load();
-    router.refresh();
-    setMessage(`Updated staff member details for ${person.email}.`);
-    setSelectedStaff(null);
+    setEditModalBusy(true);
+    setEditModalError('');
+
+    try {
+      const response = await fetch('/api/admin-staff-access', {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email: person.email,
+          name: name,
+          active: Boolean(person.active),
+          password: password || undefined,
+          permissions,
+        }),
+      });
+
+      let json: any = null;
+      try {
+        json = await response.json();
+      } catch {
+        json = null;
+      }
+
+      if (!response.ok) {
+        setEditModalError(
+          json?.error || `Permissions could not be updated (HTTP ${response.status}).`,
+        );
+        setEditModalBusy(false);
+        return;
+      }
+
+      setEditModalBusy(false);
+      setEditModalError('');
+      setSelectedStaff(null);
+      await load();
+      router.refresh();
+      setMessage(`Updated staff member details for ${person.email}.`);
+    } catch (err: any) {
+      setEditModalError(
+        err?.message || 'Network error occurred while updating staff member. Please try again.',
+      );
+      setEditModalBusy(false);
+    }
   }
 
   async function toggle(person: Staff) {
@@ -202,7 +269,10 @@ export default function StaffAccessManager({
 
             {/* Add New Staff Button */}
             <button
-              onClick={() => setShowAddModal(true)}
+              onClick={() => {
+                setAddModalError('');
+                setShowAddModal(true);
+              }}
               className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl transition shadow-xs flex items-center gap-1.5 shrink-0"
             >
               <span>+ Add New Staff</span>
@@ -229,7 +299,10 @@ export default function StaffAccessManager({
                   return (
                     <tr
                       key={person.email}
-                      onClick={() => setSelectedStaff(person)}
+                      onClick={() => {
+                        setEditModalError('');
+                        setSelectedStaff(person);
+                      }}
                       className={`cursor-pointer transition hover:bg-slate-50/80 ${
                         person.active ? '' : 'bg-slate-50/40 text-slate-400'
                       }`}
@@ -272,7 +345,10 @@ export default function StaffAccessManager({
                       </td>
                       <td className="py-3.5 px-4 text-right space-x-2" onClick={(e) => e.stopPropagation()}>
                         <button
-                          onClick={() => setSelectedStaff(person)}
+                          onClick={() => {
+                            setEditModalError('');
+                            setSelectedStaff(person);
+                          }}
                           className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold rounded-lg border border-slate-300 text-xs transition"
                         >
                           View / Edit
@@ -318,8 +394,13 @@ export default function StaffAccessManager({
                 </p>
               </div>
               <button
-                onClick={() => setShowAddModal(false)}
-                className="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center font-bold text-sm"
+                type="button"
+                disabled={addModalBusy}
+                onClick={() => {
+                  setShowAddModal(false);
+                  setAddModalError('');
+                }}
+                className="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center font-bold text-sm disabled:opacity-50"
               >
                 ✕
               </button>
@@ -327,6 +408,19 @@ export default function StaffAccessManager({
 
             {/* Modal Form Body */}
             <form onSubmit={add} className="p-6 overflow-y-auto space-y-5 flex-1">
+              {addModalError && (
+                <div className="p-3 bg-red-50 border border-red-200 text-red-800 rounded-xl text-xs font-semibold flex items-center justify-between">
+                  <span>{addModalError}</span>
+                  <button
+                    type="button"
+                    onClick={() => setAddModalError('')}
+                    className="text-red-600 hover:text-red-900 font-bold ml-2"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
@@ -365,9 +459,12 @@ export default function StaffAccessManager({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
-                  Assign Admin Permissions
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                  Assign Admin Permissions <span className="text-red-500">*</span>
                 </label>
+                <p className="text-xs text-slate-500 mb-2">
+                  Select at least one admin section. Non-owner staff require explicit section permissions to access the dashboard.
+                </p>
                 <PermissionChoices sections={sections} />
               </div>
 
@@ -375,16 +472,21 @@ export default function StaffAccessManager({
               <div className="pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
                 <button
                   type="button"
-                  onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl transition"
+                  disabled={addModalBusy}
+                  onClick={() => {
+                    setShowAddModal(false);
+                    setAddModalError('');
+                  }}
+                  className="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl transition disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl transition shadow-sm"
+                  disabled={addModalBusy}
+                  className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
-                  Create Staff Access
+                  {addModalBusy ? 'Creating Staff Access…' : 'Create Staff Access'}
                 </button>
               </div>
             </form>
@@ -418,8 +520,13 @@ export default function StaffAccessManager({
                 </p>
               </div>
               <button
-                onClick={() => setSelectedStaff(null)}
-                className="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center font-bold text-sm"
+                type="button"
+                disabled={editModalBusy}
+                onClick={() => {
+                  setSelectedStaff(null);
+                  setEditModalError('');
+                }}
+                className="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center font-bold text-sm disabled:opacity-50"
               >
                 ✕
               </button>
@@ -430,6 +537,19 @@ export default function StaffAccessManager({
               onSubmit={(e) => updateModalStaff(e, selectedStaff)}
               className="p-6 overflow-y-auto space-y-5 flex-1"
             >
+              {editModalError && (
+                <div className="p-3 bg-red-50 border border-red-200 text-red-800 rounded-xl text-xs font-semibold flex items-center justify-between">
+                  <span>{editModalError}</span>
+                  <button
+                    type="button"
+                    onClick={() => setEditModalError('')}
+                    className="text-red-600 hover:text-red-900 font-bold ml-2"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
@@ -473,9 +593,12 @@ export default function StaffAccessManager({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
-                  Admin Section Permissions
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                  Admin Section Permissions <span className="text-red-500">*</span>
                 </label>
+                <p className="text-xs text-slate-500 mb-2">
+                  Select at least one admin section for this staff member.
+                </p>
                 <PermissionChoices
                   sections={sections}
                   selected={parse(selectedStaff.permissions)}
@@ -487,15 +610,17 @@ export default function StaffAccessManager({
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
+                    disabled={editModalBusy}
                     onClick={() => toggle(selectedStaff)}
-                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl border border-slate-300 transition"
+                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl border border-slate-300 transition disabled:opacity-50"
                   >
                     {selectedStaff.active ? 'Pause Access' : 'Restore Access'}
                   </button>
                   <button
                     type="button"
+                    disabled={editModalBusy}
                     onClick={() => remove(selectedStaff)}
-                    className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold rounded-xl border border-red-200 transition"
+                    className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold rounded-xl border border-red-200 transition disabled:opacity-50"
                   >
                     Remove Staff
                   </button>
@@ -504,16 +629,21 @@ export default function StaffAccessManager({
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => setSelectedStaff(null)}
-                    className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl transition"
+                    disabled={editModalBusy}
+                    onClick={() => {
+                      setSelectedStaff(null);
+                      setEditModalError('');
+                    }}
+                    className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl transition disabled:opacity-50"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl transition shadow-sm"
+                    disabled={editModalBusy}
+                    className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Save Changes
+                    {editModalBusy ? 'Saving Changes…' : 'Save Changes'}
                   </button>
                 </div>
               </div>

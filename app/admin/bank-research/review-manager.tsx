@@ -151,10 +151,17 @@ export default function BankResearchReview({
     const personLabel = kind === 'researchers' ? 'Researcher' : 'Reviewer';
     setMessage(`Adding ${personLabel.toLowerCase()} access…`);
     try {
+      const rawData = Object.fromEntries(new FormData(form).entries());
+      if (rawData.expires_at && typeof rawData.expires_at === 'string') {
+        const d = new Date(rawData.expires_at);
+        if (!isNaN(d.getTime())) {
+          rawData.expires_at = d.toISOString();
+        }
+      }
       const response = await fetch(endpoint(kind), {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(new FormData(form).entries())),
+        body: JSON.stringify(rawData),
       });
       const json = (await response.json()) as any;
       if (!response.ok) {
@@ -169,10 +176,18 @@ export default function BankResearchReview({
     }
   }
   async function loadPeople(kind: Kind) {
-    const json = (await fetch(endpoint(kind)).then((r) => r.json())) as any;
-    kind === 'researchers'
-      ? setResearchers(json.researchers || [])
-      : setReviewers(json.reviewers || []);
+    try {
+      const response = await fetch(endpoint(kind));
+      if (!response.ok) return;
+      const json = (await response.json()) as any;
+      if (kind === 'researchers') {
+        if (Array.isArray(json?.researchers)) setResearchers(json.researchers);
+      } else {
+        if (Array.isArray(json?.reviewers)) setReviewers(json.reviewers);
+      }
+    } catch {
+      // Prevent clearing existing list when fetch fails
+    }
   }
   async function toggle(person: Person, kind: Kind) {
     await fetch(endpoint(kind), {
@@ -196,24 +211,35 @@ export default function BankResearchReview({
     event.preventDefault();
     const form = event.currentTarget;
     setMessage(`Saving the individual code for ${person.email}…`);
-    const response = await fetch(endpoint('researchers'), {
+    try {
+      const rawData = Object.fromEntries(new FormData(form).entries());
+      if (rawData.expires_at && typeof rawData.expires_at === 'string') {
+        const d = new Date(rawData.expires_at);
+        if (!isNaN(d.getTime())) {
+          rawData.expires_at = d.toISOString();
+        }
+      }
+      const response = await fetch(endpoint('researchers'), {
         method: 'PUT',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           email: person.email,
-          ...Object.fromEntries(new FormData(form).entries()),
+          ...rawData,
         }),
-      }),
-      json = (await response.json()) as any;
-    if (!response.ok) {
-      setMessage(json.error || 'The code could not be saved.');
-      return;
+      });
+      const json = (await response.json()) as any;
+      if (!response.ok) {
+        setMessage(json.error || 'The code could not be saved.');
+        return;
+      }
+      form.reset();
+      await loadPeople('researchers');
+      setMessage(
+        `Individual code saved for ${person.email}. Their previous sessions were signed out.`,
+      );
+    } catch {
+      setMessage('The code could not be saved. Please try again.');
     }
-    form.reset();
-    await loadPeople('researchers');
-    setMessage(
-      `Individual code saved for ${person.email}. Their previous sessions were signed out.`,
-    );
   }
 
   return (
@@ -226,6 +252,7 @@ export default function BankResearchReview({
             toggle={toggle}
             remove={remove}
             saveCode={saveResearcherCode}
+            message={message}
           />
           <PeopleAccess
             eyebrow="REVIEWER ACCESS"
@@ -479,12 +506,14 @@ function ResearcherAccess({
   toggle,
   remove,
   saveCode,
+  message,
 }: {
   people: Person[];
   add: (event: FormEvent<HTMLFormElement>, kind: Kind) => void;
   toggle: (person: Person, kind: Kind) => void;
   remove: (person: Person, kind: Kind) => void;
   saveCode: (event: FormEvent<HTMLFormElement>, person: Person) => void;
+  message?: string;
 }) {
   return (
     <section className="researcherAccess researcherCredentialAccess">
@@ -511,6 +540,11 @@ function ResearcherAccess({
         <AccessFields />
         <button className="primary">Add researcher</button>
       </form>
+      {message && (
+        <p className="researchMessage" role="status" aria-live="polite">
+          {message}
+        </p>
+      )}
       <div className="researcherChips">
         {people.length ? (
           people.map((person) => (

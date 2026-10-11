@@ -27,11 +27,11 @@ export default function BaisHoraahPage() {
               aligned with halacha.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <a className="p-4 bg-[#102a43] hover:bg-[#1a385c] text-white transition-all duration-300 hover:scale-[1.02] flex items-center gap-3 shadow-md group rounded-lg" href="tel:8454938060">
+              <a className="p-4 bg-[#102a43] hover:bg-[#1a385c] text-white transition-all duration-300 hover:scale-[1.02] flex items-center gap-3 shadow-md group rounded-lg" href="tel:7322288558">
                 <span className="w-10 h-10 rounded-lg bg-[#c69b46] text-[#102a43] font-bold flex items-center justify-center text-lg">☎</span>
                 <div>
-                  <small className="block text-[10px] font-mono text-[#c69b46] uppercase tracking-widest">MAIN CALL CENTER</small>
-                  <b className="text-lg font-bold text-white group-hover:text-[#c69b46] transition-colors">845-493-8060</b>
+                  <small className="block text-[10px] font-mono text-[#c69b46] uppercase tracking-widest">MAIN BAIS HORAAH HOTLINE</small>
+                  <b className="text-lg font-bold text-white group-hover:text-[#c69b46] transition-colors">732-228-8558</b>
                 </div>
               </a>
               <a className="p-4 bg-white border border-[#ded7c9] hover:bg-[#f8fafc] text-[#102a43] transition-all duration-300 hover:scale-[1.02] flex items-center gap-3 shadow-sm rounded-lg" href="mailto:kavharibis@gmail.com">
@@ -43,11 +43,7 @@ export default function BaisHoraahPage() {
               </a>
             </div>
             <small className="block text-xs text-[#94a3b8] leading-relaxed">
-              The Call Center serves as the primary contact point worldwide. For Lakewood office inquiries, call{' '}
-              <a href="tel:7322288558" className="text-[#64748b] underline hover:text-[#102a43]">
-                732-228-8558
-              </a>
-              . Never include account numbers, card numbers, passwords, or other sensitive financial information.
+              732-228-8558 serves as the primary Bais Horaah contact worldwide (alternate call center: <a href="tel:8454938060" className="text-[#64748b] underline hover:text-[#102a43]">845-493-8060</a>). Never include account numbers, card numbers, passwords, or other sensitive financial information.
             </small>
           </MotionDiv>
 
@@ -225,15 +221,15 @@ export default function BaisHoraahPage() {
                 <div>
                   <a
                     className="inline-flex items-center gap-3.5 p-4 bg-[#102a43] hover:bg-[#1a385c] text-white transition-all duration-300 hover:scale-[1.02] shadow-md rounded-lg group"
-                    href="tel:8454938060"
+                    href="tel:7322288558"
                   >
                     <span className="w-10 h-10 rounded-lg bg-[#c69b46] text-[#102a43] font-bold flex items-center justify-center text-lg">☎</span>
                     <div>
                       <small className="block text-[10px] font-mono text-[#c69b46] uppercase tracking-widest">
-                        MAIN CALL CENTER · WORLDWIDE
+                        MAIN BAIS HORAAH · WORLDWIDE
                       </small>
                       <b className="text-lg font-bold text-white group-hover:text-[#c69b46] transition-colors">
-                        845-493-8060
+                        732-228-8558
                       </b>
                     </div>
                   </a>
@@ -247,9 +243,9 @@ export default function BaisHoraahPage() {
                     </h4>
                   </div>
                   <p className="text-xs text-[#64748b] leading-relaxed">
-                    There is also a separate branch in Brooklyn, NY, operated by local individuals. Visitors may contact this branch using its dedicated phone number. In the interim, inquiries may be placed through the main Call Center at{' '}
-                    <a href="tel:8454938060" className="text-[#102a43] font-bold hover:underline">
-                      845-493-8060
+                    There is also a separate branch in Brooklyn, NY, operated by local individuals. A dedicated phone number for this location has not yet been published. In the interim, inquiries may be placed through the main Bais Horaah line at{' '}
+                    <a href="tel:7322288558" className="text-[#102a43] font-bold hover:underline">
+                      732-228-8558
                     </a>{' '}
                     or submitted via the form above.
                   </p>
@@ -285,7 +281,7 @@ export default function BaisHoraahPage() {
                 </div>
 
                 <div className="pt-2 border-t border-[#e2d9c8]/80 text-xs text-[#64748b] leading-relaxed">
-                  For assistance with Heter Iska arrangements, corporate or personal ribis inquiries, call the main Call Center at <a href="tel:8454938060" className="text-[#102a43] font-bold hover:underline">845-493-8060</a>.
+                  For assistance with Heter Iska arrangements, corporate or personal ribis inquiries, call the main Bais Horaah line at <a href="tel:7322288558" className="text-[#102a43] font-bold hover:underline">732-228-8558</a> (alternate call center: <a href="tel:8454938060" className="text-[#102a43] font-bold hover:underline">845-493-8060</a>).
                 </div>
               </div>
             </div>

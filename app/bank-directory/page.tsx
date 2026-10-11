@@ -2,6 +2,7 @@ import { listBanks } from '../lib/directories';
 import { MotionDiv } from '../shared/motion-components';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
 import BankDirectoryClient from './bank-directory-client';
+import ResearchAccessGate from './research-access-gate';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,6 +36,7 @@ export default async function BankDirectory() {
         />
       </div>
       <SiteFooter />
+      <ResearchAccessGate />
     </main>
   );
 }
