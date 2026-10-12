@@ -23,6 +23,24 @@ const ranges: Record<string, string> = {
   '90': '-89 days',
   all: '',
 };
+
+function formatTimestamp(ts: string | null | undefined): string {
+  if (!ts) return 'Unknown date';
+  try {
+    const raw = String(ts).trim();
+    const normalized = raw.endsWith('Z') || raw.includes('+') ? raw : raw + 'Z';
+    const date = new Date(normalized);
+    if (isNaN(date.getTime())) {
+      const fallback = new Date(raw);
+      if (isNaN(fallback.getTime())) return 'Recent';
+      return fallback.toLocaleString('en-US', { timeZone: 'America/New_York' });
+    }
+    return date.toLocaleString('en-US', { timeZone: 'America/New_York' });
+  } catch {
+    return 'Recent';
+  }
+}
+
 const breadcrumbs = [
   { label: 'Dashboard', href: '/admin' },
   { label: 'Visitor Analytics', href: '/admin/analytics' },
@@ -43,20 +61,50 @@ export default async function AnalyticsAdmin({
       </main>
     );
   await ensureAnalytics(env.DB);
-  const params = await searchParams,
-    daysBack = params.range === '30d' ? 30 : params.range === '90d' ? 90 : 7,
-    cutoff = new Date(Date.now() - daysBack * 86400000).toISOString(),
-    where = `WHERE created_at >= '${cutoff}'`,
-    daily = `SELECT strftime('%Y-%m-%d',created_at) day,COUNT(*) views,COUNT(DISTINCT visitor_id) visitors FROM site_analytics`;
+  const params = await searchParams;
+  const rawRange = String(params?.range || '30').toLowerCase().trim();
+  const range =
+    rawRange === '14' || rawRange === '14d'
+      ? '14'
+      : rawRange === '30' || rawRange === '30d'
+        ? '30'
+        : rawRange === '90' || rawRange === '90d'
+          ? '90'
+          : rawRange === 'all'
+            ? 'all'
+            : '30';
+
+  const daysBack =
+    range === '14' ? 14
+    : range === '30' ? 30
+    : range === '90' ? 90
+    : null;
+
+  const now = Date.now();
+  const cutoff = daysBack
+    ? new Date(now - daysBack * 86400000).toISOString()
+    : null;
+  const cutoff24h = new Date(now - 86400000).toISOString();
+
+  const where = cutoff ? `WHERE created_at >= '${cutoff}'` : '';
+  const pageViewWhere = where
+    ? `${where} AND event_type='page_view'`
+    : "WHERE event_type='page_view'";
+  const sponsorWhere = where
+    ? `${where} AND event_type='ad_click'`
+    : "WHERE event_type='ad_click'";
+
+  const daily = `SELECT strftime('%Y-%m-%d',created_at) day,COUNT(CASE WHEN event_type='page_view' THEN 1 END) views,COUNT(DISTINCT visitor_id) visitors,COUNT(CASE WHEN event_type='ad_click' THEN 1 END) clicks FROM site_analytics`;
+
   const [t, p, a, d, r, h] = await Promise.all([
     env.DB.prepare(
-      `SELECT COUNT(*) views,COUNT(DISTINCT visitor_id) visitors FROM site_analytics ${where}`,
+      `SELECT COUNT(CASE WHEN event_type='page_view' THEN 1 END) views,COUNT(DISTINCT visitor_id) visitors,COUNT(DISTINCT CASE WHEN created_at >= '${cutoff24h}' THEN visitor_id END) visitors_today,COUNT(CASE WHEN event_type='ad_click' THEN 1 END) ad_clicks FROM site_analytics ${where}`,
     ).first(),
     env.DB.prepare(
-      `SELECT path,COUNT(*) views FROM site_analytics ${where} AND event_type='pageview' GROUP BY path ORDER BY views DESC LIMIT 15`,
+      `SELECT path,COUNT(*) views,COUNT(DISTINCT visitor_id) visitors FROM site_analytics ${pageViewWhere} GROUP BY path ORDER BY views DESC LIMIT 15`,
     ).all(),
     env.DB.prepare(
-      `SELECT COALESCE(NULLIF(item_name,''),'Unknown sponsor') sponsor,COUNT(*) clicks,COUNT(DISTINCT visitor_id) visitors FROM site_analytics WHERE event_type='ad_click' GROUP BY sponsor ORDER BY clicks DESC LIMIT 20`,
+      `SELECT COALESCE(NULLIF(item_name,''),'Unknown sponsor') sponsor,COUNT(*) clicks,COUNT(DISTINCT visitor_id) visitors FROM site_analytics ${sponsorWhere} GROUP BY sponsor ORDER BY clicks DESC LIMIT 20`,
     ).all(),
     env.DB.prepare(`${daily} ${where} GROUP BY day ORDER BY day`).all(),
     env.DB.prepare(
@@ -67,8 +115,7 @@ export default async function AnalyticsAdmin({
   const total = t as any,
     days = d.results as any[],
     history = h.results as any[],
-    max = Math.max(1, ...days.map((x) => Number(x.views)));
-  const range = (await searchParams).range || '30';
+    max = Math.max(1, ...days.map((x) => Number(x.views || 0)));
   return (
     <main className="adminPage analyticsAdmin">
       <div className="adminShell">
@@ -228,11 +275,7 @@ export default async function AnalyticsAdmin({
                   ? x.item_name || 'Sponsor'
                   : label(x.path)}
               </b>
-              <small>
-                {new Date(x.created_at + 'Z').toLocaleString('en-US', {
-                  timeZone: 'America/New_York',
-                })}
-              </small>
+              <small>{formatTimestamp(x.created_at)}</small>
             </div>
           ))}
         </section>

@@ -1,4 +1,5 @@
 import { isOwnerRequest } from '../../lib/request-auth';
+import { ensureArticles } from '../../lib/directories';
 
 export async function GET(request: Request) {
   const id = new URL(request.url).searchParams.get('id') || '';
@@ -7,6 +8,7 @@ export async function GET(request: Request) {
   }
 
   const { env } = await import('cloudflare:workers');
+  await ensureArticles(env.DB);
   const row = (await env.DB.prepare('SELECT published FROM articles WHERE id=?')
     .bind(id)
     .first()) as { published?: number } | null;

@@ -311,39 +311,63 @@ export async function isActiveStaffOrOwner(db: any, email: string | null | undef
   await ensureAdminStaff(db);
   const row = (await db
     .prepare(
-      'SELECT active FROM admin_staff_access WHERE LOWER(email)=? AND active=1',
+      'SELECT active FROM admin_staff_access WHERE LOWER(TRIM(email))=? AND active=1',
     )
     .bind(cleanEmail)
     .first()) as any;
   return Boolean(row);
 }
 
-export function parsePermissions(value: unknown) {
-  try {
-    const parsed = JSON.parse(String(value || '[]'));
-    return Array.isArray(parsed)
-      ? parsed.filter(
-          (x: unknown) =>
-            typeof x === 'string' &&
-            ADMIN_SECTIONS.some(
-              (section) =>
-                section.key === x &&
-                !('delegatable' in section && section.delegatable === false),
-            ),
-        )
-      : [];
-  } catch {
-    return [];
+export function parsePermissions(value: unknown): string[] {
+  if (!value) return [];
+  let rawList: unknown[] = [];
+  if (Array.isArray(value)) {
+    rawList = value;
+  } else if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (!trimmed) return [];
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed)) {
+        rawList = parsed;
+      } else if (typeof parsed === 'string') {
+        try {
+          const secondParse = JSON.parse(parsed);
+          if (Array.isArray(secondParse)) {
+            rawList = secondParse;
+          } else {
+            rawList = [parsed];
+          }
+        } catch {
+          rawList = [parsed];
+        }
+      }
+    } catch {
+      rawList = trimmed.split(',').map((s) => s.trim()).filter(Boolean);
+    }
+  } else if (typeof value === 'object' && value !== null) {
+    rawList = Object.values(value);
   }
+
+  return rawList
+    .map((x) => String(x || '').trim().toLowerCase())
+    .filter((x) =>
+      ADMIN_SECTIONS.some(
+        (section) =>
+          section.key.toLowerCase() === x &&
+          !('delegatable' in section && section.delegatable === false),
+      ),
+    );
 }
 
-export async function staffPermissions(db: any, email: string) {
+export async function staffPermissions(db: any, email: string): Promise<string[]> {
   await ensureAdminStaff(db);
+  const cleanEmail = email.trim().toLowerCase();
   const row = (await db
     .prepare(
-      'SELECT permissions FROM admin_staff_access WHERE LOWER(email)=? AND active=1',
+      'SELECT permissions FROM admin_staff_access WHERE LOWER(TRIM(email))=? AND active=1',
     )
-    .bind(email.trim().toLowerCase())
+    .bind(cleanEmail)
     .first()) as any;
   return parsePermissions(row?.permissions);
 }
@@ -357,7 +381,72 @@ export async function canAccessSection(
   const cleanEmail = String(email).trim().toLowerCase();
   if (isOwnerEmail(cleanEmail)) return true;
   const permissions = await staffPermissions(db, cleanEmail);
-  return permissions.includes(sectionKey);
+  const cleanKey = sectionKey.trim().toLowerCase();
+  return permissions.some((p) => p.toLowerCase() === cleanKey);
 }
 
+export function sanitizeReturnTo(value: string | null | undefined): string {
+  if (!value || typeof value !== 'string') return '';
+  const trimmed = value.trim();
+  if (!trimmed.startsWith('/') || trimmed.startsWith('//') || trimmed.startsWith('/\\')) {
+    return '';
+  }
+  try {
+    const url = new URL(trimmed, 'https://app.local');
+    if (url.origin !== 'https://app.local') return '';
+    if (url.pathname === '/sign-in' || url.pathname.startsWith('/api/')) return '';
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return '';
+  }
+}
 
+export async function getPostLoginRedirect(
+  db: any,
+  email: string | null | undefined,
+  requestedReturnTo?: string | null,
+): Promise<string> {
+  const cleanEmail = String(email || '').trim().toLowerCase();
+  const cleanReturnTo = sanitizeReturnTo(requestedReturnTo);
+  const isExplicitReturn = Boolean(cleanReturnTo && cleanReturnTo !== '/');
+
+  if (isOwnerEmail(cleanEmail)) {
+    if (isExplicitReturn) {
+      return cleanReturnTo;
+    }
+    return '/admin';
+  }
+
+  // Staff user
+  const permissions = await staffPermissions(db, cleanEmail);
+  const firstSection = ADMIN_SECTIONS.find((section) =>
+    permissions.includes(section.key),
+  );
+  const defaultStaffLanding = firstSection ? firstSection.href : '/sign-in?error=no_staff_access';
+
+  if (!isExplicitReturn) {
+    return defaultStaffLanding;
+  }
+
+  // Verify staff authorization for explicit return destination
+  if (cleanReturnTo.startsWith('/admin/')) {
+    const sectionKey = cleanReturnTo
+      .slice('/admin/'.length)
+      .split('/')[0]
+      ?.split('?')[0]
+      ?.toLowerCase();
+    if (sectionKey && permissions.some((p) => p.toLowerCase() === sectionKey)) {
+      return cleanReturnTo;
+    }
+    // Staff requested an admin section they are not permitted for: send to default authorized section
+    return defaultStaffLanding;
+  }
+
+  if (cleanReturnTo === '/admin') {
+    // /admin overview is reserved for owners: send staff to their authorized section
+    return defaultStaffLanding;
+  }
+
+  // Explicit non-admin return URL (e.g. /bank-directory or /heter-iska)
+  return cleanReturnTo;
+}

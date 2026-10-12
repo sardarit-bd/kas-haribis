@@ -64,7 +64,7 @@ export default function SignInForm({
         return;
       }
 
-      const redirectTarget = data.redirectUrl || returnTo || '/admin';
+      const redirectTarget = data.redirectUrl || '/admin';
       router.push(redirectTarget);
       router.refresh();
     } catch {

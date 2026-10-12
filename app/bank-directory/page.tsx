@@ -3,12 +3,23 @@ import { MotionDiv } from '../shared/motion-components';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
 import BankDirectoryClient from './bank-directory-client';
 import ResearchAccessGate from './research-access-gate';
+import { premiumMemberFromHeaders } from '../lib/bank-premium';
+import { getUserFromCookieHeader } from '../lib/auth';
+import { isOwnerEmail } from '../lib/admin-access';
+import { headers } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 
 export default async function BankDirectory() {
-  const { env } = await import('cloudflare:workers');
-  const banks = await listBanks(env.DB);
+  const { env } = await import('cloudflare:workers'),
+    requestHeaders = await headers();
+  const [banks, premium] = await Promise.all([
+    listBanks(env.DB),
+    premiumMemberFromHeaders(requestHeaders, env.DB),
+  ]);
+  const adminUser = await getUserFromCookieHeader(requestHeaders.get('cookie'));
+  const isOwner = Boolean(adminUser?.email && isOwnerEmail(adminUser.email));
+  const isAuthorized = Boolean(premium || isOwner);
   return (
     <main className="min-h-screen bg-gray-200">
       <SiteHeader />
@@ -33,6 +44,7 @@ export default async function BankDirectory() {
         {/* Directory Listing Component */}
         <BankDirectoryClient
           banks={banks.map((bank) => ({ ...bank, source: '' }))}
+          initialAuthorized={isAuthorized}
         />
       </div>
       <SiteFooter />

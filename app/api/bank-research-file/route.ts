@@ -1,30 +1,73 @@
-import { ADMIN_OWNER } from '../../lib/admin-access';
-import { ensureBankResearch } from '../../lib/directories';
+import { isOwnerEmail } from '../../lib/admin-access';
+import { ensureBankResearch, ensureBankReportTables } from '../../lib/directories';
 import { researchIdentity } from '../../lib/research-access';
-const OWNER = ADMIN_OWNER;
+import { premiumMemberFromHeaders } from '../../lib/bank-premium';
+import { getUserFromCookieHeader } from '../../lib/auth';
+
 export async function GET(request: Request) {
   const { env } = await import('cloudflare:workers');
   await ensureBankResearch(env.DB);
-  const identity = await researchIdentity(request, env.DB);
+  await ensureBankReportTables(env.DB);
+
   const url = new URL(request.url),
     id = url.searchParams.get('id') || '',
     kind = url.searchParams.get('kind') === 'logo' ? 'logo' : 'report',
+    token = url.searchParams.get('token') || '',
     row = (await env.DB.prepare(
-      'SELECT researcher_email,workflow_status,logo_key,logo_name,report_key,report_name FROM bank_research_submissions WHERE id=?',
+      'SELECT id,published_bank_id,researcher_email,workflow_status,logo_key,logo_name,report_key,report_name FROM bank_research_submissions WHERE id=?',
     )
       .bind(id)
       .first()) as any;
   if (!row) return new Response('Not found', { status: 404 });
-  const email = identity?.email || '';
-  if (kind === 'report' && email !== OWNER && email !== row.researcher_email)
-    return new Response('Unauthorized', { status: 401 });
-  if (
-    kind === 'logo' &&
-    row.workflow_status !== 'Approved' &&
-    email !== OWNER &&
-    email !== row.researcher_email
-  )
-    return new Response('Unauthorized', { status: 401 });
+
+  const sessionUser = await getUserFromCookieHeader(request.headers.get('cookie'));
+  const isOwner = Boolean(sessionUser?.email && isOwnerEmail(sessionUser.email));
+
+  const identity = await researchIdentity(request, env.DB);
+  const researcherEmail = (identity?.email || '').toLowerCase();
+  const isResearcherOwner = isOwnerEmail(researcherEmail);
+  const isAuthor = Boolean(
+    researcherEmail &&
+    researcherEmail === String(row.researcher_email || '').toLowerCase(),
+  );
+
+  let authorized = false;
+
+  if (kind === 'logo') {
+    authorized =
+      row.workflow_status === 'Approved' ||
+      isOwner ||
+      isResearcherOwner ||
+      isAuthor;
+  } else {
+    // kind === 'report'
+    if (isOwner || isResearcherOwner || isAuthor) {
+      authorized = true;
+    } else if (row.workflow_status === 'Approved') {
+      const premium = await premiumMemberFromHeaders(request.headers, env.DB);
+      if (premium) {
+        authorized = true;
+      } else if (token) {
+        const accessRecord = (await env.DB.prepare(
+          'SELECT created_at,bank_id FROM bank_report_access WHERE token=?',
+        )
+          .bind(token)
+          .first()) as any;
+        if (
+          accessRecord?.bank_id &&
+          accessRecord.bank_id === row.published_bank_id &&
+          accessRecord.created_at &&
+          Date.now() - new Date(accessRecord.created_at).getTime() <
+            7 * 24 * 60 * 60 * 1000
+        ) {
+          authorized = true;
+        }
+      }
+    }
+  }
+
+  if (!authorized) return new Response('Unauthorized', { status: 401 });
+
   const key = kind === 'logo' ? row.logo_key : row.report_key,
     name = kind === 'logo' ? row.logo_name : row.report_name;
   if (!key) return new Response('Not found', { status: 404 });

@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   const { env } = await import('cloudflare:workers');
   await ensureBankReportTables(env.DB);
   const bank = await env.DB.prepare(
-    'SELECT id FROM banks WHERE id=? AND length(full_report)>0',
+    "SELECT b.id FROM banks b WHERE b.id=? AND (length(b.full_report)>0 OR EXISTS(SELECT 1 FROM bank_research_submissions s WHERE s.published_bank_id=b.id AND s.workflow_status='Approved' AND length(s.report_key)>0))",
   )
     .bind(bankId)
     .first();

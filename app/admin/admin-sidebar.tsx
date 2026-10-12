@@ -261,7 +261,7 @@ export const ADMIN_LINKS: AdminLink[] = [
 ];
 
 export default function AdminSidebar({
-  isOwner = true,
+  isOwner = false,
   permissions = [],
 }: {
   isOwner?: boolean;
@@ -269,13 +269,16 @@ export default function AdminSidebar({
 }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const normalizedPermissions = (permissions || []).map((p) =>
+    String(p || '').trim().toLowerCase(),
+  );
 
   const visibleLinks = ADMIN_LINKS.filter((link) => {
     if (link.href === '/admin') return isOwner;
     if (isOwner) return true;
     if (link.href === '/admin/staff-access') return false;
-    const key = link.href.split('/admin/')[1];
-    return key ? permissions.includes(key) : false;
+    const key = link.href.split('/admin/')[1]?.toLowerCase();
+    return key ? normalizedPermissions.includes(key) : false;
   });
 
   return (

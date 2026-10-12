@@ -31,45 +31,54 @@ const blank = (n: number): Item => ({
 async function loadPdfJs(): Promise<any> {
   if (typeof window === 'undefined') return null;
   const w = window as any;
-  if (w.pdfjsLib) return w.pdfjsLib;
+  if (w.pdfjsLib) {
+    w.pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
+    return w.pdfjsLib;
+  }
 
   return new Promise((resolve, reject) => {
     const existing = document.querySelector('script[data-pdfjs]');
     if (existing) {
       if (w.pdfjsLib) {
+        w.pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
         resolve(w.pdfjsLib);
       } else {
-        existing.addEventListener('load', () => resolve(w.pdfjsLib));
+        existing.addEventListener('load', () => {
+          if (w.pdfjsLib) {
+            w.pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
+            resolve(w.pdfjsLib);
+          } else {
+            reject(new Error('PDF.js library could not be loaded'));
+          }
+        });
         existing.addEventListener('error', reject);
       }
       return;
     }
 
     const script = document.createElement('script');
-    script.src =
-      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    script.src = '/vendor/pdfjs/pdf.min.js';
     script.async = true;
     script.dataset.pdfjs = 'true';
     script.onload = () => {
       const lib = w.pdfjsLib;
       if (lib) {
-        lib.GlobalWorkerOptions.workerSrc =
-          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        lib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
         resolve(lib);
       } else {
         reject(new Error('PDF.js library could not be loaded'));
       }
     };
-    script.onerror = () => reject(new Error('Failed to load PDF.js'));
+    script.onerror = () => reject(new Error('Failed to load PDF.js from /vendor/pdfjs/pdf.min.js'));
     document.head.appendChild(script);
   });
 }
 
-async function renderPdfFirstPage(file: File): Promise<Blob | null> {
+async function renderPdfFirstPage(fileOrBlob: File | Blob): Promise<Blob | null> {
   try {
     const pdfjs = await loadPdfJs();
     if (!pdfjs) return null;
-    const arrayBuffer = await file.arrayBuffer();
+    const arrayBuffer = await fileOrBlob.arrayBuffer();
     const loadingTask = pdfjs.getDocument({ data: arrayBuffer });
     const pdfDoc = await loadingTask.promise;
     const page = await pdfDoc.getPage(1);
@@ -115,7 +124,17 @@ export default function ArticleManager({
     [busy, setBusy] = useState(false),
     [coverBlob, setCoverBlob] = useState<Blob | null>(null),
     [coverPreview, setCoverPreview] = useState<string>(''),
+    [manualCoverFile, setManualCoverFile] = useState<File | null>(null),
+    [manualCoverPreview, setManualCoverPreview] = useState<string>(''),
     [generatingCover, setGeneratingCover] = useState(false);
+
+  const resetCovers = () => {
+    setCoverBlob(null);
+    setCoverPreview('');
+    setManualCoverFile(null);
+    setManualCoverPreview('');
+  };
+
   const v = editing || blank(items.length + 1),
     filtered = useMemo(
       () =>
@@ -147,18 +166,94 @@ export default function ArticleManager({
       setCoverPreview(URL.createObjectURL(blob));
       setMsg('Cover preview generated successfully.');
     } else {
-      setMsg('Could not render cover preview automatically (PDF details will still be saved).');
+      setCoverBlob(null);
+      setCoverPreview('');
+      setMsg('Could not render cover preview automatically. Please choose a manual cover image below.');
+    }
+  }
+
+  function onManualCoverChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) {
+      setManualCoverFile(null);
+      setManualCoverPreview('');
+      return;
+    }
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      setMsg('Manual cover must be a JPEG, PNG, or WebP image.');
+      e.target.value = '';
+      setManualCoverFile(null);
+      setManualCoverPreview('');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setMsg('Manual cover image must be 5 MB or smaller.');
+      e.target.value = '';
+      setManualCoverFile(null);
+      setManualCoverPreview('');
+      return;
+    }
+    setManualCoverFile(file);
+    setManualCoverPreview(URL.createObjectURL(file));
+    setMsg('Manual cover image selected.');
+  }
+
+  async function regenerateCoverFromExistingPdf() {
+    if (!v.id || !v.pdf_url) return;
+    setGeneratingCover(true);
+    setMsg('Fetching existing PDF to extract cover…');
+    try {
+      const res = await fetch(v.pdf_url);
+      if (!res.ok) throw new Error('Could not fetch existing PDF file');
+      const blob = await res.blob();
+      const generated = await renderPdfFirstPage(blob);
+      if (!generated) {
+        throw new Error('Failed to render page 1 of PDF');
+      }
+      setCoverBlob(generated);
+      setCoverPreview(URL.createObjectURL(generated));
+      setMsg('Cover extracted from existing PDF. Click "Save changes" to upload and apply.');
+    } catch (err: any) {
+      setMsg(`Cover extraction failed: ${err.message || 'Unknown error'}. You can upload a manual cover image below.`);
+    } finally {
+      setGeneratingCover(false);
     }
   }
 
   async function save(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (generatingCover) {
+      setMsg('Please wait for cover generation to complete…');
+      return;
+    }
     setBusy(true);
     setMsg('Saving publication…');
     const form = e.currentTarget,
       d = Object.fromEntries(new FormData(form).entries()) as any;
     d.published = d.published === 'on';
     d.featured = d.featured === 'on';
+
+    const file = (form.elements.namedItem('pdf_file') as HTMLInputElement)
+      ?.files?.[0];
+
+    // If PDF is selected, ensure a cover is ready (manual or auto-generated)
+    let effectiveCoverBlob = coverBlob;
+    if (file && !manualCoverFile && !effectiveCoverBlob) {
+      setGeneratingCover(true);
+      setMsg('Rendering page 1 cover image from PDF…');
+      effectiveCoverBlob = await renderPdfFirstPage(file);
+      setGeneratingCover(false);
+      if (effectiveCoverBlob) {
+        setCoverBlob(effectiveCoverBlob);
+        setCoverPreview(URL.createObjectURL(effectiveCoverBlob));
+      } else {
+        setMsg('Could not generate cover image from PDF. Please upload a manual cover image (JPG, PNG, or WebP) or try another PDF.');
+        setBusy(false);
+        return;
+      }
+    }
+
     const r = await fetch('/api/articles', {
         method: d.id ? 'PUT' : 'POST',
         headers: { 'content-type': 'application/json' },
@@ -170,16 +265,17 @@ export default function ArticleManager({
       setBusy(false);
       return;
     }
-    const id = d.id || j.id,
-      file = (form.elements.namedItem('pdf_file') as HTMLInputElement)
-        ?.files?.[0];
+    const id = d.id || j.id;
+
     if (file) {
       setMsg('Uploading PDF and cover image…');
       const fd = new FormData();
       fd.set('id', id);
       fd.set('file', file);
-      if (coverBlob) {
-        fd.set('cover', coverBlob, `${id}-cover.jpg`);
+      if (manualCoverFile) {
+        fd.set('cover', manualCoverFile, manualCoverFile.name);
+      } else if (effectiveCoverBlob) {
+        fd.set('cover', effectiveCoverBlob, `${id}-cover.jpg`);
       }
       const ur = await fetch('/api/admin/article-upload', {
           method: 'POST',
@@ -194,11 +290,30 @@ export default function ArticleManager({
       }
       if (uj.pageCount !== 2)
         setMsg(`Saved. Note: this PDF contains ${uj.pageCount} pages, not 2.`);
+    } else if (manualCoverFile || coverBlob) {
+      setMsg('Uploading cover image…');
+      const fd = new FormData();
+      fd.set('id', id);
+      if (manualCoverFile) {
+        fd.set('cover', manualCoverFile, manualCoverFile.name);
+      } else if (coverBlob) {
+        fd.set('cover', coverBlob, `${id}-cover.jpg`);
+      }
+      const ur = await fetch('/api/admin/article-upload', {
+          method: 'POST',
+          body: fd,
+        }),
+        uj = (await ur.json()) as any;
+      if (!ur.ok) {
+        setMsg(`Publication details saved, but cover failed: ${uj.error}`);
+        setBusy(false);
+        await reload();
+        return;
+      }
     }
     await reload();
     setEditing(null);
-    setCoverBlob(null);
-    setCoverPreview('');
+    resetCovers();
     form.reset();
     if (!file || !msg.includes('contains'))
       setMsg(d.id ? 'Publication updated.' : 'Publication uploaded and added.');
@@ -211,8 +326,7 @@ export default function ArticleManager({
     });
     await reload();
     setEditing(null);
-    setCoverBlob(null);
-    setCoverPreview('');
+    resetCovers();
     setMsg(`${x.title} was removed.`);
   }
   return (
@@ -226,7 +340,7 @@ export default function ArticleManager({
             <h2>{editing ? editing.title : 'Upload an article or gilyon'}</h2>
           </div>
           {editing && (
-            <button onClick={() => { setEditing(null); setCoverBlob(null); setCoverPreview(''); }}>← Back to add</button>
+            <button onClick={() => { setEditing(null); resetCovers(); }}>← Back to add</button>
           )}
         </div>
         <form key={v.id || 'new'} onSubmit={save}>
@@ -278,17 +392,50 @@ export default function ArticleManager({
                 accept="application/pdf"
                 required={!v.pdf_url}
                 onChange={onPdfChange}
+                disabled={busy || generatingCover}
               />
               <small>
                 Upload the complete PDF. The administrator automatically extracts page 1 as the cover and counts its pages. Maximum 20 MB.
               </small>
             </label>
+
+            <label style={{ marginTop: '14px', display: 'block' }}>
+              <span>Manual cover image (optional override)</span>
+              <input
+                type="file"
+                name="manual_cover"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={onManualCoverChange}
+                disabled={busy || generatingCover}
+              />
+              <small>
+                Upload a custom cover image (JPG, PNG, or WebP up to 5 MB) if you wish to override or recover without PDF re-rendering.
+              </small>
+            </label>
+
             {generatingCover && (
               <p className="adminSaveMessage" style={{ margin: '8px 0 0 0', color: '#c69b46' }}>
                 ⏳ Rendering page 1 cover image from PDF…
               </p>
             )}
-            {coverPreview && !generatingCover && (
+
+            {manualCoverPreview && !generatingCover && (
+              <div style={{ marginTop: '12px', display: 'flex', gap: '12px', alignItems: 'flex-start', background: '#f0fdf4', padding: '10px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
+                <img
+                  src={manualCoverPreview}
+                  alt="Manual Cover Preview"
+                  style={{ width: '64px', height: '84px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #86efac', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}
+                />
+                <div style={{ fontSize: '12px' }}>
+                  <b style={{ color: '#166534', display: 'block', marginBottom: '2px' }}>✓ Manual cover image selected</b>
+                  <span style={{ color: '#15803d', lineHeight: '1.4' }}>
+                    This manual image takes precedence and will be saved to R2 as the article cover.
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {!manualCoverPreview && coverPreview && !generatingCover && (
               <div style={{ marginTop: '12px', display: 'flex', gap: '12px', alignItems: 'flex-start', background: '#f8fafc', padding: '10px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                 <img
                   src={coverPreview}
@@ -303,7 +450,8 @@ export default function ArticleManager({
                 </div>
               </div>
             )}
-            {!coverPreview && v.cover_url && (
+
+            {!manualCoverPreview && !coverPreview && v.cover_url && (
               <div style={{ marginTop: '12px', display: 'flex', gap: '12px', alignItems: 'flex-start', background: '#f8fafc', padding: '10px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                 <img
                   src={v.cover_url}
@@ -313,13 +461,39 @@ export default function ArticleManager({
                 <div style={{ fontSize: '12px' }}>
                   <b style={{ color: '#102a43', display: 'block', marginBottom: '2px' }}>Current cover</b>
                   <span style={{ color: '#64748b', lineHeight: '1.4' }}>
-                    Selecting a new PDF will automatically generate a replacement cover.
+                    Selecting a new PDF or manual image will update this cover.
                   </span>
                 </div>
               </div>
             )}
+
+            {!manualCoverPreview && !coverPreview && !v.cover_url && v.pdf_url && (
+              <div style={{ marginTop: '12px', padding: '10px', background: '#fffbeb', border: '1px solid #fef3c7', borderRadius: '8px' }}>
+                <b style={{ color: '#92400e', fontSize: '12px', display: 'block', marginBottom: '4px' }}>
+                  ⚠️ No cover image currently set (placeholder displayed on public archive)
+                </b>
+                <button
+                  type="button"
+                  onClick={regenerateCoverFromExistingPdf}
+                  disabled={generatingCover || busy}
+                  style={{
+                    padding: '6px 12px',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    background: '#102a43',
+                    color: '#f7f3ea',
+                    borderRadius: '4px',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  ⚡ Extract cover from current PDF
+                </button>
+              </div>
+            )}
+
             {v.pdf_url && (
-              <a href={v.pdf_url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', marginTop: '8px' }}>
+              <a href={v.pdf_url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', marginTop: '10px' }}>
                 Open current PDF ↗
               </a>
             )}
@@ -353,15 +527,17 @@ export default function ArticleManager({
             </div>
           </div>
           <div className="editFormActions">
-            <button className="primary" disabled={busy}>
+            <button className="primary" disabled={busy || generatingCover}>
               {busy
                 ? 'Saving…'
-                : editing
-                  ? 'Save changes'
-                  : 'Upload and publish'}
+                : generatingCover
+                  ? 'Processing PDF…'
+                  : editing
+                    ? 'Save changes'
+                    : 'Upload and publish'}
             </button>
             {editing && (
-              <button type="button" onClick={() => setEditing(null)}>
+              <button type="button" onClick={() => { setEditing(null); resetCovers(); }}>
                 Cancel
               </button>
             )}

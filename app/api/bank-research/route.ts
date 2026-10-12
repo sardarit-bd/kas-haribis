@@ -23,7 +23,7 @@ async function permitted(db: any, email: string) {
   );
 }
 async function canReview(db: any, email: string) {
-  if (email === OWNER) return true;
+  if (isOwnerEmail(email)) return true;
   return Boolean(
     await db
       .prepare(
@@ -63,7 +63,7 @@ export async function GET(request: Request) {
       { error: 'Your account is not approved for bank research.' },
       { status: 403 },
     );
-  const seeAll = email === OWNER || reviewer,
+  const seeAll = isOwnerEmail(email) || reviewer,
     query = seeAll
       ? 'SELECT * FROM bank_research_submissions ORDER BY updated_at DESC'
       : 'SELECT * FROM bank_research_submissions WHERE researcher_email=? ORDER BY updated_at DESC';
@@ -72,7 +72,7 @@ export async function GET(request: Request) {
     : await env.DB.prepare(query).bind(email).all();
   return Response.json({
     submissions: result.results,
-    owner: email === OWNER,
+    owner: isOwnerEmail(email),
     reviewer,
   });
 }
@@ -124,13 +124,13 @@ export async function POST(request: Request) {
     )
       .bind(id)
       .first()) as any;
-    if (!row || (email !== OWNER && row.researcher_email !== email))
+    if (!row || (!isOwnerEmail(email) && row.researcher_email !== email))
       return Response.json(
         { error: 'Research record not found.' },
         { status: 404 },
       );
     if (
-      email !== OWNER &&
+      !isOwnerEmail(email) &&
       ['Approved', 'Rejected'].includes(row.workflow_status)
     )
       return Response.json(
@@ -229,7 +229,7 @@ export async function PUT(request: Request) {
     return Response.json({ saved: true, status: 'Changes requested' });
   }
   if (action === 'reviewer_approve') {
-    if (email === OWNER)
+    if (isOwnerEmail(email))
       return Response.json(
         { error: 'Use Approve & publish for final owner approval.' },
         { status: 400 },
@@ -242,7 +242,7 @@ export async function PUT(request: Request) {
     return Response.json({ saved: true, status: 'Reviewer approved' });
   }
   if (action === 'reject') {
-    if (email !== OWNER)
+    if (!isOwnerEmail(email))
       return Response.json(
         { error: 'Only the owner can reject a record.' },
         { status: 403 },
@@ -256,19 +256,20 @@ export async function PUT(request: Request) {
   }
   if (action !== 'approve')
     return Response.json({ error: 'Choose a review action.' }, { status: 400 });
-  if (email !== OWNER)
+  if (!isOwnerEmail(email))
     return Response.json(
       { error: 'Only the Kav Haribis owner can publish research live.' },
       { status: 403 },
     );
   await ensureBanks(env.DB);
   const bankId = row.published_bank_id || crypto.randomUUID(),
+    existing = (await env.DB.prepare('SELECT id,logo_url,full_report FROM banks WHERE id=?')
+      .bind(bankId)
+      .first()) as any,
     logoUrl = row.logo_key
       ? `/api/bank-research-file?id=${encodeURIComponent(id)}&kind=logo`
-      : '',
-    existing = await env.DB.prepare('SELECT id FROM banks WHERE id=?')
-      .bind(bankId)
-      .first();
+      : (existing?.logo_url || ''),
+    bankFullReport = row.full_report || (existing?.full_report || '');
   if (existing)
     await env.DB.prepare(
       'UPDATE banks SET title=?,status=?,summary=?,comment=?,last_updated=?,full_report=?,institution_type=?,website=?,logo_url=?,researcher=?,source_urls=?,ownership_details=?,iska_details=?,internal_notes=? WHERE id=?',
@@ -279,7 +280,7 @@ export async function PUT(request: Request) {
         row.summary,
         row.public_comment,
         row.last_updated,
-        row.full_report,
+        bankFullReport,
         row.institution_type,
         row.website,
         logoUrl,
@@ -305,7 +306,7 @@ export async function PUT(request: Request) {
         row.summary,
         row.public_comment,
         row.last_updated,
-        row.full_report,
+        bankFullReport,
         row.institution_type,
         row.website,
         logoUrl,

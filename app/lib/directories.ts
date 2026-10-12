@@ -60,9 +60,10 @@ export async function ensureBankReportTables(db: any) {
 }
 export async function listBanks(db: any) {
   await ensureBanks(db);
+  await ensureBankResearch(db);
   const result = await db
     .prepare(
-      'SELECT id,title,status,summary,comment,last_updated,institution_type,website,logo_url,CASE WHEN length(full_report)>0 THEN 1 ELSE 0 END AS has_full_report,sort_order FROM banks ORDER BY title COLLATE NOCASE ASC',
+      "SELECT b.id,b.title,b.status,b.summary,b.comment,b.last_updated,b.institution_type,b.website,b.logo_url,CASE WHEN length(b.full_report)>0 OR EXISTS(SELECT 1 FROM bank_research_submissions s WHERE s.published_bank_id=b.id AND s.workflow_status='Approved' AND length(s.report_key)>0) THEN 1 ELSE 0 END AS has_full_report,b.sort_order FROM banks b ORDER BY b.title COLLATE NOCASE ASC",
     )
     .all();
   return result.results as any[];
