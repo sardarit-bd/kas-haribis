@@ -206,7 +206,7 @@ export async function buildGoogleCallbackResponse(
 
   const email = profile.email.toLowerCase();
   const { env } = await import('cloudflare:workers');
-  const { isActiveStaffOrOwner } = await import('./admin-access');
+  const { isActiveStaffOrOwner, getPostLoginRedirect } = await import('./admin-access');
   const allowed = await isActiveStaffOrOwner(env.DB, email);
 
   if (!allowed) {
@@ -217,6 +217,12 @@ export async function buildGoogleCallbackResponse(
     headers.append('Set-Cookie', clearOAuthStateCookieHeader(secureCookies));
     return new Response(null, { status: 302, headers });
   }
+
+  const redirectTarget = await getPostLoginRedirect(
+    env.DB,
+    email,
+    oauthState.returnTo,
+  );
 
   const sessionPayload: SessionPayload = {
     email,
@@ -230,7 +236,7 @@ export async function buildGoogleCallbackResponse(
 
   const secureCookies = useSecureCookies(config.APP_URL);
   const headers = new Headers();
-  headers.set('Location', oauthState.returnTo);
+  headers.set('Location', redirectTarget);
   headers.append(
     'Set-Cookie',
     sessionCookieHeader(sessionToken, SESSION_MAX_AGE_SECONDS, secureCookies),

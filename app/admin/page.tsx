@@ -60,6 +60,9 @@ export default async function AdminPage() {
     : await staffPermissions(env.DB, actualEmail);
 
   if (!owner) {
+    const firstSection = ADMIN_SECTIONS.find((section) =>
+      permissions.includes(section.key),
+    );
     return (
       <main className="p-6 max-w-4xl mx-auto">
         <div className="bg-white border border-red-200 rounded-2xl p-8 text-center text-slate-800 shadow-sm">
@@ -67,9 +70,17 @@ export default async function AdminPage() {
             ✕
           </div>
           <h1 className="text-xl font-semibold mb-1 text-slate-900">Unauthorized Access</h1>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-slate-600 mb-4">
             The main dashboard overview is reserved for Admin Owners. Account <code className="text-amber-700 font-semibold">{actualEmail}</code> is not authorized to view this page.
           </p>
+          {firstSection && (
+            <a
+              href={firstSection.href}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#102a43] text-white rounded-lg text-sm font-semibold hover:bg-[#173f5f] transition-colors"
+            >
+              Go to your assigned section: {firstSection.title} &rarr;
+            </a>
+          )}
         </div>
       </main>
     );

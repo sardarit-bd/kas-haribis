@@ -1,5 +1,5 @@
 import {
-  ADMIN_SECTIONS,
+  getPostLoginRedirect,
   isActiveStaffOrOwner,
   isOwnerEmail,
   staffPermissions,
@@ -14,19 +14,6 @@ import {
   type SessionPayload,
 } from '../../../lib/auth-session';
 
-function sanitizeReturnTo(value: string): string {
-  if (!value || !value.startsWith('/') || value.startsWith('//') || value.startsWith('/\\')) {
-    return '';
-  }
-  try {
-    const url = new URL(value, 'https://app.local');
-    if (url.origin !== 'https://app.local') return '';
-    if (url.pathname === '/sign-in' || url.pathname.startsWith('/api/')) return '';
-    return `${url.pathname}${url.search}${url.hash}`;
-  } catch {
-    return '';
-  }
-}
 
 export async function POST(request: Request) {
   let body: any;
@@ -87,12 +74,7 @@ export async function POST(request: Request) {
   }
 
   const isOwner = isOwnerEmail(email);
-  const cleanReturnTo = sanitizeReturnTo(returnTo);
-  let redirectTarget = '/admin';
-
-  if (isOwner) {
-    redirectTarget = cleanReturnTo || '/admin';
-  } else {
+  if (!isOwner) {
     const permissions = await staffPermissions(env.DB, email);
     if (!permissions.length) {
       return Response.json(
@@ -100,28 +82,10 @@ export async function POST(request: Request) {
         { status: 403 },
       );
     }
-
-    let returnToAllowed = false;
-    if (cleanReturnTo) {
-      if (cleanReturnTo.startsWith('/admin/')) {
-        const sectionKey = cleanReturnTo.slice('/admin/'.length).split('/')[0]?.split('?')[0];
-        if (sectionKey && permissions.includes(sectionKey)) {
-          returnToAllowed = true;
-        }
-      } else if (!cleanReturnTo.startsWith('/admin')) {
-        returnToAllowed = true;
-      }
-    }
-
-    if (returnToAllowed && cleanReturnTo) {
-      redirectTarget = cleanReturnTo;
-    } else {
-      const firstSection = ADMIN_SECTIONS.find((section) =>
-        permissions.includes(section.key),
-      );
-      redirectTarget = firstSection ? firstSection.href : '/admin';
-    }
   }
+
+  const redirectTarget = await getPostLoginRedirect(env.DB, email, returnTo);
+
 
   const sessionPayload: SessionPayload = {
     email,

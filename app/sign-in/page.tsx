@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { getPostLoginRedirect } from '../lib/admin-access';
 import { getCurrentUser } from '../lib/auth';
 import { SiteFooter, SiteHeader } from '../shared/site-shell';
 import SignInForm from './sign-in-form';
@@ -26,14 +27,23 @@ export default async function SignInPage({
   searchParams: Promise<{ return_to?: string; error?: string }>;
 }) {
   const params = await searchParams;
-  const returnTo = params.return_to || '/';
+  const requestedReturnTo = params.return_to || '';
   const initialError = params.error || '';
   const user = await getCurrentUser();
   if (user) {
-    redirect(returnTo.startsWith('/') ? returnTo : '/');
+    // @ts-ignore
+    const { env } = await import('cloudflare:workers');
+    const destination = await getPostLoginRedirect(
+      env.DB,
+      user.email,
+      requestedReturnTo,
+    );
+    redirect(destination);
   }
 
-  const googleHref = `/api/auth/google?return_to=${encodeURIComponent(returnTo)}`;
+  const googleHref = requestedReturnTo
+    ? `/api/auth/google?return_to=${encodeURIComponent(requestedReturnTo)}`
+    : '/api/auth/google';
 
   return (
     <main className="flex min-h-screen flex-col bg-[#f7f3ea]">
@@ -89,7 +99,7 @@ export default async function SignInPage({
           <section className="flex items-center justify-center">
             <SignInForm
               googleHref={googleHref}
-              returnTo={returnTo}
+              returnTo={requestedReturnTo}
               initialError={initialError}
             />
           </section>
@@ -98,4 +108,4 @@ export default async function SignInPage({
       <SiteFooter />
     </main>
   );
-}
+}
