@@ -1,6 +1,6 @@
 'use client';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import BankReportUnlock, { UnlockMode } from './bank-report-unlock';
 import BankResearchForm from './bank-research-form';
 
@@ -41,7 +41,14 @@ function getPageNumbers(current: number, total: number) {
   return [1, '...', current - 1, current, current + 1, '...', total];
 }
 
-export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
+export default function BankDirectoryClient({
+  banks,
+  initialAuthorized = false,
+}: {
+  banks: Bank[];
+  initialAuthorized?: boolean;
+}) {
+  const [isAuthorized, setIsAuthorized] = useState(Boolean(initialAuthorized));
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('all');
   const [unlock, setUnlock] = useState<Bank | null>(null);
@@ -51,6 +58,15 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
   const [perPage, setPerPage] = useState<number | 'all'>(12);
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+
+  useEffect(() => {
+    fetch('/api/bank-premium-login')
+      .then((r) => r.json())
+      .then((result) => {
+        if (result?.authenticated) setIsAuthorized(true);
+      })
+      .catch(() => {});
+  }, []);
 
   const filtered = useMemo(
     () =>
@@ -374,7 +390,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
 
                   {Boolean(bank.has_full_report) && (
                     <span className="absolute top-2 left-2 z-10 text-[10px] font-extrabold uppercase px-2 py-0.5 bg-amber-100 text-amber-900 border border-amber-300 rounded-sm">
-                      $15 Report
+                      {isAuthorized ? 'Full Report' : '$15 Report'}
                     </span>
                   )}
 
@@ -422,13 +438,32 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
 
               {/* Bottom Buttons */}
               <div className="grid grid-cols-2 gap-2.5 pt-3 w-full">
-                <button
-                  type="button"
-                  onClick={() => setDetailBank(bank)}
-                  className="w-full py-1.5 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md"
-                >
-                  Full Report
-                </button>
+                {bank.has_full_report ? (
+                  isAuthorized ? (
+                    <a
+                      href={`/bank-directory/full-report?bankId=${encodeURIComponent(String(bank.id))}`}
+                      className="w-full py-1.5 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md inline-flex items-center justify-center"
+                    >
+                      View Full Report
+                    </a>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setDetailBank(bank)}
+                      className="w-full py-1.5 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md"
+                    >
+                      View Full Report
+                    </button>
+                  )
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setDetailBank(bank)}
+                    className="w-full py-1.5 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md"
+                  >
+                    Bank Details
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => setRequestUpdateBank(bank)}
@@ -483,7 +518,7 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
 
                   {Boolean(bank.has_full_report) && (
                     <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 bg-amber-100 text-amber-900 border border-amber-300 rounded-sm">
-                      $15 Report
+                      {isAuthorized ? 'Full Report' : '$15 Report'}
                     </span>
                   )}
 
@@ -516,13 +551,32 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
 
               {/* Right: Action Buttons */}
               <div className="w-full md:w-44 shrink-0 flex flex-col sm:flex-row md:flex-col gap-2.5 justify-center pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
-                <button
-                  type="button"
-                  onClick={() => setDetailBank(bank)}
-                  className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md"
-                >
-                  Full Report
-                </button>
+                {bank.has_full_report ? (
+                  isAuthorized ? (
+                    <a
+                      href={`/bank-directory/full-report?bankId=${encodeURIComponent(String(bank.id))}`}
+                      className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md inline-flex items-center justify-center"
+                    >
+                      View Full Report
+                    </a>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setDetailBank(bank)}
+                      className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md"
+                    >
+                      View Full Report
+                    </button>
+                  )
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setDetailBank(bank)}
+                    className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md"
+                  >
+                    Bank Details
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => setRequestUpdateBank(bank)}
@@ -772,34 +826,46 @@ export default function BankDirectoryClient({ banks }: { banks: Bank[] }) {
                         Protected Full Report
                       </h3>
                       <p className="text-xs text-slate-300">
-                        Unlock the complete in-depth legal and halachic research
-                        report for this institution.
+                        {isAuthorized
+                          ? 'You are signed in with access to the complete in-depth legal and halachic research report.'
+                          : 'Unlock the complete in-depth legal and halachic research report for this institution.'}
                       </p>
                     </div>
-                    <div className="flex flex-wrap items-center justify-center gap-3">
-                      <button
-                        className="px-6 py-2.5 bg-[#c69b46] hover:bg-[#b0883b] text-white text-xs font-bold rounded-xl transition-colors shadow-md cursor-pointer"
-                        onClick={() => {
-                          const target = detailBank;
-                          setDetailBank(null);
-                          setUnlockMode('pay');
-                          setUnlock(target);
-                        }}
-                      >
-                        Unlock Full Report — $15
-                      </button>
-                      <button
-                        className="px-6 py-2.5 bg-white/10 hover:bg-white/20 border border-[#c69b46]/60 hover:border-[#c69b46] text-[#e0c07d] hover:text-white text-xs font-bold rounded-xl transition-all shadow-sm cursor-pointer"
-                        onClick={() => {
-                          const target = detailBank;
-                          setDetailBank(null);
-                          setUnlockMode('membership');
-                          setUnlock(target);
-                        }}
-                      >
-                        Premium Membership
-                      </button>
-                    </div>
+                    {isAuthorized ? (
+                      <div className="flex flex-wrap items-center justify-center gap-3">
+                        <a
+                          href={`/bank-directory/full-report?bankId=${encodeURIComponent(String(detailBank.id))}`}
+                          className="px-6 py-2.5 bg-[#c69b46] hover:bg-[#b0883b] text-white text-xs font-bold rounded-xl transition-colors shadow-md inline-flex items-center gap-1.5"
+                        >
+                          View Full Report →
+                        </a>
+                      </div>
+                    ) : (
+                      <div className="flex flex-wrap items-center justify-center gap-3">
+                        <button
+                          className="px-6 py-2.5 bg-[#c69b46] hover:bg-[#b0883b] text-white text-xs font-bold rounded-xl transition-colors shadow-md cursor-pointer"
+                          onClick={() => {
+                            const target = detailBank;
+                            setDetailBank(null);
+                            setUnlockMode('pay');
+                            setUnlock(target);
+                          }}
+                        >
+                          Unlock Full Report — $15
+                        </button>
+                        <button
+                          className="px-6 py-2.5 bg-white/10 hover:bg-white/20 border border-[#c69b46]/60 hover:border-[#c69b46] text-[#e0c07d] hover:text-white text-xs font-bold rounded-xl transition-all shadow-sm cursor-pointer"
+                          onClick={() => {
+                            const target = detailBank;
+                            setDetailBank(null);
+                            setUnlockMode('membership');
+                            setUnlock(target);
+                          }}
+                        >
+                          Premium Membership
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="pt-2 text-xs text-slate-400 text-center">

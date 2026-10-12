@@ -9,6 +9,9 @@ import {
   premiumMemberFromHeaders,
   recordFailure,
 } from '../../lib/bank-premium';
+import { getUserFromCookieHeader } from '../../lib/auth';
+import { isOwnerEmail } from '../../lib/admin-access';
+import { ensureBankResearch } from '../../lib/directories';
 const clean = (value: unknown, max: number) =>
   String(value || '')
     .trim()
@@ -16,9 +19,16 @@ const clean = (value: unknown, max: number) =>
 export async function GET(request: Request) {
   const { env } = await import('cloudflare:workers'),
     member = await premiumMemberFromHeaders(request.headers, env.DB);
+  const user = await getUserFromCookieHeader(request.headers.get('cookie'));
+  const isOwner = Boolean(user?.email && isOwnerEmail(user.email));
   return Response.json({
-    authenticated: Boolean(member),
-    member: member ? { name: member.name, email: member.email } : null,
+    authenticated: Boolean(member || isOwner),
+    isOwner,
+    member: member
+      ? { name: member.name, email: member.email }
+      : isOwner
+      ? { name: user?.name || 'Administrator', email: user?.email }
+      : null,
   });
 }
 export async function POST(request: Request) {
@@ -33,8 +43,9 @@ export async function POST(request: Request) {
     );
   const { env } = await import('cloudflare:workers');
   await ensureBankPremium(env.DB);
+  await ensureBankResearch(env.DB);
   const bank = await env.DB.prepare(
-    'SELECT id FROM banks WHERE id=? AND length(full_report)>0',
+    "SELECT b.id FROM banks b WHERE b.id=? AND (length(b.full_report)>0 OR EXISTS(SELECT 1 FROM bank_research_submissions s WHERE s.published_bank_id=b.id AND s.workflow_status='Approved' AND length(s.report_key)>0))",
   )
     .bind(bankId)
     .first();
