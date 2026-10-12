@@ -22,12 +22,25 @@ export default async function GenealogyAdminPage() {
         </div>
       </main>
     );
-  await ensureContactSubmissions(env.DB);
-  const result = await env.DB.prepare(
-    'SELECT * FROM contact_submissions WHERE topic = ? ORDER BY created_at DESC',
-  )
-    .bind('Genealogy research request')
-    .all();
+  let result: any;
+  try {
+    result = await env.DB.prepare(
+      'SELECT * FROM contact_submissions WHERE topic = ? ORDER BY created_at DESC',
+    )
+      .bind('Genealogy research request')
+      .all();
+  } catch (err: any) {
+    if (String(err).toLowerCase().includes('no such table')) {
+      await ensureContactSubmissions(env.DB);
+      result = await env.DB.prepare(
+        'SELECT * FROM contact_submissions WHERE topic = ? ORDER BY created_at DESC',
+      )
+        .bind('Genealogy research request')
+        .all();
+    } else {
+      throw err;
+    }
+  }
   return (
     <main className="adminPage">
       <div className="adminShell">

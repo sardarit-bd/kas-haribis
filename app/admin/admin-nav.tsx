@@ -1,4 +1,4 @@
-import { ADMIN_OWNER, isOwnerEmail } from '../lib/admin-access';
+import { ADMIN_OWNER, isOwnerEmail, getStaffMemberName } from '../lib/admin-access';
 import { getCurrentUser, signOutPath } from '../lib/auth';
 
 export default async function AdminNav() {
@@ -12,14 +12,7 @@ export default async function AdminNav() {
   if (!isOwner && userEmail) {
     try {
       const { env } = await import('cloudflare:workers');
-      const row = (await env.DB.prepare(
-        'SELECT name FROM admin_staff_access WHERE LOWER(email)=? AND active=1',
-      )
-        .bind(userEmail.trim().toLowerCase())
-        .first()) as any;
-      if (row?.name) {
-        staffName = String(row.name).trim();
-      }
+      staffName = await getStaffMemberName(env.DB, userEmail);
     } catch {}
   }
 

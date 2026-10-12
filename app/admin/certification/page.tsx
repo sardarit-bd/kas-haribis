@@ -21,10 +21,21 @@ export default async function Page() {
         </div>
       </main>
     );
-  await ensureCertificationApplications(env.DB);
-  const result = await env.DB.prepare(
-    'SELECT * FROM certification_applications ORDER BY created_at DESC',
-  ).all();
+  let result: any;
+  try {
+    result = await env.DB.prepare(
+      'SELECT * FROM certification_applications ORDER BY created_at DESC',
+    ).all();
+  } catch (err: any) {
+    if (String(err).toLowerCase().includes('no such table')) {
+      await ensureCertificationApplications(env.DB);
+      result = await env.DB.prepare(
+        'SELECT * FROM certification_applications ORDER BY created_at DESC',
+      ).all();
+    } else {
+      throw err;
+    }
+  }
   return (
     <main className="adminPage">
       <div className="adminShell">

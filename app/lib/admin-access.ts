@@ -1,3 +1,5 @@
+import { cache } from 'react';
+
 export const ADMIN_OWNER = ['mdemong87@gmail.com',"kavharibis@gmail.com","sardarit.bd.official@gmail.com"];
 
 export function isOwnerEmail(email: string | null | undefined): boolean {
@@ -184,6 +186,7 @@ export const ADMIN_SECTIONS = [
 export type AdminSectionKey = (typeof ADMIN_SECTIONS)[number]['key'];
 
 export async function ensureAdminStaff(db: any) {
+  if (!db) return;
   await db
     .prepare(
       "CREATE TABLE IF NOT EXISTS admin_staff_access (email TEXT PRIMARY KEY,name TEXT NOT NULL DEFAULT '',active INTEGER NOT NULL DEFAULT 1,permissions TEXT NOT NULL DEFAULT '[]',password_salt TEXT NOT NULL DEFAULT '',password_hash TEXT NOT NULL DEFAULT '',created_at TEXT NOT NULL,updated_at TEXT NOT NULL)",
@@ -191,11 +194,18 @@ export async function ensureAdminStaff(db: any) {
     .run();
 
   try {
-    await db.prepare("ALTER TABLE admin_staff_access ADD COLUMN password_salt TEXT NOT NULL DEFAULT ''").run();
-  } catch {}
-  try {
-    await db.prepare("ALTER TABLE admin_staff_access ADD COLUMN password_hash TEXT NOT NULL DEFAULT ''").run();
-  } catch {}
+    const tableInfo = await db.prepare("PRAGMA table_info('admin_staff_access')").all();
+    const cols = new Set((tableInfo?.results || []).map((c: any) => String(c.name).toLowerCase()));
+    if (!cols.has('password_salt')) {
+      await db.prepare("ALTER TABLE admin_staff_access ADD COLUMN password_salt TEXT NOT NULL DEFAULT ''").run();
+    }
+    if (!cols.has('password_hash')) {
+      await db.prepare("ALTER TABLE admin_staff_access ADD COLUMN password_hash TEXT NOT NULL DEFAULT ''").run();
+    }
+  } catch (error) {
+    const msg = String(error).toLowerCase();
+    if (!msg.includes('duplicate column')) throw error;
+  }
 }
 
 const bytesToHex = (bytes: Uint8Array) =>
@@ -360,16 +370,81 @@ export function parsePermissions(value: unknown): string[] {
     );
 }
 
+import { AsyncLocalStorage } from 'node:async_hooks';
+
+const requestStorage = new AsyncLocalStorage<Map<string, any>>();
+
+export function withRequestScope<T>(fn: () => Promise<T>): Promise<T> {
+  const store = new Map<string, any>();
+  return requestStorage.run(store, fn);
+}
+
+export interface StaffProfile {
+  name: string;
+  permissions: string[];
+}
+
+async function queryStaffProfile(db: any, email: string): Promise<StaffProfile | null> {
+  if (!db || !email) return null;
+  const cleanEmail = String(email).trim().toLowerCase();
+  if (isOwnerEmail(cleanEmail)) return null;
+
+  const query =
+    'SELECT name, permissions FROM admin_staff_access WHERE LOWER(TRIM(email))=? AND active=1';
+  try {
+    const row = (await db.prepare(query).bind(cleanEmail).first()) as any;
+    if (!row) return null;
+    return {
+      name: String(row.name || '').trim(),
+      permissions: parsePermissions(row.permissions),
+    };
+  } catch (err: any) {
+    if (String(err).toLowerCase().includes('no such table')) {
+      await ensureAdminStaff(db);
+      const row = (await db.prepare(query).bind(cleanEmail).first()) as any;
+      if (!row) return null;
+      return {
+        name: String(row.name || '').trim(),
+        permissions: parsePermissions(row.permissions),
+      };
+    }
+    throw err;
+  }
+}
+
+const cachedQueryStaffProfile = cache(queryStaffProfile);
+
+export async function getRequestStaffProfile(db: any, email: string): Promise<StaffProfile | null> {
+  const store = requestStorage.getStore();
+  if (store) {
+    const cleanEmail = String(email || '').trim().toLowerCase();
+    const key = `staff_profile:${cleanEmail}`;
+    if (store.has(key)) {
+      return store.get(key);
+    }
+    const promise = cachedQueryStaffProfile(db, email);
+    store.set(key, promise);
+    return promise;
+  }
+  return cachedQueryStaffProfile(db, email);
+}
+
 export async function staffPermissions(db: any, email: string): Promise<string[]> {
-  await ensureAdminStaff(db);
-  const cleanEmail = email.trim().toLowerCase();
-  const row = (await db
-    .prepare(
-      'SELECT permissions FROM admin_staff_access WHERE LOWER(TRIM(email))=? AND active=1',
-    )
-    .bind(cleanEmail)
-    .first()) as any;
-  return parsePermissions(row?.permissions);
+  if (!db || !email) return [];
+  const cleanEmail = String(email).trim().toLowerCase();
+  if (isOwnerEmail(cleanEmail)) {
+    return ADMIN_SECTIONS.map((section) => section.key);
+  }
+  const profile = await getRequestStaffProfile(db, cleanEmail);
+  return profile?.permissions || [];
+}
+
+export async function getStaffMemberName(db: any, email: string): Promise<string> {
+  if (!db || !email) return '';
+  const cleanEmail = String(email).trim().toLowerCase();
+  if (isOwnerEmail(cleanEmail)) return '';
+  const profile = await getRequestStaffProfile(db, cleanEmail);
+  return profile?.name || '';
 }
 
 export async function canAccessSection(

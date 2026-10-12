@@ -275,13 +275,19 @@ export async function ensureArticles(db: any) {
   }
 }
 export async function listArticles(db: any, includePrivate = false) {
-  await ensureArticles(db);
-  const result = await db
-    .prepare(
-      `SELECT * FROM articles ${includePrivate ? '' : 'WHERE published=1'} ORDER BY publication_date DESC,featured DESC,title COLLATE NOCASE ASC`,
-    )
-    .all();
-  return result.results;
+  if (!db) return [];
+  const query = `SELECT * FROM articles ${includePrivate ? '' : 'WHERE published=1'} ORDER BY publication_date DESC,featured DESC,title COLLATE NOCASE ASC`;
+  try {
+    const result = await db.prepare(query).all();
+    return result.results;
+  } catch (err: any) {
+    if (String(err).toLowerCase().includes('no such table')) {
+      await ensureArticles(db);
+      const result = await db.prepare(query).all();
+      return result.results;
+    }
+    throw err;
+  }
 }
 export const EDUCATIONAL_RESOURCES_TABLE = `CREATE TABLE IF NOT EXISTS educational_resources (id TEXT PRIMARY KEY,title TEXT NOT NULL,description TEXT NOT NULL DEFAULT '',resource_type TEXT NOT NULL DEFAULT 'Coloring Page',audience TEXT NOT NULL DEFAULT '',file_key TEXT NOT NULL DEFAULT '',file_name TEXT NOT NULL DEFAULT '',file_type TEXT NOT NULL DEFAULT '',published INTEGER NOT NULL DEFAULT 1,featured INTEGER NOT NULL DEFAULT 0,sort_order INTEGER NOT NULL DEFAULT 0,created_at TEXT NOT NULL,updated_at TEXT NOT NULL)`;
 export async function ensureEducationalResources(db: any) {
