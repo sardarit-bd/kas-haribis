@@ -21,10 +21,21 @@ export default async function InvoiceAdmin() {
         </div>
       </main>
     );
-  await ensureInvoices(env.DB);
-  const result = await env.DB.prepare(
-    'SELECT * FROM invoices ORDER BY created_at DESC',
-  ).all();
+  let result: any;
+  try {
+    result = await env.DB.prepare(
+      'SELECT * FROM invoices ORDER BY created_at DESC',
+    ).all();
+  } catch (err: any) {
+    if (String(err).toLowerCase().includes('no such table')) {
+      await ensureInvoices(env.DB);
+      result = await env.DB.prepare(
+        'SELECT * FROM invoices ORDER BY created_at DESC',
+      ).all();
+    } else {
+      throw err;
+    }
+  }
   return (
     <main className="adminPage invoiceAdminPage">
       <div className="adminShell">

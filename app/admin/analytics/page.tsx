@@ -60,7 +60,6 @@ export default async function AnalyticsAdmin({
         </div>
       </main>
     );
-  await ensureAnalytics(env.DB);
   const params = await searchParams;
   const rawRange = String(params?.range || '30').toLowerCase().trim();
   const range =
@@ -96,22 +95,68 @@ export default async function AnalyticsAdmin({
 
   const daily = `SELECT strftime('%Y-%m-%d',created_at) day,COUNT(CASE WHEN event_type='page_view' THEN 1 END) views,COUNT(DISTINCT visitor_id) visitors,COUNT(CASE WHEN event_type='ad_click' THEN 1 END) clicks FROM site_analytics`;
 
-  const [t, p, a, d, r, h] = await Promise.all([
-    env.DB.prepare(
+  async function fetchAnalyticsData() {
+    const stmtTotal = env.DB.prepare(
       `SELECT COUNT(CASE WHEN event_type='page_view' THEN 1 END) views,COUNT(DISTINCT visitor_id) visitors,COUNT(DISTINCT CASE WHEN created_at >= '${cutoff24h}' THEN visitor_id END) visitors_today,COUNT(CASE WHEN event_type='ad_click' THEN 1 END) ad_clicks FROM site_analytics ${where}`,
-    ).first(),
-    env.DB.prepare(
+    );
+    const stmtPaths = env.DB.prepare(
       `SELECT path,COUNT(*) views,COUNT(DISTINCT visitor_id) visitors FROM site_analytics ${pageViewWhere} GROUP BY path ORDER BY views DESC LIMIT 15`,
-    ).all(),
-    env.DB.prepare(
+    );
+    const stmtSponsors = env.DB.prepare(
       `SELECT COALESCE(NULLIF(item_name,''),'Unknown sponsor') sponsor,COUNT(*) clicks,COUNT(DISTINCT visitor_id) visitors FROM site_analytics ${sponsorWhere} GROUP BY sponsor ORDER BY clicks DESC LIMIT 20`,
-    ).all(),
-    env.DB.prepare(`${daily} ${where} GROUP BY day ORDER BY day`).all(),
-    env.DB.prepare(
+    );
+    const stmtDaily = env.DB.prepare(`${daily} ${where} GROUP BY day ORDER BY day`);
+    const stmtRecent = env.DB.prepare(
       `SELECT event_type,path,item_name,created_at FROM site_analytics ORDER BY id DESC LIMIT 30`,
-    ).all(),
-    env.DB.prepare(`${daily} GROUP BY day ORDER BY day DESC`).all(),
-  ]);
+    );
+    const stmtHistory = env.DB.prepare(`${daily} GROUP BY day ORDER BY day DESC`);
+
+    if (typeof env.DB.batch === 'function') {
+      const [bTotal, bPaths, bSponsors, bDaily, bRecent, bHistory] = await env.DB.batch([
+        stmtTotal,
+        stmtPaths,
+        stmtSponsors,
+        stmtDaily,
+        stmtRecent,
+        stmtHistory,
+      ]);
+      return [
+        bTotal?.results?.[0] || null,
+        bPaths || { results: [] },
+        bSponsors || { results: [] },
+        bDaily || { results: [] },
+        bRecent || { results: [] },
+        bHistory || { results: [] },
+      ] as const;
+    }
+
+    return Promise.all([
+      stmtTotal.first(),
+      stmtPaths.all(),
+      stmtSponsors.all(),
+      stmtDaily.all(),
+      stmtRecent.all(),
+      stmtHistory.all(),
+    ]);
+  }
+
+  let t: any;
+  let p: any;
+  let a: any;
+  let d: any;
+  let r: any;
+  let h: any;
+
+  try {
+    [t, p, a, d, r, h] = await fetchAnalyticsData();
+  } catch (err: any) {
+    if (String(err).toLowerCase().includes('no such table')) {
+      await ensureAnalytics(env.DB);
+      [t, p, a, d, r, h] = await fetchAnalyticsData();
+    } else {
+      throw err;
+    }
+  }
   const total = t as any,
     days = d.results as any[],
     history = h.results as any[],
