@@ -63,7 +63,7 @@ export async function listBanks(db: any) {
   await ensureBankResearch(db);
   const result = await db
     .prepare(
-      "SELECT b.id,b.title,b.status,b.summary,b.comment,b.last_updated,b.institution_type,b.website,b.logo_url,CASE WHEN length(b.full_report)>0 OR EXISTS(SELECT 1 FROM bank_research_submissions s WHERE s.published_bank_id=b.id AND s.workflow_status='Approved' AND length(s.report_key)>0) THEN 1 ELSE 0 END AS has_full_report,b.sort_order FROM banks b ORDER BY b.title COLLATE NOCASE ASC",
+      "SELECT b.id,b.title,b.status,b.summary,b.comment,b.last_updated,b.institution_type,b.website,b.logo_url,CASE WHEN COALESCE(length(trim(b.full_report)),0)>0 OR EXISTS(SELECT 1 FROM bank_research_submissions s WHERE (s.published_bank_id=b.id OR s.title=b.title) AND (s.workflow_status='Approved' OR s.workflow_status='Reviewer approved') AND (COALESCE(length(trim(s.report_key)),0)>0 OR COALESCE(length(trim(s.full_report)),0)>0)) THEN 1 ELSE 0 END AS has_full_report,b.sort_order FROM banks b ORDER BY b.title COLLATE NOCASE ASC",
     )
     .all();
   return result.results as any[];
@@ -277,14 +277,24 @@ export async function ensureArticles(db: any) {
 export async function listArticles(db: any, includePrivate = false) {
   if (!db) return [];
   const query = `SELECT * FROM articles ${includePrivate ? '' : 'WHERE published=1'} ORDER BY publication_date DESC,featured DESC,title COLLATE NOCASE ASC`;
+  const formatRows = (rows: any[]) =>
+    rows.map((x) => {
+      if (!x.cover_url && x.id && !String(x.id).startsWith('legacy-')) {
+        return {
+          ...x,
+          cover_url: `/api/article-cover?id=${encodeURIComponent(x.id)}`,
+        };
+      }
+      return x;
+    });
   try {
     const result = await db.prepare(query).all();
-    return result.results;
+    return formatRows((result.results || []) as any[]);
   } catch (err: any) {
     if (String(err).toLowerCase().includes('no such table')) {
       await ensureArticles(db);
       const result = await db.prepare(query).all();
-      return result.results;
+      return formatRows((result.results || []) as any[]);
     }
     throw err;
   }

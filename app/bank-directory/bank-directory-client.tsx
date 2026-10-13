@@ -11,11 +11,12 @@ type Bank = {
   summary: string;
   comment: string;
   last_updated: string;
-  has_full_report: number;
+  has_full_report: number | boolean;
   source: string;
   institution_type: string;
   website: string;
   logo_url: string;
+  full_report?: string;
 };
 
 const labels: Record<string, string> = {
@@ -388,7 +389,7 @@ export default function BankDirectoryClient({
                     {labels[bank.status] || bank.status}
                   </span>
 
-                  {Boolean(bank.has_full_report) && (
+                  {Boolean(bank.has_full_report || bank.full_report) && (
                     <span className="absolute top-2 left-2 z-10 text-[10px] font-extrabold uppercase px-2 py-0.5 bg-amber-100 text-amber-900 border border-amber-300 rounded-sm">
                       {isAuthorized ? 'Full Report' : '$15 Report'}
                     </span>
@@ -438,11 +439,12 @@ export default function BankDirectoryClient({
 
               {/* Bottom Buttons */}
               <div className="grid grid-cols-2 gap-2.5 pt-3 w-full">
-                {bank.has_full_report ? (
+                {Boolean(bank.has_full_report || bank.full_report) ? (
                   isAuthorized ? (
                     <a
                       href={`/bank-directory/full-report?bankId=${encodeURIComponent(String(bank.id))}`}
-                      className="w-full py-1.5 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md inline-flex items-center justify-center"
+                      style={{ color: '#ffffff' }}
+                      className="w-full py-1.5 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white !text-white hover:!text-white focus:!text-white visited:!text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md inline-flex items-center justify-center"
                     >
                       View Full Report
                     </a>
@@ -450,7 +452,8 @@ export default function BankDirectoryClient({
                     <button
                       type="button"
                       onClick={() => setDetailBank(bank)}
-                      className="w-full py-1.5 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md"
+                      style={{ color: '#ffffff' }}
+                      className="w-full py-1.5 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white !text-white hover:!text-white focus:!text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md"
                     >
                       View Full Report
                     </button>
@@ -459,7 +462,8 @@ export default function BankDirectoryClient({
                   <button
                     type="button"
                     onClick={() => setDetailBank(bank)}
-                    className="w-full py-1.5 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md"
+                    style={{ color: '#ffffff' }}
+                    className="w-full py-1.5 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white !text-white hover:!text-white focus:!text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md"
                   >
                     Bank Details
                   </button>
@@ -467,7 +471,8 @@ export default function BankDirectoryClient({
                 <button
                   type="button"
                   onClick={() => setRequestUpdateBank(bank)}
-                  className="w-full py-1.5 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-medium transition-colors text-center cursor-pointer rounded-md"
+                  style={{ color: '#ffffff' }}
+                  className="w-full py-1.5 px-1 bg-[#102a43] hover:bg-[#1a385c] text-white !text-white hover:!text-white focus:!text-white text-xs font-medium transition-colors text-center cursor-pointer rounded-md"
                 >
                   Request Update
                 </button>
@@ -516,7 +521,7 @@ export default function BankDirectoryClient({
                     {labels[bank.status] || bank.status}
                   </span>
 
-                  {Boolean(bank.has_full_report) && (
+                  {Boolean(bank.has_full_report || bank.full_report) && (
                     <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 bg-amber-100 text-amber-900 border border-amber-300 rounded-sm">
                       {isAuthorized ? 'Full Report' : '$15 Report'}
                     </span>
@@ -551,11 +556,12 @@ export default function BankDirectoryClient({
 
               {/* Right: Action Buttons */}
               <div className="w-full md:w-44 shrink-0 flex flex-col sm:flex-row md:flex-col gap-2.5 justify-center pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
-                {bank.has_full_report ? (
+                {Boolean(bank.has_full_report || bank.full_report) ? (
                   isAuthorized ? (
                     <a
                       href={`/bank-directory/full-report?bankId=${encodeURIComponent(String(bank.id))}`}
-                      className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md inline-flex items-center justify-center"
+                      style={{ color: '#ffffff' }}
+                      className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white !text-white hover:!text-white focus:!text-white visited:!text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md inline-flex items-center justify-center"
                     >
                       View Full Report
                     </a>
@@ -563,7 +569,8 @@ export default function BankDirectoryClient({
                     <button
                       type="button"
                       onClick={() => setDetailBank(bank)}
-                      className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md"
+                      style={{ color: '#ffffff' }}
+                      className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white !text-white hover:!text-white focus:!text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md"
                     >
                       View Full Report
                     </button>
@@ -572,7 +579,8 @@ export default function BankDirectoryClient({
                   <button
                     type="button"
                     onClick={() => setDetailBank(bank)}
-                    className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md"
+                    style={{ color: '#ffffff' }}
+                    className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white !text-white hover:!text-white focus:!text-white text-xs font-bold transition-colors text-center cursor-pointer rounded-md"
                   >
                     Bank Details
                   </button>
@@ -580,7 +588,8 @@ export default function BankDirectoryClient({
                 <button
                   type="button"
                   onClick={() => setRequestUpdateBank(bank)}
-                  className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-medium transition-colors text-center cursor-pointer rounded-md"
+                  style={{ color: '#ffffff' }}
+                  className="w-full py-2 px-3 bg-[#102a43] hover:bg-[#1a385c] text-white !text-white hover:!text-white focus:!text-white text-xs font-medium transition-colors text-center cursor-pointer rounded-md"
                 >
                   Request Update
                 </button>
@@ -819,7 +828,7 @@ export default function BankDirectoryClient({
                 </div>
 
                 {/* Protected Full Report */}
-                {Boolean(detailBank.has_full_report) ? (
+                {Boolean(detailBank.has_full_report || detailBank.full_report) ? (
                   <div className="pt-4 border-t border-slate-100 flex flex-col items-center justify-center p-6 bg-[#102a43] rounded-2xl text-white text-center space-y-3">
                     <div>
                       <h3 className="font-serif font-bold text-lg text-white">
@@ -835,7 +844,8 @@ export default function BankDirectoryClient({
                       <div className="flex flex-wrap items-center justify-center gap-3">
                         <a
                           href={`/bank-directory/full-report?bankId=${encodeURIComponent(String(detailBank.id))}`}
-                          className="px-6 py-2.5 bg-[#c69b46] hover:bg-[#b0883b] text-white text-xs font-bold rounded-xl transition-colors shadow-md inline-flex items-center gap-1.5"
+                          style={{ color: '#ffffff' }}
+                          className="px-6 py-2.5 bg-[#c69b46] hover:bg-[#b0883b] text-white !text-white hover:!text-white focus:!text-white visited:!text-white text-xs font-bold rounded-xl transition-colors shadow-md inline-flex items-center gap-1.5"
                         >
                           View Full Report →
                         </a>
