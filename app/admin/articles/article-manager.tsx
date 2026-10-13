@@ -1,5 +1,9 @@
 'use client';
 import { FormEvent, useMemo, useState } from 'react';
+import {
+  renderPdfFirstPage,
+  renderPdfFirstPageFromUrl,
+} from '../../lib/pdf-cover';
 type Item = {
   id: string;
   title: string;
@@ -28,89 +32,6 @@ const blank = (n: number): Item => ({
   featured: 0,
   sort_order: n,
 });
-async function loadPdfJs(): Promise<any> {
-  if (typeof window === 'undefined') return null;
-  const w = window as any;
-  if (w.pdfjsLib) {
-    w.pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
-    return w.pdfjsLib;
-  }
-
-  return new Promise((resolve, reject) => {
-    const existing = document.querySelector('script[data-pdfjs]');
-    if (existing) {
-      if (w.pdfjsLib) {
-        w.pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
-        resolve(w.pdfjsLib);
-      } else {
-        existing.addEventListener('load', () => {
-          if (w.pdfjsLib) {
-            w.pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
-            resolve(w.pdfjsLib);
-          } else {
-            reject(new Error('PDF.js library could not be loaded'));
-          }
-        });
-        existing.addEventListener('error', reject);
-      }
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.src = '/vendor/pdfjs/pdf.min.js';
-    script.async = true;
-    script.dataset.pdfjs = 'true';
-    script.onload = () => {
-      const lib = w.pdfjsLib;
-      if (lib) {
-        lib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
-        resolve(lib);
-      } else {
-        reject(new Error('PDF.js library could not be loaded'));
-      }
-    };
-    script.onerror = () => reject(new Error('Failed to load PDF.js from /vendor/pdfjs/pdf.min.js'));
-    document.head.appendChild(script);
-  });
-}
-
-async function renderPdfFirstPage(fileOrBlob: File | Blob): Promise<Blob | null> {
-  try {
-    const pdfjs = await loadPdfJs();
-    if (!pdfjs) return null;
-    const arrayBuffer = await fileOrBlob.arrayBuffer();
-    const loadingTask = pdfjs.getDocument({ data: arrayBuffer });
-    const pdfDoc = await loadingTask.promise;
-    const page = await pdfDoc.getPage(1);
-
-    const unscaledViewport = page.getViewport({ scale: 1 });
-    const targetWidth = 696;
-    const scale = targetWidth / unscaledViewport.width;
-    const viewport = page.getViewport({ scale });
-
-    const canvas = document.createElement('canvas');
-    canvas.width = Math.round(viewport.width);
-    canvas.height = Math.round(viewport.height);
-
-    const context = canvas.getContext('2d');
-    if (!context) return null;
-
-    context.fillStyle = '#ffffff';
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    await page.render({
-      canvasContext: context,
-      viewport,
-    }).promise;
-
-    return new Promise((resolve) => {
-      canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.85);
-    });
-  } catch (e) {
-    console.error('Error generating PDF cover:', e);
-    return null;
-  }
-}
 
 export default function ArticleManager({
   initialItems,
@@ -204,10 +125,7 @@ export default function ArticleManager({
     setGeneratingCover(true);
     setMsg('Fetching existing PDF to extract cover…');
     try {
-      const res = await fetch(v.pdf_url);
-      if (!res.ok) throw new Error('Could not fetch existing PDF file');
-      const blob = await res.blob();
-      const generated = await renderPdfFirstPage(blob);
+      const generated = await renderPdfFirstPageFromUrl(v.pdf_url);
       if (!generated) {
         throw new Error('Failed to render page 1 of PDF');
       }
@@ -252,6 +170,15 @@ export default function ArticleManager({
         setBusy(false);
         return;
       }
+    } else if (!file && !manualCoverFile && !effectiveCoverBlob && !v.cover_url && v.pdf_url) {
+      setGeneratingCover(true);
+      setMsg('Extracting missing cover image from current PDF…');
+      effectiveCoverBlob = await renderPdfFirstPageFromUrl(v.pdf_url);
+      setGeneratingCover(false);
+      if (effectiveCoverBlob) {
+        setCoverBlob(effectiveCoverBlob);
+        setCoverPreview(URL.createObjectURL(effectiveCoverBlob));
+      }
     }
 
     const r = await fetch('/api/articles', {
@@ -290,14 +217,14 @@ export default function ArticleManager({
       }
       if (uj.pageCount !== 2)
         setMsg(`Saved. Note: this PDF contains ${uj.pageCount} pages, not 2.`);
-    } else if (manualCoverFile || coverBlob) {
+    } else if (manualCoverFile || effectiveCoverBlob) {
       setMsg('Uploading cover image…');
       const fd = new FormData();
       fd.set('id', id);
       if (manualCoverFile) {
         fd.set('cover', manualCoverFile, manualCoverFile.name);
-      } else if (coverBlob) {
-        fd.set('cover', coverBlob, `${id}-cover.jpg`);
+      } else if (effectiveCoverBlob) {
+        fd.set('cover', effectiveCoverBlob, `${id}-cover.jpg`);
       }
       const ur = await fetch('/api/admin/article-upload', {
           method: 'POST',

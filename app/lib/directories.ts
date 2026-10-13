@@ -277,14 +277,24 @@ export async function ensureArticles(db: any) {
 export async function listArticles(db: any, includePrivate = false) {
   if (!db) return [];
   const query = `SELECT * FROM articles ${includePrivate ? '' : 'WHERE published=1'} ORDER BY publication_date DESC,featured DESC,title COLLATE NOCASE ASC`;
+  const formatRows = (rows: any[]) =>
+    rows.map((x) => {
+      if (!x.cover_url && x.id && !String(x.id).startsWith('legacy-')) {
+        return {
+          ...x,
+          cover_url: `/api/article-cover?id=${encodeURIComponent(x.id)}`,
+        };
+      }
+      return x;
+    });
   try {
     const result = await db.prepare(query).all();
-    return result.results;
+    return formatRows((result.results || []) as any[]);
   } catch (err: any) {
     if (String(err).toLowerCase().includes('no such table')) {
       await ensureArticles(db);
       const result = await db.prepare(query).all();
-      return result.results;
+      return formatRows((result.results || []) as any[]);
     }
     throw err;
   }

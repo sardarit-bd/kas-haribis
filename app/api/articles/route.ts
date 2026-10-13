@@ -60,7 +60,15 @@ export async function PUT(r: Request) {
   await ensureArticles(e.DB);
   if (!id || !clean(b.title, 240))
     return Response.json({ error: 'Enter an article title.' }, { status: 400 });
-  const v = fields.map((f) => clean(b[f], f === 'summary' ? 8000 : 500));
+  const existing = (await e.DB.prepare('SELECT cover_url FROM articles WHERE id=?').bind(id).first()) as { cover_url?: string } | null;
+  let coverUrl = clean(b.cover_url, 500);
+  if (!coverUrl && existing?.cover_url) {
+    coverUrl = existing.cover_url;
+  }
+  const v = fields.map((f) => {
+    if (f === 'cover_url') return coverUrl;
+    return clean(b[f], f === 'summary' ? 8000 : 500);
+  });
   await e.DB.prepare(
     `UPDATE articles SET ${fields.map((f) => `${f}=?`).join(',')},page_count=?,published=?,featured=?,sort_order=?,updated_at=? WHERE id=?`,
   )
