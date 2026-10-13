@@ -56,7 +56,9 @@ export default function BankManager({
   const [banks, setBanks] = useState(initialBanks),
     [editing, setEditing] = useState<Bank | null>(null),
     [query, setQuery] = useState(''),
-    [message, setMessage] = useState('');
+    [message, setMessage] = useState(''),
+    [isError, setIsError] = useState(false),
+    [isSaving, setIsSaving] = useState(false);
   const [codes, setCodes] = useState<AccessCode[]>([]),
     [newCode, setNewCode] = useState('');
   const filtered = useMemo(
@@ -70,65 +72,103 @@ export default function BankManager({
   );
   const value = editing || emptyBank(banks.length + 1);
   async function reload() {
-    const result = (await fetch('/api/banks').then((response) =>
-      response.json(),
-    )) as { banks: Bank[] };
-    setBanks(result.banks);
+    try {
+      const response = await fetch('/api/banks');
+      if (!response.ok) return;
+      const result = (await response.json()) as { banks: Bank[] };
+      if (Array.isArray(result?.banks)) {
+        setBanks(result.banks);
+      }
+    } catch {
+      // ignore background reload failure
+    }
   }
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
+    setIsError(false);
+    setIsSaving(true);
     setMessage('Saving…');
-    const response = await fetch('/api/banks', {
-      method: data.id ? 'PUT' : 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    const result = (await response.json()) as { id?: string; error?: string };
-    if (!response.ok) {
-      setMessage(result.error || 'Could not save the bank.');
-      return;
-    }
-    const bankId = (data.id as string) || result.id;
-    const logoFile = (form.elements.namedItem('logo_file') as HTMLInputElement)
-      ?.files?.[0];
-    if (logoFile && bankId) {
-      setMessage('Uploading logo…');
-      const logoFd = new FormData();
-      logoFd.set('id', bankId);
-      logoFd.set('file', logoFile);
-      const logoResponse = await fetch('/api/admin/bank-logo', {
-        method: 'POST',
-        body: logoFd,
+    try {
+      const response = await fetch('/api/banks', {
+        method: data.id ? 'PUT' : 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(data),
       });
-      const logoResult = (await logoResponse.json()) as { error?: string };
-      if (!logoResponse.ok) {
-        setMessage(`Bank saved, but logo upload failed: ${logoResult.error}`);
-        await reload();
+      const result = (await response.json().catch(() => ({}))) as {
+        id?: string;
+        error?: string;
+        saved?: boolean;
+      };
+      if (!response.ok || !result.saved) {
+        setIsError(true);
+        setMessage(result.error || `Could not save the bank (HTTP ${response.status}).`);
+        setIsSaving(false);
         return;
       }
+      const bankId = (data.id as string) || result.id;
+      const logoFile = (form.elements.namedItem('logo_file') as HTMLInputElement)
+        ?.files?.[0];
+      if (logoFile && bankId) {
+        setMessage('Uploading logo…');
+        const logoFd = new FormData();
+        logoFd.set('id', bankId);
+        logoFd.set('file', logoFile);
+        const logoResponse = await fetch('/api/admin/bank-logo', {
+          method: 'POST',
+          body: logoFd,
+        });
+        const logoResult = (await logoResponse.json().catch(() => ({}))) as {
+          error?: string;
+          saved?: boolean;
+        };
+        if (!logoResponse.ok || !logoResult.saved) {
+          setIsError(true);
+          setMessage(`Bank saved, but logo upload failed: ${logoResult.error || 'Upload failed'}`);
+          setIsSaving(false);
+          await reload();
+          return;
+        }
+      }
+      await reload();
+      form.reset();
+      setEditing(null);
+      setIsError(false);
+      setMessage(
+        data.id ? '✓ Bank and report updated successfully.' : '✓ Bank added to the directory successfully.',
+      );
+    } catch (err: any) {
+      setIsError(true);
+      setMessage(err?.message || 'A network error occurred while saving the bank.');
+    } finally {
+      setIsSaving(false);
     }
-    await reload();
-    form.reset();
-    setEditing(null);
-    setMessage(
-      data.id ? 'Bank and comment updated.' : 'Bank added to the directory.',
-    );
   }
   async function remove(bank: Bank) {
     if (!confirm(`Remove ${bank.title} from the bank directory?`)) return;
-    const response = await fetch(
-      `/api/banks?id=${encodeURIComponent(bank.id)}`,
-      { method: 'DELETE' },
-    );
-    if (!response.ok) {
-      setMessage('The bank could not be removed.');
-      return;
+    try {
+      const response = await fetch(
+        `/api/banks?id=${encodeURIComponent(bank.id)}`,
+        { method: 'DELETE' },
+      );
+      const result = (await response.json().catch(() => ({}))) as {
+        error?: string;
+        deleted?: boolean;
+      };
+      if (!response.ok || !result.deleted) {
+        setIsError(true);
+        setMessage(result.error || 'The bank could not be removed.');
+        return;
+      }
+      setIsError(false);
+      setBanks((current) => current.filter((item) => item.id !== bank.id));
+      if (editing?.id === bank.id) setEditing(null);
+      setMessage(`✓ ${bank.title} was removed.`);
+    } catch (err: any) {
+      setIsError(true);
+      setMessage(`The bank could not be removed: ${err?.message || 'Network error'}`);
     }
-    setBanks((current) => current.filter((item) => item.id !== bank.id));
-    if (editing?.id === bank.id) setEditing(null);
-    setMessage(`${bank.title} was removed.`);
   }
   async function loadCodes(bankId: string) {
     const result = (await fetch(
@@ -166,6 +206,7 @@ export default function BankManager({
   function edit(bank: Bank) {
     setEditing(bank);
     setMessage('');
+    setIsError(false);
     setNewCode('');
     loadCodes(bank.id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -180,13 +221,21 @@ export default function BankManager({
             <h2>{editing ? editing.title : 'Add a bank or lender'}</h2>
           </div>
           {editing && (
-            <button type="button" onClick={() => setEditing(null)}>
+            <button
+              type="button"
+              onClick={() => {
+                setEditing(null);
+                setMessage('');
+                setIsError(false);
+              }}
+            >
               ← Back to add bank
             </button>
           )}
         </div>
         <form key={value.id || 'new'} onSubmit={save}>
           <input type="hidden" name="id" value={value.id} />
+          <input type="hidden" name="logo_url" value={value.logo_url || ''} />
           <div className="bankFormGrid">
             <label>
               Bank or institution name
@@ -341,21 +390,63 @@ export default function BankManager({
             </div>
           )}
           <div className="editFormActions">
-            <button className="primary">
-              {editing ? 'Save bank changes' : 'Add bank'}
+            <button className="primary" disabled={isSaving}>
+              {isSaving ? 'Saving…' : editing ? 'Save bank changes' : 'Add bank'}
             </button>
             {editing && (
               <button
                 className="cancelEditButton"
                 type="button"
-                onClick={() => setEditing(null)}
+                disabled={isSaving}
+                onClick={() => {
+                  setEditing(null);
+                  setMessage('');
+                  setIsError(false);
+                }}
               >
                 Cancel editing
               </button>
             )}
           </div>
         </form>
-        {message && <p className="adminSaveMessage">{message}</p>}
+        {message && (
+          <div
+            role="alert"
+            className={isError ? 'adminErrorMessage' : 'adminSaveMessage'}
+            style={
+              isError
+                ? {
+                    padding: '12px 16px',
+                    background: '#fef2f2',
+                    color: '#991b1b',
+                    borderLeft: '4px solid #ef4444',
+                    borderRadius: '4px',
+                    margin: '16px 0',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }
+                : {
+                    padding: '12px 16px',
+                    background: '#eff8f0',
+                    color: '#2b6f3b',
+                    borderLeft: '4px solid #4e9660',
+                    borderRadius: '4px',
+                    margin: '16px 0',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }
+            }
+          >
+            <span style={{ fontSize: '16px', lineHeight: 1 }}>{isError ? '⚠️' : '✓'}</span>
+            <span>{message}</span>
+          </div>
+        )}
         {editing && (
           <section className="bankCodeManager">
             <div>
@@ -413,6 +504,8 @@ export default function BankManager({
             className="primary"
             onClick={() => {
               setEditing(null);
+              setMessage('');
+              setIsError(false);
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           >
@@ -457,7 +550,7 @@ export default function BankManager({
                         />
                       ) : (
                         <span
-                          style={{ display: 'inline-flex', items: 'center', justifyContent: 'center', width: '44px', height: '44px', background: '#102a43', color: '#ffffff', fontWeight: 'bold', fontSize: '18px', borderRadius: '6px' }}
+                          style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '44px', height: '44px', background: '#102a43', color: '#ffffff', fontWeight: 'bold', fontSize: '18px', borderRadius: '6px' }}
                         >
                           {bank.title.charAt(0).toUpperCase()}
                         </span>
