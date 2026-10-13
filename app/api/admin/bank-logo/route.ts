@@ -1,11 +1,12 @@
-import { isOwnerRequest } from '../../../lib/request-auth';
+import { getRequestEmail } from '../../../lib/request-auth';
+import { canAccessSection } from '../../../lib/admin-access';
 import { ensureBanks } from '../../../lib/directories';
 
 export async function POST(request: Request) {
-  if (!(await isOwnerRequest(request)))
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
-
   const { env } = await import('cloudflare:workers');
+  const email = await getRequestEmail(request);
+  if (!(await canAccessSection(env.DB, email, 'banks')))
+    return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const form = await request.formData();
   const file = form.get('file');
   const id = String(form.get('id') || '');

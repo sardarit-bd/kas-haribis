@@ -2,7 +2,7 @@ import { InteriorPage } from '../../shared/site-shell';
 import { ensureBankReportTables, ensureBankResearch } from '../../lib/directories';
 import { premiumMemberFromHeaders } from '../../lib/bank-premium';
 import { getUserFromCookieHeader } from '../../lib/auth';
-import { isOwnerEmail } from '../../lib/admin-access';
+import { canAccessSection, isOwnerEmail } from '../../lib/admin-access';
 import { headers } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
@@ -20,13 +20,16 @@ export default async function FullBankReport({
 
   const adminUser = await getUserFromCookieHeader(requestHeaders.get('cookie'));
   const isOwner = Boolean(adminUser?.email && isOwnerEmail(adminUser.email));
+  const isStaff = Boolean(
+    adminUser?.email && (await canAccessSection(env.DB, adminUser.email, 'banks')),
+  );
   const premium = await premiumMemberFromHeaders(requestHeaders, env.DB);
 
   let record: any = null,
     targetBankId = bankId,
     valid = false;
 
-  if ((isOwner || premium) && targetBankId) {
+  if ((isOwner || isStaff || premium) && targetBankId) {
     record = await env.DB.prepare(
       'SELECT id,title,full_report,last_updated FROM banks WHERE id=?',
     )
@@ -50,16 +53,73 @@ export default async function FullBankReport({
     }
   }
 
-  let attachedFile: any = null;
+  let approvedSubmission: any = null;
   if (valid && targetBankId) {
-    attachedFile = await env.DB.prepare(
-      "SELECT id,report_name,report_key FROM bank_research_submissions WHERE published_bank_id=? AND workflow_status='Approved' AND length(report_key)>0 ORDER BY updated_at DESC LIMIT 1",
+    // 1. Query approved submission explicitly linked by published_bank_id
+    approvedSubmission = await env.DB.prepare(
+      "SELECT id,title,report_name,report_key,full_report,published_bank_id,last_updated FROM bank_research_submissions WHERE published_bank_id=? AND workflow_status='Approved' ORDER BY updated_at DESC LIMIT 1",
     )
       .bind(targetBankId)
       .first();
+
+    // 2. If no submission has published_bank_id, check for an approved submission matching bank title
+    if (!approvedSubmission && record?.title) {
+      const cleanTitle = String(record.title).trim();
+      const titleMatches = (
+        await env.DB.prepare(
+          "SELECT id,title,report_name,report_key,full_report,published_bank_id,last_updated FROM bank_research_submissions WHERE (published_bank_id IS NULL OR published_bank_id='') AND LOWER(TRIM(title))=LOWER(TRIM(?)) AND workflow_status='Approved' ORDER BY updated_at DESC",
+        )
+          .bind(cleanTitle)
+          .all()
+      ).results as any[];
+
+      if (titleMatches.length > 0) {
+        // Verify unambiguous bank association: exactly 1 bank with this title exists
+        const countRow = (await env.DB.prepare(
+          'SELECT COUNT(*) AS count FROM banks WHERE LOWER(TRIM(title))=LOWER(TRIM(?))',
+        )
+          .bind(cleanTitle)
+          .first()) as { count?: number } | null;
+
+        if (Number(countRow?.count || 0) === 1) {
+          approvedSubmission = titleMatches[0];
+          // Backfill association so future queries and token downloads use published_bank_id directly
+          await env.DB.prepare(
+            'UPDATE bank_research_submissions SET published_bank_id=? WHERE id=?',
+          )
+            .bind(targetBankId, approvedSubmission.id)
+            .run();
+        }
+      }
+    }
   }
 
-  const hasReportContent = Boolean(record?.full_report || attachedFile);
+  const fullReportText = String(
+    record?.full_report || approvedSubmission?.full_report || '',
+  ).trim();
+
+  // If banks table full_report was empty but the approved submission has text, heal banks table
+  if (!record?.full_report && approvedSubmission?.full_report && targetBankId) {
+    await env.DB.prepare(
+      'UPDATE banks SET full_report=? WHERE id=? AND (full_report IS NULL OR full_report="")',
+    )
+      .bind(approvedSubmission.full_report, targetBankId)
+      .run();
+  }
+
+  const attachedFile =
+    approvedSubmission?.report_key &&
+    approvedSubmission.report_key.trim().length > 0
+      ? {
+          id: approvedSubmission.id,
+          report_name:
+            approvedSubmission.report_name ||
+            'Download research report document',
+          report_key: approvedSubmission.report_key,
+        }
+      : null;
+
+  const hasReportContent = Boolean(fullReportText || attachedFile);
 
   if (!valid || !hasReportContent)
     return (
@@ -76,24 +136,32 @@ export default async function FullBankReport({
       </InteriorPage>
     );
 
+  const reportDate =
+    record?.last_updated || approvedSubmission?.last_updated || '';
+  const dateIntro = reportDate
+    ? ` · Last updated ${new Date(`${reportDate}T00:00:00`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`
+    : '';
+
   return (
     <InteriorPage
       eyebrow="PROTECTED FULL REPORT"
       title={record.title || 'Bank report'}
-      intro={`Private Kav Haribis research report${record.last_updated ? ` · Last updated ${new Date(`${record.last_updated}T00:00:00`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}` : ''}.`}
+      intro={`Private Kav Haribis research report${dateIntro}.`}
     >
       <article className="protectedReport">
         <div className="protectedReportNotice">
           🔒{' '}
           {isOwner
             ? 'Administrator review access confirmed.'
+            : isStaff
+            ? 'Administrator staff review access confirmed.'
             : premium
             ? `Premium member access confirmed for ${premium.name || premium.email}.`
             : `Access confirmed · This private link expires seven days after it was issued.`}
         </div>
-        {record.full_report ? (
+        {fullReportText ? (
           <div className="reportBody">
-            {record.full_report
+            {fullReportText
               .split(/\n{2,}/)
               .map((paragraph: string, index: number) => (
                 <p key={index}>{paragraph}</p>

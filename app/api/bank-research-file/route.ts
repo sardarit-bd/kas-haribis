@@ -1,4 +1,4 @@
-import { isOwnerEmail } from '../../lib/admin-access';
+import { canAccessSection, isOwnerEmail } from '../../lib/admin-access';
 import { ensureBankResearch, ensureBankReportTables } from '../../lib/directories';
 import { researchIdentity } from '../../lib/research-access';
 import { premiumMemberFromHeaders } from '../../lib/bank-premium';
@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     kind = url.searchParams.get('kind') === 'logo' ? 'logo' : 'report',
     token = url.searchParams.get('token') || '',
     row = (await env.DB.prepare(
-      'SELECT id,published_bank_id,researcher_email,workflow_status,logo_key,logo_name,report_key,report_name FROM bank_research_submissions WHERE id=?',
+      'SELECT id,title,published_bank_id,researcher_email,workflow_status,logo_key,logo_name,report_key,report_name FROM bank_research_submissions WHERE id=?',
     )
       .bind(id)
       .first()) as any;
@@ -22,6 +22,9 @@ export async function GET(request: Request) {
 
   const sessionUser = await getUserFromCookieHeader(request.headers.get('cookie'));
   const isOwner = Boolean(sessionUser?.email && isOwnerEmail(sessionUser.email));
+  const isStaff = Boolean(
+    sessionUser?.email && (await canAccessSection(env.DB, sessionUser.email, 'banks')),
+  );
 
   const identity = await researchIdentity(request, env.DB);
   const researcherEmail = (identity?.email || '').toLowerCase();
@@ -37,11 +40,12 @@ export async function GET(request: Request) {
     authorized =
       row.workflow_status === 'Approved' ||
       isOwner ||
+      isStaff ||
       isResearcherOwner ||
       isAuthor;
   } else {
     // kind === 'report'
-    if (isOwner || isResearcherOwner || isAuthor) {
+    if (isOwner || isStaff || isResearcherOwner || isAuthor) {
       authorized = true;
     } else if (row.workflow_status === 'Approved') {
       const premium = await premiumMemberFromHeaders(request.headers, env.DB);
@@ -55,12 +59,39 @@ export async function GET(request: Request) {
           .first()) as any;
         if (
           accessRecord?.bank_id &&
-          accessRecord.bank_id === row.published_bank_id &&
           accessRecord.created_at &&
           Date.now() - new Date(accessRecord.created_at).getTime() <
             7 * 24 * 60 * 60 * 1000
         ) {
-          authorized = true;
+          if (accessRecord.bank_id === row.published_bank_id) {
+            authorized = true;
+          } else if (!row.published_bank_id && row.title) {
+            // Check unambiguous bank title match for legacy unlinked submissions
+            const bankRow = (await env.DB.prepare(
+              'SELECT id, title FROM banks WHERE id=?',
+            )
+              .bind(accessRecord.bank_id)
+              .first()) as any;
+            if (
+              bankRow?.title &&
+              bankRow.title.trim().toLowerCase() === row.title.trim().toLowerCase()
+            ) {
+              const countRow = (await env.DB.prepare(
+                'SELECT COUNT(*) AS count FROM banks WHERE LOWER(TRIM(title))=LOWER(TRIM(?))',
+              )
+                .bind(bankRow.title.trim())
+                .first()) as { count?: number } | null;
+              if (Number(countRow?.count || 0) === 1) {
+                authorized = true;
+                // Backfill published_bank_id to seal association permanently
+                await env.DB.prepare(
+                  'UPDATE bank_research_submissions SET published_bank_id=? WHERE id=?',
+                )
+                  .bind(accessRecord.bank_id, row.id)
+                  .run();
+              }
+            }
+          }
         }
       }
     }

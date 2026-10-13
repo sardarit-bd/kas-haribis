@@ -206,10 +206,12 @@ export function InteriorPage({
   eyebrow,
   title,
   intro,
+  children,
 }: {
   eyebrow: string;
   title: string;
   intro: string;
+  children?: React.ReactNode;
 }) {
   return (
     <main className="bg-slate-50/50">
@@ -220,6 +222,7 @@ export function InteriorPage({
           <p className="text-slate-300 text-base sm:text-lg leading-relaxed font-normal max-w-2xl mx-auto">{intro}</p>
         </div>
       </section>
+      {children}
     </main>
   );
 }

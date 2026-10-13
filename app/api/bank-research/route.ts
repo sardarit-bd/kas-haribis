@@ -262,15 +262,114 @@ export async function PUT(request: Request) {
       { status: 403 },
     );
   await ensureBanks(env.DB);
-  const bankId = row.published_bank_id || crypto.randomUUID(),
-    existing = (await env.DB.prepare('SELECT id,logo_url,full_report FROM banks WHERE id=?')
-      .bind(bankId)
-      .first()) as any,
-    logoUrl = row.logo_key
-      ? `/api/bank-research-file?id=${encodeURIComponent(id)}&kind=logo`
-      : (existing?.logo_url || ''),
-    bankFullReport = row.full_report || (existing?.full_report || '');
-  if (existing)
+
+  let bankId = '';
+  let existing: any = null;
+
+  const explicitBankId = clean(b.published_bank_id || b.bankId, 80);
+  const createNewRequested = Boolean(b.create_new || b.createNew);
+
+  // 1. Explicit bank ID provided
+  if (explicitBankId) {
+    existing = await env.DB.prepare(
+      'SELECT id, title, logo_url, full_report, sort_order FROM banks WHERE id=?',
+    )
+      .bind(explicitBankId)
+      .first();
+    if (!existing) {
+      return Response.json(
+        { error: 'The specified target bank ID was not found.' },
+        { status: 404 },
+      );
+    }
+    bankId = existing.id;
+  } else if (row.published_bank_id) {
+    // 2. Preserve existing valid published_bank_id
+    existing = await env.DB.prepare(
+      'SELECT id, title, logo_url, full_report, sort_order FROM banks WHERE id=?',
+    )
+      .bind(row.published_bank_id)
+      .first();
+    if (existing) {
+      bankId = existing.id;
+    }
+  }
+
+  // 3. If published_bank_id is empty, check whether the submission clearly matches an existing bank
+  if (!bankId) {
+    const submissionTitle = clean(row.title, 250);
+
+    // Exact title match check (case-insensitive, trimmed)
+    const exactMatches = (
+      await env.DB.prepare(
+        'SELECT id, title, logo_url, full_report, sort_order FROM banks WHERE LOWER(TRIM(title)) = LOWER(TRIM(?))',
+      )
+        .bind(submissionTitle)
+        .all()
+    ).results as any[];
+
+    if (exactMatches.length === 1) {
+      // Unambiguous exact match to single existing bank
+      existing = exactMatches[0];
+      bankId = existing.id;
+    } else if (exactMatches.length > 1) {
+      // Multiple exact matches: ambiguous!
+      return Response.json(
+        {
+          error: `Multiple banks match the title "${submissionTitle}". Please manually select the intended bank before approving.`,
+          ambiguous: true,
+          candidates: exactMatches.map((m) => ({ id: m.id, title: m.title })),
+        },
+        { status: 409 },
+      );
+    } else {
+      // No exact match. Check for similar/partial title matches in existing banks
+      const cleanLower = submissionTitle.toLowerCase();
+      let similarMatches: any[] = [];
+      if (cleanLower.length >= 4) {
+        similarMatches = (
+          await env.DB.prepare(
+            "SELECT id, title, logo_url, full_report, sort_order FROM banks WHERE length(trim(title)) >= 4 AND (LOWER(TRIM(title)) LIKE ? OR ? LIKE '%' || LOWER(TRIM(title)) || '%') LIMIT 10",
+          )
+            .bind(`%${cleanLower}%`, cleanLower)
+            .all()
+        ).results as any[];
+      }
+
+      if (similarMatches.length > 1) {
+        // Multiple similar candidates: ambiguous!
+        return Response.json(
+          {
+            error: `Multiple existing banks may match "${submissionTitle}". Please select the intended bank or confirm creating a new bank.`,
+            ambiguous: true,
+            candidates: similarMatches.map((m) => ({ id: m.id, title: m.title })),
+          },
+          { status: 409 },
+        );
+      } else if (similarMatches.length === 1 && !createNewRequested) {
+        // 1 similar candidate exists, but titles are not identical and create_new was not explicitly confirmed
+        return Response.json(
+          {
+            error: `An existing bank with a similar name was found: "${similarMatches[0].title}". To update this existing bank, provide published_bank_id="${similarMatches[0].id}". To create a new bank instead, approve with create_new=true.`,
+            ambiguous: true,
+            candidates: [{ id: similarMatches[0].id, title: similarMatches[0].title }],
+          },
+          { status: 409 },
+        );
+      } else {
+        // 0 matches found (or create_new explicitly confirmed): create new bank record
+        bankId = crypto.randomUUID();
+        existing = null;
+      }
+    }
+  }
+
+  const logoUrl = row.logo_key
+    ? `/api/bank-research-file?id=${encodeURIComponent(id)}&kind=logo`
+    : (existing?.logo_url || '');
+  const bankFullReport = row.full_report || (existing?.full_report || '');
+
+  if (existing) {
     await env.DB.prepare(
       'UPDATE banks SET title=?,status=?,summary=?,comment=?,last_updated=?,full_report=?,institution_type=?,website=?,logo_url=?,researcher=?,source_urls=?,ownership_details=?,iska_details=?,internal_notes=? WHERE id=?',
     )
@@ -292,7 +391,7 @@ export async function PUT(request: Request) {
         bankId,
       )
       .run();
-  else {
+  } else {
     const max = (await env.DB.prepare(
       'SELECT MAX(sort_order) AS value FROM banks',
     ).first()) as any;

@@ -127,6 +127,7 @@ export default function BankResearchReview({
         action: name,
         review_notes: notes,
         reviewer_name: currentUser.name,
+        published_bank_id: selected.published_bank_id || undefined,
       }),
     });
     const json = (await response.json()) as any;
