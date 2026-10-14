@@ -7,9 +7,10 @@ export interface ParsedTable {
 }
 
 export type ContentBlock =
+  | { type: 'intro'; title: string; publicInfo: string }
   | { type: 'heading'; level: 1 | 2 | 3 | 4; text: string }
-  | { type: 'list'; items: string[] }
-  | { type: 'blockquote'; lines: string[] }
+  | { type: 'list'; items: string[]; variant?: 'bullet' | 'officers' | 'directors' }
+  | { type: 'blockquote'; lines: string[]; title?: string }
   | { type: 'table'; data: ParsedTable }
   | { type: 'paragraph'; text: string };
 
@@ -131,6 +132,64 @@ export function parsePipeTableRow(line: string): string[] {
   return trimmed.split('|').map((c) => c.trim());
 }
 
+export const INSTITUTIONAL_ROW_REGEX =
+  /^(.*?)\s+([\d\.,]+[kmbKMB]?)\s+((?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2},?\s+\d{4})|(?:\d{4}-\d{2}-\d{2})|(?:\d{1,2}\/\d{1,2}\/\d{2,4}))\s+([\d\.,]+%)\s+([\$€£]?[\d\.,]+)$/i;
+
+export function isKnownSectionHeading(line: string): {
+  isHeading: boolean;
+  clean: string;
+  original: string;
+} {
+  const trimmed = line.trim();
+  if (!trimmed) return { isHeading: false, clean: '', original: '' };
+
+  const clean = trimmed
+    .replace(/^#+\s*/, '')
+    .replace(/:$/, '')
+    .trim()
+    .toLowerCase();
+
+  const exactHeadings = [
+    'executive management',
+    'executive officers',
+    'executive team',
+    'management',
+    'board of directors',
+    'directors',
+    'top institutional holders',
+    'institutional holders',
+    'institutional ownership',
+    'principal shareholders',
+    'top shareholders',
+    'research note',
+    'research notes',
+    'halachic analysis',
+    'halachic note',
+    'halachic notes',
+    'bank overview',
+    'public bank information',
+  ];
+
+  if (exactHeadings.includes(clean)) {
+    return {
+      isHeading: true,
+      clean,
+      original: trimmed.replace(/^#+\s*/, '').replace(/:$/, ''),
+    };
+  }
+
+  // Markdown heading (# to ####)
+  if (/^#{1,4}\s+/.test(trimmed)) {
+    return {
+      isHeading: true,
+      clean,
+      original: trimmed.replace(/^#+\s*/, ''),
+    };
+  }
+
+  return { isHeading: false, clean: '', original: '' };
+}
+
 export function parseStructuredReport(text: string): ContentBlock[] {
   if (!text || !text.trim()) return [];
 
@@ -138,44 +197,243 @@ export function parseStructuredReport(text: string): ContentBlock[] {
   const blocks: ContentBlock[] = [];
   let i = 0;
 
+  // Step 1: Detect Bank Title and Public Bank Information at the beginning
+  while (i < rawLines.length && !rawLines[i].trim()) i++;
+
+  if (i < rawLines.length) {
+    const firstLine = rawLines[i].trim();
+    const headingCheck = isKnownSectionHeading(firstLine);
+
+    if (
+      !headingCheck.isHeading &&
+      !firstLine.startsWith('#') &&
+      !firstLine.startsWith('|') &&
+      !firstLine.startsWith('>') &&
+      !firstLine.startsWith('-') &&
+      !firstLine.startsWith('*') &&
+      !firstLine.includes('\t')
+    ) {
+      let lookaheadIndex = i + 1;
+      while (lookaheadIndex < rawLines.length && !rawLines[lookaheadIndex].trim()) {
+        lookaheadIndex++;
+      }
+
+      if (lookaheadIndex < rawLines.length) {
+        const nextLine = rawLines[lookaheadIndex].trim();
+        if (
+          /^(public bank|private bank|institution type|holding company|bank info|otc|nasdaq)/i.test(
+            nextLine,
+          )
+        ) {
+          blocks.push({
+            type: 'intro',
+            title: firstLine,
+            publicInfo: nextLine,
+          });
+          i = lookaheadIndex + 1;
+        }
+      }
+    }
+  }
+
+  // Step 2: Main loop through document sections
   while (i < rawLines.length) {
     const line = rawLines[i];
     const trimmed = line.trim();
 
-    // 1. Skip empty lines
     if (!trimmed) {
       i++;
       continue;
     }
 
-    // 2. Headings: #, ##, ###, ####
-    const headingMatch = trimmed.match(/^(#{1,4})\s+(.+)$/);
-    if (headingMatch) {
-      const level = headingMatch[1].length as 1 | 2 | 3 | 4;
+    // Check for Section Headings
+    const headingCheck = isKnownSectionHeading(trimmed);
+    if (headingCheck.isHeading) {
+      const sectionType = headingCheck.clean;
+      const title = headingCheck.original;
+      i++;
+
+      // A. Executive Management
+      if (
+        ['executive management', 'executive officers', 'executive team', 'management'].includes(
+          sectionType,
+        )
+      ) {
+        blocks.push({ type: 'heading', level: 2, text: title });
+
+        const items: string[] = [];
+        while (i < rawLines.length) {
+          const itemLine = rawLines[i].trim();
+          if (!itemLine) {
+            i++;
+            while (i < rawLines.length && !rawLines[i].trim()) i++;
+            if (i < rawLines.length && isKnownSectionHeading(rawLines[i].trim()).isHeading) break;
+            continue;
+          }
+          if (isKnownSectionHeading(itemLine).isHeading) break;
+          const cleanedItem = itemLine.replace(/^[-*]\s*/, '').trim();
+          items.push(cleanedItem);
+          i++;
+        }
+
+        if (items.length) {
+          blocks.push({ type: 'list', items, variant: 'officers' });
+        }
+        continue;
+      }
+
+      // B. Board of Directors
+      if (['board of directors', 'directors'].includes(sectionType)) {
+        blocks.push({ type: 'heading', level: 2, text: title });
+
+        const items: string[] = [];
+        while (i < rawLines.length) {
+          const itemLine = rawLines[i].trim();
+          if (!itemLine) {
+            i++;
+            while (i < rawLines.length && !rawLines[i].trim()) i++;
+            if (i < rawLines.length && isKnownSectionHeading(rawLines[i].trim()).isHeading) break;
+            continue;
+          }
+          if (isKnownSectionHeading(itemLine).isHeading) break;
+          const cleanedItem = itemLine.replace(/^[-*]\s*/, '').trim();
+          items.push(cleanedItem);
+          i++;
+        }
+
+        if (items.length) {
+          blocks.push({ type: 'list', items, variant: 'directors' });
+        }
+        continue;
+      }
+
+      // C. Top Institutional Holders Table
+      if (
+        [
+          'top institutional holders',
+          'institutional holders',
+          'institutional ownership',
+          'principal shareholders',
+          'top shareholders',
+        ].includes(sectionType)
+      ) {
+        blocks.push({ type: 'heading', level: 2, text: title });
+
+        while (i < rawLines.length && !rawLines[i].trim()) i++;
+
+        if (i < rawLines.length) {
+          let tableHeaders = ['Holder', 'Shares', 'Date Reported', '% Out', 'Value'];
+          const alignments: TableAlignment[] = ['left', 'right', 'center', 'right', 'right'];
+          const rows: string[][] = [];
+
+          // Check if first line is a header row
+          const possibleHeader = rawLines[i].trim();
+          if (/holder/i.test(possibleHeader) && /share/i.test(possibleHeader)) {
+            if (possibleHeader.includes('|')) {
+              tableHeaders = possibleHeader.split('|').map((c) => c.trim()).filter(Boolean);
+            } else if (possibleHeader.includes('\t')) {
+              tableHeaders = possibleHeader.split('\t').map((c) => c.trim()).filter(Boolean);
+            }
+            i++;
+            if (
+              i < rawLines.length &&
+              rawLines[i].trim().includes('-') &&
+              rawLines[i].trim().includes('|')
+            ) {
+              i++;
+            }
+          }
+
+          while (i < rawLines.length) {
+            const rowLine = rawLines[i].trim();
+            if (!rowLine) {
+              i++;
+              while (i < rawLines.length && !rawLines[i].trim()) i++;
+              if (i < rawLines.length && isKnownSectionHeading(rawLines[i].trim()).isHeading) break;
+              continue;
+            }
+            if (isKnownSectionHeading(rowLine).isHeading) break;
+
+            if (rowLine.includes('|')) {
+              const cells = rowLine.split('|').map((c) => c.trim()).filter(Boolean);
+              if (cells.length >= 2) rows.push(cells);
+            } else if (rowLine.includes('\t')) {
+              const cells = rowLine.split('\t').map((c) => c.trim()).filter(Boolean);
+              if (cells.length >= 2) rows.push(cells);
+            } else {
+              const match = rowLine.match(INSTITUTIONAL_ROW_REGEX);
+              if (match) {
+                rows.push([match[1], match[2], match[3], match[4], match[5]]);
+              } else {
+                break;
+              }
+            }
+            i++;
+          }
+
+          if (rows.length) {
+            blocks.push({
+              type: 'table',
+              data: {
+                headers: tableHeaders,
+                alignments,
+                rows,
+              },
+            });
+          }
+        }
+        continue;
+      }
+
+      // D. Research Notes / Halachic Analysis
+      if (
+        [
+          'research note',
+          'research notes',
+          'halachic analysis',
+          'halachic note',
+          'halachic notes',
+        ].includes(sectionType)
+      ) {
+        blocks.push({ type: 'heading', level: 2, text: title });
+
+        const noteLines: string[] = [];
+        while (i < rawLines.length) {
+          const noteLine = rawLines[i].trim();
+          if (!noteLine) {
+            i++;
+            while (i < rawLines.length && !rawLines[i].trim()) i++;
+            if (i < rawLines.length && isKnownSectionHeading(rawLines[i].trim()).isHeading) break;
+            continue;
+          }
+          if (isKnownSectionHeading(noteLine).isHeading) break;
+          noteLines.push(noteLine.replace(/^>\s*/, ''));
+          i++;
+        }
+
+        if (noteLines.length) {
+          blocks.push({
+            type: 'blockquote',
+            title,
+            lines: noteLines,
+          });
+        }
+        continue;
+      }
+
+      // General Heading
+      const level = trimmed.startsWith('#')
+        ? (Math.min(trimmed.match(/^#+/)?.[0].length || 2, 4) as 1 | 2 | 3 | 4)
+        : 2;
       blocks.push({
         type: 'heading',
         level,
-        text: headingMatch[2].trim(),
-      });
-      i++;
-      continue;
-    }
-
-    // 3. Blockquotes: > line
-    if (trimmed.startsWith('>')) {
-      const quoteLines: string[] = [];
-      while (i < rawLines.length && rawLines[i].trim().startsWith('>')) {
-        quoteLines.push(rawLines[i].trim().replace(/^>\s?/, ''));
-        i++;
-      }
-      blocks.push({
-        type: 'blockquote',
-        lines: quoteLines,
+        text: title,
       });
       continue;
     }
 
-    // 4. Check for Markdown Pipe Table
+    // Markdown pipe table without explicit section heading
     if (
       trimmed.includes('|') &&
       i + 1 < rawLines.length &&
@@ -184,19 +442,18 @@ export function parseStructuredReport(text: string): ContentBlock[] {
       const headerRow = parsePipeTableRow(trimmed);
       const separatorRow = parseMarkdownTableSeparator(rawLines[i + 1])!;
       const rows: string[][] = [];
-      i += 2; // skip header & separator
+      i += 2;
 
       while (i < rawLines.length) {
         const bodyLine = rawLines[i].trim();
         if (!bodyLine || !bodyLine.includes('|')) break;
-        if (bodyLine.startsWith('#') || bodyLine.startsWith('>')) break;
+        if (isKnownSectionHeading(bodyLine).isHeading || bodyLine.startsWith('>')) break;
         const rowCells = parsePipeTableRow(bodyLine);
         while (rowCells.length < headerRow.length) rowCells.push('');
         rows.push(rowCells.slice(0, headerRow.length));
         i++;
       }
 
-      // Infer column alignments if default left: if 60%+ values are numeric, default to right
       const finalAlignments = separatorRow.map((align, colIdx) => {
         if (align !== 'left') return align;
         const numericCount = rows.filter((r) => isCellNumeric(r[colIdx] || '')).length;
@@ -217,7 +474,7 @@ export function parseStructuredReport(text: string): ContentBlock[] {
       continue;
     }
 
-    // 5. Check for Tab-Separated Table
+    // Tab-Separated Table without heading
     if (trimmed.includes('\t')) {
       const candidateLines: string[][] = [];
       let tempIndex = i;
@@ -269,7 +526,41 @@ export function parseStructuredReport(text: string): ContentBlock[] {
       }
     }
 
-    // 6. Unordered lists: - item or * item
+    // Blockquote
+    if (trimmed.startsWith('>')) {
+      const quoteLines: string[] = [];
+      while (i < rawLines.length && rawLines[i].trim().startsWith('>')) {
+        quoteLines.push(rawLines[i].trim().replace(/^>\s?/, ''));
+        i++;
+      }
+      blocks.push({
+        type: 'blockquote',
+        lines: quoteLines,
+      });
+      continue;
+    }
+
+    // Research note paragraph (detecting "As it is a bulletin board stock..." or "Note:")
+    if (/^(as it is|note:|research note:|halachic note:)/i.test(trimmed)) {
+      const noteLines: string[] = [trimmed];
+      i++;
+      while (
+        i < rawLines.length &&
+        rawLines[i].trim() &&
+        !isKnownSectionHeading(rawLines[i].trim()).isHeading
+      ) {
+        noteLines.push(rawLines[i].trim());
+        i++;
+      }
+      blocks.push({
+        type: 'blockquote',
+        title: 'Research Note',
+        lines: noteLines,
+      });
+      continue;
+    }
+
+    // Unordered lists
     if (/^[-*]\s+/.test(trimmed)) {
       const items: string[] = [];
       while (i < rawLines.length && /^[-*]\s+/.test(rawLines[i].trim())) {
@@ -279,16 +570,17 @@ export function parseStructuredReport(text: string): ContentBlock[] {
       blocks.push({
         type: 'list',
         items,
+        variant: 'bullet',
       });
       continue;
     }
 
-    // 7. Regular paragraph
+    // Fallback paragraph
     const pLines: string[] = [];
     while (
       i < rawLines.length &&
       rawLines[i].trim() &&
-      !rawLines[i].trim().startsWith('#') &&
+      !isKnownSectionHeading(rawLines[i].trim()).isHeading &&
       !rawLines[i].trim().startsWith('>') &&
       !/^[-*]\s+/.test(rawLines[i].trim()) &&
       !(rawLines[i].trim().includes('|') && i + 1 < rawLines.length && parseMarkdownTableSeparator(rawLines[i + 1]) !== null)
