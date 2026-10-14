@@ -109,6 +109,98 @@ As it is a bulletin board stock I was unable to find ownership info. Might be en
   assert.match(blocks[7].lines[0], /As it is a bulletin board stock/);
 });
 
+test('Structured Report Regression: Parses completely flattened Top Institutional Holders single-line format', () => {
+  const input = `1st Colonial Bank
+Public Bank: 1st Colonial Bancorp, Inc. (FCOB) OTCPK
+
+Executive Management
+Robert B white: President and CEO
+Mary K Shea: EVP and CFO
+
+Board of Directors:
+Linda M Rohrer
+Robert B white: President and CEO
+Thomas Brugger
+
+Top Institutional Holders
+Holder Shares Date Reported % Out Value Banc Funds Company, L.L.C. (The) 108.14k Sep 30, 2024 2.24% 1,589,716 Siena Capital Partners GP, LLC 95.35k Sep 30, 2024 1.97% 1,401,674 Fulton Bank, NA 55.63k Dec 31, 2024 1.15% 817,716 Ethos Financial Group, LLC 14.42k Sep 30, 2024 0.30% 211,929 As it is a bulletin board stock I was unable to find ownership info. Might be enough to rely on regardless.`;
+
+  const blocks = parseStructuredReport(input);
+
+  const headingBlock = blocks.find(
+    (b) => b.type === 'heading' && b.text === 'Top Institutional Holders',
+  );
+  assert.ok(headingBlock, 'Top Institutional Holders heading must be present');
+
+  const tableBlock = blocks.find((b) => b.type === 'table');
+  assert.ok(tableBlock, 'Top Institutional Holders must render as a table');
+  assert.deepEqual(tableBlock.data.headers, ['Holder', 'Shares', 'Date Reported', '% Out', 'Value']);
+  assert.deepEqual(tableBlock.data.alignments, ['left', 'right', 'left', 'right', 'right']);
+  assert.equal(tableBlock.data.rows.length, 4);
+
+  // Exact 4 holders from verified 1st Colonial Bank.pdf
+  assert.deepEqual(tableBlock.data.rows[0], [
+    'Banc Funds Company, L.L.C. (The)',
+    '108.14k',
+    'Sep 30, 2024',
+    '2.24%',
+    '1,589,716',
+  ]);
+  assert.deepEqual(tableBlock.data.rows[1], [
+    'Siena Capital Partners GP, LLC',
+    '95.35k',
+    'Sep 30, 2024',
+    '1.97%',
+    '1,401,674',
+  ]);
+  assert.deepEqual(tableBlock.data.rows[2], [
+    'Fulton Bank, NA',
+    '55.63k',
+    'Dec 31, 2024',
+    '1.15%',
+    '817,716',
+  ]);
+  assert.deepEqual(tableBlock.data.rows[3], [
+    'Ethos Financial Group, LLC',
+    '14.42k',
+    'Sep 30, 2024',
+    '0.30%',
+    '211,929',
+  ]);
+
+  // Research note blockquote
+  const noteBlock = blocks.find((b) => b.type === 'blockquote');
+  assert.ok(noteBlock, 'Research note blockquote must be present');
+  assert.match(noteBlock.lines[0], /As it is a bulletin board stock/);
+});
+
+test('Structured Report Regression: Parses Top Institutional Holders with heading inline on same line', () => {
+  const input = `Top Institutional Holders Holder Shares Date Reported % Out Value Banc Funds Company, L.L.C. (The) 108.14k Sep 30, 2024 2.24% 1,589,716 Siena Capital Partners GP, LLC 95.35k Sep 30, 2024 1.97% 1,401,674 Fulton Bank, NA 55.63k Dec 31, 2024 1.15% 817,716 Ethos Financial Group, LLC 14.42k Sep 30, 2024 0.30% 211,929`;
+  const blocks = parseStructuredReport(input);
+
+  assert.equal(blocks[0].type, 'heading');
+  assert.equal(blocks[0].text, 'Top Institutional Holders');
+
+  assert.equal(blocks[1].type, 'table');
+  assert.equal(blocks[1].data.rows.length, 4);
+  assert.equal(blocks[1].data.rows[0][0], 'Banc Funds Company, L.L.C. (The)');
+  assert.equal(blocks[1].data.rows[0][1], '108.14k');
+  assert.equal(blocks[1].data.rows[0][4], '1,589,716');
+  assert.equal(blocks[1].data.rows[3][0], 'Ethos Financial Group, LLC');
+  assert.equal(blocks[1].data.rows[3][4], '211,929');
+});
+
+test('Structured Report: Preserves original unparsed text when section format is ambiguous without guessing numbers', () => {
+  const input = `Top Institutional Holders\nThis bank has unclear shareholder records without standard numeric disclosure columns.`;
+  const blocks = parseStructuredReport(input);
+
+  assert.equal(blocks[0].type, 'heading');
+  assert.equal(blocks[0].text, 'Top Institutional Holders');
+
+  assert.equal(blocks[1].type, 'paragraph');
+  assert.match(blocks[1].text, /unclear shareholder records/);
+});
+
 test('Structured Report: Parses Markdown headings (# to ####)', () => {
   const input = `# Bank Overview\n## Executive Management\n### Key Officers\n#### Sub-team`;
   const blocks = parseStructuredReport(input);

@@ -387,8 +387,19 @@ function FullReportEditor({ defaultValue }: { defaultValue: string }) {
 
   return (
     <div className="fullReportEditor" style={{ margin: '16px 0' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: '8px' }}>
-        <span style={{ fontWeight: 'bold', fontSize: '14px', color: '#1e293b' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '8px',
+          marginBottom: '8px',
+        }}
+      >
+        <span
+          style={{ fontWeight: 'bold', fontSize: '14px', color: '#1e293b' }}
+        >
           Full report text (Protected $15 report)
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -408,7 +419,15 @@ function FullReportEditor({ defaultValue }: { defaultValue: string }) {
           >
             + Insert Table Template
           </button>
-          <div style={{ display: 'inline-flex', border: '1px solid #cbd5e1', borderRadius: '4px', overflow: 'hidden', background: '#f8fafc' }}>
+          <div
+            style={{
+              display: 'inline-flex',
+              border: '1px solid #cbd5e1',
+              borderRadius: '4px',
+              overflow: 'hidden',
+              background: '#f8fafc',
+            }}
+          >
             <button
               type="button"
               onClick={() => setView('edit')}
@@ -453,16 +472,44 @@ function FullReportEditor({ defaultValue }: { defaultValue: string }) {
           style={{ width: '100%', fontFamily: 'monospace', fontSize: '13px' }}
         />
       ) : (
-        <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px', background: '#ffffff', minHeight: '220px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+        <div
+          style={{
+            border: '1px solid #e2e8f0',
+            borderRadius: '8px',
+            padding: '16px',
+            background: '#ffffff',
+            minHeight: '220px',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+          }}
+        >
           <input type="hidden" name="full_report" value={text} />
-          <div style={{ fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8', marginBottom: '8px', borderBottom: '1px solid #f1f5f9', paddingBottom: '4px' }}>
+          <div
+            style={{
+              fontSize: '11px',
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              color: '#94a3b8',
+              marginBottom: '8px',
+              borderBottom: '1px solid #f1f5f9',
+              paddingBottom: '4px',
+            }}
+          >
             Live Website Preview
           </div>
           <StructuredReportRenderer content={text} />
         </div>
       )}
-      <small style={{ display: 'block', marginTop: '6px', color: '#64748b', fontSize: '12px' }}>
-        If approved, this becomes the protected $15 full report. Markdown tables with pipes (|) and tab-separated rows render as formatted HTML tables.
+      <small
+        style={{
+          display: 'block',
+          marginTop: '6px',
+          color: '#64748b',
+          fontSize: '12px',
+        }}
+      >
+        If approved, this becomes the protected $15 full report. Markdown tables
+        with pipes (|) and tab-separated rows render as formatted HTML tables.
       </small>
     </div>
   );

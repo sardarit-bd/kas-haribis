@@ -139,55 +139,184 @@ export function isKnownSectionHeading(line: string): {
   isHeading: boolean;
   clean: string;
   original: string;
+  rest?: string;
 } {
   const trimmed = line.trim();
-  if (!trimmed) return { isHeading: false, clean: '', original: '' };
+  if (!trimmed) return { isHeading: false, clean: '', original: '', rest: '' };
 
-  const clean = trimmed
-    .replace(/^#+\s*/, '')
-    .replace(/:$/, '')
-    .trim()
-    .toLowerCase();
+  const withoutMd = trimmed.replace(/^#{1,4}\s+/, '');
+  const lower = withoutMd.toLowerCase();
 
   const exactHeadings = [
+    'top institutional holders',
+    'institutional holders',
+    'institutional ownership',
+    'principal shareholders',
+    'top shareholders',
     'executive management',
     'executive officers',
     'executive team',
     'management',
     'board of directors',
     'directors',
-    'top institutional holders',
-    'institutional holders',
-    'institutional ownership',
-    'principal shareholders',
-    'top shareholders',
-    'research note',
     'research notes',
+    'research note',
     'halachic analysis',
-    'halachic note',
     'halachic notes',
+    'halachic note',
     'bank overview',
     'public bank information',
   ];
 
-  if (exactHeadings.includes(clean)) {
-    return {
-      isHeading: true,
-      clean,
-      original: trimmed.replace(/^#+\s*/, '').replace(/:$/, ''),
-    };
+  for (const h of exactHeadings) {
+    if (lower === h || lower === h + ':') {
+      return {
+        isHeading: true,
+        clean: h,
+        original: withoutMd.replace(/:$/, '').trim(),
+        rest: '',
+      };
+    }
+
+    if (lower.startsWith(h)) {
+      const charAfter = withoutMd[h.length];
+      if (charAfter === ':' || charAfter === ' ' || charAfter === '\t') {
+        const rest = withoutMd.slice(h.length).replace(/^[:\s]+/, '').trim();
+        return {
+          isHeading: true,
+          clean: h,
+          original: withoutMd.slice(0, h.length).trim(),
+          rest,
+        };
+      }
+    }
   }
 
   // Markdown heading (# to ####)
   if (/^#{1,4}\s+/.test(trimmed)) {
     return {
       isHeading: true,
-      clean,
-      original: trimmed.replace(/^#+\s*/, ''),
+      clean: withoutMd.toLowerCase().replace(/:$/, '').trim(),
+      original: withoutMd.replace(/:$/, '').trim(),
+      rest: '',
     };
   }
 
-  return { isHeading: false, clean: '', original: '' };
+  return { isHeading: false, clean: '', original: '', rest: '' };
+}
+
+const DATE_PATTERN =
+  '(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\\.?\\s+\\d{1,2},?\\s+\\d{4})|(?:\\d{4}-\\d{2}-\\d{2})|(?:\\d{1,2}/\\d{1,2}/\\d{2,4})';
+const PCT_PATTERN = '\\d+(?:\\.\\d+)?%';
+const VAL_PATTERN = '[$€£]?\\d[\\d,]*(?:\\.\\d+)?[kmbKMB]?';
+const SHARES_PATTERN = '[\\d,]+(?:\\.\\d+)?[kmbKMB]?';
+
+export interface InstitutionalParseResult {
+  headers: string[];
+  alignments: TableAlignment[];
+  rows: string[][];
+  trailingText: string;
+}
+
+export function parseInstitutionalTableSection(
+  lines: string[],
+): InstitutionalParseResult | null {
+  const cleanLines = lines.map((l) => l.trim()).filter(Boolean);
+  if (cleanLines.length === 0) return null;
+
+  // 1. Check for standard Markdown pipe table
+  const pipeLines = cleanLines.filter((l) => l.includes('|'));
+  if (pipeLines.length >= 2) {
+    const headers = parsePipeTableRow(pipeLines[0]);
+    let rows: string[][] = [];
+    let startIdx = 1;
+    if (pipeLines.length > 2 && parseMarkdownTableSeparator(pipeLines[1])) {
+      startIdx = 2;
+    }
+    for (let j = startIdx; j < pipeLines.length; j++) {
+      const cells = parsePipeTableRow(pipeLines[j]);
+      if (cells.length >= 2) {
+        while (cells.length < headers.length) cells.push('');
+        rows.push(cells.slice(0, headers.length));
+      }
+    }
+    if (rows.length > 0) {
+      const alignments: TableAlignment[] = ['left', 'right', 'left', 'right', 'right'];
+      return { headers, alignments, rows, trailingText: '' };
+    }
+  }
+
+  // 2. Check for TSV table
+  const tsvLines = cleanLines.filter((l) => l.includes('\t'));
+  if (tsvLines.length >= 2) {
+    const headers = tsvLines[0].split('\t').map((c) => c.trim()).filter(Boolean);
+    const rows: string[][] = [];
+    for (let j = 1; j < tsvLines.length; j++) {
+      const cells = tsvLines[j].split('\t').map((c) => c.trim()).filter(Boolean);
+      if (cells.length >= 2) rows.push(cells);
+    }
+    if (rows.length > 0) {
+      const alignments: TableAlignment[] = ['left', 'right', 'left', 'right', 'right'];
+      return { headers, alignments, rows, trailingText: '' };
+    }
+  }
+
+  // 3. Plain-text / Flattened OCR table parsing
+  const fullText = cleanLines.join(' ').replace(/\s+/g, ' ').trim();
+  const headerRegex =
+    /^(?:\|\s*)?Holder\s+Shares\s+Date(?:\s+Reported)?\s+(?:%\s*Out|%|Percent(?:\s+Out)?)\s+Value(?:\s*\|)?\s*/i;
+  const headerMatch = fullText.match(headerRegex);
+
+  let bodyText = fullText;
+  const headers = ['Holder', 'Shares', 'Date Reported', '% Out', 'Value'];
+  const alignments: TableAlignment[] = ['left', 'right', 'left', 'right', 'right'];
+
+  if (headerMatch) {
+    bodyText = fullText.slice(headerMatch[0].length).trim();
+  }
+
+  const rows: string[][] = [];
+  const regex = new RegExp(
+    '(?:^|\\s+)(.+?)\\s+(' +
+      SHARES_PATTERN +
+      ')\\s+(' +
+      DATE_PATTERN +
+      ')\\s+(' +
+      PCT_PATTERN +
+      ')\\s+(' +
+      VAL_PATTERN +
+      ')(?=\\s+[A-Za-z0-9\\(]|$)',
+    'gi',
+  );
+
+  let match: RegExpExecArray | null;
+  let lastIndex = 0;
+
+  while ((match = regex.exec(bodyText)) !== null) {
+    const holder = match[1].trim();
+    const shares = match[2].trim();
+    const dateReported = match[3].trim();
+    const pctOut = match[4].trim();
+    const value = match[5].trim();
+
+    if (holder.length > 0) {
+      rows.push([holder, shares, dateReported, pctOut, value]);
+      lastIndex = regex.lastIndex;
+    }
+  }
+
+  const trailingText = bodyText.slice(lastIndex).trim();
+
+  if (rows.length > 0) {
+    return {
+      headers,
+      alignments,
+      rows,
+      trailingText,
+    };
+  }
+
+  return null;
 }
 
 export function parseStructuredReport(text: string): ContentBlock[] {
@@ -319,66 +448,90 @@ export function parseStructuredReport(text: string): ContentBlock[] {
       ) {
         blocks.push({ type: 'heading', level: 2, text: title });
 
-        while (i < rawLines.length && !rawLines[i].trim()) i++;
+        const sectionLines: string[] = [];
+        if (headingCheck.rest) {
+          sectionLines.push(headingCheck.rest);
+        }
 
-        if (i < rawLines.length) {
-          let tableHeaders = ['Holder', 'Shares', 'Date Reported', '% Out', 'Value'];
-          const alignments: TableAlignment[] = ['left', 'right', 'center', 'right', 'right'];
-          const rows: string[][] = [];
+        while (i < rawLines.length) {
+          const rawCurrent = rawLines[i];
+          const trimmedCurrent = rawCurrent.trim();
 
-          // Check if first line is a header row
-          const possibleHeader = rawLines[i].trim();
-          if (/holder/i.test(possibleHeader) && /share/i.test(possibleHeader)) {
-            if (possibleHeader.includes('|')) {
-              tableHeaders = possibleHeader.split('|').map((c) => c.trim()).filter(Boolean);
-            } else if (possibleHeader.includes('\t')) {
-              tableHeaders = possibleHeader.split('\t').map((c) => c.trim()).filter(Boolean);
+          if (!trimmedCurrent) {
+            let lookAhead = i + 1;
+            while (lookAhead < rawLines.length && !rawLines[lookAhead].trim()) {
+              lookAhead++;
             }
-            i++;
             if (
-              i < rawLines.length &&
-              rawLines[i].trim().includes('-') &&
-              rawLines[i].trim().includes('|')
+              lookAhead < rawLines.length &&
+              isKnownSectionHeading(rawLines[lookAhead]).isHeading
             ) {
               i++;
+              break;
             }
-          }
-
-          while (i < rawLines.length) {
-            const rowLine = rawLines[i].trim();
-            if (!rowLine) {
+            if (
+              lookAhead < rawLines.length &&
+              /^(as it is|note:|research note:|halachic note:)/i.test(
+                rawLines[lookAhead].trim(),
+              )
+            ) {
               i++;
-              while (i < rawLines.length && !rawLines[i].trim()) i++;
-              if (i < rawLines.length && isKnownSectionHeading(rawLines[i].trim()).isHeading) break;
-              continue;
-            }
-            if (isKnownSectionHeading(rowLine).isHeading) break;
-
-            if (rowLine.includes('|')) {
-              const cells = rowLine.split('|').map((c) => c.trim()).filter(Boolean);
-              if (cells.length >= 2) rows.push(cells);
-            } else if (rowLine.includes('\t')) {
-              const cells = rowLine.split('\t').map((c) => c.trim()).filter(Boolean);
-              if (cells.length >= 2) rows.push(cells);
-            } else {
-              const match = rowLine.match(INSTITUTIONAL_ROW_REGEX);
-              if (match) {
-                rows.push([match[1], match[2], match[3], match[4], match[5]]);
-              } else {
-                break;
-              }
+              break;
             }
             i++;
+            continue;
           }
 
-          if (rows.length) {
+          if (isKnownSectionHeading(trimmedCurrent).isHeading) {
+            break;
+          }
+
+          if (
+            sectionLines.length > 0 &&
+            /^(as it is|note:|research note:|halachic note:)/i.test(trimmedCurrent)
+          ) {
+            break;
+          }
+
+          sectionLines.push(trimmedCurrent);
+          i++;
+        }
+
+        if (sectionLines.length > 0) {
+          const parsed = parseInstitutionalTableSection(sectionLines);
+          if (parsed && parsed.rows.length > 0) {
             blocks.push({
               type: 'table',
               data: {
-                headers: tableHeaders,
-                alignments,
-                rows,
+                headers: parsed.headers,
+                alignments: parsed.alignments,
+                rows: parsed.rows,
               },
+            });
+
+            if (parsed.trailingText) {
+              if (
+                /^(as it is|note:|research note:|halachic note:)/i.test(
+                  parsed.trailingText,
+                )
+              ) {
+                blocks.push({
+                  type: 'blockquote',
+                  title: 'Research Note',
+                  lines: [parsed.trailingText],
+                });
+              } else {
+                blocks.push({
+                  type: 'paragraph',
+                  text: parsed.trailingText,
+                });
+              }
+            }
+          } else {
+            // Preserve original unparsed section text under heading rather than dropping it
+            blocks.push({
+              type: 'paragraph',
+              text: sectionLines.join(' '),
             });
           }
         }
