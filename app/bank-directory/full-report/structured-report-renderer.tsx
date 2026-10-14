@@ -50,6 +50,24 @@ function renderInline(text: string): React.ReactNode {
   });
 }
 
+function renderOfficerOrDirector(item: string) {
+  // Check if item contains Name: Title or Name — Title or Name - Title
+  const colonMatch = item.match(/^(.*?)(?:\s*:\s*|\s*[—–-]\s*)(.+)$/);
+  if (colonMatch) {
+    const name = colonMatch[1].trim();
+    const role = colonMatch[2].trim();
+    return (
+      <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
+        <span className="font-semibold text-slate-900">{renderInline(name)}</span>
+        <span className="text-slate-400 hidden sm:inline">·</span>
+        <span className="text-slate-600 text-sm font-medium">{renderInline(role)}</span>
+      </div>
+    );
+  }
+
+  return <span className="font-medium text-slate-800">{renderInline(item)}</span>;
+}
+
 export interface StructuredReportRendererProps {
   content: string;
   className?: string;
@@ -72,9 +90,31 @@ export function StructuredReportRenderer({
   }
 
   return (
-    <div className={`space-y-4 text-[#334155] leading-relaxed ${className}`}>
+    <div className={`space-y-6 text-[#334155] leading-relaxed ${className}`}>
       {blocks.map((block, index) => {
         switch (block.type) {
+          case 'intro': {
+            return (
+              <div
+                key={index}
+                className="mb-6 p-5 bg-gradient-to-r from-slate-50 to-slate-100/70 border border-slate-200 rounded-xl shadow-2xs"
+              >
+                <div className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-1">
+                  Bank Research Overview
+                </div>
+                <h2 className="text-xl font-bold text-[#102a43]">
+                  {renderInline(block.title)}
+                </h2>
+                {block.publicInfo && (
+                  <p className="text-sm font-medium text-slate-600 mt-1.5 flex items-center gap-2">
+                    <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
+                    {renderInline(block.publicInfo)}
+                  </p>
+                )}
+              </div>
+            );
+          }
+
           case 'heading': {
             if (block.level === 1) {
               return (
@@ -90,8 +130,9 @@ export function StructuredReportRenderer({
               return (
                 <h2
                   key={index}
-                  className="text-xl font-bold text-[#102a43] mt-7 mb-3 border-b border-slate-200 pb-2"
+                  className="text-xl font-bold text-[#102a43] mt-8 mb-3 border-b border-slate-200 pb-2 flex items-center gap-2"
                 >
+                  <span className="w-1.5 h-5 bg-[#102a43] rounded-sm inline-block" />
                   {renderInline(block.text)}
                 </h2>
               );
@@ -100,7 +141,7 @@ export function StructuredReportRenderer({
               return (
                 <h3
                   key={index}
-                  className="text-lg font-bold text-[#102a43] mt-5 mb-2"
+                  className="text-lg font-bold text-[#102a43] mt-6 mb-2"
                 >
                   {renderInline(block.text)}
                 </h3>
@@ -117,6 +158,39 @@ export function StructuredReportRenderer({
           }
 
           case 'list': {
+            if (block.variant === 'officers') {
+              return (
+                <div key={index} className="my-4 grid grid-cols-1 gap-2.5">
+                  {block.items.map((item, itemIdx) => (
+                    <div
+                      key={itemIdx}
+                      className="p-3 bg-white border border-slate-200 rounded-lg shadow-2xs hover:border-slate-300 transition-colors"
+                    >
+                      {renderOfficerOrDirector(item)}
+                    </div>
+                  ))}
+                </div>
+              );
+            }
+
+            if (block.variant === 'directors') {
+              return (
+                <div
+                  key={index}
+                  className="my-4 grid grid-cols-1 sm:grid-cols-2 gap-2.5"
+                >
+                  {block.items.map((item, itemIdx) => (
+                    <div
+                      key={itemIdx}
+                      className="p-3 bg-slate-50/80 border border-slate-200/90 rounded-lg text-sm"
+                    >
+                      {renderOfficerOrDirector(item)}
+                    </div>
+                  ))}
+                </div>
+              );
+            }
+
             return (
               <ul
                 key={index}
@@ -135,11 +209,18 @@ export function StructuredReportRenderer({
             return (
               <blockquote
                 key={index}
-                className="my-4 border-l-4 border-[#c69b46] bg-amber-50/50 p-4 rounded-r-lg text-slate-800 text-sm space-y-1"
+                className="my-6 border-l-4 border-[#c69b46] bg-amber-50/60 p-4 rounded-r-xl text-slate-800 text-sm shadow-2xs"
               >
-                {block.lines.map((line, lineIdx) => (
-                  <p key={lineIdx}>{renderInline(line)}</p>
-                ))}
+                {block.title && (
+                  <div className="font-bold text-amber-900 text-xs uppercase tracking-wider mb-1.5">
+                    {block.title}
+                  </div>
+                )}
+                <div className="space-y-1.5">
+                  {block.lines.map((line, lineIdx) => (
+                    <p key={lineIdx}>{renderInline(line)}</p>
+                  ))}
+                </div>
               </blockquote>
             );
           }
@@ -151,7 +232,7 @@ export function StructuredReportRenderer({
                 key={index}
                 className="my-6 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-xs"
               >
-                <table className="w-full text-left text-sm border-collapse min-w-[500px]">
+                <table className="w-full text-left text-sm border-collapse min-w-[550px]">
                   <thead className="bg-slate-100/90 text-[#102a43] border-b border-slate-200">
                     <tr>
                       {headers.map((header, hIdx) => {
@@ -186,11 +267,11 @@ export function StructuredReportRenderer({
                               ? 'text-right font-mono'
                               : align === 'center'
                                 ? 'text-center'
-                                : 'text-left';
+                                : 'text-left font-medium text-slate-900';
                           return (
                             <td
                               key={cIdx}
-                              className={`py-2.5 px-4 text-slate-700 ${alignClass}`}
+                              className={`py-3 px-4 text-slate-700 ${alignClass}`}
                             >
                               {renderInline(cell)}
                             </td>
@@ -220,19 +301,32 @@ export function StructuredReportRenderer({
   );
 }
 
-export const INSTITUTIONAL_HOLDERS_TEMPLATE = `### Executive Management
-- **Robert B. White**: President and Chief Executive Officer
-- **Mary K. Shea**: Executive Vice President and Chief Financial Officer
+export const INSTITUTIONAL_HOLDERS_TEMPLATE = `1st Colonial Bank
+Public Bank: 1st Colonial Bancorp, Inc. (FCOB) OTCPK
 
-### Board of Directors
-- [Director Name]: [Title / Role]
-- [Director Name]: [Title / Role]
+Executive Management
+Robert B white: President and CEO
+Mary K Shea: EVP and CFO
 
-### Top Institutional Holders
-| Holder | Shares | Date Reported | % Out | Value |
-| :--- | ---: | :---: | ---: | ---: |
-| [Institution Name] | 0 | YYYY-MM-DD | 0.0% | $0 |
-| [Institution Name] | 0 | YYYY-MM-DD | 0.0% | $0 |
+Board of Directors:
+Linda M Rohrer
+Robert B white: President and CEO
+Curt Byerly
+Thomas A Clark III
+John J Donnelley IV
+Michael Haydinger
+Harvey C Johnson
+Stanley H Molotsky
+Letita G Colombi
+Shelley Sims
+Thomas Brugger
 
-### Research Note
-[Enter halachic analysis, ownership structure, and relevant notes here.]`;
+Top Institutional Holders
+Holder Shares Date Reported % Out Value
+Banc Funds Company, L.L.C. (The) 108.14k Sep 30, 2024 2.24% 1,589,716
+Siena Capital Partners GP, LLC 95.35k Sep 30, 2024 1.97% 1,401,674
+Fulton Bank, NA 55.63k Dec 31, 2024 1.15% 817,716
+Ethos Financial Group, LLC 14.42k Sep 30, 2024 0.30% 211,929
+
+Research Note:
+As it is a bulletin board stock I was unable to find ownership info. Might be enough to rely on regardless.`;
