@@ -9,7 +9,7 @@ export default async function BusinessesPage() {
   const businesses = (await listBusinesses(env.DB)) as any[];
   return (
     <>
-     <SiteHeader />
+     <SiteHeader stickySponsor />
     <InteriorPage
       eyebrow="KOSHER COMMERCE DIRECTORY"
       title="Businesses With a Heter Iska"
