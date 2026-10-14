@@ -25,7 +25,7 @@ const sectionVariants = {
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-white">
-      <SiteHeader />
+      <SiteHeader stickySponsor />
 
       <motion.div
         initial="hidden"
