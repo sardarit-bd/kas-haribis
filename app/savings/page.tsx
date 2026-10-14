@@ -10,7 +10,7 @@ export default async function SavingsPage() {
     items = (await listSavingsAccounts(env.DB)) as any[];
   return (
     <>
-    <SiteHeader/>
+    <SiteHeader stickySponsor />
     <InteriorPage
       eyebrow="SAVINGS RESEARCH"
       title="Kosher High-Yield Savings Accounts"
