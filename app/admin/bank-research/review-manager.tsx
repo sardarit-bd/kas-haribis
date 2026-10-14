@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useMemo, useState } from 'react';
+import { StructuredReportRenderer } from '../../bank-directory/full-report/structured-report-renderer';
 
 type Item = {
   id: string;
@@ -386,10 +387,16 @@ export default function BankResearchReview({
                 title="Heter Iska details"
                 text={selected.iska_details}
               />
-              <ReviewBlock
-                title="Full protected report ($15)"
-                text={selected.full_report}
-              />
+              <section className="reviewBlock">
+                <small>Full protected report ($15)</small>
+                {selected.full_report ? (
+                  <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px', marginTop: '8px' }}>
+                    <StructuredReportRenderer content={selected.full_report} />
+                  </div>
+                ) : (
+                  <p>Not provided.</p>
+                )}
+              </section>
               <ReviewBlock title="Sources" text={selected.source_urls} />
               <ReviewBlock
                 title="Private researcher notes"

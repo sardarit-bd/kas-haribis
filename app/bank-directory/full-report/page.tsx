@@ -4,6 +4,7 @@ import { premiumMemberFromHeaders } from '../../lib/bank-premium';
 import { getUserFromCookieHeader } from '../../lib/auth';
 import { canAccessSection, isOwnerEmail } from '../../lib/admin-access';
 import { headers } from 'next/headers';
+import { StructuredReportRenderer } from './structured-report-renderer';
 
 export const dynamic = 'force-dynamic';
 
@@ -159,34 +160,42 @@ export default async function FullBankReport({
             ? `Premium member access confirmed for ${premium.name || premium.email}.`
             : `Access confirmed · This private link expires seven days after it was issued.`}
         </div>
-        {fullReportText ? (
-          <div className="reportBody">
-            {fullReportText
-              .split(/\n{2,}/)
-              .map((paragraph: string, index: number) => (
-                <p key={index}>{paragraph}</p>
-              ))}
-          </div>
-        ) : null}
+
         {attachedFile && (
-          <div className="my-6 p-6 bg-slate-50 border border-slate-200 rounded-xl">
-            <h3 className="text-base font-bold text-[#102a43] mb-1">
-              Attached Research Document
-            </h3>
-            <p className="text-sm text-slate-600 mb-4">
-              {attachedFile.report_name || 'Download research report document'}
-            </p>
+          <div className="my-5 p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#102a43]">
+                <span>📄 Verified Analyst Document Attached</span>
+              </div>
+              <p className="text-xs text-slate-600 mt-1">
+                {attachedFile.report_name || 'Original source report document'}
+              </p>
+            </div>
             <a
               href={`/api/bank-research-file?id=${encodeURIComponent(attachedFile.id)}&kind=report${token ? `&token=${encodeURIComponent(token)}` : ''}`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold rounded-lg transition-colors shadow-xs"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold rounded-lg transition-colors shadow-xs shrink-0"
             >
-              📄 Download Research Report
+              Download Original PDF ↗
             </a>
           </div>
         )}
-        <a href="/bank-directory">← Return to Bank Directory</a>
+
+        <div className="reportBody">
+          <StructuredReportRenderer
+            content={fullReportText}
+            emptyMessage={
+              attachedFile
+                ? 'This bank report has an official analyst document attached above. Use the Download Original PDF button to review the complete file.'
+                : 'No report text available.'
+            }
+          />
+        </div>
+
+        <div className="mt-8 pt-4 border-t border-slate-200">
+          <a href="/bank-directory">← Return to Bank Directory</a>
+        </div>
       </article>
     </InteriorPage>
   );

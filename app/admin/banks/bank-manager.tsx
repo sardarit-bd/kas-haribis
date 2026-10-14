@@ -1,5 +1,9 @@
 'use client';
 import { FormEvent, useMemo, useState } from 'react';
+import {
+  StructuredReportRenderer,
+  INSTITUTIONAL_HOLDERS_TEMPLATE,
+} from '../../bank-directory/full-report/structured-report-renderer';
 
 type Bank = {
   id: string;
@@ -327,19 +331,7 @@ export default function BankManager({
               defaultValue={value.internal_notes}
             />
           </label>
-          <label className="fullReportEditor">
-            Protected full report — $15 access
-            <textarea
-              name="full_report"
-              rows={12}
-              defaultValue={value.full_report}
-              placeholder="Enter the complete detailed report. This text is never included in the public directory and is shown only after payment or a valid access code."
-            />
-            <small>
-              Visitors will see the Full Report button only when this field
-              contains a report.
-            </small>
-          </label>
+          <FullReportEditor defaultValue={value.full_report} />
           <div className="bankFormGrid compactFields">
             <label>
               Researcher
@@ -613,6 +605,99 @@ export default function BankManager({
           )}
         </div>
       </section>
+    </div>
+  );
+}
+
+function FullReportEditor({ defaultValue }: { defaultValue: string }) {
+  const [text, setText] = useState(defaultValue);
+  const [view, setView] = useState<'edit' | 'preview'>('edit');
+
+  function insertTemplate() {
+    const separator = text.trim() ? '\n\n' : '';
+    setText((prev) => prev + separator + INSTITUTIONAL_HOLDERS_TEMPLATE);
+    setView('edit');
+  }
+
+  return (
+    <div className="fullReportEditor" style={{ margin: '20px 0' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: '8px' }}>
+        <span style={{ fontWeight: 'bold', fontSize: '14px', color: '#1e293b' }}>
+          Protected full report — $15 access
+        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button
+            type="button"
+            onClick={insertTemplate}
+            style={{
+              padding: '4px 10px',
+              fontSize: '12px',
+              fontWeight: 600,
+              background: '#f1f5f9',
+              color: '#334155',
+              border: '1px solid #cbd5e1',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+          >
+            + Insert Table Template
+          </button>
+          <div style={{ display: 'inline-flex', border: '1px solid #cbd5e1', borderRadius: '4px', overflow: 'hidden', background: '#f8fafc' }}>
+            <button
+              type="button"
+              onClick={() => setView('edit')}
+              style={{
+                padding: '4px 12px',
+                fontSize: '12px',
+                fontWeight: 600,
+                border: 'none',
+                cursor: 'pointer',
+                background: view === 'edit' ? '#102a43' : 'transparent',
+                color: view === 'edit' ? '#ffffff' : '#475569',
+              }}
+            >
+              Edit
+            </button>
+            <button
+              type="button"
+              onClick={() => setView('preview')}
+              style={{
+                padding: '4px 12px',
+                fontSize: '12px',
+                fontWeight: 600,
+                border: 'none',
+                cursor: 'pointer',
+                background: view === 'preview' ? '#102a43' : 'transparent',
+                color: view === 'preview' ? '#ffffff' : '#475569',
+              }}
+            >
+              Preview
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {view === 'edit' ? (
+        <textarea
+          name="full_report"
+          rows={12}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Enter the complete detailed report in Markdown or plain text. Tables, headings, lists, and blockquotes will render as formatted HTML on the website."
+          style={{ width: '100%', fontFamily: 'monospace', fontSize: '13px' }}
+        />
+      ) : (
+        <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px', background: '#ffffff', minHeight: '220px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+          <input type="hidden" name="full_report" value={text} />
+          <div style={{ fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8', marginBottom: '8px', borderBottom: '1px solid #f1f5f9', paddingBottom: '4px' }}>
+            Live Website Preview
+          </div>
+          <StructuredReportRenderer content={text} />
+        </div>
+      )}
+      <small style={{ display: 'block', marginTop: '6px', color: '#64748b', fontSize: '12px' }}>
+        Visitors will see the Full Report button only when this field contains a report. Markdown tables with pipes (|) and tab-separated rows render as formatted HTML tables.
+      </small>
     </div>
   );
 }
