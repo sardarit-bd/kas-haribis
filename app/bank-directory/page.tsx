@@ -22,7 +22,7 @@ export default async function BankDirectory() {
   const isAuthorized = Boolean(premium || isOwner);
   return (
     <main className="min-h-screen bg-gray-200">
-      <SiteHeader />
+      <SiteHeader stickySponsor />
       <div className="overflow-x-hidden">
         {/* Hero Section */}
         <section className="bankdirectoryherosectionbg">

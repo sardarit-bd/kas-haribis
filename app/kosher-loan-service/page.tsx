@@ -8,7 +8,7 @@ export default async function Page() {
     items = (await listLoanServices(env.DB)) as any[];
   return (
     <>
-    <SiteHeader/>
+    <SiteHeader stickySponsor />
     
     <InteriorPage
       eyebrow="HALACHICALLY RESPONSIBLE FINANCING"

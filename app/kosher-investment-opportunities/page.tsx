@@ -9,7 +9,7 @@ export default async function Page() {
     items = (await listInvestments(env.DB)) as any[];
   return (
     <>
-    <SiteHeader/>
+    <SiteHeader stickySponsor />
     <InteriorPage
       eyebrow="KOSHER INVESTING"
       title="Kosher Investment Opportunities"
