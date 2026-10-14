@@ -20,9 +20,9 @@ export default function BaisHoraahPage() {
               <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1">
                 SPEAK TO A RAV
               </p>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[#102a43] leading-tight">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[#102a43] leading-tight">
                 Clarity before you sign, borrow, lend, or invest
-              </h2>
+              </h1>
             </div>
             <p className="text-sm sm:text-base text-[#64748b] leading-relaxed">
               Whether you are reviewing a loan agreement, need guidance about a
@@ -260,109 +260,99 @@ export default function BaisHoraahPage() {
         </div>
       </section>
 
-      {/* Worldwide Rabbinical Assistance & Guidance Section */}
+      {/* Worldwide Halachic Assistance & Global Inquiry Reach */}
       <section className="py-16 md:py-20 bg-white border-t border-[#e2d9c8]/60 overflow-hidden">
-        <div className="container max-w-[1440px] mx-auto px-4 sm:px-8">
+        <div className="container max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
           <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-20px' }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center"
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start"
           >
+            {/* Left Column: Eyebrow, Heading, Intro, Main Phone CTA & Brooklyn Branch */}
             <div className="lg:col-span-7 space-y-6">
               <div>
-                <p className="text-[#c69b46] font-bold text-xs tracking-widest uppercase mb-1">
+                <p className="text-[#c59a3f] font-bold text-xs sm:text-sm tracking-wider uppercase mb-2">
                   WORLDWIDE HALACHIC ASSISTANCE
                 </p>
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[#102a43] leading-tight">
+                <h2 className="text-3xl sm:text-4xl lg:text-[40px] font-bold text-[#0c2340] leading-[1.18] tracking-tight">
                   DIRECT INQUIRIES &amp; HETER ISKA GUIDANCE
                 </h2>
               </div>
-              <p className="text-base sm:text-lg text-[#64748b] leading-relaxed">
-                Kav Haribis helps individuals, businesses, and communities in
-                the United States and worldwide with inquiries relating to Ribis
-                and financial halachic matters.
-              </p>
-              <p className="text-sm sm:text-base text-[#64748b] leading-relaxed">
-                The Call Center serves as the main contact point for inquiries
-                and calls from around the world, including the USA, Israel, the
-                UK, Belgium, Mexico, Argentina, and beyond.
-              </p>
 
-              <div className="space-y-3 pt-1">
-                <h3 className="text-sm font-bold text-[#102a43] uppercase tracking-wider">
-                  Rabbinical Network &amp; Consultation
-                </h3>
-                <p className="text-sm sm:text-base text-[#64748b] leading-relaxed">
-                  Working closely under the guidance of and in consultation with
-                  prominent Posekim and Rabbanim, including Harav Pinchos Vind
-                  Shlita, Harav Pinchos Rottenberg Shlita, Rabbi Yaakov Weinfeld
-                  Shlita, Harav Pinchos Shue Shlita, and other leading Rabbanim.
+              <div className="space-y-4 text-base sm:text-[17px] text-[#556980] leading-relaxed">
+                <p>
+                  Kav Haribis helps individuals, businesses, and communities in
+                  the United States and worldwide with inquiries relating to
+                  Ribis and financial halachic matters.
                 </p>
-                <p className="text-sm sm:text-base text-[#64748b] leading-relaxed">
-                  Comprehensive guidance is available regarding Heter Iska
-                  structures, loan agreements, investment contracts, and complex
-                  financial inquiries.
+                <p>
+                  The Call Center serves as the main contact point for inquiries
+                  and calls from around the world, including the USA, Israel, the
+                  UK, Belgium, Mexico, Argentina, and beyond.
                 </p>
               </div>
 
-              {/* Contact Points: Main Call Center & Separate Brooklyn Branch */}
-              <div className="pt-2 space-y-4">
-                <div>
-                  <a
-                    className="inline-flex items-center gap-3.5 p-4 bg-[#102a43] hover:bg-[#1a385c] text-white transition-all duration-300 hover:scale-[1.02] shadow-md rounded-lg group"
-                    href="tel:7322288558"
-                  >
-                    <span className="w-10 h-10 rounded-lg bg-[#c69b46] text-[#102a43] font-bold flex items-center justify-center text-lg">
-                      ☎
-                    </span>
-                    <div>
-                      <small className="block text-[10px] font-mono text-[#c69b46] uppercase tracking-widest">
-                        MAIN BAIS HORAAH · WORLDWIDE
-                      </small>
-                      <b className="text-lg font-bold text-white group-hover:text-[#c69b46] transition-colors">
-                        732-228-8558
-                      </b>
-                    </div>
-                  </a>
-                </div>
-
-                <div className="p-4 bg-[#f8fafc] border border-[#ded7c9] rounded-xl space-y-1.5 max-w-xl">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#c69b46] shrink-0" />
-                    <h4 className="text-xs font-mono font-bold text-[#102a43] uppercase tracking-wider">
-                      Brooklyn, NY Branch — Local Inquiries
-                    </h4>
+              {/* Main Worldwide Hotline Card */}
+              <div>
+                <a
+                  className="inline-flex items-center gap-3.5 px-4 py-3.5 bg-[#0a233f] hover:bg-[#0e2c4d] text-white transition-all duration-200 rounded-lg shadow-sm border border-[#102d4f] group"
+                  href="tel:7322288558"
+                >
+                  <span className="w-10 h-10 rounded-md bg-[#c59a3f] text-[#0a233f] font-bold flex items-center justify-center text-xl shrink-0 shadow-xs">
+                    ☎
+                  </span>
+                  <div>
+                    <small className="block text-[10px] font-bold text-[#c59a3f] uppercase tracking-wider">
+                      MAIN BAIS HORAAH - WORLDWIDE
+                    </small>
+                    <b className="text-xl sm:text-2xl font-bold text-white group-hover:text-[#f4dfa2] transition-colors">
+                      732-228-8558
+                    </b>
                   </div>
-                  <p className="text-xs text-[#64748b] leading-relaxed">
-                    There is also a separate branch in Brooklyn, NY, operated by
-                    local individuals. Inquiries may be placed through the
-                    Brooklyn Bais Horaah office at{' '}
-                    <a
-                      href="tel:8454938060"
-                      className="text-[#102a43] font-bold hover:underline"
-                    >
-                      845-493-8060
-                    </a>{' '}
-                    or submitted via the form above.
-                  </p>
+                </a>
+              </div>
+
+              {/* Brooklyn Branch Card */}
+              <div className="p-5 sm:p-6 bg-[#fcfbf9] border border-[#eadfcb] rounded-xl space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#c59a3f] shrink-0" />
+                  <h3 className="text-xs sm:text-sm font-bold text-[#0c2340] uppercase tracking-wider">
+                    BROOKLYN, NY BRANCH — LOCAL INQUIRIES
+                  </h3>
                 </div>
+                <p className="text-sm text-[#556980] leading-relaxed">
+                  Rabbi Pinchos Vind has a branch in Brooklyn, NY, operated by
+                  local Rabbonim Rabbi Pinchos Rotenberg and Rabbi Yaakov
+                  Weinfeld. The Heter Iska specialist is Rabbi Pinchos Slue.
+                  Inquiries may be placed through the Brooklyn Bais Horaah office
+                  at{' '}
+                  <a
+                    href="tel:8454938060"
+                    className="text-[#0c2340] font-bold underline hover:text-[#c59a3f] transition-colors"
+                  >
+                    845-493-8060
+                  </a>{' '}
+                  or submitted via the form above.
+                </p>
               </div>
             </div>
 
-            {/* Global Reach / Communities Badge Card */}
+            {/* Right Column: Global Inquiry Reach Card */}
             <div className="lg:col-span-5">
-              <div className="p-6 sm:p-8 bg-[#f7f3ea] border border-[#e2d9c8] rounded-2xl space-y-5 shadow-xs">
+              <div className="p-6 sm:p-8 bg-[#fbf7ed] border border-[#eadfcb] rounded-2xl space-y-5 shadow-xs">
                 <div>
-                  <span className="text-xs font-mono font-bold text-[#c69b46] uppercase tracking-widest block mb-1">
+                  <span className="text-xs font-bold text-[#c59a3f] uppercase tracking-wider block mb-1">
                     GLOBAL INQUIRY REACH
                   </span>
-                  <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#102a43]">
+                  <h3 className="text-2xl sm:text-[28px] font-bold text-[#0c2340] tracking-tight">
                     Inquiries Received From
                   </h3>
                 </div>
-                <div className="grid grid-cols-2 gap-2.5">
+
+                {/* Country 2-Column Grid */}
+                <div className="grid grid-cols-2 gap-3 pt-1">
                   {[
                     'USA',
                     'Israel',
@@ -373,31 +363,33 @@ export default function BaisHoraahPage() {
                   ].map((country) => (
                     <div
                       key={country}
-                      className="flex items-center gap-2 p-3 bg-white border border-[#e2d9c8]/70 rounded-lg text-sm font-semibold text-[#102a43]"
+                      className="flex items-center gap-2.5 px-4 py-3 bg-white border border-[#eadfcb] rounded-lg text-sm sm:text-base font-bold text-[#0c2340] shadow-2xs hover:border-[#c59a3f] transition-colors"
                     >
-                      <span className="w-2 h-2 rounded-full bg-[#c69b46] shrink-0" />
+                      <span className="w-2 h-2 rounded-full bg-[#c59a3f] shrink-0" />
                       <span>{country}</span>
                     </div>
                   ))}
-                  <div className="col-span-2 flex items-center gap-2 p-3 bg-white/60 border border-[#e2d9c8]/70 rounded-lg text-xs font-medium text-[#64748b]">
-                    <span className="w-2 h-2 rounded-full bg-[#102a43] shrink-0" />
+                  {/* Full-width final item */}
+                  <div className="col-span-2 flex items-center gap-2.5 px-4 py-3 bg-white border border-[#eadfcb] rounded-lg text-xs sm:text-sm font-medium text-[#475569] shadow-2xs">
+                    <span className="w-2 h-2 rounded-full bg-[#0c2340] shrink-0" />
                     <span>And communities worldwide</span>
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-[#e2d9c8]/80 text-xs text-[#64748b] leading-relaxed">
+                {/* Explanatory Contact Note */}
+                <div className="pt-2 text-xs text-[#64748b] leading-relaxed">
                   For assistance with Heter Iska arrangements, corporate or
                   personal ribis inquiries, call the main Bais Horaah line at{' '}
                   <a
                     href="tel:7322288558"
-                    className="text-[#102a43] font-bold hover:underline"
+                    className="text-[#0c2340] font-bold underline hover:text-[#c59a3f] transition-colors"
                   >
                     732-228-8558
                   </a>{' '}
                   (Brooklyn office:{' '}
                   <a
                     href="tel:8454938060"
-                    className="text-[#102a43] font-bold hover:underline"
+                    className="text-[#0c2340] font-bold underline hover:text-[#c59a3f] transition-colors"
                   >
                     845-493-8060
                   </a>
