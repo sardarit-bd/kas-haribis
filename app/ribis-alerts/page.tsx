@@ -13,7 +13,7 @@ export default async function Page() {
   );
   return (
     <>
-      <SiteHeader/>
+      <SiteHeader stickySponsor />
       <MotionDiv
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
