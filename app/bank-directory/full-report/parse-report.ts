@@ -752,3 +752,7 @@ export function parseStructuredReport(text: string): ContentBlock[] {
 
   return blocks;
 }
+
+export const INSTITUTIONAL_HOLDERS_TEMPLATE = `| Holder | Shares | Date Reported | % Out | Value |
+|---|---|---|---|---|
+| [Holder Name] | [Shares] | [Date] | [Percentage] | [Value] |`;

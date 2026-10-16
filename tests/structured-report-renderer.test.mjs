@@ -1,8 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
 import {
   parseStructuredReport,
   parseInlineTokens,
+  INSTITUTIONAL_HOLDERS_TEMPLATE,
 } from '../app/bank-directory/full-report/parse-report.ts';
 
 test('Structured Report: Empty and whitespace strings return empty blocks', () => {
@@ -296,4 +299,83 @@ test('Structured Report: Inline tokens parsing for bold, code, and italic', () =
     { type: 'text', value: ' with ' },
     { type: 'italic', value: 'emphasis' },
   ]);
+});
+
+test('Institutional Table Template: Contains only required 5 column headings', () => {
+  const expectedHeaders = ['Holder', 'Shares', 'Date Reported', '% Out', 'Value'];
+  for (const header of expectedHeaders) {
+    assert.ok(
+      INSTITUTIONAL_HOLDERS_TEMPLATE.includes(header),
+      `Template must include header: ${header}`,
+    );
+  }
+});
+
+test('Institutional Table Template: Parses into valid 5-column table without extra content', () => {
+  const blocks = parseStructuredReport(INSTITUTIONAL_HOLDERS_TEMPLATE);
+  assert.equal(blocks.length, 1, 'Template must parse into exactly one block');
+  assert.equal(blocks[0].type, 'table', 'Template must parse as a table block');
+  assert.deepEqual(blocks[0].data.headers, [
+    'Holder',
+    'Shares',
+    'Date Reported',
+    '% Out',
+    'Value',
+  ]);
+  assert.equal(blocks[0].data.rows.length, 1);
+  assert.equal(blocks[0].data.rows[0].length, 5);
+});
+
+test('Institutional Table Template: Contains zero 1st Colonial Bank or specific bank content', () => {
+  const forbiddenTerms = [
+    '1st Colonial Bank',
+    'Robert B white',
+    'Banc Funds Company',
+    'Siena Capital Partners',
+    'Fulton Bank',
+    'Ethos Financial Group',
+    'bulletin board stock',
+    'Mary K Shea',
+    'Linda M Rohrer',
+    'OTCPK',
+  ];
+
+  for (const term of forbiddenTerms) {
+    assert.equal(
+      INSTITUTIONAL_HOLDERS_TEMPLATE.toLowerCase().includes(term.toLowerCase()),
+      false,
+      `Template must not contain specific bank term: "${term}"`,
+    );
+  }
+});
+
+test('Institutional Table Template: Both Admin and Research Workspace editors import and use shared template', () => {
+  const adminEditorSrc = fs.readFileSync(
+    path.resolve('app/admin/banks/bank-manager.tsx'),
+    'utf-8',
+  );
+  const researchEditorSrc = fs.readFileSync(
+    path.resolve('app/research/lenders/research-workspace.tsx'),
+    'utf-8',
+  );
+
+  // Both must import INSTITUTIONAL_HOLDERS_TEMPLATE
+  assert.match(
+    adminEditorSrc,
+    /import\s*\{[^}]*INSTITUTIONAL_HOLDERS_TEMPLATE[^}]*\}\s*from\s*['"][^'"]*structured-report-renderer['"]/,
+  );
+  assert.match(
+    researchEditorSrc,
+    /import\s*\{[^}]*INSTITUTIONAL_HOLDERS_TEMPLATE[^}]*\}\s*from\s*['"][^'"]*structured-report-renderer['"]/,
+  );
+
+  // Both must use it in insertTemplate
+  assert.match(
+    adminEditorSrc,
+    /setText\(\(prev\)\s*=>\s*prev\s*\+\s*separator\s*\+\s*INSTITUTIONAL_HOLDERS_TEMPLATE\)/,
+  );
+  assert.match(
+    researchEditorSrc,
+    /setText\(\(prev\)\s*=>\s*prev\s*\+\s*separator\s*\+\s*INSTITUTIONAL_HOLDERS_TEMPLATE\)/,
+  );
 });

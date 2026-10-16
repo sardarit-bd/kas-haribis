@@ -64,7 +64,8 @@ export default function BankManager({
     [isError, setIsError] = useState(false),
     [isSaving, setIsSaving] = useState(false);
   const [codes, setCodes] = useState<AccessCode[]>([]),
-    [newCode, setNewCode] = useState('');
+    [newCode, setNewCode] = useState(''),
+    [formVersion, setFormVersion] = useState(0);
   const filtered = useMemo(
     () =>
       banks.filter((bank) =>
@@ -138,6 +139,7 @@ export default function BankManager({
       await reload();
       form.reset();
       setEditing(null);
+      setFormVersion((v) => v + 1);
       setIsError(false);
       setMessage(
         data.id ? '✓ Bank and report updated successfully.' : '✓ Bank added to the directory successfully.',
@@ -237,7 +239,7 @@ export default function BankManager({
             </button>
           )}
         </div>
-        <form key={value.id || 'new'} onSubmit={save}>
+        <form key={value.id ? value.id : `new-${formVersion}`} onSubmit={save}>
           <input type="hidden" name="id" value={value.id} />
           <input type="hidden" name="logo_url" value={value.logo_url || ''} />
           <div className="bankFormGrid">
