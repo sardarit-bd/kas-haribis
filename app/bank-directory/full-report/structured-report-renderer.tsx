@@ -7,6 +7,7 @@ import {
   type ContentBlock,
   type TableAlignment,
   type ParsedTable,
+  INSTITUTIONAL_HOLDERS_TEMPLATE,
 } from './parse-report';
 
 export {
@@ -14,6 +15,7 @@ export {
   type ContentBlock,
   type TableAlignment,
   type ParsedTable,
+  INSTITUTIONAL_HOLDERS_TEMPLATE,
 };
 
 function renderInline(text: string): React.ReactNode {
@@ -300,33 +302,3 @@ export function StructuredReportRenderer({
     </div>
   );
 }
-
-export const INSTITUTIONAL_HOLDERS_TEMPLATE = `1st Colonial Bank
-Public Bank: 1st Colonial Bancorp, Inc. (FCOB) OTCPK
-
-Executive Management
-Robert B white: President and CEO
-Mary K Shea: EVP and CFO
-
-Board of Directors:
-Linda M Rohrer
-Robert B white: President and CEO
-Curt Byerly
-Thomas A Clark III
-John J Donnelley IV
-Michael Haydinger
-Harvey C Johnson
-Stanley H Molotsky
-Letita G Colombi
-Shelley Sims
-Thomas Brugger
-
-Top Institutional Holders
-Holder Shares Date Reported % Out Value
-Banc Funds Company, L.L.C. (The) 108.14k Sep 30, 2024 2.24% 1,589,716
-Siena Capital Partners GP, LLC 95.35k Sep 30, 2024 1.97% 1,401,674
-Fulton Bank, NA 55.63k Dec 31, 2024 1.15% 817,716
-Ethos Financial Group, LLC 14.42k Sep 30, 2024 0.30% 211,929
-
-Research Note:
-As it is a bulletin board stock I was unable to find ownership info. Might be enough to rely on regardless.`;
