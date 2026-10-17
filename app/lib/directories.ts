@@ -21,6 +21,8 @@ export async function ensureBanks(db: any) {
     ['ownership_details', "TEXT NOT NULL DEFAULT ''"],
     ['iska_details', "TEXT NOT NULL DEFAULT ''"],
     ['internal_notes', "TEXT NOT NULL DEFAULT ''"],
+    ['report_pdf_key', "TEXT NOT NULL DEFAULT ''"],
+    ['report_pdf_name', "TEXT NOT NULL DEFAULT ''"],
   ] as const;
   for (const [name, type] of additions)
     if (!names.has(name))
@@ -63,7 +65,7 @@ export async function listBanks(db: any) {
   await ensureBankResearch(db);
   const result = await db
     .prepare(
-      "SELECT b.id,b.title,b.status,b.summary,b.comment,b.last_updated,b.institution_type,b.website,b.logo_url,CASE WHEN COALESCE(length(trim(b.full_report)),0)>0 OR EXISTS(SELECT 1 FROM bank_research_submissions s WHERE (s.published_bank_id=b.id OR s.title=b.title) AND (s.workflow_status='Approved' OR s.workflow_status='Reviewer approved') AND (COALESCE(length(trim(s.report_key)),0)>0 OR COALESCE(length(trim(s.full_report)),0)>0)) THEN 1 ELSE 0 END AS has_full_report,b.sort_order FROM banks b ORDER BY b.title COLLATE NOCASE ASC",
+      "SELECT b.id,b.title,b.status,b.summary,b.comment,b.last_updated,b.institution_type,b.website,b.logo_url,b.report_pdf_key,b.report_pdf_name,CASE WHEN COALESCE(length(trim(b.full_report)),0)>0 OR COALESCE(length(trim(b.report_pdf_key)),0)>0 OR EXISTS(SELECT 1 FROM bank_research_submissions s WHERE (s.published_bank_id=b.id OR s.title=b.title) AND (s.workflow_status='Approved' OR s.workflow_status='Reviewer approved') AND (COALESCE(length(trim(s.report_key)),0)>0 OR COALESCE(length(trim(s.full_report)),0)>0)) THEN 1 ELSE 0 END AS has_full_report,b.sort_order FROM banks b ORDER BY b.title COLLATE NOCASE ASC",
     )
     .all();
   return result.results as any[];

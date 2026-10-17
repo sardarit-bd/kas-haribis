@@ -34,8 +34,20 @@ export async function POST(request: Request) {
     status = clean(body.status, 60),
     summary = clean(body.summary, 3000),
     comment = clean(body.comment, 2000),
-    lastUpdated = clean(body.last_updated, 10),
-    fullReport = clean(body.full_report, 30000);
+    lastUpdated = clean(body.last_updated, 10);
+
+  if (body.full_report !== undefined) {
+    if (typeof body.full_report !== 'string') {
+      return Response.json({ error: 'Invalid report content.' }, { status: 400 });
+    }
+    if (body.full_report.length > 512000) {
+      return Response.json(
+        { error: 'Report content exceeds the maximum size limit of 500 KB. Please reduce embedded content or use the attached PDF.' },
+        { status: 413 },
+      );
+    }
+  }
+  const fullReport = String(body.full_report || '').trim();
 
   if (!title || !status)
     return Response.json(
@@ -70,8 +82,11 @@ export async function POST(request: Request) {
     'SELECT MAX(sort_order) AS value FROM banks',
   ).first()) as any;
 
+  const reportPdfKey = clean(body.report_pdf_key, 250);
+  const reportPdfName = clean(body.report_pdf_name, 250);
+
   await runtime.DB.prepare(
-    'INSERT INTO banks(id,title,status,summary,comment,last_updated,full_report,institution_type,website,logo_url,researcher,source_urls,ownership_details,iska_details,internal_notes,sort_order,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+    'INSERT INTO banks(id,title,status,summary,comment,last_updated,full_report,institution_type,website,logo_url,researcher,source_urls,ownership_details,iska_details,internal_notes,sort_order,created_at,report_pdf_key,report_pdf_name) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
   )
     .bind(
       id,
@@ -91,6 +106,8 @@ export async function POST(request: Request) {
       clean(body.internal_notes, 10000),
       Number(max?.value || 0) + 1,
       new Date().toISOString(),
+      reportPdfKey,
+      reportPdfName,
     )
     .run();
 
@@ -122,12 +139,26 @@ export async function PUT(request: Request) {
       { status: 400 },
     );
 
-  const existing = (await runtime.DB.prepare('SELECT id, logo_url FROM banks WHERE id=?')
+  const existing = (await runtime.DB.prepare('SELECT id, logo_url, full_report, report_pdf_key, report_pdf_name FROM banks WHERE id=?')
     .bind(id)
-    .first()) as { id: string; logo_url: string } | null;
+    .first()) as { id: string; logo_url: string; full_report: string; report_pdf_key: string; report_pdf_name: string } | null;
 
   if (!existing)
     return Response.json({ error: 'Bank not found.' }, { status: 404 });
+
+  if (body.full_report !== undefined) {
+    if (typeof body.full_report !== 'string') {
+      return Response.json({ error: 'Invalid report content.' }, { status: 400 });
+    }
+    if (body.full_report.length > 512000) {
+      return Response.json(
+        { error: 'Report content exceeds the maximum size limit of 500 KB. Please reduce embedded content or use the attached PDF.' },
+        { status: 413 },
+      );
+    }
+  }
+
+  const fullReport = body.full_report !== undefined ? String(body.full_report).trim() : (existing.full_report || '');
 
   const duplicate = (await runtime.DB.prepare(
     'SELECT id, title FROM banks WHERE LOWER(TRIM(title)) = LOWER(TRIM(?)) AND id != ?',
@@ -149,8 +180,18 @@ export async function PUT(request: Request) {
       ? clean(body.logo_url, 1000)
       : existing.logo_url || '';
 
+  const reportPdfKey =
+    body.report_pdf_key !== undefined
+      ? clean(body.report_pdf_key, 250)
+      : (existing.report_pdf_key || '');
+
+  const reportPdfName =
+    body.report_pdf_name !== undefined
+      ? clean(body.report_pdf_name, 250)
+      : (existing.report_pdf_name || '');
+
   await runtime.DB.prepare(
-    'UPDATE banks SET title=?,status=?,summary=?,comment=?,last_updated=?,full_report=?,institution_type=?,website=?,logo_url=?,researcher=?,source_urls=?,ownership_details=?,iska_details=?,internal_notes=?,sort_order=? WHERE id=?',
+    'UPDATE banks SET title=?,status=?,summary=?,comment=?,last_updated=?,full_report=?,institution_type=?,website=?,logo_url=?,researcher=?,source_urls=?,ownership_details=?,iska_details=?,internal_notes=?,sort_order=?,report_pdf_key=?,report_pdf_name=? WHERE id=?',
   )
     .bind(
       title,
@@ -158,7 +199,7 @@ export async function PUT(request: Request) {
       clean(body.summary, 3000),
       clean(body.comment, 2000),
       lastUpdated,
-      clean(body.full_report, 30000),
+      fullReport,
       clean(body.institution_type, 150),
       clean(body.website, 1000),
       logoUrl,
@@ -168,6 +209,8 @@ export async function PUT(request: Request) {
       clean(body.iska_details, 10000),
       clean(body.internal_notes, 10000),
       Number(body.sort_order) || 0,
+      reportPdfKey,
+      reportPdfName,
       id,
     )
     .run();

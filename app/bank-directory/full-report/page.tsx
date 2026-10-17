@@ -4,7 +4,7 @@ import { premiumMemberFromHeaders } from '../../lib/bank-premium';
 import { getUserFromCookieHeader } from '../../lib/auth';
 import { canAccessSection, isOwnerEmail } from '../../lib/admin-access';
 import { headers } from 'next/headers';
-import { StructuredReportRenderer } from './structured-report-renderer';
+import ReportTabs from './report-tabs';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,14 +32,14 @@ export default async function FullBankReport({
 
   if ((isOwner || isStaff || premium) && targetBankId) {
     record = await env.DB.prepare(
-      'SELECT id,title,full_report,last_updated FROM banks WHERE id=?',
+      'SELECT id,title,full_report,last_updated,report_pdf_key,report_pdf_name FROM banks WHERE id=?',
     )
       .bind(targetBankId)
       .first();
     valid = Boolean(record);
   } else if (token) {
     const accessRow = (await env.DB.prepare(
-      'SELECT a.created_at,a.bank_id,b.title,b.full_report,b.last_updated FROM bank_report_access a JOIN banks b ON b.id=a.bank_id WHERE a.token=?',
+      'SELECT a.created_at,a.bank_id,b.title,b.full_report,b.last_updated,b.report_pdf_key,b.report_pdf_name FROM bank_report_access a JOIN banks b ON b.id=a.bank_id WHERE a.token=?',
     )
       .bind(token)
       .first()) as any;
@@ -108,19 +108,11 @@ export default async function FullBankReport({
       .run();
   }
 
-  const attachedFile =
-    approvedSubmission?.report_key &&
-    approvedSubmission.report_key.trim().length > 0
-      ? {
-          id: approvedSubmission.id,
-          report_name:
-            approvedSubmission.report_name ||
-            'Download research report document',
-          report_key: approvedSubmission.report_key,
-        }
-      : null;
+  const pdfKey = String(record?.report_pdf_key || approvedSubmission?.report_key || '').trim();
+  const pdfName = String(record?.report_pdf_name || approvedSubmission?.report_name || '').trim();
+  const hasPdf = Boolean(pdfKey);
 
-  const hasReportContent = Boolean(fullReportText || attachedFile);
+  const hasReportContent = Boolean(fullReportText || hasPdf);
 
   if (!valid || !hasReportContent)
     return (
@@ -161,35 +153,14 @@ export default async function FullBankReport({
             : `Access confirmed · This private link expires seven days after it was issued.`}
         </div>
 
-        {attachedFile && (
-          <div className="my-5 p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
-            <div>
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#102a43]">
-                <span>📄 Verified Analyst Document Attached</span>
-              </div>
-              <p className="text-xs text-slate-600 mt-1">
-                {attachedFile.report_name || 'Original source report document'}
-              </p>
-            </div>
-            <a
-              href={`/api/bank-research-file?id=${encodeURIComponent(attachedFile.id)}&kind=report${token ? `&token=${encodeURIComponent(token)}` : ''}`}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold rounded-lg transition-colors shadow-xs shrink-0"
-            >
-              Download Original PDF ↗
-            </a>
-          </div>
-        )}
-
         <div className="reportBody">
-          <StructuredReportRenderer
-            content={fullReportText}
-            emptyMessage={
-              attachedFile
-                ? 'This bank report has an official analyst document attached above. Use the Download Original PDF button to review the complete file.'
-                : 'No report text available.'
-            }
+          <ReportTabs
+            bankId={targetBankId}
+            bankTitle={record.title || 'Bank Report'}
+            fullReportText={fullReportText}
+            hasPdf={hasPdf}
+            pdfName={pdfName}
+            token={token}
           />
         </div>
 
