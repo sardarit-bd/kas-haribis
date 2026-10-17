@@ -4,6 +4,7 @@ import {
   StructuredReportRenderer,
   INSTITUTIONAL_HOLDERS_TEMPLATE,
 } from '../../bank-directory/full-report/structured-report-renderer';
+import RichReportEditor from './rich-report-editor';
 
 type Bank = {
   id: string;
@@ -22,6 +23,8 @@ type Bank = {
   ownership_details: string;
   iska_details: string;
   internal_notes: string;
+  report_pdf_key?: string;
+  report_pdf_name?: string;
 };
 type AccessCode = { id: string; code_hint: string; created_at: string };
 const statuses = [
@@ -50,6 +53,8 @@ const emptyBank = (order: number): Bank => ({
   ownership_details: '',
   iska_details: '',
   internal_notes: '',
+  report_pdf_key: '',
+  report_pdf_name: '',
 });
 
 export default function BankManager({
@@ -136,6 +141,30 @@ export default function BankManager({
           return;
         }
       }
+
+      const pdfFile = (form.elements.namedItem('report_pdf_file') as HTMLInputElement)?.files?.[0];
+      if (pdfFile && bankId) {
+        setMessage('Uploading PDF report…');
+        const pdfFd = new FormData();
+        pdfFd.set('bankId', bankId);
+        pdfFd.set('file', pdfFile);
+        const pdfResponse = await fetch('/api/admin/bank-report-pdf', {
+          method: 'POST',
+          body: pdfFd,
+        });
+        const pdfResult = (await pdfResponse.json().catch(() => ({}))) as {
+          error?: string;
+          saved?: boolean;
+        };
+        if (!pdfResponse.ok || !pdfResult.saved) {
+          setIsError(true);
+          setMessage(`Bank saved, but PDF upload failed: ${pdfResult.error || 'Upload failed'}`);
+          setIsSaving(false);
+          await reload();
+          return;
+        }
+      }
+
       await reload();
       form.reset();
       setEditing(null);
@@ -174,6 +203,29 @@ export default function BankManager({
     } catch (err: any) {
       setIsError(true);
       setMessage(`The bank could not be removed: ${err?.message || 'Network error'}`);
+    }
+  }
+
+  async function removePdf(bankId: string) {
+    if (!confirm('Are you sure you want to remove the attached original PDF from this bank?')) return;
+    try {
+      setMessage('Removing attached PDF…');
+      const res = await fetch(`/api/admin/bank-report-pdf?bankId=${encodeURIComponent(bankId)}`, {
+        method: 'DELETE',
+      });
+      const data = (await res.json().catch(() => ({}))) as any;
+      if (!res.ok || !data.deleted) {
+        throw new Error(data.error || 'Could not remove attached PDF');
+      }
+      await reload();
+      if (editing?.id === bankId) {
+        setEditing((prev) => (prev ? { ...prev, report_pdf_key: '', report_pdf_name: '' } : null));
+      }
+      setIsError(false);
+      setMessage('✓ Attached PDF removed.');
+    } catch (err: any) {
+      setIsError(true);
+      setMessage(err.message || 'Error removing PDF.');
     }
   }
   async function loadCodes(bankId: string) {
@@ -242,6 +294,8 @@ export default function BankManager({
         <form key={value.id ? value.id : `new-${formVersion}`} onSubmit={save}>
           <input type="hidden" name="id" value={value.id} />
           <input type="hidden" name="logo_url" value={value.logo_url || ''} />
+          <input type="hidden" name="report_pdf_key" value={value.report_pdf_key || ''} />
+          <input type="hidden" name="report_pdf_name" value={value.report_pdf_name || ''} />
           <div className="bankFormGrid">
             <label>
               Bank or institution name
@@ -333,7 +387,131 @@ export default function BankManager({
               defaultValue={value.internal_notes}
             />
           </label>
-          <FullReportEditor defaultValue={value.full_report} />
+
+          {/* Official Source PDF Document Attachment Card */}
+          <div
+            className="pdfAttachmentSection"
+            style={{
+              margin: '18px 0',
+              padding: '16px',
+              background: '#f8fafc',
+              border: '1px solid #cbd5e1',
+              borderRadius: '8px',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: '8px',
+              }}
+            >
+              <strong style={{ fontSize: '13px', color: '#1e293b' }}>
+                Official Source Document (Original PDF)
+              </strong>
+              {value.report_pdf_key && (
+                <span
+                  style={{
+                    fontSize: '11px',
+                    background: '#dbeafe',
+                    color: '#1e40af',
+                    padding: '2px 8px',
+                    borderRadius: '4px',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  PDF ATTACHED
+                </span>
+              )}
+            </div>
+
+            {value.report_pdf_key ? (
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '10px',
+                }}
+              >
+                <div style={{ fontSize: '13px', color: '#334155' }}>
+                  📄 <strong>{value.report_pdf_name || 'Attached PDF Document'}</strong>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <a
+                    href={`/api/bank-report-pdf?bankId=${encodeURIComponent(value.id)}&download=1`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      padding: '4px 10px',
+                      fontSize: '12px',
+                      background: '#ffffff',
+                      border: '1px solid #cbd5e1',
+                      borderRadius: '4px',
+                      color: '#0f172a',
+                      textDecoration: 'none',
+                      fontWeight: 600,
+                    }}
+                  >
+                    Download / View ↗
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => removePdf(value.id)}
+                    style={{
+                      padding: '4px 10px',
+                      fontSize: '12px',
+                      background: '#fee2e2',
+                      border: '1px solid #fecaca',
+                      borderRadius: '4px',
+                      color: '#b91c1c',
+                      cursor: 'pointer',
+                      fontWeight: 600,
+                    }}
+                  >
+                    Remove PDF
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <p style={{ margin: '0 0 10px 0', fontSize: '12px', color: '#64748b' }}>
+                {value.id
+                  ? 'No original PDF attached yet. Attach the official source PDF document to preserve complex vector charts, analyst signatures, and original formatting.'
+                  : 'Save this bank record first before uploading an attached PDF document.'}
+              </p>
+            )}
+
+            {value.id && (
+              <label
+                style={{
+                  display: 'block',
+                  marginTop: value.report_pdf_key ? '12px' : '4px',
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    color: '#475569',
+                    display: 'block',
+                    marginBottom: '4px',
+                  }}
+                >
+                  {value.report_pdf_key ? 'Replace Attached PDF (max 25 MB):' : 'Attach PDF Document (max 25 MB):'}
+                </span>
+                <input
+                  name="report_pdf_file"
+                  type="file"
+                  accept="application/pdf"
+                  style={{ fontSize: '12px' }}
+                />
+              </label>
+            )}
+          </div>
+
+          <FullReportEditor defaultValue={value.full_report} bankId={value.id} />
           <div className="bankFormGrid compactFields">
             <label>
               Researcher
@@ -584,13 +762,21 @@ export default function BankManager({
                       )}
                     </td>
                     <td style={{ padding: '12px 16px', verticalAlign: 'middle' }}>
-                      {bank.full_report ? (
-                        <span className="reportReadyBadge" style={{ display: 'inline-block', fontSize: '11px', fontWeight: 'bold', padding: '4px 8px', background: '#fef3c7', color: '#92400e', border: '1px solid #fde68a', borderRadius: '4px' }}>
-                          $15 FULL REPORT
-                        </span>
-                      ) : (
-                        <span style={{ fontSize: '12px', color: '#94a3b8' }}>—</span>
-                      )}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        {bank.full_report ? (
+                          <span className="reportReadyBadge" style={{ display: 'inline-block', fontSize: '11px', fontWeight: 'bold', padding: '3px 8px', background: '#fef3c7', color: '#92400e', border: '1px solid #fde68a', borderRadius: '4px' }}>
+                            $15 WEB REPORT
+                          </span>
+                        ) : null}
+                        {bank.report_pdf_key ? (
+                          <span style={{ display: 'inline-block', fontSize: '11px', fontWeight: 'bold', padding: '3px 8px', background: '#e0f2fe', color: '#0369a1', border: '1px solid #bae6fd', borderRadius: '4px' }}>
+                            📄 SOURCE PDF
+                          </span>
+                        ) : null}
+                        {!bank.full_report && !bank.report_pdf_key && (
+                          <span style={{ fontSize: '12px', color: '#94a3b8' }}>—</span>
+                        )}
+                      </div>
                     </td>
                     <td style={{ padding: '12px 16px', verticalAlign: 'middle', textAlign: 'right' }}>
                       <div className="bankRowActions" style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
@@ -611,7 +797,14 @@ export default function BankManager({
   );
 }
 
-function FullReportEditor({ defaultValue }: { defaultValue: string }) {
+function FullReportEditor({
+  defaultValue,
+  bankId,
+}: {
+  defaultValue: string;
+  bankId?: string;
+}) {
+  const [useRich, setUseRich] = useState(true);
   const [text, setText] = useState(defaultValue);
   const [view, setView] = useState<'edit' | 'preview'>('edit');
 
@@ -622,84 +815,165 @@ function FullReportEditor({ defaultValue }: { defaultValue: string }) {
   }
 
   return (
-    <div className="fullReportEditor" style={{ margin: '20px 0' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: '8px' }}>
-        <span style={{ fontWeight: 'bold', fontSize: '14px', color: '#1e293b' }}>
-          Protected full report — $15 access
-        </span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <button
-            type="button"
-            onClick={insertTemplate}
+    <div className="fullReportEditorSection">
+      {useRich ? (
+        <div>
+          <RichReportEditor
+            defaultValue={defaultValue}
+            bankId={bankId || ''}
+            name="full_report"
+          />
+          <div style={{ textAlign: 'right', marginTop: '-12px', marginBottom: '14px' }}>
+            <button
+              type="button"
+              onClick={() => {
+                setText(defaultValue);
+                setUseRich(false);
+              }}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#64748b',
+                fontSize: '11px',
+                textDecoration: 'underline',
+                cursor: 'pointer',
+              }}
+            >
+              Switch to plain Markdown textarea
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="fullReportEditor" style={{ margin: '20px 0' }}>
+          <div
             style={{
-              padding: '4px 10px',
-              fontSize: '12px',
-              fontWeight: 600,
-              background: '#f1f5f9',
-              color: '#334155',
-              border: '1px solid #cbd5e1',
-              borderRadius: '4px',
-              cursor: 'pointer',
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '8px',
+              marginBottom: '8px',
             }}
           >
-            + Insert Table Template
-          </button>
-          <div style={{ display: 'inline-flex', border: '1px solid #cbd5e1', borderRadius: '4px', overflow: 'hidden', background: '#f8fafc' }}>
-            <button
-              type="button"
-              onClick={() => setView('edit')}
-              style={{
-                padding: '4px 12px',
-                fontSize: '12px',
-                fontWeight: 600,
-                border: 'none',
-                cursor: 'pointer',
-                background: view === 'edit' ? '#102a43' : 'transparent',
-                color: view === 'edit' ? '#ffffff' : '#475569',
-              }}
-            >
-              Edit
-            </button>
-            <button
-              type="button"
-              onClick={() => setView('preview')}
-              style={{
-                padding: '4px 12px',
-                fontSize: '12px',
-                fontWeight: 600,
-                border: 'none',
-                cursor: 'pointer',
-                background: view === 'preview' ? '#102a43' : 'transparent',
-                color: view === 'preview' ? '#ffffff' : '#475569',
-              }}
-            >
-              Preview
-            </button>
+            <span style={{ fontWeight: 'bold', fontSize: '14px', color: '#1e293b' }}>
+              Protected full report (Plain Markdown)
+            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <button
+                type="button"
+                onClick={() => setUseRich(true)}
+                style={{
+                  padding: '4px 10px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  background: '#f8fafc',
+                  color: '#102a43',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                }}
+              >
+                Switch to Rich Editor
+              </button>
+              <button
+                type="button"
+                onClick={insertTemplate}
+                style={{
+                  padding: '4px 10px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  background: '#f1f5f9',
+                  color: '#334155',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                }}
+              >
+                + Insert Table Template
+              </button>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: '4px',
+                  overflow: 'hidden',
+                  background: '#f8fafc',
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setView('edit')}
+                  style={{
+                    padding: '4px 12px',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    border: 'none',
+                    cursor: 'pointer',
+                    background: view === 'edit' ? '#102a43' : 'transparent',
+                    color: view === 'edit' ? '#ffffff' : '#475569',
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setView('preview')}
+                  style={{
+                    padding: '4px 12px',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    border: 'none',
+                    cursor: 'pointer',
+                    background: view === 'preview' ? '#102a43' : 'transparent',
+                    color: view === 'preview' ? '#ffffff' : '#475569',
+                  }}
+                >
+                  Preview
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {view === 'edit' ? (
-        <textarea
-          name="full_report"
-          rows={12}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Enter the complete detailed report in Markdown or plain text. Tables, headings, lists, and blockquotes will render as formatted HTML on the website."
-          style={{ width: '100%', fontFamily: 'monospace', fontSize: '13px' }}
-        />
-      ) : (
-        <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px', background: '#ffffff', minHeight: '220px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-          <input type="hidden" name="full_report" value={text} />
-          <div style={{ fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8', marginBottom: '8px', borderBottom: '1px solid #f1f5f9', paddingBottom: '4px' }}>
-            Live Website Preview
-          </div>
-          <StructuredReportRenderer content={text} />
+          {view === 'edit' ? (
+            <textarea
+              name="full_report"
+              rows={12}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Enter the complete detailed report in Markdown or plain text."
+              style={{ width: '100%', fontFamily: 'monospace', fontSize: '13px' }}
+            />
+          ) : (
+            <div
+              style={{
+                border: '1px solid #e2e8f0',
+                borderRadius: '8px',
+                padding: '16px',
+                background: '#ffffff',
+                minHeight: '220px',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+              }}
+            >
+              <input type="hidden" name="full_report" value={text} />
+              <div
+                style={{
+                  fontSize: '11px',
+                  fontWeight: 'bold',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  color: '#94a3b8',
+                  marginBottom: '8px',
+                  borderBottom: '1px solid #f1f5f9',
+                  paddingBottom: '4px',
+                }}
+              >
+                Live Website Preview
+              </div>
+              <StructuredReportRenderer content={text} />
+            </div>
+          )}
         </div>
       )}
-      <small style={{ display: 'block', marginTop: '6px', color: '#64748b', fontSize: '12px' }}>
-        Visitors will see the Full Report button only when this field contains a report. Markdown tables with pipes (|) and tab-separated rows render as formatted HTML tables.
-      </small>
     </div>
   );
 }
