@@ -131,6 +131,12 @@ export default function BankDirectoryClient({
 
   const statusCards = [
     {
+      key: 'all',
+      title: 'All Banks',
+      desc: 'Complete directory of all researched financial institutions.',
+      bg: 'bg-[#102a43] hover:bg-[#0c1f32] text-white',
+    },
+    {
       key: 'mehudar',
       title: 'Mehudar',
       desc: 'No Jewish CEO or Board Member.',
@@ -225,7 +231,7 @@ export default function BankDirectoryClient({
         </div>
       </section>
 
-      {/* 7 Status Cards Grid */}
+      {/* Status Cards Grid (8 Cards: All Banks + 7 Kashruth Categories) */}
       <div className="mb-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 container justify-center">
           {statusCards.map((card, idx) => {
@@ -234,7 +240,7 @@ export default function BankDirectoryClient({
               <motion.button
                 key={card.key}
                 type="button"
-                onClick={() => handleStatusChange(isSelected ? 'all' : card.key)}
+                onClick={() => handleStatusChange(card.key === 'all' ? 'all' : (isSelected ? 'all' : card.key))}
                 initial={{ opacity: 0, scale: 0.9, y: 15 }}
                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
@@ -356,15 +362,63 @@ export default function BankDirectoryClient({
         </div>
       </motion.div>
 
+      {/* Contextual Active Filter Indicator & Reset */}
+      {status !== 'all' && (
+        <div className="flex flex-wrap items-center justify-between gap-3 -mt-4 mb-8 p-3.5 px-4 bg-white border border-slate-200/80 rounded-xl shadow-xs text-sm">
+          <div className="flex flex-wrap items-center gap-2 text-[#102a43] font-medium">
+            <span className="text-slate-500 text-xs">Active Filter:</span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#102a43] text-white">
+              {labels[status] || status}
+            </span>
+            <span className="text-xs text-slate-500">
+              ({filtered.length} {filtered.length === 1 ? 'bank' : 'banks'} shown)
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => handleStatusChange('all')}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#102a43] hover:bg-[#1b4368] text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
+          >
+            <span>View All Banks</span>
+            <span aria-hidden="true">✕</span>
+          </button>
+        </div>
+      )}
+
       {/* Directory Cards (Grid / List View) */}
       {filtered.length === 0 ? (
-        <motion.p
+        <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="p-6 text-center text-sm font-semibold text-[#876622] bg-[#fff7e5] border border-[#f3e4bc] rounded-lg"
+          className="p-8 text-center text-sm font-semibold text-[#876622] bg-[#fff7e5] border border-[#f3e4bc] rounded-xl flex flex-col items-center justify-center gap-4"
         >
-          No banks match this search. Clear the search or choose All statuses.
-        </motion.p>
+          <p className="text-base text-slate-800">
+            No financial institutions match your current search and filter criteria.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {(query || status !== 'all') && (
+              <button
+                type="button"
+                onClick={() => {
+                  setQuery('');
+                  handleStatusChange('all');
+                }}
+                className="px-4 py-2 bg-[#102a43] hover:bg-[#1b4368] text-white text-xs font-bold rounded-lg shadow-sm transition-colors cursor-pointer"
+              >
+                View All Banks (Clear Filters)
+              </button>
+            )}
+            {query && status !== 'all' && (
+              <button
+                type="button"
+                onClick={() => handleStatusChange('all')}
+                className="px-3.5 py-2 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
+              >
+                Keep Search, Show All Categories
+              </button>
+            )}
+          </div>
+        </motion.div>
       ) : viewMode === 'grid' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
           {paginatedBanks.map((bank, idx) => (
