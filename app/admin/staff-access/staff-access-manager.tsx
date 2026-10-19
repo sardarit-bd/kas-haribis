@@ -26,6 +26,17 @@ const parse = (value: string) => {
   }
 };
 
+const PROTECTED_ADMIN_EMAILS = [
+  'mdemong87@gmail.com',
+  'kavharibis@gmail.com',
+  'sardarit.bd.official@gmail.com',
+];
+
+function isProtectedAdminEmail(email: string | null | undefined): boolean {
+  const clean = String(email || '').trim().toLowerCase();
+  return PROTECTED_ADMIN_EMAILS.includes(clean);
+}
+
 export default function StaffAccessManager({
   initialStaff,
   sections,
@@ -73,6 +84,10 @@ export default function StaffAccessManager({
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setAddModalError('Please enter a valid email address.');
+      return;
+    }
+    if (isProtectedAdminEmail(email)) {
+      setAddModalError('This email belongs to an admin account and cannot be managed as staff.');
       return;
     }
     if (permissions.length === 0) {
@@ -136,6 +151,11 @@ export default function StaffAccessManager({
     const permissions = data.getAll('permissions');
     const name = data.get('name');
     const password = data.get('password');
+
+    if (isProtectedAdminEmail(person.email)) {
+      setEditModalError('This email belongs to an admin account and cannot be managed as staff.');
+      return;
+    }
 
     if (permissions.length === 0) {
       setEditModalError('Please select at least one admin section permission.');

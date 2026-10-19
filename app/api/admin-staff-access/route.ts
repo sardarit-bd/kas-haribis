@@ -12,6 +12,7 @@ const clean = (value: unknown, max = 300) =>
     .trim()
     .slice(0, max);
 async function runtime() {
+  // @ts-ignore
   const { env } = await import('cloudflare:workers');
   await ensureAdminStaff(env.DB);
   return env;
@@ -24,7 +25,8 @@ export async function GET(request: Request) {
     result = await env.DB.prepare(
       'SELECT email, name, active, permissions, created_at, updated_at, (password_hash IS NOT NULL AND password_hash != "") as has_password FROM admin_staff_access ORDER BY active DESC,name COLLATE NOCASE,email COLLATE NOCASE',
     ).all();
-  return Response.json({ staff: result.results, sections: ADMIN_SECTIONS });
+  const staff = (result.results || []).filter((s: any) => !isOwnerEmail(s.email));
+  return Response.json({ staff, sections: ADMIN_SECTIONS });
 }
 
 export async function POST(request: Request) {
@@ -41,12 +43,21 @@ export async function POST(request: Request) {
     name = clean(body?.name, 200),
     password = clean(body?.password, 200),
     permissions = parsePermissions(JSON.stringify(body?.permissions));
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return Response.json(
       { error: 'Enter a valid staff email address.' },
       { status: 400 },
     );
-  if (!isOwnerEmail(email) && !permissions.length)
+
+  if (isOwnerEmail(email)) {
+    return Response.json(
+      { error: 'This email belongs to an admin account and cannot be managed as staff.' },
+      { status: 400 },
+    );
+  }
+
+  if (!permissions.length)
     return Response.json(
       { error: 'Select at least one admin section.' },
       { status: 400 },
@@ -115,9 +126,18 @@ export async function PUT(request: Request) {
     return Response.json({ error: 'Invalid request payload.' }, { status: 400 });
   }
   const email = clean(body?.email).toLowerCase(),
+    newEmail = clean(body?.newEmail || body?.targetEmail).toLowerCase(),
     password = clean(body?.password, 200),
     permissions = parsePermissions(JSON.stringify(body?.permissions));
-  if (body?.permissions && !isOwnerEmail(email) && !permissions.length)
+
+  if (isOwnerEmail(email) || (newEmail && isOwnerEmail(newEmail))) {
+    return Response.json(
+      { error: 'This email belongs to an admin account and cannot be managed as staff.' },
+      { status: 400 },
+    );
+  }
+
+  if (body?.permissions && !permissions.length)
     return Response.json(
       { error: 'Select at least one admin section.' },
       { status: 400 },

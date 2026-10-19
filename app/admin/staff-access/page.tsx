@@ -42,7 +42,11 @@ export default async function StaffAccessPage() {
           </div>
         </div>
         <StaffAccessManager
-          initialStaff={result.results as any}
+          initialStaff={
+            ((result.results as any[]) || []).filter(
+              (s: any) => !isOwnerEmail(s?.email),
+            )
+          }
           sections={ADMIN_SECTIONS as any}
         />
       </div>
