@@ -272,8 +272,11 @@ export async function createStaffPasswordCredentials(password: string) {
 }
 
 export async function setStaffPassword(db: any, email: string, password: string) {
-  await ensureAdminStaff(db);
   const cleanEmail = email.trim().toLowerCase();
+  if (isOwnerEmail(cleanEmail)) {
+    throw new Error('This email belongs to an admin account and cannot be managed as staff.');
+  }
+  await ensureAdminStaff(db);
   const { salt, hash } = await createStaffPasswordCredentials(password);
   const now = new Date().toISOString();
   await db
