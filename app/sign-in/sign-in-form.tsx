@@ -137,9 +137,17 @@ export default function SignInForm({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] mb-1.5">
-              Password / Temporary Password
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569]">
+                Password / Temporary Password
+              </label>
+              <a
+                href="/forgot-password"
+                className="text-xs font-medium text-[#c69b46] hover:text-[#b28735] hover:underline transition"
+              >
+                Forgot password?
+              </a>
+            </div>
             <input
               type="password"
               required

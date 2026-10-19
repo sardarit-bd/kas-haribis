@@ -422,4 +422,53 @@ export const ribbisAlertEmailTemplate = (data = {}) => {
         </div>
     </div>
   `;
-};
+};
+
+export const passwordResetEmailTemplate = (data = {}) => {
+  const resetUrl = sanitize(data.resetUrl);
+  const recipientName = sanitize(data.name) || "Administrator";
+  const expireMinutes = data.expireMinutes || 60;
+
+  return `
+    <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <div style="border-bottom: 2px solid #eaeaea; padding-bottom: 15px; margin-bottom: 20px; text-align: center;">
+                <h2 style="color: #102a43; margin: 0 0 5px 0; font-size: 22px;">Kav Haribis</h2>
+                <p style="color: #c69b46; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Password Reset Request</p>
+            </div>
+            
+            <p style="color: #333333; font-size: 15px; line-height: 1.5; margin: 0 0 15px 0;">
+                Hello ${recipientName},
+            </p>
+            <p style="color: #555555; font-size: 14px; line-height: 1.6; margin: 0 0 25px 0;">
+                We received a request to reset the password for your account. Click the button below to choose a new password:
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="${resetUrl}" style="background-color: #102a43; color: #ffffff; text-decoration: none; padding: 12px 28px; border-radius: 6px; font-size: 14px; font-weight: bold; display: inline-block;">
+                    Reset Your Password
+                </a>
+            </div>
+            
+            <div style="background-color: #f8fafc; border-left: 4px solid #cbd5e1; padding: 12px 16px; margin: 25px 0; border-radius: 4px;">
+                <p style="color: #64748b; font-size: 12px; line-height: 1.5; margin: 0;">
+                    This link will expire in <strong>${expireMinutes} minutes</strong> and can only be used once.<br>
+                    If you did not request a password reset, you can safely ignore this email.
+                </p>
+            </div>
+
+            <p style="color: #94a3b8; font-size: 12px; line-height: 1.5; margin: 25px 0 0 0; word-break: break-all;">
+                If the button above does not work, copy and paste this link into your browser:<br>
+                <a href="${resetUrl}" style="color: #0284c7; text-decoration: underline;">${resetUrl}</a>
+            </p>
+
+            <div style="border-top: 1px solid #eaeaea; padding-top: 15px; margin-top: 30px; text-align: center;">
+                <p style="color: #94a3b8; font-size: 11px; margin: 0;">
+                    Kav Haribis Admin Portal
+                </p>
+            </div>
+        </div>
+    </div>
+  `;
+};
+

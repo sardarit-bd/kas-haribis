@@ -1,4 +1,5 @@
 import { cache } from 'react';
+import { ensureAdminProfiles } from './admin-profile.ts';
 
 export const ADMIN_OWNER = ['mdemong87@gmail.com',"kavharibis@gmail.com","sardarit.bd.official@gmail.com"];
 
@@ -194,13 +195,16 @@ export async function ensureAdminStaff(db: any) {
     .run();
 
   try {
-    const tableInfo = await db.prepare("PRAGMA table_info('admin_staff_access')").all();
-    const cols = new Set((tableInfo?.results || []).map((c: any) => String(c.name).toLowerCase()));
-    if (!cols.has('password_salt')) {
-      await db.prepare("ALTER TABLE admin_staff_access ADD COLUMN password_salt TEXT NOT NULL DEFAULT ''").run();
-    }
-    if (!cols.has('password_hash')) {
-      await db.prepare("ALTER TABLE admin_staff_access ADD COLUMN password_hash TEXT NOT NULL DEFAULT ''").run();
+    const prep = db.prepare("PRAGMA table_info('admin_staff_access')");
+    if (typeof prep?.all === 'function') {
+      const tableInfo = await prep.all();
+      const cols = new Set((tableInfo?.results || []).map((c: any) => String(c.name).toLowerCase()));
+      if (!cols.has('password_salt')) {
+        await db.prepare("ALTER TABLE admin_staff_access ADD COLUMN password_salt TEXT NOT NULL DEFAULT ''").run();
+      }
+      if (!cols.has('password_hash')) {
+        await db.prepare("ALTER TABLE admin_staff_access ADD COLUMN password_hash TEXT NOT NULL DEFAULT ''").run();
+      }
     }
   } catch (error) {
     const msg = String(error).toLowerCase();
@@ -280,9 +284,67 @@ export async function setStaffPassword(db: any, email: string, password: string)
     .run();
 }
 
-export async function verifyStaffPassword(db: any, email: string, password: string): Promise<boolean> {
-  await ensureAdminStaff(db);
+export async function setOwnerPassword(db: any, email: string, password: string) {
   const cleanEmail = email.trim().toLowerCase();
+  if (!isOwnerEmail(cleanEmail)) {
+    throw new Error('Email is not an authorized owner.');
+  }
+  await ensureAdminProfiles(db);
+  const { salt, hash } = await createStaffPasswordCredentials(password);
+  const now = new Date().toISOString();
+  await db
+    .prepare(
+      'INSERT INTO admin_profiles (email, name, password_salt, password_hash, updated_at) VALUES (?, ?, ?, ?, ?) ON CONFLICT(email) DO UPDATE SET password_salt=excluded.password_salt, password_hash=excluded.password_hash, updated_at=excluded.updated_at',
+    )
+    .bind(cleanEmail, '', salt, hash, now)
+    .run();
+}
+
+export async function setUserPassword(db: any, email: string, password: string) {
+  const cleanEmail = email.trim().toLowerCase();
+  if (isOwnerEmail(cleanEmail)) {
+    await setOwnerPassword(db, cleanEmail, password);
+  } else {
+    await setStaffPassword(db, cleanEmail, password);
+  }
+}
+
+export async function verifyStaffPassword(db: any, email: string, password: string): Promise<boolean> {
+  const cleanEmail = email.trim().toLowerCase();
+
+  // Owner verification: only authorized owners can authenticate against admin_profiles
+  if (isOwnerEmail(cleanEmail)) {
+    await ensureAdminProfiles(db);
+    const row = (await db
+      .prepare(
+        'SELECT password_salt, password_hash FROM admin_profiles WHERE LOWER(email)=?',
+      )
+      .bind(cleanEmail)
+      .first()) as any;
+
+    if (!row || !row.password_salt || !row.password_hash) return false;
+
+    const actualHash = await derivePasswordHash(
+      password,
+      String(row.password_salt),
+      CURRENT_PBKDF2_ITERATIONS,
+    );
+    if (timingSafeEqual(actualHash, String(row.password_hash))) return true;
+
+    try {
+      const legacyHash = await derivePasswordHash(
+        password,
+        String(row.password_salt),
+        LEGACY_PBKDF2_ITERATIONS,
+      );
+      return timingSafeEqual(legacyHash, String(row.password_hash));
+    } catch {
+      return false;
+    }
+  }
+
+  // Staff verification: active staff in admin_staff_access
+  await ensureAdminStaff(db);
   const row = (await db
     .prepare(
       'SELECT password_salt, password_hash, active FROM admin_staff_access WHERE LOWER(email)=?',
