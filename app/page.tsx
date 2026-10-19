@@ -17,7 +17,7 @@ const sectionVariants = {
     y: 0,
     transition: {
       duration: 0.8,
-      ease: [0.16, 1, 0.3, 1],
+      ease: [0.16, 1, 0.3, 1] as const,
     },
   },
 };
@@ -82,6 +82,27 @@ export default function HomePage() {
         variants={sectionVariants}
       >
         <SubscriptionForm />
+      </motion.div>
+
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={sectionVariants}
+      >
+        <section
+          aria-label="Legal Disclaimer"
+          className="bg-slate-50 border-t border-slate-200/80 py-8 sm:py-10"
+        >
+          <div className="container max-w-4xl mx-auto px-4 sm:px-6 text-center">
+            <p className="text-xs font-semibold tracking-wider text-[#102a43]/70 uppercase mb-2">
+              Legal Notice &amp; Halachic Governance
+            </p>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              All sales, transactions, agreements, and other dealings of any nature in which Kav Haribis is involved, whether directly or indirectly, that may involve any actual or potential concern of Ribis (interest prohibited under Jewish law), shall be governed by and subject to the most current version of Heter Iska Bris Pinchos, including any amendments or updates thereto.
+            </p>
+          </div>
+        </section>
       </motion.div>
 
       <SiteFooter />
