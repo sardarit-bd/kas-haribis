@@ -428,6 +428,27 @@ export default async function AboutPage() {
         </section>
       )}
 
+      {/* Founder Credit Section */}
+      <section className="bg-white py-12 md:py-16 border-t border-slate-100">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col items-center justify-center"
+          >
+            <div className="w-12 sm:w-16 h-[2px] bg-[#c69b46] mb-4" />
+            <p className="text-xs sm:text-sm font-semibold tracking-widest text-[#c69b46] uppercase mb-2">
+              KAV HARIBIS FOUNDER
+            </p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-[#102a43] tracking-tight">
+              Rabbi Yaakov Yitzchaok Jacob
+            </h2>
+          </MotionDiv>
+        </div>
+      </section>
+
       {/* Bottom CTA Banner */}
       <MotionDiv
         initial={{ opacity: 0, y: 30 }}
