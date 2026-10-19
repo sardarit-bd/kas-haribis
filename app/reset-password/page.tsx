@@ -25,15 +25,16 @@ function ResetPasswordForm() {
           Missing Reset Token
         </h2>
         <p className="mt-2 text-xs sm:text-sm text-[#637282] leading-relaxed">
-          This password reset link is invalid or incomplete. Please request a new
-          password reset link from the account recovery page.
+          This password reset link is invalid or incomplete. Please request a
+          new password reset link from the account recovery page.
         </p>
         <div className="mt-6">
           <Link
             href="/forgot-password"
-            className="inline-flex items-center justify-center h-10 px-5 rounded-xl bg-[#102a43] text-white text-xs sm:text-sm font-semibold hover:bg-[#173f5f] transition"
+            style={{ color: '#ffffff' }}
+            className="inline-flex items-center justify-center h-10 px-5 rounded-xl bg-[#102a43] !text-white text-xs sm:text-sm font-semibold hover:bg-[#173f5f] transition"
           >
-            Request New Reset Link
+            <span style={{ color: '#ffffff' }}>Request New Reset Link</span>
           </Link>
         </div>
       </div>
@@ -56,9 +57,10 @@ function ResetPasswordForm() {
         <div className="mt-6">
           <Link
             href="/sign-in"
-            className="inline-flex items-center justify-center h-11 px-6 rounded-xl bg-[#102a43] text-white text-sm font-semibold hover:bg-[#173f5f] transition shadow-xs"
+            style={{ color: '#ffffff' }}
+            className="inline-flex items-center justify-center h-11 px-6 rounded-xl bg-[#102a43] !text-white text-sm font-semibold hover:bg-[#173f5f] transition shadow-xs"
           >
-            Continue to Sign In →
+            <span style={{ color: '#ffffff' }}>Continue to Sign In →</span>
           </Link>
         </div>
       </div>
@@ -123,7 +125,8 @@ function ResetPasswordForm() {
           Choose New Password
         </h1>
         <p className="mt-2 text-xs sm:text-sm leading-relaxed text-[#637282]">
-          Enter your new password below. It must be between 10 and 128 characters.
+          Enter your new password below. It must be between 10 and 128
+          characters.
         </p>
       </div>
 
