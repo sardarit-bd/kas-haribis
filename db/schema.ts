@@ -104,6 +104,23 @@ export const adminStaffAccess = sqliteTable('admin_staff_access', {
   updatedAt: text('updated_at').notNull(),
 });
 
+export const adminProfiles = sqliteTable('admin_profiles', {
+  email: text('email').primaryKey(),
+  name: text('name').notNull().default(''),
+  passwordSalt: text('password_salt').notNull().default(''),
+  passwordHash: text('password_hash').notNull().default(''),
+  updatedAt: text('updated_at').notNull(),
+});
+
+export const passwordResetTokens = sqliteTable('password_reset_tokens', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  email: text('email').notNull(),
+  tokenHash: text('token_hash').notNull().unique(),
+  expiresAt: text('expires_at').notNull(),
+  usedAt: text('used_at'),
+  createdAt: text('created_at').notNull(),
+});
+
 export const bankResearcherCredentials = sqliteTable(
   'bank_researcher_credentials',
   {

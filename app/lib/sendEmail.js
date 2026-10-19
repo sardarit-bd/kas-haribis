@@ -5,6 +5,7 @@ import {
   contactSubmissionEmailTemplate,
   statusUpdateEmailTemplate,
   ribbisAlertEmailTemplate,
+  passwordResetEmailTemplate,
 } from "./emailTemplates.js";
 import { getEmailSettings } from "./email-settings";
 
@@ -48,6 +49,9 @@ const sendEmail = async (emails, subject, data, templateType) => {
         break;
       case "ribbis-alert":
         htmlTemplate = ribbisAlertEmailTemplate(data);
+        break;
+      case "password-reset":
+        htmlTemplate = passwordResetEmailTemplate(data);
         break;
       default:
         throw new Error(`Invalid email template type: ${templateType}`);

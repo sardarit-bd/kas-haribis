@@ -5,6 +5,7 @@ import {
   staffPermissions,
   verifyStaffPassword,
 } from '../../../lib/admin-access';
+import { getAdminProfileName } from '../../../lib/admin-profile';
 import { getAuthEnv } from '../../../lib/auth-config';
 import {
   createSessionToken,
@@ -57,13 +58,19 @@ export async function POST(request: Request) {
     );
   }
 
-  // Fetch staff name if available
-  const staffRow = (await env.DB.prepare(
-    'SELECT name FROM admin_staff_access WHERE LOWER(email)=?',
-  )
-    .bind(email)
-    .first()) as any;
-  const name = staffRow?.name || email;
+  // Fetch name for session
+  let name = email;
+  if (isOwnerEmail(email)) {
+    const profileName = await getAdminProfileName(env.DB, email);
+    name = profileName || email;
+  } else {
+    const staffRow = (await env.DB.prepare(
+      'SELECT name FROM admin_staff_access WHERE LOWER(email)=?',
+    )
+      .bind(email)
+      .first()) as any;
+    name = staffRow?.name || email;
+  }
 
   const config = await getAuthEnv();
   if (!config.AUTH_SECRET) {

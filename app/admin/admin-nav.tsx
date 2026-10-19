@@ -1,4 +1,5 @@
 import { ADMIN_OWNER, isOwnerEmail, getStaffMemberName } from '../lib/admin-access';
+import { getAdminProfileName } from '../lib/admin-profile';
 import { getCurrentUser, signOutPath } from '../lib/auth';
 
 export default async function AdminNav() {
@@ -8,15 +9,19 @@ export default async function AdminNav() {
   const userEmail = user?.email || '';
   const isOwner = isOwnerEmail(userEmail);
 
+  let profileName = '';
   let staffName = '';
-  if (!isOwner && userEmail) {
+  if (userEmail) {
     try {
       const { env } = await import('cloudflare:workers');
-      staffName = await getStaffMemberName(env.DB, userEmail);
+      profileName = await getAdminProfileName(env.DB, userEmail);
+      if (!profileName && !isOwner) {
+        staffName = await getStaffMemberName(env.DB, userEmail);
+      }
     } catch {}
   }
 
-  const userName = staffName || user?.displayName || user?.fullName || 'User';
+  const userName = profileName || staffName || user?.displayName || user?.fullName || 'User';
   const role = isOwner ? 'Administrator' : 'Staff';
 
   // Extract initials for avatar (e.g. "Md Emon Hossen" -> "ME")
@@ -73,6 +78,22 @@ export default async function AdminNav() {
                 {userEmail ? (
                   <p className="mt-0.5 text-xs text-slate-500 truncate">{userEmail}</p>
                 ) : null}
+              </div>
+              <div className="py-1 border-b border-slate-100">
+                <a
+                  className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+                  href="/admin/profile"
+                >
+                  <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                  <span>Account settings</span>
+                </a>
               </div>
               <a
                 className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors"
