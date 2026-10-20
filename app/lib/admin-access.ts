@@ -541,6 +541,17 @@ export function sanitizeReturnTo(value: string | null | undefined): string {
   }
 }
 
+export function isMemberAccountPath(path: string | null | undefined): boolean {
+  if (!path || typeof path !== 'string') return false;
+  try {
+    const url = new URL(path, 'https://app.local');
+    const pathname = url.pathname.replace(/\/+$/, '');
+    return pathname === '/membership/account';
+  } catch {
+    return false;
+  }
+}
+
 export async function getPostLoginRedirect(
   db: any,
   email: string | null | undefined,
@@ -551,7 +562,7 @@ export async function getPostLoginRedirect(
   const isExplicitReturn = Boolean(cleanReturnTo && cleanReturnTo !== '/');
 
   if (isOwnerEmail(cleanEmail)) {
-    if (isExplicitReturn) {
+    if (isExplicitReturn && !isMemberAccountPath(cleanReturnTo)) {
       return cleanReturnTo;
     }
     return '/admin';
@@ -559,12 +570,13 @@ export async function getPostLoginRedirect(
 
   // Staff user
   const permissions = await staffPermissions(db, cleanEmail);
+  const isStaff = permissions.length > 0;
   const firstSection = ADMIN_SECTIONS.find((section) =>
     permissions.includes(section.key),
   );
   const defaultStaffLanding = firstSection ? firstSection.href : '/sign-in?error=no_staff_access';
 
-  if (!isExplicitReturn) {
+  if (!isExplicitReturn || (isStaff && isMemberAccountPath(cleanReturnTo))) {
     return defaultStaffLanding;
   }
 

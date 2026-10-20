@@ -693,8 +693,7 @@ export async function ensureAboutMembers(db: any) {
         category: 'Our Genealogist and Yuchasin specialist',
         name: 'Rabbi Aharon Hamaoui',
         designation: 'Genealogist and Yuchasin Specialist',
-        description:
-          'Our rabbinical guidance specifically for the Kosher Bank research center is Rabbi Ari Marberger shlita besides the regular guidance from Harav Pinchos Vind Shlita',
+        description: '',
         image_url: '/assets/avatar.webp',
       },
       {
@@ -747,6 +746,13 @@ export async function ensureAboutMembers(db: any) {
         )
         .run();
     }
+  } else {
+    await db
+      .prepare(
+        `UPDATE about_members SET description = '' WHERE description LIKE '%Rabbi Ari Marberger shlita besides the regular guidance from Harav Pinchos Vind Shlita%'`,
+      )
+      .run()
+      .catch(() => {});
   }
 }
 
@@ -759,5 +765,3 @@ export async function listAboutMembers(db: any, includePrivate = false) {
     .all();
   return result.results as any[];
 }
-
-

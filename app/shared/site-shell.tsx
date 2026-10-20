@@ -2,7 +2,7 @@ import NavigationMenu from './navigation-menu';
 import SponsorBanner from './sponsor-banner';
 
 export function SiteHeader({
-  stickySponsor = false,
+  stickySponsor = true,
 }: {
   stickySponsor?: boolean;
 } = {}) {
