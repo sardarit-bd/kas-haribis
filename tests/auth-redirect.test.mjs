@@ -5,6 +5,7 @@ import {
   ADMIN_SECTIONS,
   canAccessSection,
   getPostLoginRedirect,
+  isMemberAccountPath,
   isOwnerEmail,
   parsePermissions,
   sanitizeReturnTo,
@@ -56,6 +57,20 @@ test('sanitizeReturnTo prevents open redirects and disallows sensitive paths', (
   assert.equal(sanitizeReturnTo('/api/admin-staff-access'), '');
 });
 
+test('isMemberAccountPath helper correctly identifies member account paths', () => {
+  assert.equal(isMemberAccountPath('/membership/account'), true);
+  assert.equal(isMemberAccountPath('/membership/account/'), true);
+  assert.equal(isMemberAccountPath('/membership/account?tab=orders'), true);
+  assert.equal(isMemberAccountPath('/membership/account#profile'), true);
+  assert.equal(isMemberAccountPath('/membership'), false);
+  assert.equal(isMemberAccountPath('/membership/account/other'), false);
+  assert.equal(isMemberAccountPath('/bank-directory/full-report'), false);
+  assert.equal(isMemberAccountPath('/admin'), false);
+  assert.equal(isMemberAccountPath(''), false);
+  assert.equal(isMemberAccountPath(null), false);
+  assert.equal(isMemberAccountPath(undefined), false);
+});
+
 function createMockDb(staffRows = {}) {
   return {
     prepare(sql) {
@@ -96,9 +111,22 @@ test('getPostLoginRedirect for Owner', async () => {
   const r3 = await getPostLoginRedirect(db, ownerEmail, '/admin/analytics');
   assert.equal(r3, '/admin/analytics');
 
-  // Explicit valid public page requested
+  // Explicit valid public page requested (deep link preserved)
   const r4 = await getPostLoginRedirect(db, ownerEmail, '/bank-directory');
   assert.equal(r4, '/bank-directory');
+
+  const rDeep = await getPostLoginRedirect(db, ownerEmail, '/bank-directory/full-report?bankId=1');
+  assert.equal(rDeep, '/bank-directory/full-report?bankId=1');
+
+  // Signing in through "Member Sign In" (/membership/account) redirects Owner to /admin
+  const rMember = await getPostLoginRedirect(db, ownerEmail, '/membership/account');
+  assert.equal(rMember, '/admin');
+
+  const rMemberSlash = await getPostLoginRedirect(db, ownerEmail, '/membership/account/');
+  assert.equal(rMemberSlash, '/admin');
+
+  const rMemberQuery = await getPostLoginRedirect(db, ownerEmail, '/membership/account?tab=orders');
+  assert.equal(rMemberQuery, '/admin');
 
   // Open redirect attempt falls back to /admin
   const r5 = await getPostLoginRedirect(db, ownerEmail, '//attacker.com');
@@ -143,17 +171,51 @@ test('getPostLoginRedirect for Staff', async () => {
   const s1Invoices = await getPostLoginRedirect(db, 'staff1@example.com', '/admin/invoices');
   assert.equal(s1Invoices, '/admin/analytics');
 
-  // Staff requesting public page (/bank-directory) is preserved
+  // Staff requesting public page (/bank-directory) is preserved as genuine deep link
   const s1Public = await getPostLoginRedirect(db, 'staff1@example.com', '/bank-directory');
   assert.equal(s1Public, '/bank-directory');
+
+  const s1Deep = await getPostLoginRedirect(db, 'staff1@example.com', '/bank-directory/full-report');
+  assert.equal(s1Deep, '/bank-directory/full-report');
+
+  // Staff signing in from /membership/account goes to their authorized section
+  const s1Member = await getPostLoginRedirect(db, 'staff1@example.com', '/membership/account');
+  assert.equal(s1Member, '/admin/analytics');
 
   // Staff2 whose first section is invoices
   const s2Default = await getPostLoginRedirect(db, 'staff2@example.com', '');
   assert.equal(s2Default, '/admin/invoices');
 
+  const s2Member = await getPostLoginRedirect(db, 'staff2@example.com', '/membership/account');
+  assert.equal(s2Member, '/admin/invoices');
+
   // Staff with no permissions
   const sNoPerms = await getPostLoginRedirect(db, 'noperms@example.com', '');
   assert.equal(sNoPerms, '/sign-in?error=no_staff_access');
+});
+
+test('getPostLoginRedirect for Regular Member', async () => {
+  const db = createMockDb();
+  const regularEmail = 'member@example.com';
+
+  // Regular member signing in to /membership/account remains on /membership/account
+  const m1 = await getPostLoginRedirect(db, regularEmail, '/membership/account');
+  assert.equal(m1, '/membership/account');
+
+  const m1Query = await getPostLoginRedirect(db, regularEmail, '/membership/account?tab=orders');
+  assert.equal(m1Query, '/membership/account?tab=orders');
+
+  // Regular member requesting genuine public deep link is preserved
+  const m2 = await getPostLoginRedirect(db, regularEmail, '/bank-directory/full-report');
+  assert.equal(m2, '/bank-directory/full-report');
+
+  // Regular member attempting /admin is denied
+  const m3 = await getPostLoginRedirect(db, regularEmail, '/admin');
+  assert.equal(m3, '/sign-in?error=no_staff_access');
+
+  // Regular member with no returnTo gets default staff landing error
+  const m4 = await getPostLoginRedirect(db, regularEmail, '');
+  assert.equal(m4, '/sign-in?error=no_staff_access');
 });
 
 test('canAccessSection verifies permissions correctly and case-insensitively', async () => {

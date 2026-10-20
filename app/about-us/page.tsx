@@ -6,7 +6,8 @@ import MemberAvatar from './member-avatar';
 
 export const metadata = {
   title: 'About Us | Kav Haribis',
-  description: 'Learn about Kav Haribis, our founders, rabbinic leadership, mission, and community programs for Hilchos Ribbis.',
+  description:
+    'Learn about Kav Haribis, our founders, rabbinic leadership, mission, and community programs for Hilchos Ribbis.',
 };
 
 export const dynamic = 'force-dynamic';
@@ -50,10 +51,14 @@ export default async function AboutPage() {
           <div className="flex flex-col">
             <h1 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-semibold leading-tight tracking-tight mt-3.5 mb-5">
               Clarity in Hilchos Ribbis.
-              <em className="text-[#e5c474] not-italic block mt-2 font-semibold">Guidance for everyday life.</em>
+              <em className="text-[#e5c474] not-italic block mt-2 font-semibold">
+                Guidance for everyday life.
+              </em>
             </h1>
             <p className="text-slate-200 text-base sm:text-lg leading-relaxed font-normal max-w-[620px] mb-8">
-              Kav Haribis is a dedicated halachic center bringing clarity to the laws of ribbis through comprehensive education, communal outreach, research directories, and direct access to experienced Rabbanim.
+              Kav Haribis is a dedicated halachic center bringing clarity to the
+              laws of ribbis through comprehensive education, communal outreach,
+              research directories, and direct access to experienced Rabbanim.
             </p>
             <div className="flex items-center gap-5 flex-wrap">
               <a
@@ -108,17 +113,33 @@ export default async function AboutPage() {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
           >
             <h2 className="text-3xl sm:text-4xl font-semibold text-[#102a43] leading-tight tracking-tight mb-6">
-              Welcome to Kav HaRibis — a halachic center dedicated to bringing clarity to the laws of ribis, with a strong focus on outreach and raising awareness in Hilchos Ribis.
+              Welcome to Kav HaRibis — a halachic center dedicated to bringing
+              clarity to the laws of ribis, with a strong focus on outreach and
+              raising awareness in Hilchos Ribis.
             </h2>
             <div className="space-y-4">
               <p className="text-slate-600 text-base sm:text-lg leading-relaxed font-normal">
-                Kav haribis was founded By the talmidim of Harav Pinchos Vind shlita who were inspired by his world wide network of batei Horaah and his passion to create awareness in hilchos ribis, and work closely with him and his network of Batei Horaah to advance awareness in hilchos ribis and bring you the most up to date and accurate ruling in hilchos ribis.   
+                Kav haribis was founded By the talmidim of Harav Pinchos Vind
+                shlita who were inspired by his world wide network of batei
+                Horaah and his passion to create awareness in hilchos ribis, and
+                work closely with him and his network of Batei Horaah to advance
+                awareness in hilchos ribis and bring you the most up to date and
+                accurate ruling in hilchos ribis.
               </p>
               <p className="text-slate-600 text-base sm:text-lg leading-relaxed font-normal">
-                Harav Pinchos Vind Shlita had the privilege to discuss many questions regarding hilchos ribis with Harav Yosef Shalom Elyashiv Zazal and Harav Sholmo Vozner Zatal among many other Gedolim, and has a close connection with many of the current gedolei Yisroel to help us clarify the complex questions when they arrive.
+                Harav Pinchos Vind Shlita had the privilege to discuss many
+                questions regarding hilchos ribis with Harav Yosef Shalom
+                Elyashiv Zazal and Harav Sholmo Vozner Zatal among many other
+                Gedolim, and has a close connection with many of the current
+                gedolei Yisroel to help us clarify the complex questions when
+                they arrive.
               </p>
               <p className="text-slate-600 text-base sm:text-lg leading-relaxed font-normal">
-                Furthermore the Rabonim of our Bais Horaah Have a connection to many of well known experts in hilchos ribis like Harav Ari Marberger Harav Shmuel Honigwachs and Harav Avrohom Moshe Levanoni amongst many other Rabonim  to bring you the the most accurate pesak based on our Mesorah.
+                Furthermore the Rabonim of our Bais Horaah Have a connection to
+                many of well known experts in hilchos ribis like Harav Ari
+                Marberger Harav Shmuel Honigwachs and Harav Avrohom Moshe
+                Levanoni amongst many other Rabonim to bring you the the most
+                accurate pesak based on our Mesorah.
               </p>
             </div>
           </MotionDiv>
@@ -140,10 +161,24 @@ export default async function AboutPage() {
               Rooted in Torah. Responsive to modern financial life.
             </h2>
             <p className="text-slate-200 text-base sm:text-lg leading-relaxed font-normal mb-4">
-              Harav Pinchos Vind shlita had the privilege of discussing many questions in Hilchos Ribbis with <strong className="text-[#e5c474] font-semibold">Harav Yosef Shalom Elyashiv zt״l</strong> and <strong className="text-[#e5c474] font-semibold">Harav Shmuel Wosner zt״l</strong>, among other Gedolei Yisroel.
+              Harav Pinchos Vind shlita had the privilege of discussing many
+              questions in Hilchos Ribbis with{' '}
+              <strong className="text-[#e5c474] font-semibold">
+                Harav Yosef Shalom Elyashiv zt״l
+              </strong>{' '}
+              and{' '}
+              <strong className="text-[#e5c474] font-semibold">
+                Harav Shmuel Wosner zt״l
+              </strong>
+              , among other Gedolei Yisroel.
             </p>
             <p className="text-slate-200 text-base sm:text-lg leading-relaxed font-normal mb-4">
-              Through his close relationships with leading contemporary Gedolim, complex financial questions can be clarified with the depth, care, and practical understanding they require. The Rabbanim of the Kav Haribis Bais Horaah bring this guidance to the real financial questions facing individuals, families, businesses, and institutions.
+              Through his close relationships with leading contemporary Gedolim,
+              complex financial questions can be clarified with the depth, care,
+              and practical understanding they require. The Rabbanim of the Kav
+              Haribis Bais Horaah bring this guidance to the real financial
+              questions facing individuals, families, businesses, and
+              institutions.
             </p>
             <a
               href="/bais-horaah"
@@ -174,7 +209,9 @@ export default async function AboutPage() {
                 Awareness &amp; Education
               </h3>
               <p className="text-slate-600 text-base leading-relaxed font-normal">
-                Shiurim, articles, alerts, and community programs that bring Hilchos Ribbis into everyday conversation and financial decision-making.
+                Shiurim, articles, alerts, and community programs that bring
+                Hilchos Ribbis into everyday conversation and financial
+                decision-making.
               </p>
             </article>
 
@@ -186,7 +223,8 @@ export default async function AboutPage() {
                 Practical Guidance
               </h3>
               <p className="text-slate-600 text-base leading-relaxed font-normal">
-                Clear educational resources and direct access to experienced Rabbanim for personal, commercial, and institutional questions.
+                Clear educational resources and direct access to experienced
+                Rabbanim for personal, commercial, and institutional questions.
               </p>
             </article>
 
@@ -198,7 +236,9 @@ export default async function AboutPage() {
                 Research &amp; Resources
               </h3>
               <p className="text-slate-600 text-base leading-relaxed font-normal">
-                Careful financial research, kosher bank directories, custom Heter Iska documents, and tools designed for practical everyday use.
+                Careful financial research, kosher bank directories, custom
+                Heter Iska documents, and tools designed for practical everyday
+                use.
               </p>
             </article>
           </div>
@@ -213,7 +253,9 @@ export default async function AboutPage() {
               Education that reaches every part of the community
             </h2>
             <p className="text-slate-600 text-base sm:text-lg leading-relaxed font-normal mb-6">
-              From classrooms and community events to businesses and financial institutions, Kav Haribis works to make awareness of Hilchos Ribbis practical, visible, and lasting.
+              From classrooms and community events to businesses and financial
+              institutions, Kav Haribis works to make awareness of Hilchos
+              Ribbis practical, visible, and lasting.
             </p>
             <a
               href="/programs"
@@ -443,7 +485,7 @@ export default async function AboutPage() {
               KAV HARIBIS FOUNDER
             </p>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-[#102a43] tracking-tight">
-              Rabbi Yaakov Yitzchaok Jacob
+              Rabbi Yaakov Yitzchok Jacob
             </h2>
           </MotionDiv>
         </div>
@@ -457,9 +499,13 @@ export default async function AboutPage() {
         transition={{ duration: 0.6, ease: 'easeOut' }}
       >
         <BottomCTA
-          eyebrow={"HOW CAN WE HELP?"}
-          title={"Bring your question, program, or research need to Kav Haribis."}
-          discription={"Whether you have a personal question, need halachic guidance for a financial product, or would like to invite Kav Haribis to present a program, we are here to help."}
+          eyebrow={'HOW CAN WE HELP?'}
+          title={
+            'Bring your question, program, or research need to Kav Haribis.'
+          }
+          discription={
+            'Whether you have a personal question, need halachic guidance for a financial product, or would like to invite Kav Haribis to present a program, we are here to help.'
+          }
           link="/contact"
           linktext="Contact Kav Haribis"
           link2="/contact"
@@ -471,4 +517,3 @@ export default async function AboutPage() {
     </main>
   );
 }
-

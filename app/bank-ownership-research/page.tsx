@@ -32,12 +32,20 @@ export default function BankOwnershipResearchPage() {
             <p className="text-[#cbd5e1] text-base sm:text-lg leading-relaxed max-w-xl">
               Submit a request for halachic ownership research on a bank, mortgage lender, or financial institution for inclusion and review in the Kosher Bank Directory.
             </p>
-            <a
-              className="inline-block px-6 py-3.5 bg-[#c69b46] hover:bg-[#b0883b] text-[#102a43] text-md font-semibold transition-all duration-300 hover:scale-105 shadow-md rounded-md"
-              href="#bank-research-form"
-            >
-              Submit Research Request
-            </a>
+            <div className="flex flex-wrap items-center gap-4">
+              <a
+                className="inline-block px-6 py-3.5 bg-[#c69b46] hover:bg-[#b0883b] text-[#102a43] text-md font-semibold transition-all duration-300 hover:scale-105 shadow-md rounded-md text-center"
+                href="#bank-research-form"
+              >
+                Submit Research Request
+              </a>
+              <a
+                className="inline-block px-6 py-3.5 bg-[#c69b46] hover:bg-[#b0883b] text-[#102a43] text-md font-semibold transition-all duration-300 hover:scale-105 shadow-md rounded-md text-center"
+                href="/bank-directory"
+              >
+                View Kosher Bank List
+              </a>
+            </div>
           </MotionDiv>
           <MotionDiv
             initial={{ opacity: 0, y: 20 }}
