@@ -413,11 +413,6 @@ export default async function AboutPage() {
                       {member.designation}
                     </p>
                   )}
-                  {member.description && (
-                    <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
-                      {member.description}
-                    </p>
-                  )}
                 </MotionDiv>
               ))}
             </div>
