@@ -40,7 +40,7 @@ export default function RichReportEditor({
   async function uploadAndInsertImage(file: File) {
     if (!bankId) {
       setNotice({
-        text: 'Please save the bank entry before uploading inline images.',
+        text: 'Please save the bank entry first to enable uploading inline images/charts. Once saved, the editor will remain open and ready for images.',
         isError: true,
       });
       return;
@@ -278,7 +278,16 @@ export default function RichReportEditor({
           <button
             type="button"
             disabled={isUploadingImage}
-            onClick={() => imageInputRef.current?.click()}
+            onClick={() => {
+              if (!bankId) {
+                setNotice({
+                  text: 'Please save the bank entry first to enable uploading inline images/charts. Once saved, the editor will remain open and ready for images.',
+                  isError: true,
+                });
+                return;
+              }
+              imageInputRef.current?.click();
+            }}
             style={{
               padding: '4px 10px',
               fontSize: '12px',
@@ -289,7 +298,11 @@ export default function RichReportEditor({
               borderRadius: '4px',
               cursor: 'pointer',
             }}
-            title="Upload or paste a chart screenshot / image into the web report"
+            title={
+              bankId
+                ? 'Upload or paste a chart screenshot / image into the web report'
+                : 'Save the bank entry first to enable uploading inline images/charts'
+            }
           >
             {isUploadingImage ? 'Uploading…' : '📷 Add Image / Chart'}
           </button>
