@@ -40,7 +40,7 @@ export default function RichReportEditor({
   async function uploadAndInsertImage(file: File) {
     if (!bankId) {
       setNotice({
-        text: 'Please save the bank entry first to enable uploading inline images/charts. Once saved, the editor will remain open and ready for images.',
+        text: 'Missing bank identifier. Please refresh the page and try again.',
         isError: true,
       });
       return;
@@ -56,7 +56,7 @@ export default function RichReportEditor({
 
     if (file.size > 5 * 1024 * 1024) {
       setNotice({
-        text: 'Image size exceeds the 5 MB limit.',
+        text: `Image size exceeds the 5 MB limit (file size: ${(file.size / (1024 * 1024)).toFixed(1)} MB). Please select an image under 5 MB or attach via the Source PDF option.`,
         isError: true,
       });
       return;
@@ -77,7 +77,10 @@ export default function RichReportEditor({
 
       const data = (await res.json().catch(() => ({}))) as any;
       if (!res.ok || !data.url) {
-        throw new Error(data.error || `Upload failed with status ${res.status}`);
+        const errorMsg = res.status === 413
+          ? (data.error || 'The image file exceeds the 5 MB server size limit (HTTP 413).')
+          : (data.error || `Upload failed with status ${res.status}`);
+        throw new Error(errorMsg);
       }
 
       if (editor) {
@@ -144,6 +147,32 @@ export default function RichReportEditor({
             }
           }
         }
+        const html = event.clipboardData?.getData('text/html');
+        if (html && /<img[^>]+src=["']data:image\//i.test(html)) {
+          // If pasted HTML contains embedded base64 data URIs, sanitize it to prevent 413 errors
+          event.preventDefault();
+          const cleanHtml = sanitizeReportHtml(html);
+          if (editor) {
+            editor.commands.insertContent(cleanHtml);
+          }
+          setNotice({
+            text: 'Embedded base64 images from clipboard were stripped to prevent oversized reports (HTTP 413). Please use "Add Image / Chart" to insert images.',
+            isError: false,
+          });
+          return true;
+        }
+        return false;
+      },
+      handleDrop: (view, event) => {
+        const files = event.dataTransfer?.files;
+        if (files && files.length > 0) {
+          const file = files[0];
+          if (/^image\/(png|jpeg|jpg|webp)$/i.test(file.type)) {
+            event.preventDefault();
+            uploadAndInsertImage(file);
+            return true;
+          }
+        }
         return false;
       },
     },
@@ -175,6 +204,11 @@ export default function RichReportEditor({
       return;
     }
 
+    if (content.trim().length > 200 && typeof window !== 'undefined' && !window.confirm('Importing a Word document will replace current editor contents. Continue?')) {
+      if (docxInputRef.current) docxInputRef.current.value = '';
+      return;
+    }
+
     setIsImporting(true);
     setNotice({ text: 'Processing Word document in browser…' });
 
@@ -197,7 +231,7 @@ export default function RichReportEditor({
       }
 
       setNotice({
-        text: '✓ Word document imported successfully. Tables, headings, and formatting preserved. (Note: Complex charts remain available in the source PDF).',
+        text: '✓ Word document imported successfully. Tables, headings, and formatting preserved. (Note: Use "Add Image / Chart" to insert graphics at your desired location).',
       });
     } catch (err: any) {
       setNotice({
@@ -220,6 +254,26 @@ export default function RichReportEditor({
     <div className="fullReportEditor richReportContainer" style={{ margin: '20px 0' }}>
       {/* Hidden input ensures standard HTML form submission sends the editor content */}
       <input type="hidden" name={name} value={content} />
+
+      <div
+        style={{
+          fontSize: '12px',
+          color: '#334155',
+          background: '#f8fafc',
+          border: '1px solid #e2e8f0',
+          borderRadius: '6px',
+          padding: '8px 12px',
+          marginBottom: '10px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+        }}
+      >
+        <span style={{ fontSize: '15px' }}>💡</span>
+        <span>
+          <strong>Report Editor:</strong> Use <strong>📄 Import Word (.docx)</strong> to bring in formatted text and tables. To add charts or screenshots, place your cursor where desired and click <strong>📷 Add Image / Chart</strong> (PNG, JPEG, WebP up to 5 MB).
+        </span>
+      </div>
 
       <div
         style={{
@@ -281,7 +335,7 @@ export default function RichReportEditor({
             onClick={() => {
               if (!bankId) {
                 setNotice({
-                  text: 'Please save the bank entry first to enable uploading inline images/charts. Once saved, the editor will remain open and ready for images.',
+                  text: 'Missing bank identifier. Please refresh the page and try again.',
                   isError: true,
                 });
                 return;
@@ -298,11 +352,7 @@ export default function RichReportEditor({
               borderRadius: '4px',
               cursor: 'pointer',
             }}
-            title={
-              bankId
-                ? 'Upload or paste a chart screenshot / image into the web report'
-                : 'Save the bank entry first to enable uploading inline images/charts'
-            }
+            title="Upload or paste a chart screenshot / image at the cursor position"
           >
             {isUploadingImage ? 'Uploading…' : '📷 Add Image / Chart'}
           </button>
@@ -574,6 +624,34 @@ export default function RichReportEditor({
           )}
         </div>
       )}
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '8px',
+          marginTop: '6px',
+          padding: '4px 8px',
+          background: '#f8fafc',
+          border: '1px solid #e2e8f0',
+          borderRadius: '4px',
+          fontSize: '11px',
+          color: '#64748b',
+        }}
+      >
+        <span>
+          Report content size: <strong>{(new Blob([content]).size / 1024).toFixed(1)} KB</strong> / 500 KB limit
+        </span>
+        {new Blob([content]).size > 400 * 1024 ? (
+          <span style={{ color: '#dc2626', fontWeight: 600 }}>
+            ⚠️ Approaching 500 KB limit. Ensure charts are uploaded via &quot;Add Image / Chart&quot;, not embedded as base64 text.
+          </span>
+        ) : (
+          <span>Hosted R2 images preserve full visual quality with zero text size bloat.</span>
+        )}
+      </div>
 
       <small
         style={{

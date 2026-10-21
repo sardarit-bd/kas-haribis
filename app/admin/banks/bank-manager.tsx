@@ -70,7 +70,8 @@ export default function BankManager({
     [isSaving, setIsSaving] = useState(false);
   const [codes, setCodes] = useState<AccessCode[]>([]),
     [newCode, setNewCode] = useState(''),
-    [formVersion, setFormVersion] = useState(0);
+    [formVersion, setFormVersion] = useState(0),
+    [draftId, setDraftId] = useState<string>(() => crypto.randomUUID());
   const filtered = useMemo(
     () =>
       banks.filter((bank) =>
@@ -80,7 +81,10 @@ export default function BankManager({
       ),
     [banks, query],
   );
-  const value = editing || emptyBank(banks.length + 1);
+  const value = editing || {
+    ...emptyBank(banks.length + 1),
+    id: draftId,
+  };
   async function reload(): Promise<Bank[] | null> {
     try {
       const response = await fetch('/api/banks');
@@ -99,7 +103,16 @@ export default function BankManager({
     event.preventDefault();
     const form = event.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
-    const isNew = !data.id;
+    const isNew = !editing;
+    const fullReport = String(data.full_report || '');
+    if (fullReport.length > 512000) {
+      setIsError(true);
+      setMessage(
+        `Report content (${(fullReport.length / 1024).toFixed(0)} KB) exceeds the maximum 500 KB limit. Inline images must be uploaded via "Add Image / Chart" rather than pasted as raw base64 data.`,
+      );
+      setIsSaving(false);
+      return;
+    }
     setIsError(false);
     setIsSaving(true);
     setMessage(isNew ? 'Creating bank record…' : 'Saving bank record…');
@@ -207,13 +220,14 @@ export default function BankManager({
       if (isNew) {
         // Keep newly created bank open in Edit mode
         setEditing(targetBank);
+        setDraftId(crypto.randomUUID()); // Reset draftId for the next new bank
         loadCodes(bankId);
         setNewCode('');
         setIsError(false);
         const extras: string[] = [];
         if (pdfUploaded) extras.push('PDF document attached.');
         if (logoUploaded) extras.push('Logo uploaded.');
-        extras.push('The record is now open in Edit mode—you can now add inline images/charts.');
+        extras.push('The record is open in Edit mode.');
         setMessage(`✓ Bank created successfully. ${extras.join(' ')}`);
       } else {
         // Preserve existing behavior for updating existing bank records
@@ -336,6 +350,7 @@ export default function BankManager({
               type="button"
               onClick={() => {
                 setEditing(null);
+                setDraftId(crypto.randomUUID());
                 setMessage('');
                 setIsError(false);
               }}
@@ -344,7 +359,7 @@ export default function BankManager({
             </button>
           )}
         </div>
-        <form key={value.id ? value.id : `new-${formVersion}`} onSubmit={save}>
+        <form key={editing ? editing.id : `draft-${draftId}-${formVersion}`} onSubmit={save}>
           <input type="hidden" name="id" value={value.id} />
           <input type="hidden" name="logo_url" value={value.logo_url || ''} />
           <input type="hidden" name="report_pdf_key" value={value.report_pdf_key || ''} />
@@ -624,6 +639,7 @@ export default function BankManager({
                 disabled={isSaving}
                 onClick={() => {
                   setEditing(null);
+                  setDraftId(crypto.randomUUID());
                   setMessage('');
                   setIsError(false);
                 }}

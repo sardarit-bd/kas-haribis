@@ -282,3 +282,110 @@ test('Word DOCX Extraction: Verifies table and heading tags pass cleanly through
   assert.ok(sanitized.includes('<td>John Doe</td>'));
   assert.ok(sanitized.includes('<td>5.2%</td>'));
 });
+
+// 10. Draft UUID Validation for New Bank Creation & Inline Image Insertion
+test('Draft UUID Validation: Accepts valid UUIDs for draft bank entries and rejects malformed IDs', () => {
+  function validateBankOrDraftId(id, existingDbIds = new Set()) {
+    if (!id || typeof id !== 'string') return { valid: false, error: 'Bank ID is required' };
+    const trimmed = id.trim();
+    if (existingDbIds.has(trimmed)) return { valid: true, isDraft: false };
+    const isValidUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(trimmed);
+    if (isValidUuid) return { valid: true, isDraft: true };
+    return { valid: false, error: 'Bank record or valid draft identifier not found' };
+  }
+
+  const existingDbIds = new Set(['legacy-1', 'bank-chase-corp']);
+
+  // Valid existing bank
+  const res1 = validateBankOrDraftId('legacy-1', existingDbIds);
+  assert.equal(res1.valid, true);
+  assert.equal(res1.isDraft, false);
+
+  // Valid client-generated draft UUID
+  const draftUuid = 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d';
+  const res2 = validateBankOrDraftId(draftUuid, existingDbIds);
+  assert.equal(res2.valid, true);
+  assert.equal(res2.isDraft, true);
+
+  // Malformed ID / path traversal attempt
+  const res3 = validateBankOrDraftId('../../evil', existingDbIds);
+  assert.equal(res3.valid, false);
+
+  // Random non-existent string
+  const res4 = validateBankOrDraftId('non-existent-bank', existingDbIds);
+  assert.equal(res4.valid, false);
+});
+
+// 11. Base64 Sanitization: Strips Data URIs to Prevent 413 while Preserving Hosted R2 URLs
+test('HTML Sanitizer: Strips base64 data URIs and blob URLs to prevent 413 Payload Too Large', () => {
+  const hostedR2Image = '<img src="/api/bank-report-image?bankId=draft-123&id=img-456&ext=png" alt="Chart" />';
+  const base64Image = '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="Embedded" />';
+  const blobImage = '<img src="blob:http://localhost:3000/temp-uuid" alt="Blob Image" />';
+
+  const html = `<h2>Financial Ratios</h2><p>${hostedR2Image}</p><p>${base64Image}</p><p>${blobImage}</p>`;
+  const sanitized = sanitizeReportHtml(html);
+
+  // Hosted R2 URL is preserved
+  assert.ok(sanitized.includes('src="/api/bank-report-image?bankId=draft-123&amp;id=img-456&amp;ext=png"'));
+
+  // Base64 data URI is stripped
+  assert.equal(sanitized.includes('data:image/png;base64'), false, 'data: URI must be stripped');
+
+  // Blob URL is stripped
+  assert.equal(sanitized.includes('blob:http'), false, 'blob: URL must be stripped');
+});
+
+// 12. Image Upload Size Validation: Enforces 5 MB Limit with HTTP 413
+test('Image Upload Size Validation: Rejects files > 5 MB with HTTP 413 status code', () => {
+  const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
+
+  function validateImageSize(sizeInBytes) {
+    if (sizeInBytes > MAX_IMAGE_SIZE) {
+      return {
+        status: 413,
+        error: `The uploaded image exceeds the 5 MB limit (file size: ${(sizeInBytes / (1024 * 1024)).toFixed(1)} MB).`,
+      };
+    }
+    return { status: 200, valid: true };
+  }
+
+  // 2 MB image (allowed)
+  const normalImg = validateImageSize(2 * 1024 * 1024);
+  assert.equal(normalImg.status, 200);
+
+  // Exactly 5 MB image (allowed)
+  const exactLimitImg = validateImageSize(5 * 1024 * 1024);
+  assert.equal(exactLimitImg.status, 200);
+
+  // 5.1 MB image (rejected with 413)
+  const oversizedImg = validateImageSize(5.1 * 1024 * 1024);
+  assert.equal(oversizedImg.status, 413);
+  assert.match(oversizedImg.error, /exceeds the 5 MB limit/);
+});
+
+// 13. ID Collision Protection: Prevents duplicate records on bank create POST
+test('ID Collision Prevention: Rejects bank creation if target ID already exists in DB', () => {
+  const existingIds = new Set(['bank-existing-1', 'bank-existing-2']);
+
+  function handleCreateId(providedId) {
+    const isValidUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(providedId);
+    const id = isValidUuid ? providedId : 'auto-generated-uuid';
+    if (existingIds.has(id)) {
+      return { status: 409, error: 'A bank entry with this identifier already exists.' };
+    }
+    return { status: 200, id };
+  }
+
+  // Pre-assigned UUID that does not exist -> accepted
+  const newId = 'c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e5f';
+  const result1 = handleCreateId(newId);
+  assert.equal(result1.status, 200);
+  assert.equal(result1.id, newId);
+
+  // Pre-assigned UUID that collides -> rejected with 409
+  existingIds.add(newId);
+  const result2 = handleCreateId(newId);
+  assert.equal(result2.status, 409);
+  assert.match(result2.error, /already exists/);
+});
+

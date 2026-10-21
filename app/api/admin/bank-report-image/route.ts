@@ -68,12 +68,14 @@ export async function POST(request: Request) {
     return Response.json({ error: 'Bank ID is required.' }, { status: 400 });
   }
 
+  // Allow existing banks in D1, or a valid draft UUID generated client-side for new bank creation
+  const isValidUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(bankId);
   const bank = (await env.DB.prepare('SELECT id FROM banks WHERE id=?')
     .bind(bankId)
     .first()) as { id: string } | null;
 
-  if (!bank) {
-    return Response.json({ error: 'Bank record not found.' }, { status: 404 });
+  if (!bank && !isValidUuid) {
+    return Response.json({ error: 'Bank record or valid draft identifier not found.' }, { status: 404 });
   }
 
   if (!(file instanceof File) || !file.size) {
@@ -83,7 +85,7 @@ export async function POST(request: Request) {
   if (file.size > MAX_IMAGE_SIZE) {
     return Response.json(
       { error: `The uploaded image exceeds the 5 MB limit (file size: ${(file.size / (1024 * 1024)).toFixed(1)} MB).` },
-      { status: 400 },
+      { status: 413 },
     );
   }
 

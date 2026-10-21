@@ -1,6 +1,7 @@
 import { getRequestEmail, isOwnerRequest } from '../../lib/request-auth';
 import { canAccessSection } from '../../lib/admin-access';
 import { ensureBanks, listBanks, listBanksAdmin } from '../../lib/directories';
+import { isHtmlReport, sanitizeReportHtml } from '../../lib/report-sanitizer';
 
 const clean = (v: unknown, n: number) =>
   String(v || '')
@@ -36,18 +37,20 @@ export async function POST(request: Request) {
     comment = clean(body.comment, 2000),
     lastUpdated = clean(body.last_updated, 10);
 
+  let fullReport = '';
   if (body.full_report !== undefined) {
     if (typeof body.full_report !== 'string') {
       return Response.json({ error: 'Invalid report content.' }, { status: 400 });
     }
-    if (body.full_report.length > 512000) {
+    const rawReport = String(body.full_report || '').trim();
+    fullReport = isHtmlReport(rawReport) ? sanitizeReportHtml(rawReport) : rawReport;
+    if (fullReport.length > 512000) {
       return Response.json(
-        { error: 'Report content exceeds the maximum size limit of 500 KB. Please reduce embedded content or use the attached PDF.' },
+        { error: 'Report content exceeds the maximum size limit of 500 KB. Please reduce text length or use the attached PDF.' },
         { status: 413 },
       );
     }
   }
-  const fullReport = String(body.full_report || '').trim();
 
   if (!title || !status)
     return Response.json(
@@ -77,7 +80,18 @@ export async function POST(request: Request) {
     );
   }
 
-  const id = crypto.randomUUID();
+  const clientAssignedId = clean(body.id, 80);
+  const isValidUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(clientAssignedId);
+  const id = isValidUuid ? clientAssignedId : crypto.randomUUID();
+
+  const idCollision = await runtime.DB.prepare('SELECT id FROM banks WHERE id = ?').bind(id).first();
+  if (idCollision) {
+    return Response.json(
+      { error: 'A bank entry with this identifier already exists.' },
+      { status: 409 },
+    );
+  }
+
   const max = (await runtime.DB.prepare(
     'SELECT MAX(sort_order) AS value FROM banks',
   ).first()) as any;
@@ -146,19 +160,20 @@ export async function PUT(request: Request) {
   if (!existing)
     return Response.json({ error: 'Bank not found.' }, { status: 404 });
 
+  let fullReport = existing.full_report || '';
   if (body.full_report !== undefined) {
     if (typeof body.full_report !== 'string') {
       return Response.json({ error: 'Invalid report content.' }, { status: 400 });
     }
-    if (body.full_report.length > 512000) {
+    const rawReport = String(body.full_report || '').trim();
+    fullReport = isHtmlReport(rawReport) ? sanitizeReportHtml(rawReport) : rawReport;
+    if (fullReport.length > 512000) {
       return Response.json(
-        { error: 'Report content exceeds the maximum size limit of 500 KB. Please reduce embedded content or use the attached PDF.' },
+        { error: 'Report content exceeds the maximum size limit of 500 KB. Please reduce text length or use the attached PDF.' },
         { status: 413 },
       );
     }
   }
-
-  const fullReport = body.full_report !== undefined ? String(body.full_report).trim() : (existing.full_report || '');
 
   const duplicate = (await runtime.DB.prepare(
     'SELECT id, title FROM banks WHERE LOWER(TRIM(title)) = LOWER(TRIM(?)) AND id != ?',
