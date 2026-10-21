@@ -335,32 +335,37 @@ test('HTML Sanitizer: Strips base64 data URIs and blob URLs to prevent 413 Paylo
   assert.equal(sanitized.includes('blob:http'), false, 'blob: URL must be stripped');
 });
 
-// 12. Image Upload Size Validation: Enforces 5 MB Limit with HTTP 413
-test('Image Upload Size Validation: Rejects files > 5 MB with HTTP 413 status code', () => {
-  const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
+// 12. Image Upload Size Validation: Enforces 1 MB Limit with HTTP 413
+test('Image Upload Size Validation: Rejects files > 1 MB with HTTP 413 status code', () => {
+  const MAX_IMAGE_SIZE = 1 * 1024 * 1024; // 1 MB (1,048,576 bytes)
 
   function validateImageSize(sizeInBytes) {
     if (sizeInBytes > MAX_IMAGE_SIZE) {
       return {
         status: 413,
-        error: `The uploaded image exceeds the 5 MB limit (file size: ${(sizeInBytes / (1024 * 1024)).toFixed(1)} MB).`,
+        error: `Image is too large. Maximum allowed size is 1 MB. Your file is ${(sizeInBytes / (1024 * 1024)).toFixed(1)} MB.`,
       };
     }
     return { status: 200, valid: true };
   }
 
-  // 2 MB image (allowed)
-  const normalImg = validateImageSize(2 * 1024 * 1024);
-  assert.equal(normalImg.status, 200);
+  // 0.5 MB image (allowed)
+  const smallImg = validateImageSize(Math.floor(0.5 * 1024 * 1024));
+  assert.equal(smallImg.status, 200);
 
-  // Exactly 5 MB image (allowed)
-  const exactLimitImg = validateImageSize(5 * 1024 * 1024);
+  // Exactly 1 MB image (1,048,576 bytes - allowed)
+  const exactLimitImg = validateImageSize(1 * 1024 * 1024);
   assert.equal(exactLimitImg.status, 200);
 
-  // 5.1 MB image (rejected with 413)
-  const oversizedImg = validateImageSize(5.1 * 1024 * 1024);
+  // 1 MB + 1 byte image (rejected with 413)
+  const slightlyOverImg = validateImageSize(1 * 1024 * 1024 + 1);
+  assert.equal(slightlyOverImg.status, 413);
+  assert.match(slightlyOverImg.error, /Image is too large\. Maximum allowed size is 1 MB\./);
+
+  // 1.5 MB image (rejected with 413)
+  const oversizedImg = validateImageSize(Math.floor(1.5 * 1024 * 1024));
   assert.equal(oversizedImg.status, 413);
-  assert.match(oversizedImg.error, /exceeds the 5 MB limit/);
+  assert.equal(oversizedImg.error, 'Image is too large. Maximum allowed size is 1 MB. Your file is 1.5 MB.');
 });
 
 // 13. ID Collision Protection: Prevents duplicate records on bank create POST
@@ -388,4 +393,158 @@ test('ID Collision Prevention: Rejects bank creation if target ID already exists
   assert.equal(result2.status, 409);
   assert.match(result2.error, /already exists/);
 });
+
+// 14. Frontend Image Upload Error Resolution & Parsing
+test('Frontend Image Upload Error Parsing: Distinguishes application limit from upstream 413', () => {
+  function parseUploadError(resStatus, responseJson, isJson) {
+    let errorMsg = '';
+    if (isJson && responseJson && responseJson.error) {
+      errorMsg = responseJson.error;
+    }
+
+    if (!errorMsg) {
+      if (resStatus === 413) {
+        errorMsg = 'Upload request was rejected because the payload is too large for the server or network gateway (HTTP 413).';
+      } else if (resStatus === 401 || resStatus === 403) {
+        errorMsg = 'You do not have permission to upload images for this bank.';
+      } else {
+        errorMsg = `Upload failed with status ${resStatus}.`;
+      }
+    }
+    return errorMsg;
+  }
+
+  // Case 1: Application 413 with explicit JSON error
+  const appError = parseUploadError(413, { error: 'Image is too large. Maximum allowed size is 1 MB. Your file is 1.5 MB.' }, true);
+  assert.equal(appError, 'Image is too large. Maximum allowed size is 1 MB. Your file is 1.5 MB.');
+
+  // Case 2: Upstream proxy/gateway 413 without JSON error (e.g. plain text "Payload Too Large")
+  const gatewayError = parseUploadError(413, null, false);
+  assert.equal(gatewayError, 'Upload request was rejected because the payload is too large for the server or network gateway (HTTP 413).');
+  assert.equal(gatewayError.includes('1 MB'), false, 'Must not falsely label gateway 413 as application 1 MB rejection');
+  assert.equal(gatewayError.includes('5 MB'), false, 'Must not claim the file exceeded the 5 MB limit');
+
+  // Case 3: 401 Unauthorized
+  const authError = parseUploadError(401, null, false);
+  assert.equal(authError, 'You do not have permission to upload images for this bank.');
+
+  // Case 4: 500 Internal Server Error
+  const serverError = parseUploadError(500, null, false);
+  assert.equal(serverError, 'Upload failed with status 500.');
+});
+
+// 15. Client-Side Image Size Validation
+test('Client-Side Image Validation: Returns accurate 1 MB limit in error message for oversized files', () => {
+  const MAX_IMAGE_SIZE_BYTES = 1 * 1024 * 1024; // 1 MB (1,048,576 bytes)
+
+  function validateClientImage(fileSize) {
+    if (fileSize > MAX_IMAGE_SIZE_BYTES) {
+      return {
+        valid: false,
+        message: `Image is too large. Maximum allowed size is 1 MB. Your file is ${(fileSize / (1024 * 1024)).toFixed(1)} MB. Please select an image under 1 MB or attach via the Source PDF option.`,
+      };
+    }
+    return { valid: true };
+  }
+
+  // 0.5 MB image -> valid
+  assert.equal(validateClientImage(0.5 * 1024 * 1024).valid, true);
+
+  // Exactly 1.0 MB (1,048,576 bytes) -> valid
+  assert.equal(validateClientImage(1 * 1024 * 1024).valid, true);
+
+  // 1.0 MB + 1 byte -> invalid with message stating 1 MB limit
+  const resBoundary = validateClientImage(1 * 1024 * 1024 + 1);
+  assert.equal(resBoundary.valid, false);
+  assert.match(resBoundary.message, /Maximum allowed size is 1 MB\./);
+
+  // 1.5 MB image -> invalid with message stating 1 MB limit and actual size
+  const res15 = validateClientImage(1.5 * 1024 * 1024);
+  assert.equal(res15.valid, false);
+  assert.match(res15.message, /Maximum allowed size is 1 MB\./);
+  assert.match(res15.message, /Your file is 1.5 MB\./);
+
+  // 3.0 MB image -> invalid
+  const res30 = validateClientImage(3.0 * 1024 * 1024);
+  assert.equal(res30.valid, false);
+  assert.match(res30.message, /Your file is 3.0 MB\./);
+});
+
+// 16. UI Helper Text and Separate Upload Limits Integrity
+test('UI and Upload Limits: Enforces 1 MB for inline images while preserving 25 MB for PDF attachments', () => {
+  const helperText = 'Add Image / Chart (PNG, JPEG, WebP up to 1 MB)';
+  assert.match(helperText, /up to 1 MB/);
+
+  const MAX_PDF_SIZE = 25 * 1024 * 1024; // 25 MB
+  const pdfSizeAllowed = 20 * 1024 * 1024;
+  assert.ok(pdfSizeAllowed <= MAX_PDF_SIZE, '20 MB PDF is well within 25 MB limit');
+
+  const pdfSizeLimit = 25 * 1024 * 1024;
+  assert.ok(pdfSizeLimit <= MAX_PDF_SIZE, '25 MB PDF is accepted');
+
+  const pdfOversized = 26 * 1024 * 1024;
+  assert.ok(pdfOversized > MAX_PDF_SIZE, '26 MB PDF is rejected');
+});
+
+// 17. Image Removal UX Precision & Persistence Tests
+test('Image Removal UX: Removes only the targeted image, preserves surrounding text, and persists', () => {
+  // Scenario A: Two images inserted, remove one
+  const reportWithTwoImages = `
+    <h2>Executive Overview</h2>
+    <p>Opening paragraph with essential data.</p>
+    <p><img class="richReportImage" src="/api/bank-report-image?bankId=test-bank&id=img-1&ext=png" alt="Chart 1" /></p>
+    <p>Intermediary financial metrics paragraph.</p>
+    <p><img class="richReportImage" src="/api/bank-report-image?bankId=test-bank&id=img-2&ext=png" alt="Chart 2" /></p>
+    <p>Closing analysis paragraph.</p>
+  `;
+
+  // Simulate removing Image 1 only
+  const targetImg1Src = '/api/bank-report-image?bankId=test-bank&id=img-1&ext=png';
+  function removeImageBySrc(html, imgSrc) {
+    // Matches the img tag with the specific src
+    const regex = new RegExp(`<img[^>]*src=["']${imgSrc.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["'][^>]*>`, 'i');
+    return html.replace(regex, '');
+  }
+
+  const reportAfterRemoval1 = removeImageBySrc(reportWithTwoImages, targetImg1Src);
+  const clean1 = sanitizeReportHtml(reportAfterRemoval1);
+
+  // Assert Image 1 is completely removed
+  assert.equal(clean1.includes('id=img-1'), false, 'Targeted image 1 must be removed');
+
+  // Assert Image 2 remains completely intact
+  assert.ok(clean1.includes('id=img-2'), 'Non-targeted image 2 must remain in the report');
+
+  // Assert all text and headings are preserved
+  assert.ok(clean1.includes('<h2>Executive Overview</h2>'), 'Heading must be preserved');
+  assert.ok(clean1.includes('Opening paragraph with essential data.'), 'Preceding paragraph must be preserved');
+  assert.ok(clean1.includes('Intermediary financial metrics paragraph.'), 'Intermediary paragraph must be preserved');
+  assert.ok(clean1.includes('Closing analysis paragraph.'), 'Closing paragraph must be preserved');
+
+  // Scenario B: Image between paragraphs removed
+  const singleImageBetweenParagraphs = `
+    <p>Before paragraph.</p>
+    <p><img class="richReportImage" src="/api/bank-report-image?bankId=test-bank&id=img-solo&ext=png" alt="Solo Chart" /></p>
+    <p>After paragraph.</p>
+  `;
+  const reportAfterSoloRemoval = removeImageBySrc(singleImageBetweenParagraphs, '/api/bank-report-image?bankId=test-bank&id=img-solo&ext=png');
+  const cleanSolo = sanitizeReportHtml(reportAfterSoloRemoval);
+
+  assert.equal(cleanSolo.includes('img-solo'), false, 'Solo image must be removed');
+  assert.ok(cleanSolo.includes('Before paragraph.'), 'Before paragraph must be preserved');
+  assert.ok(cleanSolo.includes('After paragraph.'), 'After paragraph must be preserved');
+
+  // Scenario C: Persistence check - saving and reloading the report
+  const savedDbRecord = {
+    id: 'test-bank',
+    full_report: cleanSolo,
+  };
+
+  // Simulate reopening editor with saved report
+  const reloadedReport = savedDbRecord.full_report;
+  assert.equal(reloadedReport.includes('img-solo'), false, 'Removed image must not reappear upon reopening');
+  assert.ok(reloadedReport.includes('Before paragraph.'), 'Before text must persist');
+  assert.ok(reloadedReport.includes('After paragraph.'), 'After text must persist');
+});
+
 

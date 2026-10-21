@@ -7397,6 +7397,20 @@ img.richReportImage {
   margin: 16px 0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
+.richTextEditorContent img.richReportImage {
+  cursor: pointer;
+  transition: outline 0.15s ease, box-shadow 0.15s ease;
+}
+.richTextEditorContent img.richReportImage:hover {
+  outline: 2px dashed #0284c7;
+  outline-offset: 2px;
+}
+.richTextEditorContent img.richReportImage.ProseMirror-selectednode,
+.richTextEditorContent img.ProseMirror-selectednode {
+  outline: 3px solid #0284c7 !important;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.25) !important;
+}
 .richTextEditorContent table {
   border-collapse: collapse;
   width: 100%;
