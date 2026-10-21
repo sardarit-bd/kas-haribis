@@ -81,28 +81,31 @@ export default function BankManager({
     [banks, query],
   );
   const value = editing || emptyBank(banks.length + 1);
-  async function reload() {
+  async function reload(): Promise<Bank[] | null> {
     try {
       const response = await fetch('/api/banks');
-      if (!response.ok) return;
+      if (!response.ok) return null;
       const result = (await response.json()) as { banks: Bank[] };
       if (Array.isArray(result?.banks)) {
         setBanks(result.banks);
+        return result.banks;
       }
     } catch {
       // ignore background reload failure
     }
+    return null;
   }
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
+    const isNew = !data.id;
     setIsError(false);
     setIsSaving(true);
-    setMessage('Saving…');
+    setMessage(isNew ? 'Creating bank record…' : 'Saving bank record…');
     try {
       const response = await fetch('/api/banks', {
-        method: data.id ? 'PUT' : 'POST',
+        method: isNew ? 'POST' : 'PUT',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(data),
       });
@@ -118,6 +121,14 @@ export default function BankManager({
         return;
       }
       const bankId = (data.id as string) || result.id;
+      if (!bankId) {
+        setIsError(true);
+        setMessage('Server did not return a valid bank identifier.');
+        setIsSaving(false);
+        return;
+      }
+
+      let logoUploaded = false;
       const logoFile = (form.elements.namedItem('logo_file') as HTMLInputElement)
         ?.files?.[0];
       if (logoFile && bankId) {
@@ -134,14 +145,22 @@ export default function BankManager({
           saved?: boolean;
         };
         if (!logoResponse.ok || !logoResult.saved) {
+          const updatedBanks = await reload();
+          const targetBank = updatedBanks?.find((b) => b.id === bankId) || ({
+            ...(editing || emptyBank(banks.length + 1)),
+            ...data,
+            id: bankId,
+          } as Bank);
+          setEditing(targetBank);
           setIsError(true);
-          setMessage(`Bank saved, but logo upload failed: ${logoResult.error || 'Upload failed'}`);
+          setMessage(`Bank record saved, but logo upload failed: ${logoResult.error || 'Upload failed'}. The record is open in Edit mode so you can re-select the logo and retry.`);
           setIsSaving(false);
-          await reload();
           return;
         }
+        logoUploaded = true;
       }
 
+      let pdfUploaded = false;
       const pdfFile = (form.elements.namedItem('report_pdf_file') as HTMLInputElement)?.files?.[0];
       if (pdfFile && bankId) {
         setMessage('Uploading PDF report…');
@@ -157,22 +176,56 @@ export default function BankManager({
           saved?: boolean;
         };
         if (!pdfResponse.ok || !pdfResult.saved) {
+          const updatedBanks = await reload();
+          const targetBank = updatedBanks?.find((b) => b.id === bankId) || ({
+            ...(editing || emptyBank(banks.length + 1)),
+            ...data,
+            id: bankId,
+          } as Bank);
+          setEditing(targetBank);
           setIsError(true);
-          setMessage(`Bank saved, but PDF upload failed: ${pdfResult.error || 'Upload failed'}`);
+          setMessage(`Bank record saved, but PDF report upload failed: ${pdfResult.error || 'Upload failed'}. The record is open in Edit mode so you can re-select the PDF and retry.`);
           setIsSaving(false);
-          await reload();
           return;
         }
+        pdfUploaded = true;
       }
 
-      await reload();
-      form.reset();
-      setEditing(null);
-      setFormVersion((v) => v + 1);
-      setIsError(false);
-      setMessage(
-        data.id ? '✓ Bank and report updated successfully.' : '✓ Bank added to the directory successfully.',
-      );
+      const updatedBanks = await reload();
+      const targetBank = updatedBanks?.find((b) => b.id === bankId) || ({
+        ...(editing || emptyBank(banks.length + 1)),
+        ...data,
+        id: bankId,
+      } as Bank);
+
+      // Reset file inputs so previously selected files aren't re-submitted on next save
+      const pdfInput = form.elements.namedItem('report_pdf_file') as HTMLInputElement | null;
+      if (pdfInput) pdfInput.value = '';
+      const logoInput = form.elements.namedItem('logo_file') as HTMLInputElement | null;
+      if (logoInput) logoInput.value = '';
+
+      if (isNew) {
+        // Keep newly created bank open in Edit mode
+        setEditing(targetBank);
+        loadCodes(bankId);
+        setNewCode('');
+        setIsError(false);
+        const extras: string[] = [];
+        if (pdfUploaded) extras.push('PDF document attached.');
+        if (logoUploaded) extras.push('Logo uploaded.');
+        extras.push('The record is now open in Edit mode—you can now add inline images/charts.');
+        setMessage(`✓ Bank created successfully. ${extras.join(' ')}`);
+      } else {
+        // Preserve existing behavior for updating existing bank records
+        form.reset();
+        setEditing(null);
+        setFormVersion((v) => v + 1);
+        setIsError(false);
+        const extras: string[] = [];
+        if (pdfUploaded) extras.push('PDF document updated.');
+        if (logoUploaded) extras.push('Logo updated.');
+        setMessage(`✓ Bank and report updated successfully.${extras.length ? ' ' + extras.join(' ') : ''}`);
+      }
     } catch (err: any) {
       setIsError(true);
       setMessage(err?.message || 'A network error occurred while saving the bank.');
@@ -477,38 +530,37 @@ export default function BankManager({
               </div>
             ) : (
               <p style={{ margin: '0 0 10px 0', fontSize: '12px', color: '#64748b' }}>
-                {value.id
-                  ? 'No original PDF attached yet. Attach the official source PDF document to preserve complex vector charts, analyst signatures, and original formatting.'
-                  : 'Save this bank record first before uploading an attached PDF document.'}
+                No original PDF attached yet. Attach the official source PDF document to preserve complex vector charts, analyst signatures, and original formatting.
               </p>
             )}
 
-            {value.id && (
-              <label
+            <label
+              style={{
+                display: 'block',
+                marginTop: value.report_pdf_key ? '12px' : '4px',
+              }}
+            >
+              <span
                 style={{
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  color: '#475569',
                   display: 'block',
-                  marginTop: value.report_pdf_key ? '12px' : '4px',
+                  marginBottom: '4px',
                 }}
               >
-                <span
-                  style={{
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    color: '#475569',
-                    display: 'block',
-                    marginBottom: '4px',
-                  }}
-                >
-                  {value.report_pdf_key ? 'Replace Attached PDF (max 25 MB):' : 'Attach PDF Document (max 25 MB):'}
-                </span>
-                <input
-                  name="report_pdf_file"
-                  type="file"
-                  accept="application/pdf"
-                  style={{ fontSize: '12px' }}
-                />
-              </label>
-            )}
+                {value.report_pdf_key ? 'Replace Attached PDF (max 25 MB):' : 'Attach PDF Document (max 25 MB):'}
+              </span>
+              <input
+                name="report_pdf_file"
+                type="file"
+                accept="application/pdf"
+                style={{ fontSize: '12px' }}
+              />
+              <small style={{ display: 'block', color: '#64748b', marginTop: '4px', fontSize: '11px' }}>
+                Official source PDF is available in the public report as a downloadable document and embedded in the Original PDF Viewer tab.
+              </small>
+            </label>
           </div>
 
           <FullReportEditor defaultValue={value.full_report} bankId={value.id} />
