@@ -2,7 +2,7 @@ import { getRequestEmail } from '../../../lib/request-auth';
 import { canAccessSection } from '../../../lib/admin-access';
 import { ensureBanks } from '../../../lib/directories';
 
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
+const MAX_IMAGE_SIZE = 1 * 1024 * 1024; // 1 MB (1,048,576 bytes)
 
 function detectImageFormat(bytes: Uint8Array): { valid: boolean; ext: string; mime: string } {
   // PNG: 89 50 4E 47 0D 0A 1A 0A
@@ -84,7 +84,7 @@ export async function POST(request: Request) {
 
   if (file.size > MAX_IMAGE_SIZE) {
     return Response.json(
-      { error: `The uploaded image exceeds the 5 MB limit (file size: ${(file.size / (1024 * 1024)).toFixed(1)} MB).` },
+      { error: `Image is too large. Maximum allowed size is 1 MB. Your file is ${(file.size / (1024 * 1024)).toFixed(1)} MB.` },
       { status: 413 },
     );
   }

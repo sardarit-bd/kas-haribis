@@ -10,6 +10,7 @@ import TableRow from '@tiptap/extension-table-row';
 import TableCell from '@tiptap/extension-table-cell';
 import TableHeader from '@tiptap/extension-table-header';
 import Image from '@tiptap/extension-image';
+import { NodeSelection } from '@tiptap/pm/state';
 import mammoth from 'mammoth';
 import { sanitizeReportHtml, isHtmlReport } from '../../lib/report-sanitizer';
 import { StructuredReportRenderer } from '../../bank-directory/full-report/structured-report-renderer';
@@ -35,6 +36,14 @@ export default function RichReportEditor({
 
   const docxInputRef = useRef<HTMLInputElement | null>(null);
   const imageInputRef = useRef<HTMLInputElement | null>(null);
+  const editorBodyRef = useRef<HTMLDivElement | null>(null);
+
+  const [selectedImagePos, setSelectedImagePos] = useState<number | null>(null);
+  const [selectedImageRect, setSelectedImageRect] = useState<{
+    top: number;
+    left: number;
+    width: number;
+  } | null>(null);
 
   // Upload an image file to R2 and insert into editor
   async function uploadAndInsertImage(file: File) {
@@ -54,9 +63,10 @@ export default function RichReportEditor({
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
+    const MAX_IMAGE_SIZE_BYTES = 1 * 1024 * 1024; // 1 MB (1,048,576 bytes)
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
       setNotice({
-        text: `Image size exceeds the 5 MB limit (file size: ${(file.size / (1024 * 1024)).toFixed(1)} MB). Please select an image under 5 MB or attach via the Source PDF option.`,
+        text: `Image is too large. Maximum allowed size is 1 MB. Your file is ${(file.size / (1024 * 1024)).toFixed(1)} MB. Please select an image under 1 MB or attach via the Source PDF option.`,
         isError: true,
       });
       return;
@@ -75,11 +85,27 @@ export default function RichReportEditor({
         body: fd,
       });
 
-      const data = (await res.json().catch(() => ({}))) as any;
-      if (!res.ok || !data.url) {
-        const errorMsg = res.status === 413
-          ? (data.error || 'The image file exceeds the 5 MB server size limit (HTTP 413).')
-          : (data.error || `Upload failed with status ${res.status}`);
+      let errorMsg = '';
+      let data: any = null;
+      try {
+        data = await res.json();
+        if (data && typeof data === 'object' && data.error) {
+          errorMsg = data.error;
+        }
+      } catch {
+        // Fallback if response is non-JSON (e.g. gateway plain text/HTML)
+      }
+
+      if (!res.ok || !data?.url) {
+        if (!errorMsg) {
+          if (res.status === 413) {
+            errorMsg = 'Upload request was rejected because the payload is too large for the server or network gateway (HTTP 413).';
+          } else if (res.status === 401 || res.status === 403) {
+            errorMsg = 'You do not have permission to upload images for this bank.';
+          } else {
+            errorMsg = `Upload failed with status ${res.status}.`;
+          }
+        }
         throw new Error(errorMsg);
       }
 
@@ -133,6 +159,38 @@ export default function RichReportEditor({
       attributes: {
         class: 'richTextEditorContent prose prose-slate max-w-none focus:outline-none min-h-[220px] p-4 text-sm',
       },
+      handleClick: (view, pos, event) => {
+        const target = event.target as HTMLElement | null;
+        if (target && target.tagName === 'IMG') {
+          try {
+            const nodePos = view.posAtDOM(target, 0);
+            if (typeof nodePos === 'number') {
+              const tr = view.state.tr.setSelection(NodeSelection.create(view.state.doc, nodePos));
+              view.dispatch(tr);
+              view.focus();
+              setSelectedImagePos(nodePos);
+              return true;
+            }
+          } catch {
+            // ignore
+          }
+        }
+        return false;
+      },
+      handleKeyDown: (view, event) => {
+        if (event.key === 'Backspace' || event.key === 'Delete') {
+          const { selection } = view.state;
+          if (selection instanceof NodeSelection && selection.node.type.name === 'image') {
+            event.preventDefault();
+            view.dispatch(view.state.tr.deleteSelection());
+            setSelectedImagePos(null);
+            setSelectedImageRect(null);
+            setNotice({ text: '✓ Image removed from report.' });
+            return true;
+          }
+        }
+        return false;
+      },
       handlePaste: (view, event) => {
         const items = event.clipboardData?.items;
         if (items) {
@@ -176,12 +234,128 @@ export default function RichReportEditor({
         return false;
       },
     },
+    onSelectionUpdate: ({ editor }) => {
+      const { selection } = editor.state;
+      if (selection instanceof NodeSelection && selection.node.type.name === 'image') {
+        setSelectedImagePos(selection.from);
+      } else {
+        setSelectedImagePos(null);
+        setSelectedImageRect(null);
+      }
+    },
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
       setContent(html);
       onContentChange?.(html);
     },
   });
+
+  // Track position of the selected image in the editor DOM for floating contextual controls
+  useEffect(() => {
+    if (!editor || selectedImagePos === null || !editorBodyRef.current) {
+      setSelectedImageRect(null);
+      return;
+    }
+
+    const updateRect = () => {
+      if (!editorBodyRef.current || !editor) return;
+      const selectedImg = editor.view.dom.querySelector('img.ProseMirror-selectednode') as HTMLImageElement | null;
+      if (!selectedImg) {
+        setSelectedImageRect(null);
+        return;
+      }
+      const containerRect = editorBodyRef.current.getBoundingClientRect();
+      const imgRect = selectedImg.getBoundingClientRect();
+      setSelectedImageRect({
+        top: Math.max(0, imgRect.top - containerRect.top + editorBodyRef.current.scrollTop),
+        left: Math.max(8, imgRect.left - containerRect.left),
+        width: imgRect.width,
+      });
+    };
+
+    updateRect();
+    const frameId = requestAnimationFrame(updateRect);
+
+    window.addEventListener('resize', updateRect);
+    window.addEventListener('scroll', updateRect, true);
+    return () => {
+      cancelAnimationFrame(frameId);
+      window.removeEventListener('resize', updateRect);
+      window.removeEventListener('scroll', updateRect, true);
+    };
+  }, [editor, selectedImagePos]);
+
+  // Remove the currently selected image without affecting surrounding text
+  function removeSelectedImage() {
+    if (!editor) return;
+
+    const { state } = editor.view;
+    const { selection } = state;
+
+    // 1. If currently a NodeSelection on an image
+    if (selection instanceof NodeSelection && selection.node.type.name === 'image') {
+      editor.chain().focus().deleteSelection().run();
+      setSelectedImagePos(null);
+      setSelectedImageRect(null);
+      setNotice({ text: '✓ Image removed from report.' });
+      return;
+    }
+
+    // 2. Tracked image position
+    if (selectedImagePos !== null && selectedImagePos >= 0 && selectedImagePos < state.doc.content.size) {
+      const node = state.doc.nodeAt(selectedImagePos);
+      if (node && node.type.name === 'image') {
+        editor.chain().focus().setNodeSelection(selectedImagePos).deleteSelection().run();
+        setSelectedImagePos(null);
+        setSelectedImageRect(null);
+        setNotice({ text: '✓ Image removed from report.' });
+        return;
+      }
+    }
+
+    // 3. Search selection range
+    const { from, to } = selection;
+    let foundPos: number | null = null;
+    state.doc.nodesBetween(Math.max(0, from - 1), Math.min(state.doc.content.size, to + 1), (node, pos) => {
+      if (node.type.name === 'image') {
+        foundPos = pos;
+        return false;
+      }
+    });
+
+    if (foundPos !== null) {
+      editor.chain().focus().setNodeSelection(foundPos).deleteSelection().run();
+      setSelectedImagePos(null);
+      setSelectedImageRect(null);
+      setNotice({ text: '✓ Image removed from report.' });
+      return;
+    }
+
+    // 4. Fallback: check DOM selected element
+    const selectedImg = editor.view.dom.querySelector('img.ProseMirror-selectednode');
+    if (selectedImg) {
+      try {
+        const nodePos = editor.view.posAtDOM(selectedImg, 0);
+        if (typeof nodePos === 'number') {
+          editor.chain().focus().setNodeSelection(nodePos).deleteSelection().run();
+          setSelectedImagePos(null);
+          setSelectedImageRect(null);
+          setNotice({ text: '✓ Image removed from report.' });
+          return;
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }
+
+  const isImageSelected = Boolean(
+    editor && (
+      (editor.state.selection instanceof NodeSelection && editor.state.selection.node.type.name === 'image') ||
+      editor.isActive('image') ||
+      selectedImagePos !== null
+    )
+  );
 
   // Sync content when defaultValue changes (e.g. when switching banks)
   useEffect(() => {
@@ -271,7 +445,7 @@ export default function RichReportEditor({
       >
         <span style={{ fontSize: '15px' }}>💡</span>
         <span>
-          <strong>Report Editor:</strong> Use <strong>📄 Import Word (.docx)</strong> to bring in formatted text and tables. To add charts or screenshots, place your cursor where desired and click <strong>📷 Add Image / Chart</strong> (PNG, JPEG, WebP up to 5 MB).
+          <strong>Report Editor:</strong> Use <strong>📄 Import Word (.docx)</strong> to bring in formatted text and tables. To add charts or screenshots, place your cursor where desired and click <strong>📷 Add Image / Chart (PNG, JPEG, WebP up to 1 MB)</strong>.
         </span>
       </div>
 
@@ -352,7 +526,7 @@ export default function RichReportEditor({
               borderRadius: '4px',
               cursor: 'pointer',
             }}
-            title="Upload or paste a chart screenshot / image at the cursor position"
+            title="Upload or paste a chart screenshot / image at the cursor position (PNG, JPEG, WebP up to 1 MB)"
           >
             {isUploadingImage ? 'Uploading…' : '📷 Add Image / Chart'}
           </button>
@@ -582,11 +756,101 @@ export default function RichReportEditor({
                   </button>
                 </>
               )}
+
+              {isImageSelected && (
+                <>
+                  <span style={{ color: '#cbd5e1', margin: '0 2px' }}>|</span>
+                  <div
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      background: '#fef2f2',
+                      border: '1px solid #fecaca',
+                      borderRadius: '4px',
+                      padding: '2px 6px',
+                    }}
+                  >
+                    <span style={{ fontSize: '11px', fontWeight: 600, color: '#991b1b', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                      🖼️ Image:
+                    </span>
+                    <button
+                      type="button"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={removeSelectedImage}
+                      style={{
+                        padding: '2px 8px',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        background: '#dc2626',
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: '3px',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                      }}
+                      title="Remove selected image from report (Delete / Backspace)"
+                      aria-label="Remove Image"
+                    >
+                      🗑️ Remove Image
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
           {/* TipTap Editor Content */}
-          <EditorContent editor={editor} />
+          <div ref={editorBodyRef} style={{ position: 'relative' }}>
+            {selectedImageRect && isImageSelected && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: `${Math.max(6, selectedImageRect.top - 38)}px`,
+                  left: `${selectedImageRect.left}px`,
+                  zIndex: 25,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: '#0f172a',
+                  color: '#ffffff',
+                  padding: '4px 10px',
+                  borderRadius: '6px',
+                  boxShadow: '0 4px 14px rgba(0, 0, 0, 0.25)',
+                  fontSize: '12px',
+                }}
+              >
+                <span style={{ fontSize: '11px', fontWeight: 600, color: '#f1f5f9', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  🖼️ Image Selected
+                </span>
+                <button
+                  type="button"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={removeSelectedImage}
+                  style={{
+                    padding: '3px 9px',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    background: '#ef4444',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                  }}
+                  title="Remove this image from report (Delete / Backspace)"
+                  aria-label="Remove Image"
+                >
+                  🗑️ Remove Image
+                </button>
+              </div>
+            )}
+            <EditorContent editor={editor} />
+          </div>
         </div>
       ) : (
         <div
@@ -662,6 +926,7 @@ export default function RichReportEditor({
         }}
       >
         You can paste directly from Microsoft Word, import a .docx file, or paste screenshot images of charts.
+        Click any inserted image to select and remove it (using the Remove Image button or Delete / Backspace key).
         Tables and headings will format cleanly for website visitors.
       </small>
     </div>
