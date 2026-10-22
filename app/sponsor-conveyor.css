@@ -5,8 +5,8 @@
   mask-image: linear-gradient(
     90deg,
     transparent,
-    #000 15%,
-    #000000 85%,
+    #000 5%,
+    #000000 95%,
     transparent
   );
 }
@@ -14,22 +14,22 @@
 .topSponsorTrack {
   display: flex;
   width: max-content;
-  animation: sponsorConveyor 60s linear infinite;
+  animation: sponsorConveyor 38s linear infinite;
   will-change: transform;
 }
 
 .topSponsorGroup {
   display: flex;
   align-items: center;
-  gap: 220px;
-  padding-right: 12px;
+  gap: 36px;
+  padding-right: 36px;
 }
 
 .topSponsorCard.conveyorSponsor {
-  width: 230px;
-  min-width: 230px;
-  max-width: 230px;
-  flex: 0 0 230px;
+  width: 215px;
+  min-width: 215px;
+  max-width: 225px;
+  flex: 0 0 215px;
 }
 
 .topSponsorConveyor:hover .topSponsorTrack,
@@ -59,26 +59,54 @@
   }
 }
 
+/* Tablet Breakpoint (701px to 1024px) */
+@media (min-width: 701px) and (max-width: 1024px) {
+  .topSponsorConveyor {
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 4%,
+      #000 96%,
+      transparent
+    );
+  }
+  .topSponsorTrack {
+    animation-duration: 34s;
+  }
+  .topSponsorCard.conveyorSponsor {
+    width: 195px;
+    min-width: 195px;
+    max-width: 205px;
+    flex: 0 0 195px;
+  }
+  .topSponsorGroup {
+    gap: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* Mobile Breakpoint (<= 700px) */
 @media (max-width: 700px) {
   .topSponsorConveyor {
     mask-image: linear-gradient(
       90deg,
       transparent,
-      #000 5%,
-      #000 95%,
+      #000 4%,
+      #000 96%,
       transparent
     );
   }
   .topSponsorTrack {
-    animation-duration: 48s;
+    animation-duration: 30s;
   }
   .topSponsorCard.conveyorSponsor {
-    width: 190px;
-    min-width: 190px;
-    max-width: 190px;
+    width: 165px;
+    min-width: 165px;
+    max-width: 175px;
+    flex: 0 0 165px;
   }
   .topSponsorGroup {
-    gap: 8px;
-    padding-right: 8px;
+    gap: 12px;
+    padding-right: 12px;
   }
 }

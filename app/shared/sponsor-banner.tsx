@@ -83,7 +83,7 @@ export default function SponsorBanner() {
     return (
       <button
         key={key}
-        className={`min-w-[150px] w-fit sm:min-w-[250px] sm:w-fit shrink-0 flex items-center text-center gap-2 py-1 transition-all duration-300 group ${
+        className={`topSponsorCard conveyorSponsor shrink-0 flex items-center text-left gap-2.5 py-1 transition-all duration-300 group ${
           clickable ? 'cursor-pointer' : 'cursor-default'
         }`}
         disabled={!clickable}
@@ -102,8 +102,8 @@ export default function SponsorBanner() {
             : `${sponsor.company_name}, proud supporter`
         }
       >
-        {/* Circle Logo Container */}
-        <div className="w-[44px] h-[44px] sm:w-[48px] sm:h-[48px] bg-white flex items-center justify-center transition-all duration-300 overflow-hidden rounded-sm">
+        {/* Circle/Square Logo Container */}
+        <div className="w-[40px] h-[40px] sm:w-[44px] sm:h-[44px] bg-white flex items-center justify-center transition-all duration-300 overflow-hidden rounded-sm shrink-0 border border-gray-200/60 shadow-2xs">
           {sponsor.image_key ? (
             <img
               src={sponsor.image_key}
@@ -111,21 +111,20 @@ export default function SponsorBanner() {
               className="w-full h-full object-cover rounded-sm"
             />
           ) : (
-            <span className="text-[#102a43] font-serif font-bold text-lg sm:text-xl">
+            <span className="text-[#102a43] font-serif font-bold text-sm sm:text-base">
               {initials(sponsor.company_name)}
             </span>
           )}
         </div>
 
-        {/* Item Title Below Logo */}
-        <div className='flex flex-col items-start'>
-           <b className="text-md sm:text-base font-medium text-gray-800 max-w-[260px] truncate leading-tight mb-0.5">
-          {sponsor.company_name}
-        </b>
-        <small className="text-xs font-normal text-gray-500/70 max-w-[200px] truncate">
-          {sponsor?.description}
-          {/* {clickable ? 'Click for details' : 'Proud Supporter'} */}
-        </small>
+        {/* Item Title & Subtitle Beside Logo */}
+        <div className="flex flex-col items-start min-w-0 flex-1 text-left">
+          <b className="text-xs sm:text-[13px] font-semibold text-gray-800 truncate leading-tight mb-0.5 w-full">
+            {sponsor.company_name}
+          </b>
+          <small className="text-[11px] sm:text-xs font-normal text-gray-500/80 truncate w-full">
+            {sponsor?.description}
+          </small>
         </div>
       </button>
     );
@@ -151,19 +150,19 @@ export default function SponsorBanner() {
         {/* Continuous Right-to-Left Sliding Conveyor / Skeleton */}
         <div className="topSponsorConveyor py-1 sm:py-1">
           {loading ? (
-            <div className="flex items-center gap-6 sm:gap-10 overflow-hidden w-full">
+            <div className="flex items-center gap-4 sm:gap-7 overflow-hidden w-full">
               {Array.from({ length: 6 }).map((_, idx) => (
                 <div
                   key={`skeleton-${idx}`}
-                  className="min-w-[150px] w-fit sm:min-w-[250px] sm:w-fit shrink-0 flex items-center gap-2 py-1 select-none"
+                  className="topSponsorCard conveyorSponsor shrink-0 flex items-center gap-2.5 py-1 select-none"
                 >
                   {/* Skeleton Logo Box */}
-                  <div className="w-[44px] h-[44px] sm:w-[48px] sm:h-[48px] bg-slate-200/90 animate-pulse rounded-sm shrink-0" />
+                  <div className="w-[40px] h-[40px] sm:w-[44px] sm:h-[44px] bg-slate-200/90 animate-pulse rounded-sm shrink-0" />
 
                   {/* Skeleton Title & Subtitle */}
-                  <div className="flex flex-col items-start gap-1.5 min-w-0">
-                    <div className="h-4 w-28 sm:w-36 bg-slate-200/90 animate-pulse rounded-xs" />
-                    <div className="h-3 w-16 sm:w-24 bg-slate-200/60 animate-pulse rounded-xs" />
+                  <div className="flex flex-col items-start gap-1.5 min-w-0 flex-1">
+                    <div className="h-3.5 w-24 sm:w-28 bg-slate-200/90 animate-pulse rounded-xs" />
+                    <div className="h-3 w-16 sm:w-20 bg-slate-200/60 animate-pulse rounded-xs" />
                   </div>
                 </div>
               ))}
