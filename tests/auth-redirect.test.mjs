@@ -4,6 +4,7 @@ import {
   ADMIN_OWNER,
   ADMIN_SECTIONS,
   canAccessSection,
+  getMemberSignInDestination,
   getPostLoginRedirect,
   isMemberAccountPath,
   isOwnerEmail,
@@ -62,6 +63,9 @@ test('isMemberAccountPath helper correctly identifies member account paths', () 
   assert.equal(isMemberAccountPath('/membership/account/'), true);
   assert.equal(isMemberAccountPath('/membership/account?tab=orders'), true);
   assert.equal(isMemberAccountPath('/membership/account#profile'), true);
+  assert.equal(isMemberAccountPath('/membership/sign-in'), true);
+  assert.equal(isMemberAccountPath('/membership/sign-in/'), true);
+  assert.equal(isMemberAccountPath('/membership/sign-in?return_to=/'), true);
   assert.equal(isMemberAccountPath('/membership'), false);
   assert.equal(isMemberAccountPath('/membership/account/other'), false);
   assert.equal(isMemberAccountPath('/bank-directory/full-report'), false);
@@ -239,4 +243,74 @@ test('canAccessSection verifies permissions correctly and case-insensitively', a
   // Staff denied for unassigned sections
   assert.equal(await canAccessSection(db, 'staff@example.com', 'donations'), false);
   assert.equal(await canAccessSection(db, 'staff@example.com', 'staff-access'), false);
+});
+
+test('getMemberSignInDestination handles logged-out, Admin/Owner, Staff, and Member cases', async () => {
+  const db = createMockDb({
+    'staff1@example.com': {
+      email: 'staff1@example.com',
+      active: 1,
+      permissions: JSON.stringify(['analytics', 'alerts']),
+    },
+    'staff2@example.com': {
+      email: 'staff2@example.com',
+      active: 1,
+      permissions: JSON.stringify(['invoices']),
+    },
+    'noperms@example.com': {
+      email: 'noperms@example.com',
+      active: 1,
+      permissions: JSON.stringify([]),
+    },
+  });
+
+  const ownerEmail = ADMIN_OWNER[0];
+  const regularEmail = 'member@example.com';
+
+  // 1. Logged-out visitor clicking "Member Sign In" is sent to /sign-in with return_to=/membership/account
+  assert.equal(
+    await getMemberSignInDestination(db, null),
+    '/sign-in?return_to=%2Fmembership%2Faccount',
+  );
+  assert.equal(
+    await getMemberSignInDestination(db, ''),
+    '/sign-in?return_to=%2Fmembership%2Faccount',
+  );
+  assert.equal(
+    await getMemberSignInDestination(db, undefined),
+    '/sign-in?return_to=%2Fmembership%2Faccount',
+  );
+
+  // 2. Authenticated Admin/Owner clicking "Member Sign In" redirects to /admin
+  assert.equal(await getMemberSignInDestination(db, ownerEmail), '/admin');
+  assert.equal(await getMemberSignInDestination(db, ownerEmail.toUpperCase()), '/admin');
+
+  // 3. Authenticated Staff clicking "Member Sign In" redirects to their authorized section
+  assert.equal(await getMemberSignInDestination(db, 'staff1@example.com'), '/admin/analytics');
+  assert.equal(await getMemberSignInDestination(db, 'staff2@example.com'), '/admin/invoices');
+  // User with no staff permissions is routed as a regular member to /membership/account
+  assert.equal(await getMemberSignInDestination(db, 'noperms@example.com'), '/membership/account');
+
+  // 4. Authenticated Regular Member clicking "Member Sign In" redirects to /membership/account
+  assert.equal(await getMemberSignInDestination(db, regularEmail), '/membership/account');
+
+  // 5. Post-login redirection when signing in with return_to=/membership/sign-in
+  assert.equal(await getPostLoginRedirect(db, ownerEmail, '/membership/sign-in'), '/admin');
+  assert.equal(await getPostLoginRedirect(db, 'staff1@example.com', '/membership/sign-in'), '/admin/analytics');
+  assert.equal(await getPostLoginRedirect(db, regularEmail, '/membership/sign-in'), '/membership/account');
+
+  // 6. Direct visit guard simulation for /membership/account:
+  // Admin/Owner redirected away from /membership/account to /admin
+  const ownerDest = await getMemberSignInDestination(db, ownerEmail);
+  assert.notEqual(ownerDest, '/membership/account');
+  assert.equal(ownerDest, '/admin');
+
+  // Staff redirected away from /membership/account to authorized admin section
+  const staffDest = await getMemberSignInDestination(db, 'staff1@example.com');
+  assert.notEqual(staffDest, '/membership/account');
+  assert.equal(staffDest, '/admin/analytics');
+
+  // Regular Member allowed to stay on /membership/account
+  const memberDest = await getMemberSignInDestination(db, regularEmail);
+  assert.equal(memberDest, '/membership/account');
 });

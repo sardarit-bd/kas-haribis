@@ -546,7 +546,20 @@ export function isMemberAccountPath(path: string | null | undefined): boolean {
   try {
     const url = new URL(path, 'https://app.local');
     const pathname = url.pathname.replace(/\/+$/, '');
-    return pathname === '/membership/account';
+    return (
+      pathname === '/membership/account' || pathname === '/membership/sign-in'
+    );
+  } catch {
+    return false;
+  }
+}
+
+export function isMemberSignInPath(path: string | null | undefined): boolean {
+  if (!path || typeof path !== 'string') return false;
+  try {
+    const url = new URL(path, 'https://app.local');
+    const pathname = url.pathname.replace(/\/+$/, '');
+    return pathname === '/membership/sign-in';
   } catch {
     return false;
   }
@@ -600,5 +613,19 @@ export async function getPostLoginRedirect(
   }
 
   // Explicit non-admin return URL (e.g. /bank-directory or /heter-iska)
+  if (isMemberSignInPath(cleanReturnTo)) {
+    return '/membership/account';
+  }
   return cleanReturnTo;
+}
+
+export async function getMemberSignInDestination(
+  db: any,
+  email: string | null | undefined,
+): Promise<string> {
+  const cleanEmail = String(email || '').trim().toLowerCase();
+  if (!cleanEmail) {
+    return '/sign-in?return_to=' + encodeURIComponent('/membership/account');
+  }
+  return getPostLoginRedirect(db, cleanEmail, '/membership/account');
 }

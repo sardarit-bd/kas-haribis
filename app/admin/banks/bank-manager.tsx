@@ -578,7 +578,19 @@ export default function BankManager({
             </label>
           </div>
 
-          <FullReportEditor defaultValue={value.full_report} bankId={value.id} />
+          <FullReportEditor
+            defaultValue={value.full_report}
+            bankId={value.id}
+            bankTitle={value.title}
+            pdfKey={value.report_pdf_key}
+            pdfName={value.report_pdf_name}
+            onPdfChange={(key, name) => {
+              setEditing((prev) =>
+                prev ? { ...prev, report_pdf_key: key, report_pdf_name: name } : null,
+              );
+              reload();
+            }}
+          />
           <div className="bankFormGrid compactFields">
             <label>
               Researcher
@@ -868,9 +880,17 @@ export default function BankManager({
 function FullReportEditor({
   defaultValue,
   bankId,
+  bankTitle,
+  pdfKey,
+  pdfName,
+  onPdfChange,
 }: {
   defaultValue: string;
   bankId?: string;
+  bankTitle?: string;
+  pdfKey?: string;
+  pdfName?: string;
+  onPdfChange?: (pdfKey: string, pdfName: string) => void;
 }) {
   const [useRich, setUseRich] = useState(true);
   const [text, setText] = useState(defaultValue);
@@ -889,6 +909,10 @@ function FullReportEditor({
           <RichReportEditor
             defaultValue={defaultValue}
             bankId={bankId || ''}
+            bankTitle={bankTitle}
+            pdfKey={pdfKey}
+            pdfName={pdfName}
+            onPdfChange={onPdfChange}
             name="full_report"
           />
           <div style={{ textAlign: 'right', marginTop: '-12px', marginBottom: '14px' }}>

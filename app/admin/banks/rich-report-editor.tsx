@@ -18,23 +18,42 @@ import { StructuredReportRenderer } from '../../bank-directory/full-report/struc
 interface RichReportEditorProps {
   defaultValue: string;
   bankId: string;
+  bankTitle?: string;
+  pdfKey?: string;
+  pdfName?: string;
   name?: string;
   onContentChange?: (content: string) => void;
+  onPdfChange?: (pdfKey: string, pdfName: string) => void;
 }
 
 export default function RichReportEditor({
   defaultValue,
   bankId,
+  bankTitle,
+  pdfKey,
+  pdfName,
   name = 'full_report',
   onContentChange,
+  onPdfChange,
 }: RichReportEditorProps) {
   const [content, setContent] = useState(defaultValue);
-  const [view, setView] = useState<'edit' | 'preview'>('edit');
+  const [view, setView] = useState<'edit' | 'preview' | 'pdf'>('edit');
   const [isImporting, setIsImporting] = useState(false);
   const [notice, setNotice] = useState<{ text: string; isError?: boolean } | null>(null);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [isUploadingPdf, setIsUploadingPdf] = useState(false);
+
+  const [attachedPdfKey, setAttachedPdfKey] = useState(pdfKey || '');
+  const [attachedPdfName, setAttachedPdfName] = useState(pdfName || '');
+  const [pdfTimestamp, setPdfTimestamp] = useState(Date.now());
+
+  useEffect(() => {
+    setAttachedPdfKey(pdfKey || '');
+    setAttachedPdfName(pdfName || '');
+  }, [pdfKey, pdfName]);
 
   const docxInputRef = useRef<HTMLInputElement | null>(null);
+  const pdfInputRef = useRef<HTMLInputElement | null>(null);
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const editorBodyRef = useRef<HTMLDivElement | null>(null);
 
@@ -49,7 +68,7 @@ export default function RichReportEditor({
   async function uploadAndInsertImage(file: File) {
     if (!bankId) {
       setNotice({
-        text: 'Missing bank identifier. Please refresh the page and try again.',
+        text: 'Please save the bank entry first to enable uploading inline images/charts. Once saved, the editor will remain open and ready for images.',
         isError: true,
       });
       return;
@@ -418,6 +437,128 @@ export default function RichReportEditor({
     }
   }
 
+  // Handle PDF file upload directly to Cloudflare R2
+  async function handlePdfUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!bankId) {
+      setNotice({
+        text: 'Please save the bank entry first to enable uploading a PDF report. Once saved, the editor will remain open and ready for PDF upload.',
+        isError: true,
+      });
+      if (pdfInputRef.current) pdfInputRef.current.value = '';
+      return;
+    }
+
+    const fileName = String(file.name || 'report.pdf').trim();
+    const lowerName = fileName.toLowerCase();
+    if (!lowerName.endsWith('.pdf')) {
+      setNotice({
+        text: 'Invalid file format. Please select a valid PDF file (.pdf).',
+        isError: true,
+      });
+      if (pdfInputRef.current) pdfInputRef.current.value = '';
+      return;
+    }
+
+    const mime = (file.type || '').toLowerCase();
+    if (mime && mime !== 'application/pdf' && mime !== 'application/x-pdf') {
+      setNotice({
+        text: `Invalid MIME type (${file.type}). Only application/pdf files are accepted.`,
+        isError: true,
+      });
+      if (pdfInputRef.current) pdfInputRef.current.value = '';
+      return;
+    }
+
+    const MAX_PDF_SIZE_BYTES = 25 * 1024 * 1024; // 25 MB
+    if (file.size > MAX_PDF_SIZE_BYTES) {
+      setNotice({
+        text: `The uploaded PDF exceeds the 25 MB limit (file size: ${(file.size / (1024 * 1024)).toFixed(1)} MB).`,
+        isError: true,
+      });
+      if (pdfInputRef.current) pdfInputRef.current.value = '';
+      return;
+    }
+
+    setIsUploadingPdf(true);
+    setNotice({ text: 'Uploading PDF report to secure Cloudflare R2 storage…' });
+
+    try {
+      const fd = new FormData();
+      fd.set('bankId', bankId);
+      fd.set('file', file);
+
+      const res = await fetch('/api/admin/bank-report-pdf', {
+        method: 'POST',
+        body: fd,
+      });
+
+      const data = (await res.json().catch(() => ({}))) as any;
+      if (!res.ok || !data.saved) {
+        throw new Error(data.error || `Upload failed with status HTTP ${res.status}`);
+      }
+
+      const newKey = data.key || `bank-reports/${bankId}/report.pdf`;
+      const newName = data.name || fileName;
+
+      setAttachedPdfKey(newKey);
+      setAttachedPdfName(newName);
+      setPdfTimestamp(Date.now());
+      setView('pdf');
+      onPdfChange?.(newKey, newName);
+
+      setNotice({
+        text: `✓ PDF report "${newName}" uploaded successfully and displayed below. Original layout, vector charts, and all pages preserved.`,
+      });
+    } catch (err: any) {
+      setNotice({
+        text: `PDF upload failed: ${err?.message || 'Unknown error'}`,
+        isError: true,
+      });
+    } finally {
+      setIsUploadingPdf(false);
+      if (pdfInputRef.current) pdfInputRef.current.value = '';
+    }
+  }
+
+  async function removeAttachedPdf() {
+    if (!bankId || !attachedPdfKey) return;
+    if (
+      !confirm(
+        `Are you sure you want to remove the attached PDF "${attachedPdfName || 'Source PDF'}" from this bank?`,
+      )
+    )
+      return;
+
+    setNotice({ text: 'Removing attached PDF…' });
+    try {
+      const res = await fetch(
+        `/api/admin/bank-report-pdf?bankId=${encodeURIComponent(bankId)}`,
+        {
+          method: 'DELETE',
+        },
+      );
+      const data = (await res.json().catch(() => ({}))) as any;
+      if (!res.ok || !data.deleted) {
+        throw new Error(data.error || 'Failed to remove attached PDF');
+      }
+      setAttachedPdfKey('');
+      setAttachedPdfName('');
+      onPdfChange?.('', '');
+      if (view === 'pdf') {
+        setView('edit');
+      }
+      setNotice({ text: '✓ Attached PDF removed.' });
+    } catch (err: any) {
+      setNotice({
+        text: `Error removing PDF: ${err?.message || 'Failed to delete'}`,
+        isError: true,
+      });
+    }
+  }
+
   function insertTable() {
     if (editor) {
       editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
@@ -445,7 +586,7 @@ export default function RichReportEditor({
       >
         <span style={{ fontSize: '15px' }}>💡</span>
         <span>
-          <strong>Report Editor:</strong> Use <strong>📄 Import Word (.docx)</strong> to bring in formatted text and tables. To add charts or screenshots, place your cursor where desired and click <strong>📷 Add Image / Chart (PNG, JPEG, WebP up to 1 MB)</strong>.
+          <strong>Report Editor:</strong> Use <strong>📄 Import Word (.docx)</strong> to bring in formatted text and tables for the web report, or <strong>📑 Upload PDF Report</strong> to attach and display the official multi-page PDF document with full vector charts and analyst signatures. Both versions can coexist on the same bank. To add inline charts or screenshots to the web report, click <strong>📷 Add Image / Chart (PNG, JPEG, WebP up to 1 MB)</strong>.
         </span>
       </div>
 
@@ -460,16 +601,23 @@ export default function RichReportEditor({
         }}
       >
         <span style={{ fontWeight: 'bold', fontSize: '14px', color: '#1e293b' }}>
-          Protected Full Report (Web Version)
+          Protected Full Report
         </span>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-          {/* Hidden inputs for DOCX and image file pickers */}
+          {/* Hidden inputs for DOCX, PDF, and image file pickers */}
           <input
             type="file"
             ref={docxInputRef}
             onChange={handleDocxImport}
             accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            style={{ display: 'none' }}
+          />
+          <input
+            type="file"
+            ref={pdfInputRef}
+            onChange={handlePdfUpload}
+            accept="application/pdf,.pdf"
             style={{ display: 'none' }}
           />
           <input
@@ -486,7 +634,7 @@ export default function RichReportEditor({
 
           <button
             type="button"
-            disabled={isImporting}
+            disabled={isImporting || isUploadingPdf}
             onClick={() => docxInputRef.current?.click()}
             style={{
               padding: '4px 10px',
@@ -505,11 +653,47 @@ export default function RichReportEditor({
 
           <button
             type="button"
-            disabled={isUploadingImage}
+            disabled={isImporting || isUploadingPdf}
             onClick={() => {
               if (!bankId) {
                 setNotice({
-                  text: 'Missing bank identifier. Please refresh the page and try again.',
+                  text: 'Please save the bank entry first to enable uploading a PDF report. Once saved, the editor will remain open and ready for PDF upload.',
+                  isError: true,
+                });
+                return;
+              }
+              pdfInputRef.current?.click();
+            }}
+            style={{
+              padding: '4px 10px',
+              fontSize: '12px',
+              fontWeight: 600,
+              background: '#fef2f2',
+              color: '#991b1b',
+              border: '1px solid #fecaca',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+            title={
+              !bankId
+                ? 'Save the bank entry first to enable uploading a PDF report'
+                : 'Upload and display official PDF report (max 25 MB, vector layout and all pages preserved)'
+            }
+          >
+            {isUploadingPdf
+              ? 'Uploading PDF…'
+              : attachedPdfKey
+                ? '📑 Replace PDF Report'
+                : '📑 Upload PDF Report'}
+          </button>
+
+          <button
+            type="button"
+            disabled={isUploadingImage || isUploadingPdf}
+            onClick={() => {
+              if (!bankId) {
+                setNotice({
+                  text: 'Please save the bank entry first to enable uploading inline images/charts. Once saved, the editor will remain open and ready for images.',
                   isError: true,
                 });
                 return;
@@ -526,12 +710,16 @@ export default function RichReportEditor({
               borderRadius: '4px',
               cursor: 'pointer',
             }}
-            title="Upload or paste a chart screenshot / image at the cursor position (PNG, JPEG, WebP up to 1 MB)"
+            title={
+              !bankId
+                ? 'Save the bank entry first to enable uploading inline images/charts'
+                : 'Upload or paste a chart screenshot / image at the cursor position (PNG, JPEG, WebP up to 1 MB)'
+            }
           >
             {isUploadingImage ? 'Uploading…' : '📷 Add Image / Chart'}
           </button>
 
-          {/* Edit / Preview toggle */}
+          {/* Edit / Preview tabs */}
           <div
             style={{
               display: 'inline-flex',
@@ -554,7 +742,7 @@ export default function RichReportEditor({
                 color: view === 'edit' ? '#ffffff' : '#475569',
               }}
             >
-              Edit
+              Edit Web Report
             </button>
             <button
               type="button"
@@ -569,11 +757,176 @@ export default function RichReportEditor({
                 color: view === 'preview' ? '#ffffff' : '#475569',
               }}
             >
-              Preview
+              Preview Web
             </button>
+            {attachedPdfKey && (
+              <button
+                type="button"
+                onClick={() => setView('pdf')}
+                style={{
+                  padding: '4px 12px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  border: 'none',
+                  cursor: 'pointer',
+                  background: view === 'pdf' ? '#102a43' : 'transparent',
+                  color: view === 'pdf' ? '#ffffff' : '#475569',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+              >
+                <span>📑 View PDF Report</span>
+                <span
+                  style={{
+                    fontSize: '9px',
+                    background: view === 'pdf' ? '#38bdf8' : '#e2e8f0',
+                    color: view === 'pdf' ? '#0f172a' : '#475569',
+                    padding: '1px 4px',
+                    borderRadius: '3px',
+                    fontWeight: 700,
+                  }}
+                >
+                  SOURCE
+                </span>
+              </button>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Attached PDF Notice / Status banner */}
+      {attachedPdfKey && (
+        <div
+          style={{
+            margin: '8px 0 12px 0',
+            padding: '10px 14px',
+            background: '#f0f9ff',
+            border: '1px solid #bae6fd',
+            borderRadius: '6px',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '8px',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#0369a1' }}>
+            <span style={{ fontSize: '15px' }}>📑</span>
+            <span>
+              <strong>Source PDF Report Attached:</strong>{' '}
+              <span style={{ color: '#0c4a6e', fontWeight: 600 }}>
+                {attachedPdfName || `${bankTitle || 'Bank'} Analyst Report (PDF)`}
+              </span>
+            </span>
+            <span
+              style={{
+                fontSize: '10px',
+                background: '#e0f2fe',
+                color: '#0284c7',
+                border: '1px solid #7dd3fc',
+                padding: '1px 6px',
+                borderRadius: '3px',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+              }}
+            >
+              Public PDF Active
+            </span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+            {view !== 'pdf' ? (
+              <button
+                type="button"
+                onClick={() => setView('pdf')}
+                style={{
+                  padding: '3px 8px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  background: '#0284c7',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                }}
+              >
+                👁 View PDF Inline
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setView('edit')}
+                style={{
+                  padding: '3px 8px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  background: '#0f172a',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                }}
+              >
+                ✏ Back to Web Editor
+              </button>
+            )}
+            <a
+              href={`/api/bank-report-pdf?bankId=${encodeURIComponent(bankId)}&download=1`}
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                padding: '3px 8px',
+                fontSize: '11px',
+                fontWeight: 600,
+                background: '#ffffff',
+                color: '#0369a1',
+                border: '1px solid #bae6fd',
+                borderRadius: '4px',
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '3px',
+              }}
+            >
+              Download ↗
+            </a>
+            <button
+              type="button"
+              onClick={() => pdfInputRef.current?.click()}
+              style={{
+                padding: '3px 8px',
+                fontSize: '11px',
+                fontWeight: 600,
+                background: '#ffffff',
+                color: '#475569',
+                border: '1px solid #cbd5e1',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+              title="Upload a new PDF to replace this one"
+            >
+              Replace PDF
+            </button>
+            <button
+              type="button"
+              onClick={removeAttachedPdf}
+              style={{
+                padding: '3px 8px',
+                fontSize: '11px',
+                fontWeight: 600,
+                background: '#fee2e2',
+                color: '#b91c1c',
+                border: '1px solid #fecaca',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+              title="Remove attached PDF from this bank"
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+      )}
 
       {notice && (
         <div
@@ -851,6 +1204,145 @@ export default function RichReportEditor({
             )}
             <EditorContent editor={editor} />
           </div>
+        </div>
+      ) : view === 'pdf' ? (
+        <div
+          style={{
+            border: '1px solid #cbd5e1',
+            borderRadius: '8px',
+            background: '#ffffff',
+            overflow: 'hidden',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+          }}
+        >
+          <div
+            style={{
+              padding: '10px 14px',
+              background: '#f8fafc',
+              borderBottom: '1px solid #e2e8f0',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '8px',
+            }}
+          >
+            <div>
+              <div style={{ fontSize: '12px', fontWeight: 700, color: '#0f172a' }}>
+                📑 Embedded PDF Report Viewer
+              </div>
+              <div style={{ fontSize: '11px', color: '#64748b' }}>
+                {attachedPdfName || 'Source Bank PDF Document'} (Original vector layout, charts, and all pages preserved)
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <a
+                href={`/api/bank-report-pdf?bankId=${encodeURIComponent(bankId)}&t=${pdfTimestamp}`}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  padding: '4px 10px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  background: '#0284c7',
+                  color: '#ffffff',
+                  borderRadius: '4px',
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+              >
+                ↗ Open in Full Tab
+              </a>
+              <button
+                type="button"
+                onClick={() => setView('edit')}
+                style={{
+                  padding: '4px 10px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  background: '#f1f5f9',
+                  color: '#334155',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                }}
+              >
+                ✏ Back to Web Editor
+              </button>
+            </div>
+          </div>
+
+          {attachedPdfKey ? (
+            <div style={{ width: '100%', background: '#475569', minHeight: '650px', position: 'relative' }}>
+              <iframe
+                title="Bank PDF Report Viewer"
+                src={`/api/bank-report-pdf?bankId=${encodeURIComponent(bankId)}&t=${pdfTimestamp}#toolbar=1&navpanes=1`}
+                style={{
+                  width: '100%',
+                  height: '750px',
+                  border: 'none',
+                  display: 'block',
+                }}
+              />
+              <div
+                style={{
+                  padding: '8px 12px',
+                  background: '#f1f5f9',
+                  borderTop: '1px solid #cbd5e1',
+                  fontSize: '11px',
+                  color: '#64748b',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <span>If your browser does not render embedded PDFs, you can view or download it directly:</span>
+                <a
+                  href={`/api/bank-report-pdf?bankId=${encodeURIComponent(bankId)}&download=1`}
+                  download={attachedPdfName || 'bank-report.pdf'}
+                  style={{ color: '#0284c7', fontWeight: 600, textDecoration: 'underline' }}
+                >
+                  Download Source PDF File
+                </a>
+              </div>
+            </div>
+          ) : (
+            <div
+              style={{
+                padding: '40px 20px',
+                textAlign: 'center',
+                color: '#64748b',
+                background: '#f8fafc',
+              }}
+            >
+              <div style={{ fontSize: '32px', marginBottom: '12px' }}>📄</div>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>
+                No PDF report is attached to this bank yet
+              </div>
+              <p style={{ fontSize: '12px', maxWidth: '400px', margin: '0 auto 16px auto' }}>
+                Upload an analyst PDF report to provide subscribers with the original document alongside or in place of this web report.
+              </p>
+              <button
+                type="button"
+                onClick={() => pdfInputRef.current?.click()}
+                disabled={!bankId || isUploadingPdf}
+                style={{
+                  padding: '6px 14px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  background: '#0284c7',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: (!bankId || isUploadingPdf) ? 'not-allowed' : 'pointer',
+                }}
+              >
+                {isUploadingPdf ? '⏳ Uploading...' : '📑 Upload PDF Report'}
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <div

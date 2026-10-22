@@ -1,4 +1,6 @@
+import { redirect } from 'next/navigation';
 import { requireChatGPTUser } from '../../chatgpt-auth';
+import { getMemberSignInDestination } from '../../lib/admin-access';
 import { getOrCreateMember, listMemberOrders } from '../../lib/members';
 import { SiteFooter, SiteHeader } from '../../shared/site-shell';
 import MembershipDashboard from './membership-dashboard';
@@ -8,6 +10,10 @@ export const dynamic = 'force-dynamic';
 export default async function MembershipAccountPage() {
   const user = await requireChatGPTUser('/membership/account');
   const { env } = await import('cloudflare:workers');
+  const destination = await getMemberSignInDestination(env.DB, user.email);
+  if (destination !== '/membership/account') {
+    redirect(destination);
+  }
   const member = await getOrCreateMember(
     env.DB,
     user.email.toLowerCase(),
