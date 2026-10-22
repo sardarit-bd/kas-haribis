@@ -4186,6 +4186,14 @@ footer, .siteFooterBig {
   color: #8a6724;
   font-weight: bold;
 }
+.reportPdfDownloadBtn,
+.reportPdfDownloadBtn:link,
+.reportPdfDownloadBtn:visited,
+.reportPdfDownloadBtn:hover,
+.reportPdfDownloadBtn:focus,
+.reportPdfDownloadBtn:active {
+  color: #ffffff !important;
+}
 @media (max-width: 720px) {
   .bankCodeManager {
     grid-template-columns: 1fr;
