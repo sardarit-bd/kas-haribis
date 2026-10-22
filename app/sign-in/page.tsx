@@ -38,7 +38,9 @@ export default async function SignInPage({
       user.email,
       requestedReturnTo,
     );
-    redirect(destination);
+    if (destination && !destination.startsWith('/sign-in')) {
+      redirect(destination);
+    }
   }
 
   const googleHref = requestedReturnTo

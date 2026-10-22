@@ -64,7 +64,7 @@ export default function MembershipPage() {
               </a>
               <a
                 className="px-6 py-3.5 bg-white/10 border border-white/20 hover:bg-white/20 text-white text-md font-medium text-center"
-                href="/membership/account"
+                href="/membership/sign-in"
               >
                 Member login
               </a>
