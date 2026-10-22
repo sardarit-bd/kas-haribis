@@ -21,9 +21,11 @@ interface RichReportEditorProps {
   bankTitle?: string;
   pdfKey?: string;
   pdfName?: string;
+  draftPdf?: File | null;
   name?: string;
   onContentChange?: (content: string) => void;
   onPdfChange?: (pdfKey: string, pdfName: string) => void;
+  onDraftPdfSelect?: (file: File | null) => void;
 }
 
 export default function RichReportEditor({
@@ -32,9 +34,11 @@ export default function RichReportEditor({
   bankTitle,
   pdfKey,
   pdfName,
+  draftPdf,
   name = 'full_report',
   onContentChange,
   onPdfChange,
+  onDraftPdfSelect,
 }: RichReportEditorProps) {
   const [content, setContent] = useState(defaultValue);
   const [view, setView] = useState<'edit' | 'preview' | 'pdf'>('edit');
@@ -45,12 +49,46 @@ export default function RichReportEditor({
 
   const [attachedPdfKey, setAttachedPdfKey] = useState(pdfKey || '');
   const [attachedPdfName, setAttachedPdfName] = useState(pdfName || '');
+  const [draftPdfFile, setDraftPdfFile] = useState<File | null>(draftPdf || null);
+  const [draftPdfUrl, setDraftPdfUrl] = useState<string>('');
   const [pdfTimestamp, setPdfTimestamp] = useState(Date.now());
 
   useEffect(() => {
     setAttachedPdfKey(pdfKey || '');
     setAttachedPdfName(pdfName || '');
   }, [pdfKey, pdfName]);
+
+  useEffect(() => {
+    if (draftPdf !== undefined) {
+      setDraftPdfFile(draftPdf);
+      if (draftPdf) {
+        setDraftPdfUrl((prev) => {
+          if (prev && typeof window !== 'undefined' && window.URL?.revokeObjectURL) {
+            window.URL.revokeObjectURL(prev);
+          }
+          return typeof window !== 'undefined' && window.URL?.createObjectURL
+            ? window.URL.createObjectURL(draftPdf)
+            : '';
+        });
+        setAttachedPdfName(draftPdf.name);
+      } else {
+        setDraftPdfUrl((prev) => {
+          if (prev && typeof window !== 'undefined' && window.URL?.revokeObjectURL) {
+            window.URL.revokeObjectURL(prev);
+          }
+          return '';
+        });
+      }
+    }
+  }, [draftPdf]);
+
+  useEffect(() => {
+    return () => {
+      if (draftPdfUrl && typeof window !== 'undefined' && window.URL?.revokeObjectURL) {
+        window.URL.revokeObjectURL(draftPdfUrl);
+      }
+    };
+  }, [draftPdfUrl]);
 
   const docxInputRef = useRef<HTMLInputElement | null>(null);
   const pdfInputRef = useRef<HTMLInputElement | null>(null);
@@ -442,42 +480,33 @@ export default function RichReportEditor({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!bankId) {
-      setNotice({
-        text: 'Please save the bank entry first to enable uploading a PDF report. Once saved, the editor will remain open and ready for PDF upload.',
-        isError: true,
-      });
-      if (pdfInputRef.current) pdfInputRef.current.value = '';
-      return;
-    }
-
-    const fileName = String(file.name || 'report.pdf').trim();
-    const lowerName = fileName.toLowerCase();
-    if (!lowerName.endsWith('.pdf')) {
-      setNotice({
-        text: 'Invalid file format. Please select a valid PDF file (.pdf).',
-        isError: true,
-      });
-      if (pdfInputRef.current) pdfInputRef.current.value = '';
-      return;
-    }
-
-    const mime = (file.type || '').toLowerCase();
-    if (mime && mime !== 'application/pdf' && mime !== 'application/x-pdf') {
-      setNotice({
-        text: `Invalid MIME type (${file.type}). Only application/pdf files are accepted.`,
-        isError: true,
-      });
-      if (pdfInputRef.current) pdfInputRef.current.value = '';
-      return;
-    }
-
     const MAX_PDF_SIZE_BYTES = 25 * 1024 * 1024; // 25 MB
     if (file.size > MAX_PDF_SIZE_BYTES) {
       setNotice({
         text: `The uploaded PDF exceeds the 25 MB limit (file size: ${(file.size / (1024 * 1024)).toFixed(1)} MB).`,
         isError: true,
       });
+      if (pdfInputRef.current) pdfInputRef.current.value = '';
+      return;
+    }
+
+    // 1. If this is an unsaved bank draft (no persisted bankId yet):
+    // Stage the PDF file, allow instant preview, and notify parent so Save Bank uploads it in one step
+    if (!bankId) {
+      setDraftPdfFile(file);
+      setDraftPdfUrl((prev) => {
+        if (prev && typeof window !== 'undefined' && window.URL?.revokeObjectURL) {
+          window.URL.revokeObjectURL(prev);
+        }
+        return typeof window !== 'undefined' && window.URL?.createObjectURL
+          ? window.URL.createObjectURL(file)
+          : '';
+      });
+      setAttachedPdfName(fileName);
+      setNotice({
+        text: `✓ PDF report "${fileName}" (${(file.size / (1024 * 1024)).toFixed(1)} MB) selected. It will be uploaded and attached when you save the bank.`,
+      });
+      onDraftPdfSelect?.(file);
       if (pdfInputRef.current) pdfInputRef.current.value = '';
       return;
     }
@@ -655,13 +684,6 @@ export default function RichReportEditor({
             type="button"
             disabled={isImporting || isUploadingPdf}
             onClick={() => {
-              if (!bankId) {
-                setNotice({
-                  text: 'Please save the bank entry first to enable uploading a PDF report. Once saved, the editor will remain open and ready for PDF upload.',
-                  isError: true,
-                });
-                return;
-              }
               pdfInputRef.current?.click();
             }}
             style={{
@@ -675,14 +697,14 @@ export default function RichReportEditor({
               cursor: 'pointer',
             }}
             title={
-              !bankId
-                ? 'Save the bank entry first to enable uploading a PDF report'
+              (attachedPdfKey || draftPdfFile)
+                ? 'Replace current PDF report with another file (max 25 MB)'
                 : 'Upload and display official PDF report (max 25 MB, vector layout and all pages preserved)'
             }
           >
             {isUploadingPdf
               ? 'Uploading PDF…'
-              : attachedPdfKey
+              : (attachedPdfKey || draftPdfFile)
                 ? '📑 Replace PDF Report'
                 : '📑 Upload PDF Report'}
           </button>
@@ -759,7 +781,7 @@ export default function RichReportEditor({
             >
               Preview Web
             </button>
-            {attachedPdfKey && (
+            {(attachedPdfKey || draftPdfFile) && (
               <button
                 type="button"
                 onClick={() => setView('pdf')}
@@ -787,7 +809,7 @@ export default function RichReportEditor({
                     fontWeight: 700,
                   }}
                 >
-                  SOURCE
+                  {draftPdfFile ? 'DRAFT' : 'SOURCE'}
                 </span>
               </button>
             )}
@@ -796,7 +818,7 @@ export default function RichReportEditor({
       </div>
 
       {/* Attached PDF Notice / Status banner */}
-      {attachedPdfKey && (
+      {(attachedPdfKey || draftPdfFile) && (
         <div
           style={{
             margin: '8px 0 12px 0',
@@ -814,24 +836,29 @@ export default function RichReportEditor({
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#0369a1' }}>
             <span style={{ fontSize: '15px' }}>📑</span>
             <span>
-              <strong>Source PDF Report Attached:</strong>{' '}
+              <strong>{draftPdfFile ? 'Selected PDF Report to Attach:' : 'Source PDF Report Attached:'}</strong>{' '}
               <span style={{ color: '#0c4a6e', fontWeight: 600 }}>
-                {attachedPdfName || `${bankTitle || 'Bank'} Analyst Report (PDF)`}
+                {draftPdfFile ? draftPdfFile.name : (attachedPdfName || `${bankTitle || 'Bank'} Analyst Report (PDF)`)}
               </span>
+              {draftPdfFile && (
+                <span style={{ color: '#64748b', fontSize: '11px', marginLeft: '6px' }}>
+                  ({(draftPdfFile.size / (1024 * 1024)).toFixed(1)} MB)
+                </span>
+              )}
             </span>
             <span
               style={{
                 fontSize: '10px',
-                background: '#e0f2fe',
-                color: '#0284c7',
-                border: '1px solid #7dd3fc',
+                background: draftPdfFile ? '#fef3c7' : '#e0f2fe',
+                color: draftPdfFile ? '#92400e' : '#0284c7',
+                border: `1px solid ${draftPdfFile ? '#fcd34d' : '#7dd3fc'}`,
                 padding: '1px 6px',
                 borderRadius: '3px',
                 fontWeight: 700,
                 textTransform: 'uppercase',
               }}
             >
-              Public PDF Active
+              {draftPdfFile ? 'Ready to Save' : 'Public PDF Active'}
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
@@ -870,26 +897,28 @@ export default function RichReportEditor({
                 ✏ Back to Web Editor
               </button>
             )}
-            <a
-              href={`/api/bank-report-pdf?bankId=${encodeURIComponent(bankId)}&download=1`}
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                padding: '3px 8px',
-                fontSize: '11px',
-                fontWeight: 600,
-                background: '#ffffff',
-                color: '#0369a1',
-                border: '1px solid #bae6fd',
-                borderRadius: '4px',
-                textDecoration: 'none',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '3px',
-              }}
-            >
-              Download ↗
-            </a>
+            {!draftPdfFile && bankId && (
+              <a
+                href={`/api/bank-report-pdf?bankId=${encodeURIComponent(bankId)}&download=1`}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  padding: '3px 8px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  background: '#ffffff',
+                  color: '#0369a1',
+                  border: '1px solid #bae6fd',
+                  borderRadius: '4px',
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '3px',
+                }}
+              >
+                Download ↗
+              </a>
+            )}
             <button
               type="button"
               onClick={() => pdfInputRef.current?.click()}
@@ -909,7 +938,21 @@ export default function RichReportEditor({
             </button>
             <button
               type="button"
-              onClick={removeAttachedPdf}
+              onClick={() => {
+                if (draftPdfFile) {
+                  setDraftPdfFile(null);
+                  if (draftPdfUrl && typeof window !== 'undefined' && window.URL?.revokeObjectURL) {
+                    window.URL.revokeObjectURL(draftPdfUrl);
+                  }
+                  setDraftPdfUrl('');
+                  setAttachedPdfName('');
+                  onDraftPdfSelect?.(null);
+                  if (view === 'pdf') setView('edit');
+                  setNotice({ text: 'Selected draft PDF removed.' });
+                } else {
+                  removeAttachedPdf();
+                }
+              }}
               style={{
                 padding: '3px 8px',
                 fontSize: '11px',
@@ -920,7 +963,7 @@ export default function RichReportEditor({
                 borderRadius: '4px',
                 cursor: 'pointer',
               }}
-              title="Remove attached PDF from this bank"
+              title={draftPdfFile ? 'Deselect this PDF' : 'Remove attached PDF from this bank'}
             >
               Remove
             </button>
@@ -1274,11 +1317,15 @@ export default function RichReportEditor({
             </div>
           </div>
 
-          {attachedPdfKey ? (
+          {(attachedPdfKey || draftPdfUrl) ? (
             <div style={{ width: '100%', background: '#475569', minHeight: '650px', position: 'relative' }}>
               <iframe
                 title="Bank PDF Report Viewer"
-                src={`/api/bank-report-pdf?bankId=${encodeURIComponent(bankId)}&t=${pdfTimestamp}#toolbar=1&navpanes=1`}
+                src={
+                  draftPdfUrl
+                    ? `${draftPdfUrl}#toolbar=1&navpanes=1`
+                    : `/api/bank-report-pdf?bankId=${encodeURIComponent(bankId)}&t=${pdfTimestamp}#toolbar=1&navpanes=1`
+                }
                 style={{
                   width: '100%',
                   height: '750px',
@@ -1298,14 +1345,24 @@ export default function RichReportEditor({
                   alignItems: 'center',
                 }}
               >
-                <span>If your browser does not render embedded PDFs, you can view or download it directly:</span>
-                <a
-                  href={`/api/bank-report-pdf?bankId=${encodeURIComponent(bankId)}&download=1`}
-                  download={attachedPdfName || 'bank-report.pdf'}
-                  style={{ color: '#0284c7', fontWeight: 600, textDecoration: 'underline' }}
-                >
-                  Download Source PDF File
-                </a>
+                <span>
+                  {draftPdfUrl
+                    ? 'Previewing selected draft PDF before saving:'
+                    : 'If your browser does not render embedded PDFs, you can view or download it directly:'}
+                </span>
+                {draftPdfUrl ? (
+                  <span style={{ color: '#0369a1', fontWeight: 600 }}>
+                    {draftPdfFile?.name || 'Selected PDF'} (Ready to attach on Save)
+                  </span>
+                ) : (
+                  <a
+                    href={`/api/bank-report-pdf?bankId=${encodeURIComponent(bankId)}&download=1`}
+                    download={attachedPdfName || 'bank-report.pdf'}
+                    style={{ color: '#0284c7', fontWeight: 600, textDecoration: 'underline' }}
+                  >
+                    Download Source PDF File
+                  </a>
+                )}
               </div>
             </div>
           ) : (
@@ -1327,7 +1384,7 @@ export default function RichReportEditor({
               <button
                 type="button"
                 onClick={() => pdfInputRef.current?.click()}
-                disabled={!bankId || isUploadingPdf}
+                disabled={isUploadingPdf}
                 style={{
                   padding: '6px 14px',
                   fontSize: '12px',
@@ -1336,7 +1393,7 @@ export default function RichReportEditor({
                   color: '#ffffff',
                   border: 'none',
                   borderRadius: '5px',
-                  cursor: (!bankId || isUploadingPdf) ? 'not-allowed' : 'pointer',
+                  cursor: isUploadingPdf ? 'not-allowed' : 'pointer',
                 }}
               >
                 {isUploadingPdf ? '⏳ Uploading...' : '📑 Upload PDF Report'}

@@ -1,5 +1,5 @@
 'use client';
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useMemo, useRef, useState } from 'react';
 import {
   StructuredReportRenderer,
   INSTITUTIONAL_HOLDERS_TEMPLATE,
@@ -71,7 +71,9 @@ export default function BankManager({
   const [codes, setCodes] = useState<AccessCode[]>([]),
     [newCode, setNewCode] = useState(''),
     [formVersion, setFormVersion] = useState(0),
-    [draftId, setDraftId] = useState<string>(() => crypto.randomUUID());
+    [draftId, setDraftId] = useState<string>(() => crypto.randomUUID()),
+    [draftPdfFile, setDraftPdfFile] = useState<File | null>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
   const filtered = useMemo(
     () =>
       banks.filter((bank) =>
@@ -174,7 +176,8 @@ export default function BankManager({
       }
 
       let pdfUploaded = false;
-      const pdfFile = (form.elements.namedItem('report_pdf_file') as HTMLInputElement)?.files?.[0];
+      const pdfFileInput = form.elements.namedItem('report_pdf_file') as HTMLInputElement | null;
+      const pdfFile = draftPdfFile || pdfFileInput?.files?.[0];
       if (pdfFile && bankId) {
         setMessage('Uploading PDF report…');
         const pdfFd = new FormData();
@@ -187,6 +190,8 @@ export default function BankManager({
         const pdfResult = (await pdfResponse.json().catch(() => ({}))) as {
           error?: string;
           saved?: boolean;
+          key?: string;
+          name?: string;
         };
         if (!pdfResponse.ok || !pdfResult.saved) {
           const updatedBanks = await reload();
@@ -209,6 +214,12 @@ export default function BankManager({
         ...(editing || emptyBank(banks.length + 1)),
         ...data,
         id: bankId,
+        ...(pdfUploaded && pdfFile
+          ? {
+              report_pdf_key: `bank-reports/${bankId}/report.pdf`,
+              report_pdf_name: pdfFile.name,
+            }
+          : {}),
       } as Bank);
 
       // Reset file inputs so previously selected files aren't re-submitted on next save
@@ -216,6 +227,7 @@ export default function BankManager({
       if (pdfInput) pdfInput.value = '';
       const logoInput = form.elements.namedItem('logo_file') as HTMLInputElement | null;
       if (logoInput) logoInput.value = '';
+      setDraftPdfFile(null);
 
       if (isNew) {
         // Keep newly created bank open in Edit mode
@@ -350,6 +362,7 @@ export default function BankManager({
               type="button"
               onClick={() => {
                 setEditing(null);
+                setDraftPdfFile(null);
                 setDraftId(crypto.randomUUID());
                 setMessage('');
                 setIsError(false);
@@ -359,7 +372,7 @@ export default function BankManager({
             </button>
           )}
         </div>
-        <form key={editing ? editing.id : `draft-${draftId}-${formVersion}`} onSubmit={save}>
+        <form ref={formRef} key={editing ? editing.id : `draft-${draftId}-${formVersion}`} onSubmit={save}>
           <input type="hidden" name="id" value={value.id} />
           <input type="hidden" name="logo_url" value={value.logo_url || ''} />
           <input type="hidden" name="report_pdf_key" value={value.report_pdf_key || ''} />
@@ -571,6 +584,10 @@ export default function BankManager({
                 type="file"
                 accept="application/pdf"
                 style={{ fontSize: '12px' }}
+                onChange={(e) => {
+                  const f = e.target.files?.[0] || null;
+                  setDraftPdfFile(f);
+                }}
               />
               <small style={{ display: 'block', color: '#64748b', marginTop: '4px', fontSize: '11px' }}>
                 Official source PDF is available in the public report as a downloadable document and embedded in the Original PDF Viewer tab.
@@ -584,6 +601,22 @@ export default function BankManager({
             bankTitle={editing ? editing.title : ''}
             pdfKey={editing ? editing.report_pdf_key : ''}
             pdfName={editing ? editing.report_pdf_name : ''}
+            draftPdfFile={draftPdfFile}
+            onDraftPdfChange={(file) => {
+              setDraftPdfFile(file);
+              const pdfInput = formRef.current?.elements.namedItem('report_pdf_file') as HTMLInputElement | null;
+              if (pdfInput) {
+                if (!file) {
+                  pdfInput.value = '';
+                } else if (typeof DataTransfer !== 'undefined') {
+                  try {
+                    const dt = new DataTransfer();
+                    dt.items.add(file);
+                    pdfInput.files = dt.files;
+                  } catch {}
+                }
+              }
+            }}
             onPdfChange={(key, name) => {
               setEditing((prev) =>
                 prev ? { ...prev, report_pdf_key: key, report_pdf_name: name } : null,
@@ -651,6 +684,7 @@ export default function BankManager({
                 disabled={isSaving}
                 onClick={() => {
                   setEditing(null);
+                  setDraftPdfFile(null);
                   setDraftId(crypto.randomUUID());
                   setMessage('');
                   setIsError(false);
@@ -883,6 +917,8 @@ function FullReportEditor({
   bankTitle,
   pdfKey,
   pdfName,
+  draftPdfFile,
+  onDraftPdfChange,
   onPdfChange,
 }: {
   defaultValue: string;
@@ -890,6 +926,8 @@ function FullReportEditor({
   bankTitle?: string;
   pdfKey?: string;
   pdfName?: string;
+  draftPdfFile?: File | null;
+  onDraftPdfChange?: (file: File | null) => void;
   onPdfChange?: (pdfKey: string, pdfName: string) => void;
 }) {
   const [useRich, setUseRich] = useState(true);
@@ -912,6 +950,8 @@ function FullReportEditor({
             bankTitle={bankTitle}
             pdfKey={pdfKey}
             pdfName={pdfName}
+            draftPdf={draftPdfFile}
+            onDraftPdfSelect={onDraftPdfChange}
             onPdfChange={onPdfChange}
             name="full_report"
           />

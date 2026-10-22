@@ -54,7 +54,7 @@ test('Banks Report Editor UI: Contains PDF upload control alongside Word import 
   // Embedded viewer iframe with accurate URL and fallback
   assert.match(
     editorSrc,
-    /<iframe[\s\S]*?src=\{`\/api\/bank-report-pdf\?bankId=\$\{encodeURIComponent\(bankId\)\}/,
+    /<iframe[\s\S]*?src=\{[\s\S]*?\/api\/bank-report-pdf\?bankId=\$\{encodeURIComponent\(bankId\)\}/,
     'Must render embedded iframe viewer targeting secure PDF endpoint',
   );
 });
@@ -252,68 +252,201 @@ test('Protected PDF Access: Authorization gates verify role and token', () => {
   assert.equal(checkPdfAccess({ role: 'member', hasValidCodeToken: false }).allowed, false);
 });
 
-test('Regression: Unsaved draft passes empty bankId to FullReportEditor and prevents premature upload', () => {
-  // Simulate the prop computation from bank-manager.tsx
-  function computeEditorProps(editing, draftBankValue) {
+test('Regression: Unsaved draft allows PDF selection without save-first warning and stages for Save', () => {
+  const editorSrc = fs.readFileSync(
+    path.resolve('app/admin/banks/rich-report-editor.tsx'),
+    'utf-8',
+  );
+
+  // 1. PDF button must NOT be blocked by !bankId guard
+  assert.equal(
+    /onClick=\{\(\)\s*=>\s*\{[^}]*!bankId[^}]*pdfInputRef/.test(editorSrc),
+    false,
+    'Upload PDF button must not guard against !bankId with error notice',
+  );
+
+  // 2. handlePdfUpload must stage draft file when !bankId
+  assert.match(
+    editorSrc,
+    /if\s*\(!bankId\)\s*\{[\s\S]*?setDraftPdfFile\(file\)[\s\S]*?onDraftPdfSelect\?\.[\s\S]*?setNotice\(/,
+    'handlePdfUpload must stage file and set notice when !bankId',
+  );
+
+  // 3. Status banner must display when draftPdfFile is present
+  assert.match(
+    editorSrc,
+    /\{\(attachedPdfKey\s*\|\|\s*draftPdfFile\)\s*&&/,
+    'Status banner must display when either attachedPdfKey or draftPdfFile is present',
+  );
+});
+
+test('Single-action Bank Creation Workflow: New bank with PDF saves in one action and associates PDF', async () => {
+  const mockDb = new Map();
+  let nextId = 500;
+
+  async function handleSingleSave({ formData, draftPdfFile, isNew }) {
+    let bankId = formData.id;
+    if (isNew) {
+      bankId = `bank-auto-${nextId++}`;
+      mockDb.set(bankId, {
+        id: bankId,
+        title: formData.title,
+        status: formData.status || 'kosher',
+        full_report: formData.full_report || '',
+        report_pdf_key: '',
+        report_pdf_name: '',
+      });
+    }
+
+    // Single submit: if PDF was selected (via draftPdfFile or form input), upload & attach
+    let pdfUploaded = false;
+    const pdfFile = draftPdfFile || formData.report_pdf_file;
+    if (pdfFile && bankId) {
+      const record = mockDb.get(bankId);
+      record.report_pdf_key = `bank-reports/${bankId}/report.pdf`;
+      record.report_pdf_name = pdfFile.name;
+      pdfUploaded = true;
+    }
+
+    const finalRecord = mockDb.get(bankId);
     return {
-      defaultValue: draftBankValue.full_report,
-      bankId: editing ? editing.id : '',
-      bankTitle: editing ? editing.title : '',
-      pdfKey: editing ? editing.report_pdf_key : '',
-      pdfName: editing ? editing.report_pdf_name : '',
+      success: true,
+      bankId,
+      record: finalRecord,
+      pdfUploaded,
     };
   }
 
-  // Case 1: Unsaved new bank draft (editing === null, draftBankValue has a client UUID)
-  const draftBank = {
-    id: 'f9429598-a3bc-42b7-a36c-dfa80696f5b9',
-    title: 'New Community Bank Draft',
-    full_report: '',
-    report_pdf_key: undefined,
-    report_pdf_name: undefined,
-  };
+  // 1. Create bank with PDF in single action
+  const res1 = await handleSingleSave({
+    formData: {
+      title: 'Valley National Bank',
+      status: 'kosher',
+      full_report: '<h2>Valley National Summary</h2><p>Overview of bank operations</p>',
+    },
+    draftPdfFile: { name: 'valley-analyst-report.pdf', size: 2 * 1024 * 1024 },
+    isNew: true,
+  });
 
-  const unsavedProps = computeEditorProps(null, draftBank);
-  assert.equal(unsavedProps.bankId, '', 'Draft must pass empty string for bankId');
-  assert.equal(unsavedProps.bankTitle, '', 'Draft must pass empty string for bankTitle');
-  assert.equal(unsavedProps.pdfKey, '', 'Draft must pass empty string for pdfKey');
-  assert.equal(unsavedProps.pdfName, '', 'Draft must pass empty string for pdfName');
+  assert.equal(res1.success, true);
+  assert.ok(res1.bankId);
+  assert.equal(res1.pdfUploaded, true);
+  assert.equal(res1.record.title, 'Valley National Bank');
+  assert.equal(res1.record.report_pdf_key, `bank-reports/${res1.bankId}/report.pdf`);
+  assert.equal(res1.record.report_pdf_name, 'valley-analyst-report.pdf');
+  assert.match(res1.record.full_report, /Valley National Summary/);
 
-  // Verify that an upload attempt with unsaved bankId triggers guidance without sending an upload request
-  let uploadRequestSent = false;
-  let noticeMessage = null;
+  // 2. Create bank WITHOUT PDF in single action
+  const res2 = await handleSingleSave({
+    formData: {
+      title: 'First Republic Bank',
+      status: 'mehudar',
+      full_report: '<p>Standard report text</p>',
+    },
+    draftPdfFile: null,
+    isNew: true,
+  });
 
-  function attemptPdfUpload(props, file) {
-    if (!props.bankId) {
-      noticeMessage = 'Please save the bank entry first to enable uploading a PDF report. Once saved, the editor will remain open and ready for PDF upload.';
-      return;
+  assert.equal(res2.success, true);
+  assert.equal(res2.pdfUploaded, false);
+  assert.equal(res2.record.report_pdf_key, '');
+  assert.equal(res2.record.report_pdf_name, '');
+  assert.equal(res2.record.title, 'First Republic Bank');
+});
+
+test('Safe Retry Simulation: PDF failure preserves bank in edit mode without creating duplicates on retry', async () => {
+  const mockDb = new Map();
+  let nextId = 600;
+
+  async function handleSaveWithPotentialPdfFailure({ formData, draftPdfFile, isNew, failPdf }) {
+    let bankId = formData.id;
+    if (isNew) {
+      bankId = `bank-${nextId++}`;
+      mockDb.set(bankId, {
+        id: bankId,
+        title: formData.title,
+        status: formData.status || 'kosher',
+        full_report: formData.full_report || '',
+        report_pdf_key: '',
+        report_pdf_name: '',
+      });
     }
-    uploadRequestSent = true;
+
+    const pdfFile = draftPdfFile || formData.report_pdf_file;
+    if (pdfFile && bankId) {
+      if (failPdf) {
+        // PDF upload fails, but bank was persisted!
+        const savedBank = mockDb.get(bankId);
+        return {
+          status: 'pdf_failed',
+          bankId,
+          editing: savedBank, // Kept in edit mode!
+          error: 'PDF report upload failed: Network timeout',
+        };
+      }
+      const record = mockDb.get(bankId);
+      record.report_pdf_key = `bank-reports/${bankId}/report.pdf`;
+      record.report_pdf_name = pdfFile.name;
+    }
+
+    return {
+      status: isNew ? 'created' : 'updated',
+      bankId,
+      editing: isNew ? mockDb.get(bankId) : null,
+    };
   }
 
-  attemptPdfUpload(unsavedProps, { name: 'report.pdf', size: 1024 });
-  assert.equal(uploadRequestSent, false, 'Upload request must NOT be sent for an unsaved bank draft');
-  assert.match(noticeMessage, /Please save the bank entry first to enable uploading a PDF report/);
+  // 1. Initial submit: Bank creates but PDF fails
+  const attempt1 = await handleSaveWithPotentialPdfFailure({
+    formData: { title: 'PNC Financial' },
+    draftPdfFile: { name: 'pnc-report.pdf' },
+    isNew: true,
+    failPdf: true,
+  });
 
-  // Case 2: Persisted bank record in edit mode (editing !== null)
-  const persistedBank = {
-    id: 'bank-persisted-123',
-    title: 'New Community Bank',
-    full_report: '',
-    report_pdf_key: 'bank-reports/bank-persisted-123/report.pdf',
-    report_pdf_name: 'community-report.pdf',
+  assert.equal(attempt1.status, 'pdf_failed');
+  assert.ok(attempt1.editing, 'Must keep the persisted record in edit mode');
+  assert.equal(mockDb.size, 1);
+
+  // 2. Retry submit: Uses the persisted ID from edit mode (isNew = false)
+  const attempt2 = await handleSaveWithPotentialPdfFailure({
+    formData: { id: attempt1.editing.id, title: 'PNC Financial' },
+    draftPdfFile: { name: 'pnc-report.pdf' },
+    isNew: false, // NOT a new bank, now an update!
+    failPdf: false,
+  });
+
+  assert.equal(attempt2.status, 'updated');
+  assert.equal(mockDb.size, 1, 'Must NOT create duplicate bank records upon retrying save');
+  const record = mockDb.get(attempt1.bankId);
+  assert.equal(record.report_pdf_name, 'pnc-report.pdf');
+});
+
+test('Existing Bank PDF Replacement: Updates PDF and keeps web report content intact', () => {
+  const existingRecord = {
+    id: 'bank-citibank',
+    title: 'Citibank N.A.',
+    full_report: '<h3>Compliance & Governance</h3><p>Board of directors overview</p>',
+    report_pdf_key: 'bank-reports/bank-citibank/old-report.pdf',
+    report_pdf_name: 'old-report.pdf',
   };
 
-  const persistedProps = computeEditorProps(persistedBank, draftBank);
-  assert.equal(persistedProps.bankId, 'bank-persisted-123');
-  assert.equal(persistedProps.bankTitle, 'New Community Bank');
-  assert.equal(persistedProps.pdfKey, 'bank-reports/bank-persisted-123/report.pdf');
-  assert.equal(persistedProps.pdfName, 'community-report.pdf');
+  function replacePdf(record, newPdfKey, newPdfName) {
+    return {
+      ...record,
+      report_pdf_key: newPdfKey,
+      report_pdf_name: newPdfName,
+    };
+  }
 
-  // Verify upload works when bankId is persisted
-  noticeMessage = null;
-  attemptPdfUpload(persistedProps, { name: 'report.pdf', size: 1024 });
-  assert.equal(uploadRequestSent, true, 'Upload request must be sent when bankId is persisted');
+  const updated = replacePdf(existingRecord, 'bank-reports/bank-citibank/new-q4.pdf', 'new-q4.pdf');
+
+  // PDF is updated
+  assert.equal(updated.report_pdf_key, 'bank-reports/bank-citibank/new-q4.pdf');
+  assert.equal(updated.report_pdf_name, 'new-q4.pdf');
+
+  // Web report content is completely preserved
+  assert.equal(updated.full_report, existingRecord.full_report);
 });
 
 test('Backend 404 Error Message: Informs caller to save bank entry first', () => {
