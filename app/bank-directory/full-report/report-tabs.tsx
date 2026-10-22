@@ -48,7 +48,8 @@ export default function ReportTabs({
               href={downloadUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#102a43] hover:bg-[#1a385c] text-white text-xs font-bold rounded-lg transition-colors shadow-xs"
+              className="reportPdfDownloadBtn inline-flex items-center gap-1.5 px-4 py-2 bg-[#102a43] hover:bg-[#1a385c] focus:bg-[#1a385c] focus:outline-hidden focus:ring-2 focus:ring-[#102a43] focus:ring-offset-2 text-white hover:text-white focus:text-white active:text-white text-xs font-bold rounded-lg transition-colors shadow-xs"
+              style={{ color: '#ffffff' }}
             >
               Download Original PDF ↗
             </a>
@@ -123,6 +124,7 @@ export default function ReportTabs({
             <a
               href={downloadUrl}
               className="text-[#102a43] font-bold hover:underline"
+              style={{ color: '#102a43' }}
             >
               Download PDF ↗
             </a>
