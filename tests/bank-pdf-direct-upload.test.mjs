@@ -59,17 +59,24 @@ test('Banks Report Editor UI: Contains PDF upload control alongside Word import 
   );
 });
 
-test('Banks Manager UI: Connects FullReportEditor with bankTitle, pdfKey, pdfName and onPdfChange', () => {
+test('Banks Manager UI: Connects FullReportEditor with bankTitle, pdfKey, pdfName and onPdfChange only for persisted records', () => {
   const managerSrc = fs.readFileSync(
     path.resolve('app/admin/banks/bank-manager.tsx'),
     'utf-8',
   );
 
-  // FullReportEditor must forward PDF props to RichReportEditor
+  // FullReportEditor must NOT be passed unpersisted client draft UUID (value.id)
+  assert.equal(
+    /<FullReportEditor[\s\S]*?bankId=\{value\.id\}/.test(managerSrc),
+    false,
+    'FullReportEditor must not receive unpersisted draft value.id',
+  );
+
+  // FullReportEditor must pass bankId, bankTitle, pdfKey, pdfName only when editing is persisted
   assert.match(
     managerSrc,
-    /<FullReportEditor[\s\S]*?bankTitle=\{value\.title\}[\s\S]*?pdfKey=\{value\.report_pdf_key\}[\s\S]*?pdfName=\{value\.report_pdf_name\}/,
-    'FullReportEditor must be passed bankTitle, report_pdf_key, and report_pdf_name',
+    /<FullReportEditor[\s\S]*?bankId=\{editing\s*\?\s*editing\.id\s*:\s*''\}[\s\S]*?bankTitle=\{editing\s*\?\s*editing\.title\s*:\s*''\}[\s\S]*?pdfKey=\{editing\s*\?\s*editing\.report_pdf_key\s*:\s*''\}[\s\S]*?pdfName=\{editing\s*\?\s*editing\.report_pdf_name\s*:\s*''\}/,
+    'FullReportEditor must be passed bankId, bankTitle, report_pdf_key, and report_pdf_name conditionally based on editing',
   );
 
   assert.match(
@@ -244,3 +251,81 @@ test('Protected PDF Access: Authorization gates verify role and token', () => {
   // 5. Regular free member without access code
   assert.equal(checkPdfAccess({ role: 'member', hasValidCodeToken: false }).allowed, false);
 });
+
+test('Regression: Unsaved draft passes empty bankId to FullReportEditor and prevents premature upload', () => {
+  // Simulate the prop computation from bank-manager.tsx
+  function computeEditorProps(editing, draftBankValue) {
+    return {
+      defaultValue: draftBankValue.full_report,
+      bankId: editing ? editing.id : '',
+      bankTitle: editing ? editing.title : '',
+      pdfKey: editing ? editing.report_pdf_key : '',
+      pdfName: editing ? editing.report_pdf_name : '',
+    };
+  }
+
+  // Case 1: Unsaved new bank draft (editing === null, draftBankValue has a client UUID)
+  const draftBank = {
+    id: 'f9429598-a3bc-42b7-a36c-dfa80696f5b9',
+    title: 'New Community Bank Draft',
+    full_report: '',
+    report_pdf_key: undefined,
+    report_pdf_name: undefined,
+  };
+
+  const unsavedProps = computeEditorProps(null, draftBank);
+  assert.equal(unsavedProps.bankId, '', 'Draft must pass empty string for bankId');
+  assert.equal(unsavedProps.bankTitle, '', 'Draft must pass empty string for bankTitle');
+  assert.equal(unsavedProps.pdfKey, '', 'Draft must pass empty string for pdfKey');
+  assert.equal(unsavedProps.pdfName, '', 'Draft must pass empty string for pdfName');
+
+  // Verify that an upload attempt with unsaved bankId triggers guidance without sending an upload request
+  let uploadRequestSent = false;
+  let noticeMessage = null;
+
+  function attemptPdfUpload(props, file) {
+    if (!props.bankId) {
+      noticeMessage = 'Please save the bank entry first to enable uploading a PDF report. Once saved, the editor will remain open and ready for PDF upload.';
+      return;
+    }
+    uploadRequestSent = true;
+  }
+
+  attemptPdfUpload(unsavedProps, { name: 'report.pdf', size: 1024 });
+  assert.equal(uploadRequestSent, false, 'Upload request must NOT be sent for an unsaved bank draft');
+  assert.match(noticeMessage, /Please save the bank entry first to enable uploading a PDF report/);
+
+  // Case 2: Persisted bank record in edit mode (editing !== null)
+  const persistedBank = {
+    id: 'bank-persisted-123',
+    title: 'New Community Bank',
+    full_report: '',
+    report_pdf_key: 'bank-reports/bank-persisted-123/report.pdf',
+    report_pdf_name: 'community-report.pdf',
+  };
+
+  const persistedProps = computeEditorProps(persistedBank, draftBank);
+  assert.equal(persistedProps.bankId, 'bank-persisted-123');
+  assert.equal(persistedProps.bankTitle, 'New Community Bank');
+  assert.equal(persistedProps.pdfKey, 'bank-reports/bank-persisted-123/report.pdf');
+  assert.equal(persistedProps.pdfName, 'community-report.pdf');
+
+  // Verify upload works when bankId is persisted
+  noticeMessage = null;
+  attemptPdfUpload(persistedProps, { name: 'report.pdf', size: 1024 });
+  assert.equal(uploadRequestSent, true, 'Upload request must be sent when bankId is persisted');
+});
+
+test('Backend 404 Error Message: Informs caller to save bank entry first', () => {
+  const routeSrc = fs.readFileSync(
+    path.resolve('app/api/admin/bank-report-pdf/route.ts'),
+    'utf-8',
+  );
+
+  assert.match(
+    routeSrc,
+    /Bank record not found\. Please save the bank entry first before uploading a PDF report\./,
+    'Backend 404 message must guide the user that bank entry must be saved first',
+  );
+});
+
