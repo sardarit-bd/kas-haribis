@@ -41,7 +41,10 @@ export async function POST(request: Request) {
     .first()) as { id: string; title: string; report_pdf_key: string } | null;
 
   if (!bank) {
-    return Response.json({ error: 'Bank record not found.' }, { status: 404 });
+    return Response.json(
+      { error: 'Bank record not found. Please save the bank entry first before uploading a PDF report.' },
+      { status: 404 },
+    );
   }
 
   if (!(file instanceof File) || !file.size) {

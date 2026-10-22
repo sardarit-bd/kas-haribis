@@ -580,10 +580,10 @@ export default function BankManager({
 
           <FullReportEditor
             defaultValue={value.full_report}
-            bankId={value.id}
-            bankTitle={value.title}
-            pdfKey={value.report_pdf_key}
-            pdfName={value.report_pdf_name}
+            bankId={editing ? editing.id : ''}
+            bankTitle={editing ? editing.title : ''}
+            pdfKey={editing ? editing.report_pdf_key : ''}
+            pdfName={editing ? editing.report_pdf_name : ''}
             onPdfChange={(key, name) => {
               setEditing((prev) =>
                 prev ? { ...prev, report_pdf_key: key, report_pdf_name: name } : null,
