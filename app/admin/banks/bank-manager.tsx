@@ -210,17 +210,33 @@ export default function BankManager({
       }
 
       const updatedBanks = await reload();
-      const targetBank = updatedBanks?.find((b) => b.id === bankId) || ({
+      const loadedBank = updatedBanks?.find((b) => b.id === bankId);
+      const targetBank: Bank = {
         ...(editing || emptyBank(banks.length + 1)),
         ...data,
         id: bankId,
+        ...(loadedBank || {}),
         ...(pdfUploaded && pdfFile
           ? {
-              report_pdf_key: `bank-reports/${bankId}/report.pdf`,
-              report_pdf_name: pdfFile.name,
+              report_pdf_key: loadedBank?.report_pdf_key || `bank-reports/${bankId}/report.pdf`,
+              report_pdf_name: loadedBank?.report_pdf_name || pdfFile.name,
             }
           : {}),
-      } as Bank);
+      };
+
+      if (pdfUploaded && pdfFile) {
+        setBanks((prev) =>
+          prev.map((b) =>
+            b.id === bankId
+              ? {
+                  ...b,
+                  report_pdf_key: b.report_pdf_key || `bank-reports/${bankId}/report.pdf`,
+                  report_pdf_name: b.report_pdf_name || pdfFile.name,
+                }
+              : b,
+          ),
+        );
+      }
 
       // Reset file inputs so previously selected files aren't re-submitted on next save
       const pdfInput = form.elements.namedItem('report_pdf_file') as HTMLInputElement | null;
