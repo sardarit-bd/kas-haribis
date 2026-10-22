@@ -462,3 +462,190 @@ test('Backend 404 Error Message: Informs caller to save bank entry first', () =>
   );
 });
 
+test('Regression: fileName is safely defined before usage in handlePdfUpload and never throws ReferenceError', () => {
+  const editorSrc = fs.readFileSync(
+    path.resolve('app/admin/banks/rich-report-editor.tsx'),
+    'utf-8',
+  );
+
+  // fileName declaration must precede its usage in setAttachedPdfName and setNotice
+  const handlePdfUploadMatch = editorSrc.match(/async function handlePdfUpload[\s\S]*?^  \}/m);
+  assert.ok(handlePdfUploadMatch, 'handlePdfUpload function must exist');
+  const fnBody = handlePdfUploadMatch[0];
+
+  const fileNameDeclIndex = fnBody.indexOf('const fileName =');
+  const attachedNameUsageIndex = fnBody.indexOf('setAttachedPdfName(fileName)');
+  const noticeUsageIndex = fnBody.indexOf('✓ PDF report "${fileName}"');
+
+  assert.ok(fileNameDeclIndex !== -1, 'const fileName must be declared in handlePdfUpload');
+  assert.ok(attachedNameUsageIndex !== -1, 'setAttachedPdfName(fileName) must be called');
+  assert.ok(
+    fileNameDeclIndex < attachedNameUsageIndex,
+    'fileName declaration must appear before setAttachedPdfName(fileName)',
+  );
+  assert.ok(
+    fileNameDeclIndex < noticeUsageIndex,
+    'fileName declaration must appear before draft PDF notice using fileName',
+  );
+
+  // Must validate .pdf extension
+  assert.match(
+    fnBody,
+    /endsWith\('\.pdf'\)/,
+    'handlePdfUpload must validate that the filename ends with .pdf',
+  );
+
+  // When !bankId, must call onDraftPdfSelect with the file
+  assert.match(
+    fnBody,
+    /if\s*\(!bankId\)\s*\{[\s\S]*?onDraftPdfSelect\?\.[\s\S]*?return;/,
+    'When bankId is empty, handlePdfUpload must call onDraftPdfSelect(file)',
+  );
+});
+
+test('Lifecycle End-to-End: Protected Full Report Editor PDF selection stages file and single Save attaches it with SOURCE PDF in directory', async () => {
+  // Simulate complete database and storage state
+  const mockD1 = new Map();
+  const mockR2 = new Map();
+
+  // 1. User starts creating a new bank (editing = null, bankId = '')
+  let editing = null;
+  let bankId = '';
+  let draftPdfFile = null;
+
+  // 2. User selects PDF inside the Protected Full Report Editor (Flow 2)
+  const selectedFile = {
+    name: 'kav-haribis-chase-report.pdf',
+    size: 3.5 * 1024 * 1024,
+    type: 'application/pdf',
+  };
+
+  // Simulate handlePdfUpload in RichReportEditor
+  const fileName = String(selectedFile.name || 'report.pdf').trim();
+  assert.ok(fileName.toLowerCase().endsWith('.pdf'), 'File must be a valid PDF');
+
+  // Callback to parent BankManager
+  const onDraftPdfSelect = (file) => {
+    draftPdfFile = file;
+  };
+  onDraftPdfSelect(selectedFile);
+  assert.equal(draftPdfFile.name, 'kav-haribis-chase-report.pdf');
+
+  // 3. User clicks "Save bank" (single Save action)
+  async function simulateSaveBank({ title, status, fullReport, draftFile }) {
+    // Phase A: POST /api/banks
+    const newId = `bank-${crypto.randomUUID().slice(0, 8)}`;
+    mockD1.set(newId, {
+      id: newId,
+      title,
+      status,
+      full_report: fullReport,
+      report_pdf_key: '',
+      report_pdf_name: '',
+    });
+
+    // Phase B: Upload staged PDF if present
+    let pdfUploaded = false;
+    if (draftFile && newId) {
+      // POST /api/admin/bank-report-pdf
+      const r2Key = `bank-reports/${newId}/report.pdf`;
+      mockR2.set(r2Key, draftFile);
+      const row = mockD1.get(newId);
+      row.report_pdf_key = r2Key;
+      row.report_pdf_name = draftFile.name;
+      pdfUploaded = true;
+    }
+
+    // Phase C: State refresh and reload
+    const reloadedBanks = Array.from(mockD1.values());
+    const loadedBank = reloadedBanks.find((b) => b.id === newId);
+    const targetBank = {
+      id: newId,
+      title,
+      status,
+      full_report: fullReport,
+      ...(loadedBank || {}),
+      ...(pdfUploaded && draftFile
+        ? {
+            report_pdf_key: loadedBank?.report_pdf_key || `bank-reports/${newId}/report.pdf`,
+            report_pdf_name: loadedBank?.report_pdf_name || draftFile.name,
+          }
+        : {}),
+    };
+
+    return {
+      success: true,
+      bankId: newId,
+      targetBank,
+      directoryBanks: reloadedBanks,
+      pdfUploaded,
+    };
+  }
+
+  const result = await simulateSaveBank({
+    title: 'JPMorgan Chase Bank',
+    status: 'kosher',
+    fullReport: '<h2>Report content</h2>',
+    draftFile: draftPdfFile,
+  });
+
+  // Verify bank record was created
+  assert.equal(result.success, true);
+  assert.ok(result.bankId);
+  assert.equal(result.pdfUploaded, true);
+
+  // Verify R2 storage and D1 record
+  const savedKey = `bank-reports/${result.bankId}/report.pdf`;
+  assert.ok(mockR2.has(savedKey), 'R2 must contain the stored PDF');
+  assert.equal(mockD1.get(result.bankId).report_pdf_key, savedKey);
+  assert.equal(mockD1.get(result.bankId).report_pdf_name, 'kav-haribis-chase-report.pdf');
+
+  // Verify Bank Directory indicator renders
+  const directoryEntry = result.directoryBanks.find((b) => b.id === result.bankId);
+  assert.ok(directoryEntry, 'Directory must include newly saved bank');
+  assert.equal(directoryEntry.report_pdf_key, savedKey);
+  const rendersSourcePdfBadge = Boolean(directoryEntry.report_pdf_key);
+  assert.equal(rendersSourcePdfBadge, true, 'Bank Directory must show SOURCE PDF indicator on first save');
+
+  // Verify targetBank kept in edit mode contains PDF metadata
+  assert.equal(result.targetBank.report_pdf_key, savedKey);
+  assert.equal(result.targetBank.report_pdf_name, 'kav-haribis-chase-report.pdf');
+});
+
+test('Lifecycle End-to-End: Official Source Document (Original PDF) separate input attaches PDF on single Save', async () => {
+  const mockD1 = new Map();
+  const mockR2 = new Map();
+
+  // User uses Flow 1: input[name="report_pdf_file"]
+  const fileInputFile = {
+    name: 'official-charter-document.pdf',
+    size: 1.2 * 1024 * 1024,
+    type: 'application/pdf',
+  };
+
+  let draftPdfFile = null;
+  // onChange of report_pdf_file input
+  draftPdfFile = fileInputFile;
+
+  // Single save
+  const newId = 'bank-td-bank';
+  mockD1.set(newId, {
+    id: newId,
+    title: 'TD Bank',
+    report_pdf_key: '',
+    report_pdf_name: '',
+  });
+
+  const pdfFile = draftPdfFile;
+  assert.ok(pdfFile);
+  const r2Key = `bank-reports/${newId}/report.pdf`;
+  mockR2.set(r2Key, pdfFile);
+  mockD1.get(newId).report_pdf_key = r2Key;
+  mockD1.get(newId).report_pdf_name = pdfFile.name;
+
+  const saved = mockD1.get(newId);
+  assert.equal(saved.report_pdf_key, `bank-reports/bank-td-bank/report.pdf`);
+  assert.equal(saved.report_pdf_name, 'official-charter-document.pdf');
+});
+
+

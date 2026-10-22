@@ -490,6 +490,27 @@ export default function RichReportEditor({
       return;
     }
 
+    const fileName = String(file.name || 'report.pdf').trim();
+    const lowerName = fileName.toLowerCase();
+    if (!lowerName.endsWith('.pdf')) {
+      setNotice({
+        text: 'Invalid file extension. Only .pdf files are accepted.',
+        isError: true,
+      });
+      if (pdfInputRef.current) pdfInputRef.current.value = '';
+      return;
+    }
+
+    const mime = (file.type || '').toLowerCase();
+    if (mime && mime !== 'application/pdf' && mime !== 'application/x-pdf') {
+      setNotice({
+        text: `Invalid file type (${file.type}). Only PDF documents are accepted.`,
+        isError: true,
+      });
+      if (pdfInputRef.current) pdfInputRef.current.value = '';
+      return;
+    }
+
     // 1. If this is an unsaved bank draft (no persisted bankId yet):
     // Stage the PDF file, allow instant preview, and notify parent so Save Bank uploads it in one step
     if (!bankId) {
