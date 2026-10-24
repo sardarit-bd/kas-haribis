@@ -74,7 +74,7 @@ export default async function FullBankReport({
           .all()
       ).results as any[];
 
-      if (titleMatches.length > 0) {
+      if (titleMatches.length === 1) {
         // Verify unambiguous bank association: exactly 1 bank with this title exists
         const countRow = (await env.DB.prepare(
           'SELECT COUNT(*) AS count FROM banks WHERE LOWER(TRIM(title))=LOWER(TRIM(?))',
@@ -155,6 +155,7 @@ export default async function FullBankReport({
 
         <div className="reportBody">
           <ReportTabs
+            key={targetBankId}
             bankId={targetBankId}
             bankTitle={record.title || 'Bank Report'}
             fullReportText={fullReportText}
