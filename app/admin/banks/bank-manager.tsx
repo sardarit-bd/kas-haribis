@@ -357,6 +357,22 @@ export default function BankManager({
     if (editing) loadCodes(editing.id);
   }
   function edit(bank: Bank) {
+    if (editing?.id === bank.id) return;
+    if (draftPdfFile) {
+      const confirmDiscard =
+        typeof window !== 'undefined'
+          ? window.confirm(
+              `You have selected a PDF ("${draftPdfFile.name}") that has not been saved yet. Switching to ${bank.title} will discard this selection. Do you want to proceed?`,
+            )
+          : true;
+      if (!confirmDiscard) return;
+    }
+    setDraftPdfFile(null);
+    const pdfInput = formRef.current?.elements.namedItem('report_pdf_file') as HTMLInputElement | null;
+    if (pdfInput) pdfInput.value = '';
+    const logoInput = formRef.current?.elements.namedItem('logo_file') as HTMLInputElement | null;
+    if (logoInput) logoInput.value = '';
+
     setEditing(bank);
     setMessage('');
     setIsError(false);
@@ -377,8 +393,21 @@ export default function BankManager({
             <button
               type="button"
               onClick={() => {
+                if (draftPdfFile) {
+                  const confirmDiscard =
+                    typeof window !== 'undefined'
+                      ? window.confirm(
+                          `You have selected a PDF ("${draftPdfFile.name}") that has not been saved yet. Leaving edit mode will discard this selection. Do you want to proceed?`,
+                        )
+                      : true;
+                  if (!confirmDiscard) return;
+                }
                 setEditing(null);
                 setDraftPdfFile(null);
+                const pdfInput = formRef.current?.elements.namedItem('report_pdf_file') as HTMLInputElement | null;
+                if (pdfInput) pdfInput.value = '';
+                const logoInput = formRef.current?.elements.namedItem('logo_file') as HTMLInputElement | null;
+                if (logoInput) logoInput.value = '';
                 setDraftId(crypto.randomUUID());
                 setMessage('');
                 setIsError(false);
@@ -605,6 +634,45 @@ export default function BankManager({
                   setDraftPdfFile(f);
                 }}
               />
+              {draftPdfFile && (
+                <div
+                  style={{
+                    marginTop: '6px',
+                    padding: '6px 10px',
+                    background: '#fef3c7',
+                    border: '1px solid #fde68a',
+                    borderRadius: '4px',
+                    fontSize: '11px',
+                    color: '#92400e',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <span>
+                    Selected for upload: <strong>{draftPdfFile.name}</strong> ({(draftPdfFile.size / (1024 * 1024)).toFixed(1)} MB)
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDraftPdfFile(null);
+                      const pdfInput = formRef.current?.elements.namedItem('report_pdf_file') as HTMLInputElement | null;
+                      if (pdfInput) pdfInput.value = '';
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#b91c1c',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      fontSize: '11px',
+                      textDecoration: 'underline',
+                    }}
+                  >
+                    Cancel selection
+                  </button>
+                </div>
+              )}
               <small style={{ display: 'block', color: '#64748b', marginTop: '4px', fontSize: '11px' }}>
                 Official source PDF is available in the public report as a downloadable document and embedded in the Original PDF Viewer tab.
               </small>

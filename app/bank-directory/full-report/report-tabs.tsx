@@ -23,7 +23,8 @@ export default function ReportTabs({
 }: ReportTabsProps) {
   const [activeTab, setActiveTab] = useState<'web' | 'pdf'>('web');
 
-  const pdfUrl = `/api/bank-report-pdf?bankId=${encodeURIComponent(bankId)}${token ? `&token=${encodeURIComponent(token)}` : ''}`;
+  const pdfVersion = encodeURIComponent(pdfName || 'v1');
+  const pdfUrl = `/api/bank-report-pdf?bankId=${encodeURIComponent(bankId)}${token ? `&token=${encodeURIComponent(token)}` : ''}&v=${pdfVersion}`;
   const downloadUrl = `${pdfUrl}&download=1`;
 
   const isRichHtml = isHtmlReport(fullReportText);
@@ -130,6 +131,7 @@ export default function ReportTabs({
             </a>
           </div>
           <iframe
+            key={`pdf-viewer-${bankId}-${pdfName || 'report'}`}
             src={pdfUrl}
             title={`${bankTitle} Original PDF Report`}
             className="w-full h-[850px] rounded-xl border border-slate-300 shadow-sm bg-white"
