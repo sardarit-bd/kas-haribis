@@ -52,23 +52,60 @@ export async function GET(request: Request) {
     if (approvedSubmission?.report_key) {
       pdfKey = approvedSubmission.report_key.trim();
       pdfName = approvedSubmission.report_name?.trim() || '';
-    } else {
-      // Check title match fallback for legacy unlinked submissions
-      const titleMatch = (await env.DB.prepare(
-        "SELECT report_key, report_name FROM bank_research_submissions WHERE (published_bank_id IS NULL OR published_bank_id='') AND LOWER(TRIM(title))=LOWER(TRIM(?)) AND workflow_status='Approved' ORDER BY updated_at DESC LIMIT 1",
-      )
-        .bind(bank.title.trim())
-        .first()) as { report_key?: string; report_name?: string } | null;
+    } else if (bank.title?.trim()) {
+      // Safe fallback for legacy unlinked submissions:
+      // Verify that candidate is uniquely identified and verified as belonging to the requested bank.
+      const cleanTitle = bank.title.trim();
 
-      if (titleMatch?.report_key) {
-        pdfKey = titleMatch.report_key.trim();
-        pdfName = titleMatch.report_name?.trim() || '';
+      // 1. Verify unambiguous bank title: exactly 1 bank with this title exists
+      const bankCountRow = (await env.DB.prepare(
+        'SELECT COUNT(*) AS count FROM banks WHERE LOWER(TRIM(title))=LOWER(TRIM(?))',
+      )
+        .bind(cleanTitle)
+        .first()) as { count?: number } | null;
+
+      if (Number(bankCountRow?.count || 0) === 1) {
+        // 2. Query all unlinked approved submissions matching this exact title
+        const titleMatches = (await env.DB.prepare(
+          "SELECT id, report_key, report_name FROM bank_research_submissions WHERE (published_bank_id IS NULL OR published_bank_id='') AND LOWER(TRIM(title))=LOWER(TRIM(?)) AND workflow_status='Approved'",
+        )
+          .bind(cleanTitle)
+          .all()).results as Array<{ id: string; report_key?: string; report_name?: string }>;
+
+        const validMatches = titleMatches.filter(
+          (m) =>
+            Boolean(m.report_key && m.report_key.trim()) &&
+            String(m.report_name || m.report_key).toLowerCase().endsWith('.pdf'),
+        );
+
+        // Exactly 1 unlinked submission with a valid PDF report must exist
+        if (validMatches.length === 1) {
+          const match = validMatches[0];
+          pdfKey = match.report_key!.trim();
+          pdfName = match.report_name?.trim() || '';
+
+          // Backfill association so future queries and token downloads use published_bank_id directly
+          await env.DB.prepare(
+            'UPDATE bank_research_submissions SET published_bank_id=? WHERE id=?',
+          )
+            .bind(bankId, match.id)
+            .run();
+        }
       }
     }
   }
 
   if (!pdfKey) {
     return new Response('No original PDF document attached for this bank.', { status: 404 });
+  }
+
+  const isPdfExtension =
+    pdfName.toLowerCase().endsWith('.pdf') ||
+    pdfKey.toLowerCase().endsWith('.pdf') ||
+    pdfKey.startsWith('bank-reports/');
+
+  if (!isPdfExtension) {
+    return new Response('The attached document for this bank is not a PDF file.', { status: 415 });
   }
 
   // 3. Authorization check
@@ -120,7 +157,9 @@ export async function GET(request: Request) {
       'Content-Type': 'application/pdf',
       'Content-Disposition': `${dispositionType}; filename="${downloadFilename}"`,
       'X-Content-Type-Options': 'nosniff',
-      'Cache-Control': 'private, no-transform, max-age=3600',
+      'Cache-Control': 'private, no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
     },
   });
 }
