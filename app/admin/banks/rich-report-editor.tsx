@@ -56,7 +56,8 @@ export default function RichReportEditor({
   useEffect(() => {
     setAttachedPdfKey(pdfKey || '');
     setAttachedPdfName(pdfName || '');
-  }, [pdfKey, pdfName]);
+    setPdfTimestamp(Date.now());
+  }, [bankId, pdfKey, pdfName]);
 
   useEffect(() => {
     if (draftPdf !== undefined) {
@@ -78,9 +79,12 @@ export default function RichReportEditor({
           }
           return '';
         });
+        if (!pdfKey && view === 'pdf') {
+          setView('edit');
+        }
       }
     }
-  }, [draftPdf]);
+  }, [draftPdf, pdfKey, view]);
 
   useEffect(() => {
     return () => {
@@ -916,6 +920,27 @@ export default function RichReportEditor({
                 }}
               >
                 ✏ Back to Web Editor
+              </button>
+            )}
+            {draftPdfFile && (
+              <button
+                type="button"
+                onClick={() => {
+                  onDraftPdfSelect?.(null);
+                  if (pdfInputRef.current) pdfInputRef.current.value = '';
+                }}
+                style={{
+                  padding: '3px 8px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  background: '#fee2e2',
+                  color: '#b91c1c',
+                  border: '1px solid #fecaca',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                }}
+              >
+                ✕ Discard Selected
               </button>
             )}
             {!draftPdfFile && bankId && (
