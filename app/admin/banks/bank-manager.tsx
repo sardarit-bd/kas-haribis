@@ -461,15 +461,6 @@ export default function BankManager({
             </label>
           </div>
           <label>
-            Research summary
-            <textarea
-              name="summary"
-              rows={5}
-              defaultValue={value.summary}
-              placeholder="Enter the research findings or Heter Iska information."
-            />
-          </label>
-          <label>
             Comment shown with this bank
             <textarea
               name="comment"
@@ -480,6 +471,46 @@ export default function BankManager({
             <small>
               This comment will appear publicly when visitors open this bank.
             </small>
+          </label>
+
+          <FullReportEditor
+            defaultValue={value.full_report}
+            bankId={editing ? editing.id : ''}
+            bankTitle={editing ? editing.title : ''}
+            pdfKey={editing ? editing.report_pdf_key : ''}
+            pdfName={editing ? editing.report_pdf_name : ''}
+            draftPdfFile={draftPdfFile}
+            onDraftPdfChange={(file) => {
+              setDraftPdfFile(file);
+              const pdfInput = formRef.current?.elements.namedItem('report_pdf_file') as HTMLInputElement | null;
+              if (pdfInput) {
+                if (!file) {
+                  pdfInput.value = '';
+                } else if (typeof DataTransfer !== 'undefined') {
+                  try {
+                    const dt = new DataTransfer();
+                    dt.items.add(file);
+                    pdfInput.files = dt.files;
+                  } catch {}
+                }
+              }
+            }}
+            onPdfChange={(key, name) => {
+              setEditing((prev) =>
+                prev ? { ...prev, report_pdf_key: key, report_pdf_name: name } : null,
+              );
+              reload();
+            }}
+          />
+
+          <label>
+            Research summary
+            <textarea
+              name="summary"
+              rows={5}
+              defaultValue={value.summary}
+              placeholder="Enter the research findings or Heter Iska information."
+            />
           </label>
           <label>
             Ownership and control research
@@ -678,36 +709,6 @@ export default function BankManager({
               </small>
             </label>
           </div>
-
-          <FullReportEditor
-            defaultValue={value.full_report}
-            bankId={editing ? editing.id : ''}
-            bankTitle={editing ? editing.title : ''}
-            pdfKey={editing ? editing.report_pdf_key : ''}
-            pdfName={editing ? editing.report_pdf_name : ''}
-            draftPdfFile={draftPdfFile}
-            onDraftPdfChange={(file) => {
-              setDraftPdfFile(file);
-              const pdfInput = formRef.current?.elements.namedItem('report_pdf_file') as HTMLInputElement | null;
-              if (pdfInput) {
-                if (!file) {
-                  pdfInput.value = '';
-                } else if (typeof DataTransfer !== 'undefined') {
-                  try {
-                    const dt = new DataTransfer();
-                    dt.items.add(file);
-                    pdfInput.files = dt.files;
-                  } catch {}
-                }
-              }
-            }}
-            onPdfChange={(key, name) => {
-              setEditing((prev) =>
-                prev ? { ...prev, report_pdf_key: key, report_pdf_name: name } : null,
-              );
-              reload();
-            }}
-          />
           <div className="bankFormGrid compactFields">
             <label>
               Researcher

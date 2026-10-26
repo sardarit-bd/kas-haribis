@@ -233,3 +233,35 @@ test('Bank Save Workflow Simulation: PDF failure preserves bank record in edit m
   const record = mockDb.get(res1.bankId);
   assert.equal(record.report_pdf_name, 'valid-fixed.pdf');
 });
+
+test('Banks Editor UI: Form sections strictly match client-required 8-part sequence', () => {
+  const bankManagerSrc = fs.readFileSync(
+    path.resolve('app/admin/banks/bank-manager.tsx'),
+    'utf-8',
+  );
+
+  const sections = [
+    { name: '1. Comment shown with this bank', marker: 'name="comment"' },
+    { name: '2. Protected Full Report', marker: '<FullReportEditor' },
+    { name: '3. Research summary', marker: 'name="summary"' },
+    { name: '4. Ownership and control research', marker: 'name="ownership_details"' },
+    { name: '5. Heter Iska details', marker: 'name="iska_details"' },
+    { name: '6. Source links', marker: 'name="source_urls"' },
+    { name: '7. Private administrator notes', marker: 'name="internal_notes"' },
+    { name: '8. Official Source Document (Original PDF)', marker: 'Official Source Document (Original PDF)' },
+  ];
+
+  let lastIndex = -1;
+  for (const section of sections) {
+    const idx = bankManagerSrc.indexOf(section.marker);
+    assert.ok(
+      idx !== -1,
+      `Section "${section.name}" (marker: ${section.marker}) must exist in bank-manager.tsx`,
+    );
+    assert.ok(
+      idx > lastIndex,
+      `Section "${section.name}" must appear after the previous section in bank-manager.tsx (previous index: ${lastIndex}, current: ${idx})`,
+    );
+    lastIndex = idx;
+  }
+});
