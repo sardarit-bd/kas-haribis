@@ -83,8 +83,10 @@ export default function SponsorBanner() {
     return (
       <button
         key={key}
-        className={`topSponsorCard conveyorSponsor shrink-0 flex items-center text-left gap-2.5 py-1 transition-all duration-300 group ${
-          clickable ? 'cursor-pointer' : 'cursor-default'
+        className={`topSponsorCard conveyorSponsor shrink-0 flex items-center text-left gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 bg-white border border-[#E5E2DC] rounded-[11px] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-300 group ${
+          clickable
+            ? 'cursor-pointer hover:border-[#c8a45a]/60 hover:shadow-[0_2px_6px_rgba(0,0,0,0.07)]'
+            : 'cursor-default'
         }`}
         disabled={!clickable}
         onClick={() => {
@@ -102,16 +104,16 @@ export default function SponsorBanner() {
             : `${sponsor.company_name}, proud supporter`
         }
       >
-        {/* Circle/Square Logo Container */}
-        <div className="w-[40px] h-[40px] sm:w-[44px] sm:h-[44px] bg-white flex items-center justify-center transition-all duration-300 overflow-hidden rounded-sm shrink-0 border border-gray-200/60 shadow-2xs">
+        {/* Beige Logo / Initials Container */}
+        <div className="w-[36px] h-[36px] sm:w-[38px] sm:h-[38px] bg-[#f2eadb] border border-[#d8c49c] flex items-center justify-center transition-all duration-300 overflow-hidden rounded-[6px] shrink-0">
           {sponsor.image_key ? (
             <img
               src={sponsor.image_key}
               alt={sponsor.company_name}
-              className="w-full h-full object-cover rounded-sm"
+              className="w-full h-full object-contain p-0.5 rounded-[5px]"
             />
           ) : (
-            <span className="text-[#102a43] font-serif font-bold text-sm sm:text-base">
+            <span className="text-[#17364f] font-serif font-bold text-xs sm:text-[13px]">
               {initials(sponsor.company_name)}
             </span>
           )}
@@ -122,10 +124,20 @@ export default function SponsorBanner() {
           <b className="text-xs sm:text-[13px] font-semibold text-gray-800 truncate leading-tight mb-0.5 w-full">
             {sponsor.company_name}
           </b>
-          <small className="text-[11px] sm:text-xs font-normal text-gray-500/80 truncate w-full">
-            {sponsor?.description}
+          <small className="text-[10px] sm:text-[11px] font-medium text-[#a47726] truncate w-full leading-tight">
+            {clickable ? 'Click for details' : 'Proud supporter'}
           </small>
         </div>
+
+        {/* Click Indicator Arrow */}
+        {clickable && (
+          <span
+            className="text-[#667683] group-hover:text-[#102a43] group-hover:translate-x-0.5 group-focus-visible:text-[#102a43] transition-all duration-200 text-lg sm:text-xl font-bold leading-none shrink-0 ml-auto pl-1 pr-0.5 select-none"
+            aria-hidden="true"
+          >
+            ›
+          </span>
+        )}
       </button>
     );
   };
@@ -148,21 +160,21 @@ export default function SponsorBanner() {
         </div>
 
         {/* Continuous Right-to-Left Sliding Conveyor / Skeleton */}
-        <div className="topSponsorConveyor py-1 sm:py-1">
+        <div className="topSponsorConveyor py-1.5 sm:py-2">
           {loading ? (
             <div className="flex items-center gap-4 sm:gap-7 overflow-hidden w-full">
               {Array.from({ length: 6 }).map((_, idx) => (
                 <div
                   key={`skeleton-${idx}`}
-                  className="topSponsorCard conveyorSponsor shrink-0 flex items-center gap-2.5 py-1 select-none"
+                  className="topSponsorCard conveyorSponsor shrink-0 flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 bg-white border border-[#E5E2DC] rounded-[11px] shadow-[0_1px_3px_rgba(0,0,0,0.04)] select-none"
                 >
                   {/* Skeleton Logo Box */}
-                  <div className="w-[40px] h-[40px] sm:w-[44px] sm:h-[44px] bg-slate-200/90 animate-pulse rounded-sm shrink-0" />
+                  <div className="w-[36px] h-[36px] sm:w-[38px] sm:h-[38px] bg-[#f2eadb]/80 border border-[#d8c49c]/50 animate-pulse rounded-[6px] shrink-0" />
 
                   {/* Skeleton Title & Subtitle */}
                   <div className="flex flex-col items-start gap-1.5 min-w-0 flex-1">
-                    <div className="h-3.5 w-24 sm:w-28 bg-slate-200/90 animate-pulse rounded-xs" />
-                    <div className="h-3 w-16 sm:w-20 bg-slate-200/60 animate-pulse rounded-xs" />
+                    <div className="h-3 w-20 sm:w-24 bg-slate-200/90 animate-pulse rounded-xs" />
+                    <div className="h-2.5 w-14 sm:w-16 bg-[#d8c49c]/40 animate-pulse rounded-xs" />
                   </div>
                 </div>
               ))}
