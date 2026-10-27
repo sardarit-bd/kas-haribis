@@ -2,6 +2,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import { useCart } from '../shared/cart-context';
+import AvailabilityRequestModal from './availability-request-modal';
 
 export type Sefer = {
   id: string;
@@ -14,6 +15,7 @@ export type Sefer = {
   pdf_available: boolean;
   pdf_price: number;
   pdf_filename: string;
+  request_availability?: boolean;
 };
 
 export default function SeforimCatalog({ books }: { books: Sefer[] }) {
@@ -21,6 +23,7 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
   const [query, setQuery] = useState(''),
     [format, setFormat] = useState('all'),
     [selected, setSelected] = useState<Sefer | null>(null),
+    [inquiryBook, setInquiryBook] = useState<Sefer | null>(null),
     [notice, setNotice] = useState('');
 
   const filtered = useMemo(
@@ -126,7 +129,12 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
                   <div className="flex gap-4 text-base font-semibold text-[#a37828] mb-3">
                     {book.available && (
                       <span className="flex items-center gap-1">
-                        <small className="text-slate-500 text-base font-normal">Book</small>${book.price.toFixed(2)}
+                        <small className="text-slate-500 text-base font-normal">Book</small>
+                        {book.request_availability ? (
+                          <span className="text-sm font-semibold text-[#a37828]">Price on request</span>
+                        ) : (
+                          `$${book.price.toFixed(2)}`
+                        )}
                       </span>
                     )}
                     {book.pdf_available && (
@@ -140,9 +148,23 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
                 <div className="flex justify-between gap-2 pt-3">
                   <div className="flex flex-col sm:flex-row gap-2">
                     {book.available && (
-                      <button className="flex-1 py-2.5 px-3 bg-black hover:bg-[#8c651f] text-white font-bold text-xs transition cursor-pointer shadow-sm rounded-md hover:scale-[1.02]" style={{ color: 'white' }} onClick={() => add(book, 'book')}>
-                        Add Book to Cart
-                      </button>
+                      book.request_availability ? (
+                        <button
+                          className="flex-1 py-2.5 px-3 bg-black hover:bg-[#8c651f] text-white font-bold text-xs transition cursor-pointer shadow-sm rounded-md hover:scale-[1.02]"
+                          style={{ color: 'white' }}
+                          onClick={() => setInquiryBook(book)}
+                        >
+                          Submit Request to See Availability
+                        </button>
+                      ) : (
+                        <button
+                          className="flex-1 py-2.5 px-3 bg-black hover:bg-[#8c651f] text-white font-bold text-xs transition cursor-pointer shadow-sm rounded-md hover:scale-[1.02]"
+                          style={{ color: 'white' }}
+                          onClick={() => add(book, 'book')}
+                        >
+                          Add Book to Cart
+                        </button>
+                      )
                     )}
                     {book.pdf_available && (
                       <button className="flex-1 py-2.5 px-3 bg-[#102a43] hover:bg-[#0d2238] text-white font-bold text-xs transition cursor-pointer shadow-sm rounded-md hover:scale-[1.02]" style={{ color: 'white' }} onClick={() => add(book, 'pdf')}>
@@ -206,15 +228,33 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
                     <div className="flex items-center justify-between gap-4">
                       <span className="flex flex-col">
                         <b className="text-slate-800 text-sm font-semibold">Printed Book</b>
-                        <strong className="text-[#a37828] font-mono">${selected.price.toFixed(2)}</strong>
+                        {selected.request_availability ? (
+                          <strong className="text-[#a37828] text-sm font-semibold">Price on request</strong>
+                        ) : (
+                          <strong className="text-[#a37828] font-mono">${selected.price.toFixed(2)}</strong>
+                        )}
                       </span>
-                      <button
-                        className="px-4 py-2 rounded-xl bg-[#a37828] hover:bg-[#8c651f] text-white font-bold text-xs transition cursor-pointer shadow-sm"
-                        style={{ color: 'white' }}
-                        onClick={() => add(selected, 'book')}
-                      >
-                        Add Book to Cart
-                      </button>
+                      {selected.request_availability ? (
+                        <button
+                          className="px-4 py-2 rounded-xl bg-[#a37828] hover:bg-[#8c651f] text-white font-bold text-xs transition cursor-pointer shadow-sm hover:scale-[1.02]"
+                          style={{ color: 'white' }}
+                          onClick={() => {
+                            const b = selected;
+                            setSelected(null);
+                            setInquiryBook(b);
+                          }}
+                        >
+                          Submit Request to See Availability
+                        </button>
+                      ) : (
+                        <button
+                          className="px-4 py-2 rounded-xl bg-[#a37828] hover:bg-[#8c651f] text-white font-bold text-xs transition cursor-pointer shadow-sm"
+                          style={{ color: 'white' }}
+                          onClick={() => add(selected, 'book')}
+                        >
+                          Add Book to Cart
+                        </button>
+                      )}
                     </div>
                   )}
                   {selected.pdf_available && (
@@ -238,6 +278,10 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
           </motion.div>
         )}
       </AnimatePresence>
+      <AvailabilityRequestModal
+        book={inquiryBook}
+        onClose={() => setInquiryBook(null)}
+      />
     </section>
   );
 }

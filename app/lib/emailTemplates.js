@@ -49,7 +49,7 @@ return `
                     </tr>` : ''}
                     ${data.related_name ? `
                     <tr>
-                        <td style="padding: 8px 0;"><strong>Related Business/Bank:</strong></td>
+                        <td style="padding: 8px 0;"><strong>${data.topic === 'Book Availability Request' ? 'Requested Book' : 'Related Business/Bank'}:</strong></td>
                         <td style="padding: 8px 0;">${sanitize(data.related_name)}</td>
                     </tr>` : ''}
                     ${data.related_url ? `

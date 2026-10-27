@@ -9,6 +9,7 @@ export type SeferRecord = {
   pdf_available: boolean;
   pdf_price: number;
   pdf_filename: string;
+  request_availability?: boolean;
 };
 
 export const SEFORIM_TABLE =
@@ -168,6 +169,7 @@ export async function ensureSeforim(db: any) {
     'ALTER TABLE seforim ADD COLUMN pdf_price REAL NOT NULL DEFAULT 0',
     'ALTER TABLE seforim ADD COLUMN pdf_storage_key TEXT',
     'ALTER TABLE seforim ADD COLUMN pdf_filename TEXT',
+    'ALTER TABLE seforim ADD COLUMN request_availability INTEGER NOT NULL DEFAULT 0',
   ]) {
     try {
       await db.prepare(sql).run();
@@ -204,7 +206,7 @@ export async function listSeforim(db: any): Promise<SeferRecord[]> {
   await ensureSeforim(db);
   const result = await db
     .prepare(
-      "SELECT id,title,price,available,image,description,sort_order,pdf_available,pdf_price,COALESCE(pdf_filename,'') pdf_filename FROM seforim ORDER BY sort_order,title",
+      "SELECT id,title,price,available,image,description,sort_order,pdf_available,pdf_price,COALESCE(pdf_filename,'') pdf_filename,COALESCE(request_availability,0) request_availability FROM seforim ORDER BY sort_order,title",
     )
     .all();
   return (result.results as any[]).map((row) => ({
@@ -215,6 +217,7 @@ export async function listSeforim(db: any): Promise<SeferRecord[]> {
     pdf_available: Boolean(row.pdf_available),
     pdf_price: Number(row.pdf_price || 0),
     pdf_filename: String(row.pdf_filename || ''),
+    request_availability: Boolean(row.request_availability),
   }));
 }
 

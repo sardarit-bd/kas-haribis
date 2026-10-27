@@ -86,6 +86,10 @@ export default function SeforimManager({
     delete data.sale_format;
     data.available = format === 'book' || format === 'both';
     data.pdf_display = format === 'pdf' || format === 'both';
+    data.request_availability =
+      fd.get('request_availability') === 'on' ||
+      fd.get('request_availability') === '1' ||
+      fd.get('request_availability') === 'true';
     data.sort_order = Number(data.sort_order || 0);
     data.pdf_price = Number(data.pdf_price || 0);
     if (data.pdf_display && !pdf?.size && !editing?.pdf_filename) {
@@ -188,6 +192,7 @@ export default function SeforimManager({
     pdf_available: false,
     pdf_price: 0,
     pdf_filename: '',
+    request_availability: false,
   };
   return (
     <div className="seforimManagerLayout">
@@ -256,6 +261,31 @@ export default function SeforimManager({
                 This controls the exact format labels and purchase buttons shown
                 in the public store.
               </small>
+            </label>
+            <label
+              className="checkboxLabel"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                cursor: 'pointer',
+                margin: '0.75rem 0',
+              }}
+            >
+              <input
+                name="request_availability"
+                type="checkbox"
+                defaultChecked={Boolean(v.request_availability)}
+              />
+              <span
+                style={{
+                  fontWeight: 600,
+                  fontSize: '0.9rem',
+                  color: '#102a43',
+                }}
+              >
+                Request availability instead of showing price
+              </span>
             </label>
             <div className="twoFields">
               <label>
@@ -367,7 +397,11 @@ export default function SeforimManager({
                       : 'Hidden'}
               </span>
               <span>
-                {x.available ? `Book $${x.price.toFixed(2)}` : ''}
+                {x.available
+                  ? x.request_availability
+                    ? 'Book (Price on request)'
+                    : `Book $${x.price.toFixed(2)}`
+                  : ''}
                 {x.available && x.pdf_available ? ' · ' : ''}
                 {x.pdf_available ? `PDF $${x.pdf_price.toFixed(2)}` : ''}
               </span>

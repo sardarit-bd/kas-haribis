@@ -169,17 +169,17 @@ export async function POST(request: Request) {
                   Math.min(20, Math.floor(Number(item.quantity) || 1)),
                 ),
           book = (await settings.env.DB.prepare(
-            'SELECT id,title,price,available,pdf_price,pdf_available,pdf_storage_key FROM seforim WHERE id=?',
+            'SELECT id,title,price,available,pdf_price,pdf_available,pdf_storage_key,COALESCE(request_availability,0) request_availability FROM seforim WHERE id=?',
           )
             .bind(id)
             .first()) as any;
         if (
           !book ||
-          (format === 'book' && !book.available) ||
+          (format === 'book' && (!book.available || Boolean(book.request_availability))) ||
           (format === 'pdf' && (!book.pdf_available || !book.pdf_storage_key))
         )
           return Response.json(
-            { error: 'One of the items in your cart is no longer available.' },
+            { error: 'One of the items in your cart is no longer available for direct purchase.' },
             { status: 400 },
           );
         const unitPrice = Number(

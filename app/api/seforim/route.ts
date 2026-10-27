@@ -39,8 +39,9 @@ export async function POST(request: Request) {
   const max = (await env.DB.prepare(
     'SELECT MAX(sort_order) AS value FROM seforim',
   ).first()) as { value?: number } | null;
+  const requestAvailability = body.request_availability ? 1 : 0;
   await env.DB.prepare(
-    'INSERT INTO seforim(id,title,price,available,image,description,sort_order,created_at,pdf_available,pdf_price) VALUES(?,?,?,?,?,?,?,?,?,?)',
+    'INSERT INTO seforim(id,title,price,available,image,description,sort_order,created_at,pdf_available,pdf_price,request_availability) VALUES(?,?,?,?,?,?,?,?,?,?,?)',
   )
     .bind(
       id,
@@ -53,6 +54,7 @@ export async function POST(request: Request) {
       new Date().toISOString(),
       0,
       pdfPrice,
+      requestAvailability,
     )
     .run();
   return Response.json({ saved: true, id });
@@ -82,8 +84,9 @@ export async function PUT(request: Request) {
       { error: 'Enter valid book and PDF prices.' },
       { status: 400 },
     );
+  const requestAvailability = body.request_availability ? 1 : 0;
   await env.DB.prepare(
-    "UPDATE seforim SET title=?,price=?,available=?,description=?,sort_order=?,pdf_price=?,pdf_available=CASE WHEN ?=1 AND length(COALESCE(pdf_storage_key,''))>0 THEN 1 ELSE 0 END WHERE id=?",
+    "UPDATE seforim SET title=?,price=?,available=?,description=?,sort_order=?,pdf_price=?,pdf_available=CASE WHEN ?=1 AND length(COALESCE(pdf_storage_key,''))>0 THEN 1 ELSE 0 END,request_availability=? WHERE id=?",
   )
     .bind(
       title,
@@ -93,6 +96,7 @@ export async function PUT(request: Request) {
       Number(body.sort_order) || 0,
       pdfPrice,
       body.pdf_display ? 1 : 0,
+      requestAvailability,
       id,
     )
     .run();
