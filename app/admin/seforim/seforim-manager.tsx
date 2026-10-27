@@ -262,31 +262,20 @@ export default function SeforimManager({
                 in the public store.
               </small>
             </label>
-            <label
-              className="checkboxLabel"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.6rem',
-                cursor: 'pointer',
-                margin: '0.75rem 0',
-              }}
-            >
-              <input
-                name="request_availability"
-                type="checkbox"
-                defaultChecked={Boolean(v.request_availability)}
-              />
-              <span
-                style={{
-                  fontWeight: 600,
-                  fontSize: '0.9rem',
-                  color: '#102a43',
-                }}
-              >
-                Request availability instead of showing price
-              </span>
-            </label>
+            <div className="availabilityRequestsSection">
+              <b className="sectionTitle">Availability requests</b>
+              <label className="checkboxRow">
+                <input
+                  name="request_availability"
+                  type="checkbox"
+                  defaultChecked={Boolean(v.request_availability)}
+                />
+                <span>Show “Request availability” form</span>
+              </label>
+              <small className="explanationText">
+                Visitors can send their contact details and the quantity needed. Requests appear in the backend.
+              </small>
+            </div>
             <div className="twoFields">
               <label>
                 Printed book price ($)

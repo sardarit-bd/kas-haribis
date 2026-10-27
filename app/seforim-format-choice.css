@@ -20,3 +20,67 @@
   font-weight: 400;
   line-height: 1.5;
 }
+
+.availabilityRequestsSection {
+  padding: 18px 20px !important;
+  border: 1px solid #ced8de;
+  border-radius: 8px;
+  background: #fbfcfd;
+  margin: 18px 0 !important;
+}
+
+.availabilityRequestsSection > b,
+.availabilityRequestsSection > .sectionTitle {
+  display: block;
+  color: #102a43;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+.availabilityRequestsSection .checkboxRow {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  margin: 0 !important;
+  cursor: pointer;
+  user-select: none;
+}
+
+.availabilityRequestsSection .checkboxRow input[type="checkbox"] {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px;
+  margin: 0 !important;
+  padding: 0 !important;
+  cursor: pointer;
+  accent-color: #102a43;
+  display: inline-block !important;
+}
+
+.availabilityRequestsSection .checkboxRow span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #102a43;
+  line-height: 1.4;
+}
+
+.availabilityRequestsSection small,
+.availabilityRequestsSection .explanationText {
+  display: block;
+  margin-top: 8px;
+  margin-left: 28px;
+  color: #5f707b;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+  .availabilityRequestsSection small,
+  .availabilityRequestsSection .explanationText {
+    margin-left: 0;
+  }
+}
+
