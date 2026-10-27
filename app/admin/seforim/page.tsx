@@ -1,6 +1,6 @@
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
-import { listSeforim } from '../../lib/seforim';
+import { getSeforimDeliveryPrice, listSeforim } from '../../lib/seforim';
 import { canAccessSection } from "../../lib/admin-access";
 import SeforimManager from './seforim-manager';
 export const dynamic = 'force-dynamic';
@@ -23,6 +23,7 @@ export default async function SeforimAdmin() {
       </main>
     );
   const books = await listSeforim(env.DB);
+  const deliveryPrice = await getSeforimDeliveryPrice(env.DB);
   return (
     <main className="adminPage">
       <div className="adminShell">
@@ -37,7 +38,10 @@ export default async function SeforimAdmin() {
           </div>
           <a href="/seforim">View public catalog →</a>
         </div>
-        <SeforimManager initialBooks={books} />
+        <SeforimManager
+          initialBooks={books}
+          initialDeliveryPrice={deliveryPrice}
+        />
       </div>
     </main>
   );

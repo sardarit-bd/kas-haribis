@@ -126,7 +126,11 @@ export default function FeaturedSeforim() {
               <div className="pt-3 flex items-center justify-between gap-2">
                 <div>
                   <span className="text-xs text-slate-400 block font-normal hidden">Price</span>
-                  <span className="font-semibold text-xl text-[#102a43]">${book.price}</span>
+                  {book.request_availability ? (
+                    <span className="font-semibold text-lg text-[#a37828]">Price on request</span>
+                  ) : (
+                    <span className="font-semibold text-xl text-[#102a43]">${book.price}</span>
+                  )}
                 </div>
                 <button
                   onClick={() => addToCart(book, 'book')}

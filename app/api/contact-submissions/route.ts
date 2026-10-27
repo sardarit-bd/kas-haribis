@@ -17,12 +17,22 @@ async function runtime() {
 
 export async function POST(request: Request) {
   const form = await request.formData(),
-    name = clean(form.get('name'), 200),
+    honeypot = clean(form.get('website_hp') || form.get('hp'), 100);
+
+  if (honeypot) {
+    return Response.json({ error: 'Invalid submission' }, { status: 400 });
+  }
+
+  const name = clean(form.get('name'), 200),
     email = clean(form.get('email'), 300).toLowerCase(),
-    message = clean(form.get('message'), 10000);
-  if (!name || !email || !message)
+    message = clean(form.get('message'), 10000),
+    topic = clean(form.get('topic'), 200) || 'General message',
+    relatedName = clean(form.get('related_name'), 300),
+    isAvailabilityRequest = topic === 'Book Availability Request';
+
+  if (!name || !email)
     return Response.json(
-      { error: 'Name, email, and message are required.' },
+      { error: 'Name and email are required.' },
       { status: 400 },
     );
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
@@ -30,11 +40,31 @@ export async function POST(request: Request) {
       { error: 'Enter a valid email address.' },
       { status: 400 },
     );
-  if (message.length < 10)
-    return Response.json(
-      { error: 'Please provide a little more detail.' },
-      { status: 400 },
-    );
+
+  let finalMessage = message;
+  if (isAvailabilityRequest) {
+    if (!relatedName) {
+      return Response.json(
+        { error: 'Book context is required.' },
+        { status: 400 },
+      );
+    }
+    if (!finalMessage) {
+      finalMessage = `Availability request submitted for "${relatedName}".`;
+    }
+  } else {
+    if (!finalMessage)
+      return Response.json(
+        { error: 'Name, email, and message are required.' },
+        { status: 400 },
+      );
+    if (finalMessage.length < 10)
+      return Response.json(
+        { error: 'Please provide a little more detail.' },
+        { status: 400 },
+      );
+  }
+
   const env = await runtime(),
     id = crypto.randomUUID(),
     reference = `KH-C-${id.slice(0, 8).toUpperCase()}`,
@@ -73,12 +103,12 @@ export async function POST(request: Request) {
       email,
       clean(form.get('phone'), 100),
       clean(form.get('organization'), 300),
-      clean(form.get('topic'), 200) || 'General message',
-      message,
+      topic,
+      finalMessage,
       clean(form.get('response_method'), 100) || 'Email',
       now,
       now,
-      clean(form.get('related_name'), 300),
+      relatedName,
       clean(form.get('related_url'), 1000),
       clean(form.get('request_subtype'), 300),
       clean(form.get('preferred_date'), 30),
@@ -89,33 +119,34 @@ export async function POST(request: Request) {
     )
     .run();
 
-    
-    const emailData={
-      id:id,
-      reference:reference,
-      name:name,
-      email:email,
-      phone:clean(form.get('phone'), 100),
-      organization:clean(form.get('organization'), 300),
-      topic:clean(form.get('topic'), 200) || 'General message',
-      message:message,
-      response_method:clean(form.get('response_method'), 100) || 'Email',
-      status:"New",
-      notes:"",
-      created_at:now,
-      updated_at:now,
-      related_name:clean(form.get('related_name'), 300),
-      related_url:clean(form.get('related_url'), 1000),
-      request_subtype:clean(form.get('request_subtype'), 300),
-      preferred_date:clean(form.get('preferred_date'), 30),
-      location:clean(form.get('location'), 300),
-      audience:clean(form.get('audience'), 300),
-      attachment_key:attachmentKey,
-      attachment_name:attachmentName,
-    }
+  const emailData = {
+    id: id,
+    reference: reference,
+    name: name,
+    email: email,
+    phone: clean(form.get('phone'), 100),
+    organization: clean(form.get('organization'), 300),
+    topic: topic,
+    message: finalMessage,
+    response_method: clean(form.get('response_method'), 100) || 'Email',
+    status: 'New',
+    notes: '',
+    created_at: now,
+    updated_at: now,
+    related_name: relatedName,
+    related_url: clean(form.get('related_url'), 1000),
+    request_subtype: clean(form.get('request_subtype'), 300),
+    preferred_date: clean(form.get('preferred_date'), 30),
+    location: clean(form.get('location'), 300),
+    audience: clean(form.get('audience'), 300),
+    attachment_key: attachmentKey,
+    attachment_name: attachmentName,
+  };
 
-
-  await sendEmail( ADMIN_OWNER,"New Contact Submission From Kav Haribis Website",emailData, "contact-submission");  
+  const emailSubject = isAvailabilityRequest
+    ? `Book Availability Request: ${relatedName}`
+    : 'New Contact Submission From Kav Haribis Website';
+  await sendEmail(ADMIN_OWNER, emailSubject, emailData, 'contact-submission');
 
   return Response.json({ reference });
 }

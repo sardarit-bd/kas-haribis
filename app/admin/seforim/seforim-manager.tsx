@@ -11,13 +11,48 @@ const formatOf = (x: SeferRecord) =>
         : 'hidden';
 export default function SeforimManager({
   initialBooks,
+  initialDeliveryPrice = 0,
 }: {
   initialBooks: SeferRecord[];
+  initialDeliveryPrice?: number;
 }) {
   const [books, setBooks] = useState(initialBooks),
     [editing, setEditing] = useState<SeferRecord | null>(null),
     [message, setMessage] = useState(''),
     [busy, setBusy] = useState(false);
+  const [deliveryPrice, setDeliveryPrice] = useState(initialDeliveryPrice);
+  const [deliveryInput, setDeliveryInput] = useState(
+    initialDeliveryPrice.toFixed(2),
+  );
+  const [deliveryMessage, setDeliveryMessage] = useState('');
+  const [deliveryBusy, setDeliveryBusy] = useState(false);
+
+  async function saveDeliveryPrice(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setDeliveryBusy(true);
+    setDeliveryMessage('Saving delivery price…');
+    try {
+      const res = await fetch('/api/seforim/delivery-pricing', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ deliveryPrice: Number(deliveryInput) }),
+      });
+      const data = (await res.json()) as any;
+      if (!res.ok) {
+        setDeliveryMessage(data.error || 'Could not save delivery price.');
+        setDeliveryBusy(false);
+        return;
+      }
+      setDeliveryPrice(data.deliveryPrice);
+      setDeliveryInput(Number(data.deliveryPrice).toFixed(2));
+      setDeliveryMessage('Delivery price saved successfully.');
+    } catch {
+      setDeliveryMessage('Failed to save delivery price.');
+    } finally {
+      setDeliveryBusy(false);
+    }
+  }
+
   async function reload() {
     const j = (await fetch('/api/seforim').then((r) => r.json())) as any;
     setBooks(j.books);
@@ -51,6 +86,10 @@ export default function SeforimManager({
     delete data.sale_format;
     data.available = format === 'book' || format === 'both';
     data.pdf_display = format === 'pdf' || format === 'both';
+    data.request_availability =
+      fd.get('request_availability') === 'on' ||
+      fd.get('request_availability') === '1' ||
+      fd.get('request_availability') === 'true';
     data.sort_order = Number(data.sort_order || 0);
     data.pdf_price = Number(data.pdf_price || 0);
     if (data.pdf_display && !pdf?.size && !editing?.pdf_filename) {
@@ -153,125 +192,191 @@ export default function SeforimManager({
     pdf_available: false,
     pdf_price: 0,
     pdf_filename: '',
+    request_availability: false,
   };
   return (
     <div className="seforimManagerLayout">
-      <section className="settingsCard stickyEditor">
-        <div className="pdfAdminHeading">
-          <div>
-            <p className="eyebrow gold">PRINT & DIGITAL</p>
-            <h2>{editing ? 'Edit title' : 'Add a new title'}</h2>
+      <div
+        className="editorColumn"
+        style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
+      >
+        <section className="settingsCard">
+          <div className="connectionStatus">
+            <b>Global Delivery Pricing</b>
+            <span className="ready">
+              {deliveryPrice > 0
+                ? `$${deliveryPrice.toFixed(2)} Flat Rate`
+                : 'FREE Delivery'}
+            </span>
           </div>
-          <span>PDF uploads are protected</span>
-        </div>
-        <form key={v.id || 'new'} onSubmit={save}>
-          <input type="hidden" name="id" value={v.id} />
-          <label>
-            Book or PDF title
-            <input name="title" defaultValue={v.title} dir="auto" required />
-          </label>
-          <label className="saleFormatChoice">
-            <b>How should this title be displayed?</b>
-            <select name="sale_format" defaultValue={formatOf(v)}>
-              <option value="book">Printed Book Only</option>
-              <option value="pdf">PDF Book Only</option>
-              <option value="both">Printed Book and PDF</option>
-              <option value="hidden">Hidden / Unavailable</option>
-            </select>
-            <small>
-              This controls the exact format labels and purchase buttons shown
-              in the public store.
-            </small>
-          </label>
-          <div className="twoFields">
+          <form onSubmit={saveDeliveryPrice}>
             <label>
-              Printed book price ($)
+              Global Delivery Price ($)
               <input
-                name="price"
                 type="number"
                 min="0"
+                max="1000"
                 step="0.01"
-                defaultValue={v.price}
+                value={deliveryInput}
+                onChange={(e) => setDeliveryInput(e.target.value)}
+                placeholder="0.00"
                 required
               />
+              <small>
+                Flat delivery fee applied once per order containing physical books. Set to 0.00 for Free Delivery. PDF downloads are never charged delivery.
+              </small>
+            </label>
+            <button className="primary" disabled={deliveryBusy}>
+              {deliveryBusy ? 'SAVING…' : 'UPDATE DELIVERY PRICE'}
+            </button>
+            {deliveryMessage && (
+              <p className="adminSaveMessage">{deliveryMessage}</p>
+            )}
+          </form>
+        </section>
+
+        <section className="settingsCard stickyEditor">
+          <div className="pdfAdminHeading">
+            <div>
+              <p className="eyebrow gold">PRINT & DIGITAL</p>
+              <h2>{editing ? 'Edit title' : 'Add a new title'}</h2>
+            </div>
+            <span>PDF uploads are protected</span>
+          </div>
+          <form key={v.id || 'new'} onSubmit={save}>
+            <input type="hidden" name="id" value={v.id} />
+            <label>
+              Book or PDF title
+              <input name="title" defaultValue={v.title} dir="auto" required />
+            </label>
+            <label className="saleFormatChoice">
+              <b>How should this title be displayed?</b>
+              <select name="sale_format" defaultValue={formatOf(v)}>
+                <option value="book">Printed Book Only</option>
+                <option value="pdf">PDF Book Only</option>
+                <option value="both">Printed Book and PDF</option>
+                <option value="hidden">Hidden / Unavailable</option>
+              </select>
+              <small>
+                This controls the exact format labels and purchase buttons shown
+                in the public store.
+              </small>
+            </label>
+            <label
+              className="checkboxLabel"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                cursor: 'pointer',
+                margin: '0.75rem 0',
+              }}
+            >
+              <input
+                name="request_availability"
+                type="checkbox"
+                defaultChecked={Boolean(v.request_availability)}
+              />
+              <span
+                style={{
+                  fontWeight: 600,
+                  fontSize: '0.9rem',
+                  color: '#102a43',
+                }}
+              >
+                Request availability instead of showing price
+              </span>
+            </label>
+            <div className="twoFields">
+              <label>
+                Printed book price ($)
+                <input
+                  name="price"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  defaultValue={v.price}
+                  required
+                />
+              </label>
+              <label>
+                PDF price ($)
+                <input
+                  name="pdf_price"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  defaultValue={v.pdf_price}
+                />
+              </label>
+            </div>
+            <label className="mainPdfUpload">
+              <b>{v.pdf_filename ? 'Replace PDF Book' : 'Upload PDF Book'}</b>
+              <input name="pdf_file" type="file" accept="application/pdf" />
+              <small>
+                Required when selecting PDF Book Only or Printed Book and PDF.
+                Maximum 30 MB.
+              </small>
+              {v.pdf_filename && (
+                <em>Current protected file: {v.pdf_filename}</em>
+              )}
             </label>
             <label>
-              PDF price ($)
+              Display order
               <input
-                name="pdf_price"
+                name="sort_order"
                 type="number"
                 min="0"
-                step="0.01"
-                defaultValue={v.pdf_price}
+                defaultValue={v.sort_order}
               />
             </label>
-          </div>
-          <label className="mainPdfUpload">
-            <b>{v.pdf_filename ? 'Replace PDF Book' : 'Upload PDF Book'}</b>
-            <input name="pdf_file" type="file" accept="application/pdf" />
-            <small>
-              Required when selecting PDF Book Only or Printed Book and PDF.
-              Maximum 30 MB.
-            </small>
-            {v.pdf_filename && (
-              <em>Current protected file: {v.pdf_filename}</em>
-            )}
-          </label>
-          <label>
-            Display order
-            <input
-              name="sort_order"
-              type="number"
-              min="0"
-              defaultValue={v.sort_order}
-            />
-          </label>
-          <label>
-            Description
-            <textarea
-              name="description"
-              rows={5}
-              defaultValue={v.description}
-              dir="auto"
-            />
-          </label>
-          <button className="primary" disabled={busy}>
-            {busy ? 'SAVING…' : editing ? 'SAVE TITLE & FORMAT' : 'ADD TITLE'}
-          </button>
-          {editing && (
-            <button
-              type="button"
-              className="cancelButton"
-              onClick={() => setEditing(null)}
-            >
-              Cancel
+            <label>
+              Description
+              <textarea
+                name="description"
+                rows={5}
+                defaultValue={v.description}
+                dir="auto"
+              />
+            </label>
+            <button className="primary" disabled={busy}>
+              {busy ? 'SAVING…' : editing ? 'SAVE TITLE & FORMAT' : 'ADD TITLE'}
             </button>
-          )}
-        </form>
-        {editing && (
-          <div className="bookFileUploads">
-            <label className="coverUpload">
-              Replace cover image
-              <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                onChange={(e) =>
-                  e.target.files?.[0] && cover(editing.id, e.target.files[0])
-                }
-              />
-            </label>
-            {editing.pdf_filename && (
+            {editing && (
               <button
-                className="deleteButton removePdf"
-                onClick={() => removePdf(editing.id)}
+                type="button"
+                className="cancelButton"
+                onClick={() => setEditing(null)}
               >
-                Remove PDF file
+                Cancel
               </button>
             )}
-          </div>
-        )}
-        <p className="adminSaveMessage">{message}</p>
-      </section>
+          </form>
+          {editing && (
+            <div className="bookFileUploads">
+              <label className="coverUpload">
+                Replace cover image
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={(e) =>
+                    e.target.files?.[0] && cover(editing.id, e.target.files[0])
+                  }
+                />
+              </label>
+              {editing.pdf_filename && (
+                <button
+                  className="deleteButton removePdf"
+                  onClick={() => removePdf(editing.id)}
+                >
+                  Remove PDF file
+                </button>
+              )}
+            </div>
+          )}
+          <p className="adminSaveMessage">{message}</p>
+        </section>
+      </div>
       <section className="adminBookList">
         <div className="connectionStatus">
           <b>Catalog</b>
@@ -292,7 +397,11 @@ export default function SeforimManager({
                       : 'Hidden'}
               </span>
               <span>
-                {x.available ? `Book $${x.price.toFixed(2)}` : ''}
+                {x.available
+                  ? x.request_availability
+                    ? 'Book (Price on request)'
+                    : `Book $${x.price.toFixed(2)}`
+                  : ''}
                 {x.available && x.pdf_available ? ' · ' : ''}
                 {x.pdf_available ? `PDF $${x.pdf_price.toFixed(2)}` : ''}
               </span>

@@ -9,6 +9,7 @@ export type SeferRecord = {
   pdf_available: boolean;
   pdf_price: number;
   pdf_filename: string;
+  request_availability?: boolean;
 };
 
 export const SEFORIM_TABLE =
@@ -168,6 +169,7 @@ export async function ensureSeforim(db: any) {
     'ALTER TABLE seforim ADD COLUMN pdf_price REAL NOT NULL DEFAULT 0',
     'ALTER TABLE seforim ADD COLUMN pdf_storage_key TEXT',
     'ALTER TABLE seforim ADD COLUMN pdf_filename TEXT',
+    'ALTER TABLE seforim ADD COLUMN request_availability INTEGER NOT NULL DEFAULT 0',
   ]) {
     try {
       await db.prepare(sql).run();
@@ -204,7 +206,7 @@ export async function listSeforim(db: any): Promise<SeferRecord[]> {
   await ensureSeforim(db);
   const result = await db
     .prepare(
-      "SELECT id,title,price,available,image,description,sort_order,pdf_available,pdf_price,COALESCE(pdf_filename,'') pdf_filename FROM seforim ORDER BY sort_order,title",
+      "SELECT id,title,price,available,image,description,sort_order,pdf_available,pdf_price,COALESCE(pdf_filename,'') pdf_filename,COALESCE(request_availability,0) request_availability FROM seforim ORDER BY sort_order,title",
     )
     .all();
   return (result.results as any[]).map((row) => ({
@@ -215,6 +217,7 @@ export async function listSeforim(db: any): Promise<SeferRecord[]> {
     pdf_available: Boolean(row.pdf_available),
     pdf_price: Number(row.pdf_price || 0),
     pdf_filename: String(row.pdf_filename || ''),
+    request_availability: Boolean(row.request_availability),
   }));
 }
 
@@ -222,12 +225,100 @@ export async function ensureSeforimOrders(db: any) {
   await ensureSeforim(db);
   await db
     .prepare(
-      "CREATE TABLE IF NOT EXISTS sefer_orders (id TEXT PRIMARY KEY,customer_name TEXT NOT NULL,email TEXT NOT NULL,phone TEXT NOT NULL DEFAULT '',address TEXT NOT NULL DEFAULT '',city TEXT NOT NULL DEFAULT '',state TEXT NOT NULL DEFAULT '',zip TEXT NOT NULL DEFAULT '',total REAL NOT NULL,status TEXT NOT NULL,reference TEXT,created_at TEXT NOT NULL)",
+      "CREATE TABLE IF NOT EXISTS sefer_orders (id TEXT PRIMARY KEY,customer_name TEXT NOT NULL,email TEXT NOT NULL,phone TEXT NOT NULL DEFAULT '',address TEXT NOT NULL DEFAULT '',city TEXT NOT NULL DEFAULT '',state TEXT NOT NULL DEFAULT '',zip TEXT NOT NULL DEFAULT '',total REAL NOT NULL,status TEXT NOT NULL,reference TEXT,created_at TEXT NOT NULL,delivery_total REAL NOT NULL DEFAULT 0)",
     )
     .run();
+  try {
+    await db
+      .prepare(
+        'ALTER TABLE sefer_orders ADD COLUMN delivery_total REAL NOT NULL DEFAULT 0',
+      )
+      .run();
+  } catch {}
   await db
     .prepare(
       'CREATE TABLE IF NOT EXISTS sefer_order_items (id TEXT PRIMARY KEY,order_id TEXT NOT NULL,sefer_id TEXT NOT NULL,title TEXT NOT NULL,format TEXT NOT NULL,quantity INTEGER NOT NULL,unit_price REAL NOT NULL)',
     )
     .run();
 }
+
+export const SEFORIM_DELIVERY_SETTING_KEY = 'seforim_delivery_price';
+
+export function validateDeliveryPrice(input: unknown): {
+  valid: true;
+  price: number;
+} | {
+  valid: false;
+  error: string;
+} {
+  if (input === null || input === undefined || input === '') {
+    return { valid: false, error: 'Delivery price is required.' };
+  }
+  const num = typeof input === 'number' ? input : Number(input);
+  if (!Number.isFinite(num) || Number.isNaN(num)) {
+    return { valid: false, error: 'Enter a valid numeric delivery price.' };
+  }
+  if (num < 0) {
+    return { valid: false, error: 'Delivery price cannot be negative.' };
+  }
+  if (num > 1000) {
+    return { valid: false, error: 'Delivery price cannot exceed $1,000.00.' };
+  }
+  const str = String(input).trim();
+  const parts = str.split('.');
+  if (parts.length === 2 && parts[1].length > 2) {
+    return {
+      valid: false,
+      error: 'Delivery price cannot have more than 2 decimal places.',
+    };
+  }
+  const rounded = Math.round(num * 100) / 100;
+  return { valid: true, price: rounded };
+}
+
+export async function getSeforimDeliveryPrice(db: any): Promise<number> {
+  if (!db) return 0;
+  try {
+    await db
+      .prepare(
+        'CREATE TABLE IF NOT EXISTS payment_settings (name TEXT PRIMARY KEY, value TEXT NOT NULL, updated_at TEXT NOT NULL)',
+      )
+      .run();
+    const row = (await db
+      .prepare(
+        'SELECT value FROM payment_settings WHERE name = ?',
+      )
+      .bind(SEFORIM_DELIVERY_SETTING_KEY)
+      .first()) as { value?: string } | null;
+    if (!row || !row.value) return 0;
+    const num = parseFloat(row.value);
+    return Number.isFinite(num) && num >= 0 ? Math.round(num * 100) / 100 : 0;
+  } catch {
+    return 0;
+  }
+}
+
+export async function setSeforimDeliveryPrice(
+  db: any,
+  priceInput: unknown,
+): Promise<number> {
+  if (!db) throw new Error('Database is unavailable');
+  const validation = validateDeliveryPrice(priceInput);
+  if (!validation.valid) {
+    throw new Error(validation.error);
+  }
+  const rounded = validation.price.toFixed(2);
+  await db
+    .prepare(
+      'CREATE TABLE IF NOT EXISTS payment_settings (name TEXT PRIMARY KEY, value TEXT NOT NULL, updated_at TEXT NOT NULL)',
+    )
+    .run();
+  await db
+    .prepare(
+      'INSERT INTO payment_settings(name,value,updated_at) VALUES(?,?,?) ON CONFLICT(name) DO UPDATE SET value=excluded.value,updated_at=excluded.updated_at',
+    )
+    .bind(SEFORIM_DELIVERY_SETTING_KEY, rounded, new Date().toISOString())
+    .run();
+  return validation.price;
+}
+

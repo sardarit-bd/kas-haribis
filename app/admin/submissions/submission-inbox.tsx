@@ -276,7 +276,12 @@ export default function SubmissionInbox({
                   {active.related_name && (
                     <div className="detailItem">
                       <span className="detailLabel">
-                        <FiFileText /> {mode === 'genealogy' ? 'Research subject' : 'Related bank / business'}
+                        <FiFileText />{' '}
+                        {mode === 'genealogy'
+                          ? 'Research subject'
+                          : active.topic === 'Book Availability Request'
+                            ? 'Requested Book'
+                            : 'Related bank / business'}
                       </span>
                       <span className="detailValue">{active.related_name}</span>
                     </div>

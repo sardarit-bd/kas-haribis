@@ -100,6 +100,47 @@ export default async function OrdersPage() {
                     </li>
                   ))}
                 </ul>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    gap: '12px',
+                    paddingTop: '12px',
+                    marginTop: '12px',
+                    borderTop: '1px dashed #cbd5e1',
+                    fontSize: '13px',
+                    color: '#475569',
+                  }}
+                >
+                  <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                    <span>
+                      Items Subtotal:{' '}
+                      <b className="text-slate-800 font-mono">
+                        $
+                        {(
+                          Number(order.total) -
+                          Number(order.delivery_total || 0)
+                        ).toFixed(2)}
+                      </b>
+                    </span>
+                    <span>
+                      Delivery:{' '}
+                      <b className="text-slate-800 font-mono">
+                        {Number(order.delivery_total || 0) > 0
+                          ? `$${Number(order.delivery_total).toFixed(2)}`
+                          : 'FREE'}
+                      </b>
+                    </span>
+                  </div>
+                  <span style={{ fontSize: '15px' }}>
+                    Charged Total:{' '}
+                    <b className="text-[#a37828] font-mono font-bold">
+                      ${Number(order.total).toFixed(2)}
+                    </b>
+                  </span>
+                </div>
               </article>
             ))
           ) : (
