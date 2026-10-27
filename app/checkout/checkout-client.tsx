@@ -3,7 +3,11 @@
 import StoreCheckout from '../seforim/store-checkout';
 import { useCart } from '../shared/cart-context';
 
-export default function CheckoutClientPage() {
+export default function CheckoutClientPage({
+  initialDeliveryPrice = 0,
+}: {
+  initialDeliveryPrice?: number;
+}) {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
 
   if (!cart || cart.length === 0) {
@@ -32,6 +36,7 @@ export default function CheckoutClientPage() {
         onClose={() => {}}
         onQuantity={updateQuantity}
         onRemove={removeFromCart}
+        initialDeliveryPrice={initialDeliveryPrice}
       />
     </div>
   );

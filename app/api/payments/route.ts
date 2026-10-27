@@ -1,7 +1,7 @@
 import { getPaymentSettings } from '../../lib/payment-settings';
 import { ensureHeterTables } from '../../lib/heter-documents';
 import { ensureBankReportTables, ensureBankResearch } from '../../lib/directories';
-import { ensureSeforim, ensureSeforimOrders } from '../../lib/seforim';
+import { ensureSeforim, ensureSeforimOrders, getSeforimDeliveryPrice } from '../../lib/seforim';
 
 type PaymentRequest = {
   kind?:
@@ -149,6 +149,7 @@ export async function POST(request: Request) {
       unitPrice: number;
     }> = [];
     let hasPhysical = false;
+    let deliveryTotal = 0;
     if (kind === 'seforim-order') {
       await ensureSeforimOrders(settings.env.DB);
       const requested = Array.isArray(body.items)
@@ -194,7 +195,11 @@ export async function POST(request: Request) {
         calculated += unitPrice * quantity;
         if (format === 'book') hasPhysical = true;
       }
-      if (Math.abs(calculated - amount) > 0.001)
+      if (hasPhysical) {
+        deliveryTotal = await getSeforimDeliveryPrice(settings.env.DB);
+      }
+      const expectedTotal = calculated + deliveryTotal;
+      if (Math.abs(expectedTotal - amount) > 0.001)
         return Response.json(
           {
             error: 'The cart total has changed. Please refresh and try again.',
@@ -333,7 +338,7 @@ export async function POST(request: Request) {
       orderId = `KH-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
       await db
         .prepare(
-          'INSERT INTO sefer_orders(id,customer_name,email,phone,address,city,state,zip,total,status,reference,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)',
+          'INSERT INTO sefer_orders(id,customer_name,email,phone,address,city,state,zip,total,status,reference,created_at,delivery_total) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',
         )
         .bind(
           orderId,
@@ -348,6 +353,7 @@ export async function POST(request: Request) {
           'Paid',
           reference || invoice,
           new Date().toISOString(),
+          deliveryTotal,
         )
         .run();
       for (const item of validatedItems) {

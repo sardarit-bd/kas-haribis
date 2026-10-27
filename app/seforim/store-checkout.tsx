@@ -26,31 +26,42 @@ export default function StoreCheckout({
   onClose,
   onQuantity,
   onRemove,
+  initialDeliveryPrice = 0,
 }: {
   items: CartItem[];
   onClose: () => void;
   onQuantity: (index: number, q: number) => void;
   onRemove: (index: number) => void;
+  initialDeliveryPrice?: number;
 }) {
   const router = useRouter();
   const [ready, setReady] = useState(false);
   const [message, setMessage] = useState('');
   const [working, setWorking] = useState(false);
   const [success, setSuccess] = useState<any>(null);
+  const [deliveryPrice, setDeliveryPrice] = useState(initialDeliveryPrice);
 
-  const total = items.reduce(
+  const subtotal = items.reduce(
     (sum, x) =>
       sum +
       (x.format === 'pdf' ? x.book.pdf_price : x.book.price) * x.quantity,
     0,
   );
   const physical = items.some((x) => x.format === 'book');
+  const deliveryFee = physical ? deliveryPrice : 0;
+  const total = subtotal + deliveryFee;
 
   useEffect(() => {
     fetch('/api/payment-public-status')
       .then((r) => r.json())
       .then((data) => {
         setReady(Boolean(data.ready));
+        if (
+          typeof data.deliveryPrice === 'number' &&
+          Number.isFinite(data.deliveryPrice)
+        ) {
+          setDeliveryPrice(Math.max(0, data.deliveryPrice));
+        }
         if (!data.ready || !data.ifieldsKey) return;
         const init = () =>
           window.setAccount?.(
@@ -305,11 +316,15 @@ export default function StoreCheckout({
           <div className="pt-4 border-t border-slate-100 space-y-2 text-sm">
             <div className="flex items-center justify-between text-slate-600">
               <span>Subtotal</span>
-              <span className="font-mono text-slate-800 font-semibold">${total.toFixed(2)}</span>
+              <span className="font-mono text-slate-800 font-semibold">${subtotal.toFixed(2)}</span>
             </div>
             <div className="flex items-center justify-between text-slate-600">
               <span>Shipping &amp; Handling</span>
-              <span className="text-emerald-600 text-xs font-bold">FREE</span>
+              {deliveryFee > 0 ? (
+                <span className="font-mono text-slate-800 font-semibold">${deliveryFee.toFixed(2)}</span>
+              ) : (
+                <span className="text-emerald-600 text-xs font-bold">FREE</span>
+              )}
             </div>
             <div className="flex items-center justify-between pt-3 border-t border-slate-200 text-lg font-bold">
               <span className="text-[#102a43]">Total</span>
