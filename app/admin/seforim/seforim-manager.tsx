@@ -262,19 +262,19 @@ export default function SeforimManager({
                 in the public store.
               </small>
             </label>
-            <div className="availabilityRequestsSection">
-              <b className="sectionTitle">Availability requests</b>
+            <div className="purchaseOptionsSection">
+              <b className="sectionTitle">Purchase Options</b>
               <label className="checkboxRow">
                 <input
                   name="request_availability"
                   type="checkbox"
                   defaultChecked={Boolean(v.request_availability)}
                 />
-                <span>Show “Request availability” form</span>
+                <div className="checkboxText">
+                  <span className="checkboxLabel">Request availability</span>
+                  <small className="helperText">Prevent direct purchase of the printed book.</small>
+                </div>
               </label>
-              <small className="explanationText">
-                Visitors can send their contact details and the quantity needed. Requests appear in the backend.
-              </small>
             </div>
             <div className="twoFields">
               <label>
@@ -388,7 +388,7 @@ export default function SeforimManager({
               <span>
                 {x.available
                   ? x.request_availability
-                    ? 'Book (Price on request)'
+                    ? `Book $${x.price.toFixed(2)} (Request only)`
                     : `Book $${x.price.toFixed(2)}`
                   : ''}
                 {x.available && x.pdf_available ? ' · ' : ''}
