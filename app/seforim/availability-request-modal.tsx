@@ -225,7 +225,7 @@ export default function AvailabilityRequestModal({
                       {book.title}
                     </h4>
                     <span className="text-xs text-slate-500 font-medium">
-                      Physical Book • Price on request
+                      Physical Book • ${book.price.toFixed(2)}
                     </span>
                   </div>
                 </div>

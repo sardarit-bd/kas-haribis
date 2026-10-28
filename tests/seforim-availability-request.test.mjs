@@ -338,7 +338,7 @@ test('2. Admin: Can enable, save, reload, and disable request_availability setti
   assert.strictEqual(Boolean(book.request_availability), false, 'Setting should be disabled and persisted');
 });
 
-test('3. Catalog rendering logic: Standard physical books show price, request-only books show "Price on request"', () => {
+test('3. Catalog rendering logic: Physical books retain visible price while request-only books show availability action', () => {
   const standardBook = {
     id: 'b1',
     title: 'Standard Book',
@@ -357,9 +357,9 @@ test('3. Catalog rendering logic: Standard physical books show price, request-on
     request_availability: true,
   };
 
-  // Helper simulating catalog display decision
+  // Helper simulating catalog display decision (matching updated client clarification)
   function getDisplayInfo(book) {
-    const priceDisplay = book.request_availability ? 'Price on request' : `$${book.price.toFixed(2)}`;
+    const priceDisplay = `$${book.price.toFixed(2)}`;
     const actionButton = book.request_availability ? 'Submit Request to See Availability' : 'Add Book to Cart';
     return { priceDisplay, actionButton };
   }
@@ -369,9 +369,9 @@ test('3. Catalog rendering logic: Standard physical books show price, request-on
   assert.strictEqual(standardDisplay.actionButton, 'Add Book to Cart');
 
   const requestDisplay = getDisplayInfo(requestOnlyBook);
-  assert.strictEqual(requestDisplay.priceDisplay, 'Price on request');
+  assert.strictEqual(requestDisplay.priceDisplay, '$70.00');
   assert.strictEqual(requestDisplay.actionButton, 'Submit Request to See Availability');
-  assert.ok(!requestDisplay.priceDisplay.includes('$'), 'Should not display currency symbol or numeric price');
+  assert.ok(requestDisplay.priceDisplay.includes('$70.00'), 'Must display numeric price even when availability requests are enabled');
 });
 
 test('4. Hybrid format: PDF purchasing remains active when physical edition is request-only', () => {
@@ -385,15 +385,15 @@ test('4. Hybrid format: PDF purchasing remains active when physical edition is r
     request_availability: true,
   };
 
-  // Physical book presentation
-  const physicalPrice = hybridBook.request_availability ? 'Price on request' : `$${hybridBook.price.toFixed(2)}`;
+  // Physical book presentation (price remains visible, purchase button replaced with availability request)
+  const physicalPrice = `$${hybridBook.price.toFixed(2)}`;
   const physicalAction = hybridBook.request_availability ? 'Submit Request to See Availability' : 'Add Book to Cart';
 
   // PDF presentation
   const pdfPrice = `$${hybridBook.pdf_price.toFixed(2)}`;
   const pdfAction = 'Add PDF to Cart';
 
-  assert.strictEqual(physicalPrice, 'Price on request');
+  assert.strictEqual(physicalPrice, '$45.00');
   assert.strictEqual(physicalAction, 'Submit Request to See Availability');
   assert.strictEqual(pdfPrice, '$18.00');
   assert.strictEqual(pdfAction, 'Add PDF to Cart');
