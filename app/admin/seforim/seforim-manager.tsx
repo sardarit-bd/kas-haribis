@@ -262,31 +262,20 @@ export default function SeforimManager({
                 in the public store.
               </small>
             </label>
-            <label
-              className="checkboxLabel"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.6rem',
-                cursor: 'pointer',
-                margin: '0.75rem 0',
-              }}
-            >
-              <input
-                name="request_availability"
-                type="checkbox"
-                defaultChecked={Boolean(v.request_availability)}
-              />
-              <span
-                style={{
-                  fontWeight: 600,
-                  fontSize: '0.9rem',
-                  color: '#102a43',
-                }}
-              >
-                Request availability instead of showing price
-              </span>
-            </label>
+            <div className="purchaseOptionsSection">
+              <b className="sectionTitle">Purchase Options</b>
+              <label className="checkboxRow">
+                <input
+                  name="request_availability"
+                  type="checkbox"
+                  defaultChecked={Boolean(v.request_availability)}
+                />
+                <div className="checkboxText">
+                  <span className="checkboxLabel">Request availability</span>
+                  <small className="helperText">Prevent direct purchase of the printed book.</small>
+                </div>
+              </label>
+            </div>
             <div className="twoFields">
               <label>
                 Printed book price ($)
@@ -399,7 +388,7 @@ export default function SeforimManager({
               <span>
                 {x.available
                   ? x.request_availability
-                    ? 'Book (Price on request)'
+                    ? `Book $${x.price.toFixed(2)} (Request only)`
                     : `Book $${x.price.toFixed(2)}`
                   : ''}
                 {x.available && x.pdf_available ? ' · ' : ''}

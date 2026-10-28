@@ -20,3 +20,89 @@
   font-weight: 400;
   line-height: 1.5;
 }
+
+.purchaseOptionsSection,
+.availabilityRequestsSection {
+  padding: 12px 14px !important;
+  border: 1px solid #dce4e8;
+  border-radius: 6px;
+  background: #f8fafb;
+  margin: 16px 0 6px 0 !important;
+}
+
+.purchaseOptionsSection > b,
+.purchaseOptionsSection > .sectionTitle,
+.availabilityRequestsSection > b,
+.availabilityRequestsSection > .sectionTitle {
+  display: block;
+  color: #102a43;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 8px;
+}
+
+.purchaseOptionsSection .checkboxRow,
+.availabilityRequestsSection .checkboxRow {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  margin: 0 !important;
+  cursor: pointer;
+  user-select: none;
+}
+
+.purchaseOptionsSection .checkboxRow input[type="checkbox"],
+.availabilityRequestsSection .checkboxRow input[type="checkbox"] {
+  width: 17px !important;
+  height: 17px !important;
+  min-width: 17px;
+  margin: 0 !important;
+  padding: 0 !important;
+  cursor: pointer;
+  accent-color: #102a43;
+  display: inline-block !important;
+  flex-shrink: 0;
+}
+
+.purchaseOptionsSection .checkboxText {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+}
+
+.purchaseOptionsSection .checkboxLabel,
+.availabilityRequestsSection .checkboxRow span {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #102a43;
+  line-height: 1.4;
+}
+
+.purchaseOptionsSection .helperText,
+.purchaseOptionsSection small,
+.availabilityRequestsSection small,
+.availabilityRequestsSection .explanationText {
+  display: inline-block;
+  color: #5f707b;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.twoFields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .twoFields {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+

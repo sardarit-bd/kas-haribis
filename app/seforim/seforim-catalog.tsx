@@ -129,12 +129,7 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
                   <div className="flex gap-4 text-base font-semibold text-[#a37828] mb-3">
                     {book.available && (
                       <span className="flex items-center gap-1">
-                        <small className="text-slate-500 text-base font-normal">Book</small>
-                        {book.request_availability ? (
-                          <span className="text-sm font-semibold text-[#a37828]">Price on request</span>
-                        ) : (
-                          `$${book.price.toFixed(2)}`
-                        )}
+                        <small className="text-slate-500 text-base font-normal">Book</small>${book.price.toFixed(2)}
                       </span>
                     )}
                     {book.pdf_available && (
@@ -228,11 +223,7 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
                     <div className="flex items-center justify-between gap-4">
                       <span className="flex flex-col">
                         <b className="text-slate-800 text-sm font-semibold">Printed Book</b>
-                        {selected.request_availability ? (
-                          <strong className="text-[#a37828] text-sm font-semibold">Price on request</strong>
-                        ) : (
-                          <strong className="text-[#a37828] font-mono">${selected.price.toFixed(2)}</strong>
-                        )}
+                        <strong className="text-[#a37828] font-mono">${selected.price.toFixed(2)}</strong>
                       </span>
                       {selected.request_availability ? (
                         <button
