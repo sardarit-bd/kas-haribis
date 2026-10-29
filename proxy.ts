@@ -66,7 +66,13 @@ export async function proxy(request: NextRequest) {
   const email = String(user?.email || '')
     .trim()
     .toLowerCase();
-  if (!email || isOwnerEmail(email)) return NextResponse.next();
+  if (!email) return NextResponse.next();
+  if (isOwnerEmail(email)) {
+    const headers = new Headers(request.headers);
+    headers.set('x-kh-staff-email', email);
+    headers.set(ADMIN_ELEVATED_HEADER, '1');
+    return NextResponse.next({ request: { headers } });
+  }
   const section = sectionFor(request.nextUrl.pathname);
   if (!section) return NextResponse.next();
   const { env } = await import('cloudflare:workers');

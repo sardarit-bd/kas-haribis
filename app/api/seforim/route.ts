@@ -1,4 +1,4 @@
-import { getRequestEmail } from '../../lib/request-auth';
+import { getRequestEmail, isOwnerRequest } from '../../lib/request-auth';
 import { canAccessSection } from '../../lib/admin-access';
 import { ensureSeforim, listSeforim } from '../../lib/seforim';
 const clean = (value: unknown, max: number) =>
@@ -23,7 +23,10 @@ export async function GET() {
 export async function POST(request: Request) {
   const env = await runtime();
   const email = await getRequestEmail(request);
-  if (!email || !(await canAccessSection(env.DB, email, 'seforim')))
+  const isOwner = await isOwnerRequest(request);
+  const canSeforim =
+    Boolean(email) && (await canAccessSection(env.DB, email, 'seforim'));
+  if (!isOwner && !canSeforim)
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   await ensureSeforim(env.DB);
   const body = (await request.json()) as any;
@@ -71,7 +74,10 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   const env = await runtime();
   const email = await getRequestEmail(request);
-  if (!email || !(await canAccessSection(env.DB, email, 'seforim')))
+  const isOwner = await isOwnerRequest(request);
+  const canSeforim =
+    Boolean(email) && (await canAccessSection(env.DB, email, 'seforim'));
+  if (!isOwner && !canSeforim)
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   await ensureSeforim(env.DB);
   const body = (await request.json()) as any;
@@ -115,7 +121,10 @@ export async function PUT(request: Request) {
 export async function DELETE(request: Request) {
   const env = await runtime();
   const email = await getRequestEmail(request);
-  if (!email || !(await canAccessSection(env.DB, email, 'seforim')))
+  const isOwner = await isOwnerRequest(request);
+  const canSeforim =
+    Boolean(email) && (await canAccessSection(env.DB, email, 'seforim'));
+  if (!isOwner && !canSeforim)
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   await ensureSeforim(env.DB);
   const id = clean(new URL(request.url).searchParams.get('id'), 80);
