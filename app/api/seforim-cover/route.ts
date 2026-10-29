@@ -36,7 +36,6 @@ export async function POST(request: Request) {
       { error: 'The cover must be smaller than 5 MB.' },
       { status: 413 },
     );
-  const { env } = await import('cloudflare:workers');
   await ensureSeforim(env.DB);
   const book = await env.DB.prepare('SELECT id FROM seforim WHERE id=?')
     .bind(id)
