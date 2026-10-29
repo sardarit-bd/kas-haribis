@@ -1,7 +1,10 @@
-import { getRequestEmail, isOwnerRequest } from '../../../lib/request-auth';
+import { getRequestEmail } from '../../../lib/request-auth';
+import { canAccessSection } from '../../../lib/admin-access';
 import { ensureSeforim } from '../../../lib/seforim';
 export async function POST(request: Request) {
-  if (!(await isOwnerRequest(request)))
+  const { env } = await import('cloudflare:workers');
+  const email = await getRequestEmail(request);
+  if (!email || !(await canAccessSection(env.DB, email, 'seforim')))
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const url = new URL(request.url),
     id = url.searchParams.get('id') || '',
@@ -15,7 +18,6 @@ export async function POST(request: Request) {
       { error: 'The PDF must be smaller than 30 MB.' },
       { status: 413 },
     );
-  const { env } = await import('cloudflare:workers');
   await ensureSeforim(env.DB);
   const book = await env.DB.prepare('SELECT id FROM seforim WHERE id=?')
     .bind(id)
@@ -38,10 +40,11 @@ export async function POST(request: Request) {
   return Response.json({ saved: true, filename });
 }
 export async function DELETE(request: Request) {
-  if (!(await isOwnerRequest(request)))
+  const { env } = await import('cloudflare:workers');
+  const email = await getRequestEmail(request);
+  if (!email || !(await canAccessSection(env.DB, email, 'seforim')))
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const id = new URL(request.url).searchParams.get('id') || '';
-  const { env } = await import('cloudflare:workers');
   await ensureSeforim(env.DB);
   const row = (await env.DB.prepare(
     'SELECT pdf_storage_key FROM seforim WHERE id=?',

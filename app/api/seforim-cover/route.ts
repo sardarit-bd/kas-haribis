@@ -1,4 +1,5 @@
-import { getRequestEmail, isOwnerRequest } from '../../lib/request-auth';
+import { getRequestEmail } from '../../lib/request-auth';
+import { canAccessSection } from '../../lib/admin-access';
 import { ensureSeforim } from '../../lib/seforim';
 export async function GET(request: Request) {
   const id = new URL(request.url).searchParams.get('id') || '';
@@ -18,7 +19,9 @@ export async function GET(request: Request) {
   });
 }
 export async function POST(request: Request) {
-  if (!(await isOwnerRequest(request)))
+  const { env } = await import('cloudflare:workers');
+  const email = await getRequestEmail(request);
+  if (!email || !(await canAccessSection(env.DB, email, 'seforim')))
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const id = new URL(request.url).searchParams.get('id') || '';
   const type = request.headers.get('content-type') || '';

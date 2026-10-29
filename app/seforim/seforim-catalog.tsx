@@ -31,12 +31,13 @@ export default function SeforimCatalog({ books }: { books: Sefer[] }) {
       books.filter(
         (book) =>
           book.title.toLowerCase().includes(query.toLowerCase()) &&
-          (format === 'all' ||
-            (format === 'book'
+          (format === 'all'
+            ? book.available || book.pdf_available
+            : format === 'book'
               ? book.available
               : format === 'pdf'
                 ? book.pdf_available
-                : book.available && book.pdf_available)),
+                : book.available && book.pdf_available),
       ),
     [books, query, format],
   );
