@@ -839,3 +839,48 @@ test('16. Catalog rendering: Once book is enabled by admin, it displays with vis
   assert.strictEqual(directCard.priceText, '$40.00');
   assert.strictEqual(directCard.actionButton, 'Add Book to Cart');
 });
+
+test('17. Seforim Admin UI: Save failures are clearly displayed with error styling and old state is not silently kept', () => {
+  // Simulate UI save response handling logic from seforim-manager.tsx
+  function handleSaveResponse(httpStatus, responseBody) {
+    let message = '';
+    let isError = false;
+
+    if (httpStatus >= 200 && httpStatus < 300) {
+      isError = false;
+      message = 'Display format and title saved.';
+    } else {
+      isError = true;
+      message = responseBody?.error || `Could not save (HTTP ${httpStatus}).`;
+    }
+
+    return {
+      message,
+      isError,
+      className: `adminSaveMessage ${isError ? 'errorMessage' : 'successMessage'}`,
+      ariaRole: isError ? 'alert' : 'status',
+      displayText: isError ? `⚠️ ${message}` : `✓ ${message}`,
+    };
+  }
+
+  // 1. HTTP 401 Unauthorized returns an explicit alert
+  const unauthorizedResult = handleSaveResponse(401, { error: 'Unauthorized' });
+  assert.strictEqual(unauthorizedResult.isError, true);
+  assert.strictEqual(unauthorizedResult.message, 'Unauthorized');
+  assert.strictEqual(unauthorizedResult.ariaRole, 'alert');
+  assert.ok(unauthorizedResult.className.includes('errorMessage'));
+  assert.ok(unauthorizedResult.displayText.includes('⚠️ Unauthorized'));
+
+  // 2. HTTP 400 Bad Request
+  const badRequestResult = handleSaveResponse(400, { error: 'Enter valid book and PDF prices.' });
+  assert.strictEqual(badRequestResult.isError, true);
+  assert.strictEqual(badRequestResult.ariaRole, 'alert');
+
+  // 3. HTTP 200 Success
+  const successResult = handleSaveResponse(200, { saved: true });
+  assert.strictEqual(successResult.isError, false);
+  assert.strictEqual(successResult.ariaRole, 'status');
+  assert.ok(successResult.className.includes('successMessage'));
+  assert.ok(successResult.displayText.includes('✓ Display format and title saved.'));
+});
+

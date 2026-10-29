@@ -20,6 +20,7 @@ export default function SeforimManager({
     [editing, setEditing] = useState<SeferRecord | null>(null),
     [formVersion, setFormVersion] = useState(0),
     [message, setMessage] = useState(''),
+    [isError, setIsError] = useState(false),
     [busy, setBusy] = useState(false);
   const [deliveryPrice, setDeliveryPrice] = useState(initialDeliveryPrice);
   const [deliveryInput, setDeliveryInput] = useState(
@@ -80,6 +81,7 @@ export default function SeforimManager({
     e.preventDefault();
     setBusy(true);
     setMessage('Saving title…');
+    setIsError(false);
     const form = e.currentTarget,
       fd = new FormData(form),
       pdf = fd.get('pdf_file') as File | null,
@@ -99,6 +101,7 @@ export default function SeforimManager({
       setMessage(
         'Choose a PDF file before displaying this title as a PDF Book.',
       );
+      setIsError(true);
       setBusy(false);
       return;
     }
@@ -112,9 +115,10 @@ export default function SeforimManager({
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify(data),
         });
-        const j = (await r.json()) as any;
+        const j = (await r.json().catch(() => ({}))) as any;
         if (!r.ok) {
-          setMessage(j.error || 'Could not save.');
+          setMessage(j?.error || `Could not save (HTTP ${r.status}).`);
+          setIsError(true);
           setBusy(false);
           return;
         }
@@ -133,9 +137,10 @@ export default function SeforimManager({
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify(data),
         });
-        const j = (await r.json()) as any;
+        const j = (await r.json().catch(() => ({}))) as any;
         if (!r.ok) {
-          setMessage(j.error || 'Could not save.');
+          setMessage(j?.error || `Could not save (HTTP ${r.status}).`);
+          setIsError(true);
           setBusy(false);
           return;
         }
@@ -146,6 +151,7 @@ export default function SeforimManager({
           ? `Save failed: ${error.message}`
           : 'Save failed.',
       );
+      setIsError(true);
       setBusy(false);
       await reload();
       return;
@@ -158,6 +164,7 @@ export default function SeforimManager({
       setEditing(list.find((x) => x.id === savedId) || null);
     }
     setFormVersion((v) => v + 1);
+    setIsError(false);
     setMessage(
       pdf?.size
         ? 'Title and protected PDF saved.'
@@ -167,46 +174,54 @@ export default function SeforimManager({
   }
   async function cover(id: string, file: File) {
     setBusy(true);
+    setIsError(false);
     const r = await fetch(`/api/seforim-cover?id=${encodeURIComponent(id)}`, {
         method: 'POST',
         headers: { 'content-type': file.type },
         body: file,
       }),
-      j = (await r.json()) as any;
+      j = (await r.json().catch(() => ({}))) as any;
     if (!r.ok) {
-      setMessage(j.error || 'Cover upload failed.');
+      setMessage(j?.error || 'Cover upload failed.');
+      setIsError(true);
       setBusy(false);
       return;
     }
     const list = await reload();
     setEditing(list.find((x) => x.id === id) || null);
     setFormVersion((v) => v + 1);
+    setIsError(false);
     setMessage('Cover updated.');
     setBusy(false);
   }
   async function removePdf(id: string) {
     if (!confirm('Remove this PDF file?')) return;
+    setIsError(false);
     const r = await fetch(`/api/admin/seforim-pdf?id=${encodeURIComponent(id)}`, {
       method: 'DELETE',
     });
     if (!r.ok) {
       const j = (await r.json().catch(() => ({}))) as any;
       setMessage(j?.error || 'Could not remove PDF.');
+      setIsError(true);
       return;
     }
     const list = await reload();
     setEditing(list.find((x) => x.id === id) || null);
     setFormVersion((v) => v + 1);
+    setIsError(false);
     setMessage('PDF removed.');
   }
   async function remove(id: string) {
     if (!confirm('Remove this title?')) return;
+    setIsError(false);
     const r = await fetch(`/api/seforim?id=${encodeURIComponent(id)}`, {
       method: 'DELETE',
     });
     if (!r.ok) {
       const j = (await r.json().catch(() => ({}))) as any;
       setMessage(j?.error || 'Could not remove title.');
+      setIsError(true);
       return;
     }
     setBooks((x) => x.filter((y) => y.id !== id));
@@ -372,6 +387,8 @@ export default function SeforimManager({
                 onClick={() => {
                   setEditing(null);
                   setFormVersion((v) => v + 1);
+                  setMessage('');
+                  setIsError(false);
                 }}
               >
                 Cancel
@@ -400,7 +417,35 @@ export default function SeforimManager({
               )}
             </div>
           )}
-          <p className="adminSaveMessage">{message}</p>
+          {message && (
+            <p
+              className={`adminSaveMessage ${isError ? 'errorMessage' : 'successMessage'}`}
+              role={isError ? 'alert' : 'status'}
+              style={
+                isError
+                  ? {
+                      color: '#991b1b',
+                      backgroundColor: '#fef2f2',
+                      border: '1px solid #fecaca',
+                      borderRadius: '8px',
+                      padding: '12px 14px',
+                      marginTop: '12px',
+                      fontWeight: 600,
+                    }
+                  : {
+                      color: '#065f46',
+                      backgroundColor: '#ecfdf5',
+                      border: '1px solid #a7f3d0',
+                      borderRadius: '8px',
+                      padding: '12px 14px',
+                      marginTop: '12px',
+                      fontWeight: 600,
+                    }
+              }
+            >
+              {isError ? `⚠️ ${message}` : `✓ ${message}`}
+            </p>
+          )}
         </section>
       </div>
       <section className="adminBookList">
@@ -437,6 +482,7 @@ export default function SeforimManager({
                 setEditing(x);
                 setFormVersion((v) => v + 1);
                 setMessage('');
+                setIsError(false);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
             >
