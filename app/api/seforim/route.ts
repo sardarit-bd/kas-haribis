@@ -1,4 +1,5 @@
-import { getRequestEmail, isOwnerRequest } from '../../lib/request-auth';
+import { getRequestEmail } from '../../lib/request-auth';
+import { canAccessSection } from '../../lib/admin-access';
 import { ensureSeforim, listSeforim } from '../../lib/seforim';
 const clean = (value: unknown, max: number) =>
   String(value || '')
@@ -10,12 +11,20 @@ async function runtime() {
 }
 export async function GET() {
   const env = await runtime();
-  return Response.json({ books: await listSeforim(env.DB) });
+  return Response.json(
+    { books: await listSeforim(env.DB) },
+    {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+      },
+    },
+  );
 }
 export async function POST(request: Request) {
-  if (!(await isOwnerRequest(request)))
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const env = await runtime();
+  const email = await getRequestEmail(request);
+  if (!email || !(await canAccessSection(env.DB, email, 'seforim')))
+    return Response.json({ error: 'Unauthorized' }, { status: 401 });
   await ensureSeforim(env.DB);
   const body = (await request.json()) as any;
   const title = clean(body.title, 240),
@@ -60,9 +69,10 @@ export async function POST(request: Request) {
   return Response.json({ saved: true, id });
 }
 export async function PUT(request: Request) {
-  if (!(await isOwnerRequest(request)))
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const env = await runtime();
+  const email = await getRequestEmail(request);
+  if (!email || !(await canAccessSection(env.DB, email, 'seforim')))
+    return Response.json({ error: 'Unauthorized' }, { status: 401 });
   await ensureSeforim(env.DB);
   const body = (await request.json()) as any;
   const id = clean(body.id, 80),
@@ -103,9 +113,10 @@ export async function PUT(request: Request) {
   return Response.json({ saved: true });
 }
 export async function DELETE(request: Request) {
-  if (!(await isOwnerRequest(request)))
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const env = await runtime();
+  const email = await getRequestEmail(request);
+  if (!email || !(await canAccessSection(env.DB, email, 'seforim')))
+    return Response.json({ error: 'Unauthorized' }, { status: 401 });
   await ensureSeforim(env.DB);
   const id = clean(new URL(request.url).searchParams.get('id'), 80);
   const book = (await env.DB.prepare(

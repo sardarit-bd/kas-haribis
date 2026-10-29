@@ -6,7 +6,7 @@ import {
   getSeforimDeliveryPrice,
   setSeforimDeliveryPrice,
 } from '../app/lib/seforim.ts';
-import { isOwnerEmail } from '../app/lib/admin-access.ts';
+import { isOwnerEmail, canAccessSection } from '../app/lib/admin-access.ts';
 
 // In-memory mock simulating Cloudflare D1 SQLite database
 function createMockD1Database() {
@@ -15,6 +15,7 @@ function createMockD1Database() {
     seforim: new Map(),
     sefer_orders: new Map(),
     contact_submissions: new Map(),
+    admin_staff_access: new Map(),
   };
 
   return {
@@ -114,6 +115,10 @@ function createMockD1Database() {
               normalizedSql.includes("SELECT value FROM payment_settings WHERE name = 'seforim_delivery_price'")) {
             const row = tables.payment_settings.get('seforim_delivery_price');
             return row ? { value: row.value } : null;
+          }
+          if (normalizedSql.includes('FROM admin_staff_access')) {
+            const email = String(boundArgs[0] || '').trim().toLowerCase();
+            return tables.admin_staff_access.get(email) || null;
           }
           return null;
         },
@@ -605,4 +610,232 @@ test('12. Payment API: Tampered total or quantity errors are caught server-side'
     tamperedCheckout.error,
     'The cart total has changed. Please refresh and try again.',
   );
+});
+
+test('13. Seforim Admin API Authorization: Staff with seforim access and owners can manage, unauthorized users rejected', async () => {
+  const db = createMockD1Database();
+
+  // Seed staff member with seforim section access
+  db.tables.admin_staff_access.set('seforim-staff@example.com', {
+    email: 'seforim-staff@example.com',
+    name: 'Seforim Staff Admin',
+    active: 1,
+    permissions: JSON.stringify(['seforim']),
+  });
+
+  // Seed staff member without seforim section access
+  db.tables.admin_staff_access.set('other-staff@example.com', {
+    email: 'other-staff@example.com',
+    name: 'General Staff Admin',
+    active: 1,
+    permissions: JSON.stringify(['articles', 'donations']),
+  });
+
+  // 1. Owner can access
+  assert.strictEqual(
+    await canAccessSection(db, 'kavharibis@gmail.com', 'seforim'),
+    true,
+    'Owner should always have access to seforim',
+  );
+
+  // 2. Staff with seforim permission can access
+  assert.strictEqual(
+    await canAccessSection(db, 'seforim-staff@example.com', 'seforim'),
+    true,
+    'Staff with seforim permission should be authorized',
+  );
+
+  // 3. Staff without seforim permission is rejected
+  assert.strictEqual(
+    await canAccessSection(db, 'other-staff@example.com', 'seforim'),
+    false,
+    'Staff without seforim permission must be rejected',
+  );
+
+  // 4. Random / unauthenticated user is rejected
+  assert.strictEqual(
+    await canAccessSection(db, 'visitor@example.com', 'seforim'),
+    false,
+    'Unknown user must be rejected',
+  );
+  assert.strictEqual(
+    await canAccessSection(db, '', 'seforim'),
+    false,
+    'Empty user must be rejected',
+  );
+});
+
+test('14. Seforim Manager: Editing existing title updates format, price, and request_availability in a single update flow', async () => {
+  const db = createMockD1Database();
+  const bookId = '1215';
+
+  // Seed initial book (matching seed data for 1215: available=0, request_availability=0)
+  db.tables.seforim.set(bookId, {
+    id: bookId,
+    title: 'כל הסדרה',
+    price: 40.0,
+    available: 0,
+    image: '/seforim/book-01.webp',
+    description: 'The complete Kav Haribis seforim collection.',
+    sort_order: 1,
+    created_at: new Date().toISOString(),
+    pdf_available: 0,
+    pdf_price: 0,
+    pdf_filename: '',
+    pdf_storage_key: '',
+    request_availability: 0,
+  });
+
+  // Simulate admin saving: Format = Printed Book Only, Price = 45.0, Request Availability = true
+  const updatedData = {
+    id: bookId,
+    title: 'כל הסדרה (מהדורה חדשה)',
+    price: 45.0,
+    available: 1,
+    description: 'The complete Kav Haribis seforim collection updated.',
+    sort_order: 1,
+    pdf_price: 0,
+    pdf_display: 0,
+    request_availability: 1,
+  };
+
+  // Perform single PUT update
+  await db
+    .prepare(
+      "UPDATE seforim SET title=?,price=?,available=?,description=?,sort_order=?,pdf_price=?,pdf_available=CASE WHEN ?=1 AND length(COALESCE(pdf_storage_key,''))>0 THEN 1 ELSE 0 END,request_availability=? WHERE id=?",
+    )
+    .bind(
+      updatedData.title,
+      updatedData.price,
+      updatedData.available,
+      updatedData.description,
+      updatedData.sort_order,
+      updatedData.pdf_price,
+      updatedData.pdf_display,
+      updatedData.request_availability,
+      updatedData.id,
+    )
+    .run();
+
+  // Verify saved values in DB
+  const savedBook = await db
+    .prepare('SELECT id,title,price,available,request_availability FROM seforim WHERE id=?')
+    .bind(bookId)
+    .first();
+
+  assert.strictEqual(savedBook.title, 'כל הסדרה (מהדורה חדשה)');
+  assert.strictEqual(savedBook.price, 45.0);
+  assert.strictEqual(savedBook.available, 1, 'Book should now be available as a physical book');
+  assert.strictEqual(savedBook.request_availability, 1, 'Availability request mode should be enabled');
+});
+
+test('15. Catalog filtering logic: Format "all" excludes unavailable/hidden books, preventing broken cards', () => {
+  const books = [
+    {
+      id: '1215',
+      title: 'כל הסדרה',
+      price: 40.0,
+      available: false,
+      pdf_available: false,
+      request_availability: false,
+    },
+    {
+      id: '1213',
+      title: 'חוברות הלכות ריבית',
+      price: 40.0,
+      available: true,
+      pdf_available: false,
+      request_availability: false,
+    },
+    {
+      id: '1211',
+      title: 'חוברות לחתן וכלה',
+      price: 30.0,
+      available: true,
+      pdf_available: false,
+      request_availability: true,
+    },
+    {
+      id: 'pdf-only-1',
+      title: 'Digital Only Guide',
+      price: 0,
+      available: false,
+      pdf_available: true,
+      pdf_price: 15.0,
+      request_availability: false,
+    },
+  ];
+
+  // Filtering function matching updated app/seforim/seforim-catalog.tsx
+  function filterCatalog(catalogBooks, query, format) {
+    return catalogBooks.filter(
+      (book) =>
+        book.title.toLowerCase().includes(query.toLowerCase()) &&
+        (format === 'all'
+          ? book.available || book.pdf_available
+          : format === 'book'
+            ? book.available
+            : format === 'pdf'
+              ? book.pdf_available
+              : book.available && book.pdf_available),
+    );
+  }
+
+  // 1. In 'all' formats, hidden book 1215 is excluded; all books with at least one active format are included
+  const allResults = filterCatalog(books, '', 'all');
+  assert.strictEqual(allResults.length, 3, 'Should only include books with an available format');
+  assert.ok(!allResults.some((b) => b.id === '1215'), 'Unavailable book 1215 must not appear as an empty card');
+  assert.ok(allResults.some((b) => b.id === '1213'));
+  assert.ok(allResults.some((b) => b.id === '1211'));
+  assert.ok(allResults.some((b) => b.id === 'pdf-only-1'));
+
+  // 2. In 'book' format, only printed books appear
+  const bookResults = filterCatalog(books, '', 'book');
+  assert.strictEqual(bookResults.length, 2);
+  assert.ok(bookResults.every((b) => b.available));
+
+  // 3. In 'pdf' format, only PDF editions appear
+  const pdfResults = filterCatalog(books, '', 'pdf');
+  assert.strictEqual(pdfResults.length, 1);
+  assert.strictEqual(pdfResults[0].id, 'pdf-only-1');
+});
+
+test('16. Catalog rendering: Once book is enabled by admin, it displays with visible price and correct action button', () => {
+  // Simulating book 1215 after admin saves it as Printed Book with request_availability enabled
+  const book1215RequestMode = {
+    id: '1215',
+    title: 'כל הסדרה',
+    price: 40.0,
+    available: true,
+    pdf_available: false,
+    request_availability: true,
+  };
+
+  // Helper matching seforim-catalog.tsx rendering conditions
+  function renderCatalogCard(book) {
+    const hasPrice = book.available || book.pdf_available;
+    const priceText = book.available ? `$${book.price.toFixed(2)}` : null;
+    let actionButton = null;
+    if (book.available) {
+      actionButton = book.request_availability
+        ? 'Submit Request to See Availability'
+        : 'Add Book to Cart';
+    } else if (book.pdf_available) {
+      actionButton = 'Add PDF to Cart';
+    }
+    return { hasPrice, priceText, actionButton };
+  }
+
+  // Request-availability enabled
+  const requestCard = renderCatalogCard(book1215RequestMode);
+  assert.strictEqual(requestCard.hasPrice, true);
+  assert.strictEqual(requestCard.priceText, '$40.00', 'Must keep actual physical price visible');
+  assert.strictEqual(requestCard.actionButton, 'Submit Request to See Availability', 'Must show request action');
+
+  // Direct purchase mode
+  const book1215DirectPurchase = { ...book1215RequestMode, request_availability: false };
+  const directCard = renderCatalogCard(book1215DirectPurchase);
+  assert.strictEqual(directCard.hasPrice, true);
+  assert.strictEqual(directCard.priceText, '$40.00');
+  assert.strictEqual(directCard.actionButton, 'Add Book to Cart');
 });

@@ -18,6 +18,7 @@ export default function SeforimManager({
 }) {
   const [books, setBooks] = useState(initialBooks),
     [editing, setEditing] = useState<SeferRecord | null>(null),
+    [formVersion, setFormVersion] = useState(0),
     [message, setMessage] = useState(''),
     [busy, setBusy] = useState(false);
   const [deliveryPrice, setDeliveryPrice] = useState(initialDeliveryPrice);
@@ -54,7 +55,9 @@ export default function SeforimManager({
   }
 
   async function reload() {
-    const j = (await fetch('/api/seforim').then((r) => r.json())) as any;
+    const j = (await fetch('/api/seforim', { cache: 'no-store' }).then((r) =>
+      r.json(),
+    )) as any;
     setBooks(j.books);
     return j.books as SeferRecord[];
   }
@@ -99,36 +102,49 @@ export default function SeforimManager({
       setBusy(false);
       return;
     }
-    const creating = !data.id,
-      r = await fetch('/api/seforim', {
-        method: creating ? 'POST' : 'PUT',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(data),
-      }),
-      j = (await r.json()) as any;
-    if (!r.ok) {
-      setMessage(j.error || 'Could not save.');
-      setBusy(false);
-      return;
-    }
-    const id = creating ? j.id : data.id;
+    const creating = !data.id;
+    let savedId = data.id;
+
     try {
-      if (pdf?.size) {
-        setMessage('Uploading protected PDF…');
-        await sendPdf(id, pdf, data.pdf_display);
-      }
-      if (!creating) {
-        await fetch('/api/seforim', {
+      if (creating) {
+        const r = await fetch('/api/seforim', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const j = (await r.json()) as any;
+        if (!r.ok) {
+          setMessage(j.error || 'Could not save.');
+          setBusy(false);
+          return;
+        }
+        savedId = j.id;
+        if (pdf?.size) {
+          setMessage('Uploading protected PDF…');
+          await sendPdf(savedId, pdf, data.pdf_display);
+        }
+      } else {
+        if (pdf?.size) {
+          setMessage('Uploading protected PDF…');
+          await sendPdf(savedId, pdf, data.pdf_display);
+        }
+        const r = await fetch('/api/seforim', {
           method: 'PUT',
           headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ ...data, id }),
+          body: JSON.stringify(data),
         });
+        const j = (await r.json()) as any;
+        if (!r.ok) {
+          setMessage(j.error || 'Could not save.');
+          setBusy(false);
+          return;
+        }
       }
     } catch (error) {
       setMessage(
         error instanceof Error
-          ? `Title saved, but PDF failed: ${error.message}`
-          : 'PDF upload failed.',
+          ? `Save failed: ${error.message}`
+          : 'Save failed.',
       );
       setBusy(false);
       await reload();
@@ -138,7 +154,10 @@ export default function SeforimManager({
     if (creating) {
       form.reset();
       setEditing(null);
-    } else setEditing(list.find((x) => x.id === id) || null);
+    } else {
+      setEditing(list.find((x) => x.id === savedId) || null);
+    }
+    setFormVersion((v) => v + 1);
     setMessage(
       pdf?.size
         ? 'Title and protected PDF saved.'
@@ -161,25 +180,40 @@ export default function SeforimManager({
     }
     const list = await reload();
     setEditing(list.find((x) => x.id === id) || null);
+    setFormVersion((v) => v + 1);
     setMessage('Cover updated.');
     setBusy(false);
   }
   async function removePdf(id: string) {
     if (!confirm('Remove this PDF file?')) return;
-    await fetch(`/api/admin/seforim-pdf?id=${encodeURIComponent(id)}`, {
+    const r = await fetch(`/api/admin/seforim-pdf?id=${encodeURIComponent(id)}`, {
       method: 'DELETE',
     });
+    if (!r.ok) {
+      const j = (await r.json().catch(() => ({}))) as any;
+      setMessage(j?.error || 'Could not remove PDF.');
+      return;
+    }
     const list = await reload();
     setEditing(list.find((x) => x.id === id) || null);
+    setFormVersion((v) => v + 1);
     setMessage('PDF removed.');
   }
   async function remove(id: string) {
     if (!confirm('Remove this title?')) return;
-    await fetch(`/api/seforim?id=${encodeURIComponent(id)}`, {
+    const r = await fetch(`/api/seforim?id=${encodeURIComponent(id)}`, {
       method: 'DELETE',
     });
+    if (!r.ok) {
+      const j = (await r.json().catch(() => ({}))) as any;
+      setMessage(j?.error || 'Could not remove title.');
+      return;
+    }
     setBooks((x) => x.filter((y) => y.id !== id));
-    if (editing?.id === id) setEditing(null);
+    if (editing?.id === id) {
+      setEditing(null);
+      setFormVersion((v) => v + 1);
+    }
   }
   const v = editing || {
     id: '',
@@ -243,7 +277,7 @@ export default function SeforimManager({
             </div>
             <span>PDF uploads are protected</span>
           </div>
-          <form key={v.id || 'new'} onSubmit={save}>
+          <form key={`${v.id || 'new'}-${formVersion}`} onSubmit={save}>
             <input type="hidden" name="id" value={v.id} />
             <label>
               Book or PDF title
@@ -335,7 +369,10 @@ export default function SeforimManager({
               <button
                 type="button"
                 className="cancelButton"
-                onClick={() => setEditing(null)}
+                onClick={() => {
+                  setEditing(null);
+                  setFormVersion((v) => v + 1);
+                }}
               >
                 Cancel
               </button>
@@ -398,6 +435,7 @@ export default function SeforimManager({
             <button
               onClick={() => {
                 setEditing(x);
+                setFormVersion((v) => v + 1);
                 setMessage('');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
