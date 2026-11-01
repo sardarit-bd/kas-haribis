@@ -134,6 +134,13 @@
       "when": 1787343784231,
       "tag": "0018_common_iceman",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "6",
+      "when": 1787343784232,
+      "tag": "0019_super_admin_password_protection",
+      "breakpoints": true
     }
   ]
 }

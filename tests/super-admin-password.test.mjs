@@ -365,3 +365,78 @@ test('14. Seferim and Admin elevated operations remain functional', async () => 
   assert.equal(session.email, TEST_OWNER);
   assert.equal(isOwnerEmail(session.email), true, 'Owner session receives elevated status');
 });
+
+test('15. Missing profile record is handled safely and never throws error', async () => {
+  const db = createMockDb();
+  // Querying owner who has no record in admin_profiles at all
+  const status = await getOwnerSecurityStatus(db, TEST_OWNER);
+  assert.equal(status.hasPassword, false);
+  assert.equal(status.requirePassword, false);
+  assert.equal(await isOwnerPasswordRequired(db, TEST_OWNER), false);
+});
+
+test('16. Safe backward-compatibility fallback when D1 column require_password is not yet present', async () => {
+  // Mock DB where querying require_password throws "no such column: require_password"
+  const adminProfiles = new Map([
+    [TEST_OWNER, { email: TEST_OWNER, password_salt: 'a'.repeat(32), password_hash: 'b'.repeat(64) }],
+  ]);
+  const legacyDb = {
+    prepare(sql) {
+      const exec = {
+        first: async () => null,
+        run: async () => ({ success: true }),
+        all: async () => ({ results: [] }),
+      };
+      return {
+        ...exec,
+        bind(...args) {
+          return {
+            ...exec,
+            first: async () => {
+              if (sql.includes('require_password')) {
+                throw new Error('no such column: require_password');
+              }
+              if (sql.includes('password_salt, password_hash FROM admin_profiles')) {
+                const row = adminProfiles.get(args[0]);
+                return row ? { password_salt: row.password_salt, password_hash: row.password_hash } : null;
+              }
+              return null;
+            },
+          };
+        },
+      };
+    },
+  };
+
+  const status = await getOwnerSecurityStatus(legacyDb, TEST_OWNER);
+  assert.equal(status.hasPassword, true, 'Detects password is configured from legacy columns');
+  assert.equal(status.requirePassword, false, 'Defaults enforcement to false gracefully without throwing');
+  assert.equal(await isOwnerPasswordRequired(legacyDb, TEST_OWNER), false);
+});
+
+test('17. Profile navigation item is present in Admin sidebar for both Owner and Staff', async () => {
+  const fs = await import('node:fs');
+  const sidebarSrc = fs.readFileSync('app/admin/admin-sidebar.tsx', 'utf8');
+
+  // 1. Profile link exists in ADMIN_LINKS
+  assert.ok(sidebarSrc.includes("label: 'Profile'"), 'Profile label must be configured in ADMIN_LINKS');
+  assert.ok(sidebarSrc.includes("href: '/admin/profile'"), 'Profile href must point to /admin/profile');
+
+  // 2. Icon is user avatar SVG
+  assert.ok(sidebarSrc.includes('M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'), 'Profile icon must be user avatar SVG');
+
+  // 3. No duplicates
+  const matches = [...sidebarSrc.matchAll(/href:\s*['"]\/admin\/profile['"]/g)];
+  assert.equal(matches.length, 1, 'Profile link must not be duplicated');
+
+  // 4. Near bottom of navigation
+  const profilePos = sidebarSrc.indexOf("href: '/admin/profile'");
+  const settingsPos = sidebarSrc.indexOf("href: '/admin/settings'");
+  assert.ok(profilePos > settingsPos, 'Profile must be placed near the bottom after Payments & Settings');
+
+  // 5. Explicitly accessible to both Owner and Staff in visibleLinks
+  assert.ok(
+    sidebarSrc.includes("if (link.href === '/admin/profile') return true;"),
+    'Profile must be explicitly allowed for both Owner and Staff',
+  );
+});
