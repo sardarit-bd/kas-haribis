@@ -1,7 +1,10 @@
 import {
+  adminLoginAttemptAllowed,
+  clearAdminLoginFailures,
   getPostLoginRedirect,
   isActiveStaffOrOwner,
   isOwnerEmail,
+  recordAdminLoginFailure,
   staffPermissions,
   verifyStaffPassword,
 } from '../../../lib/admin-access';
@@ -49,14 +52,34 @@ export async function POST(request: Request) {
     );
   }
 
+  // Brute force protection
+  const clientIp =
+    request.headers.get('cf-connecting-ip') ||
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    '127.0.0.1';
+
+  const attempt = await adminLoginAttemptAllowed(env.DB, email, clientIp);
+  if (!attempt.allowed) {
+    return Response.json(
+      {
+        error:
+          'Too many failed login attempts. Please try again in 15 minutes.',
+      },
+      { status: 429 },
+    );
+  }
+
   // Step 2: Verify password against stored hash in DB
   const validPassword = await verifyStaffPassword(env.DB, email, password);
   if (!validPassword) {
+    await recordAdminLoginFailure(env.DB, attempt.key);
     return Response.json(
       { error: 'Invalid email or password.' },
       { status: 400 },
     );
   }
+
+  await clearAdminLoginFailures(env.DB, attempt.key);
 
   // Fetch name for session
   let name = email;

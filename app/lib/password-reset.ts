@@ -1,40 +1,13 @@
-import { isOwnerEmail, setUserPassword } from './admin-access.ts';
+import {
+  isOwnerEmail,
+  setUserPassword,
+  validateNewPassword,
+  MIN_PASSWORD_LENGTH,
+  MAX_PASSWORD_LENGTH,
+} from './admin-access.ts';
 
-export const MIN_PASSWORD_LENGTH = 10;
-export const MAX_PASSWORD_LENGTH = 128;
+export { validateNewPassword, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH };
 export const RESET_TOKEN_EXPIRY_MS = 60 * 60 * 1000; // 1 hour
-
-export function validateNewPassword(password: unknown): {
-  valid: boolean;
-  error?: string;
-} {
-  if (typeof password !== 'string') {
-    return { valid: false, error: 'Password must be a text value.' };
-  }
-
-  if (!password.trim()) {
-    return {
-      valid: false,
-      error: 'Password cannot be empty or only whitespace.',
-    };
-  }
-
-  if (password.length < MIN_PASSWORD_LENGTH) {
-    return {
-      valid: false,
-      error: `Password must be at least ${MIN_PASSWORD_LENGTH} characters long.`,
-    };
-  }
-
-  if (password.length > MAX_PASSWORD_LENGTH) {
-    return {
-      valid: false,
-      error: `Password must not exceed ${MAX_PASSWORD_LENGTH} characters.`,
-    };
-  }
-
-  return { valid: true };
-}
 
 export function generateSecureToken(): string {
   const bytes = new Uint8Array(32);

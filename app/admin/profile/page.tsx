@@ -1,8 +1,13 @@
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { requireChatGPTUser } from '../../chatgpt-auth';
-import { isOwnerEmail, getStaffMemberName } from '../../lib/admin-access';
+import {
+  isOwnerEmail,
+  getStaffMemberName,
+  getOwnerSecurityStatus,
+} from '../../lib/admin-access';
 import { getAdminProfileName } from '../../lib/admin-profile';
 import ProfileNameEditor from './profile-name-editor';
+import ProfilePasswordEditor from './profile-password-editor';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,6 +23,7 @@ export default async function AdminProfilePage() {
 
   let profileName = '';
   let staffName = '';
+  let ownerSecurity = { hasPassword: false, requirePassword: false };
   if (userEmail) {
     try {
       const { env } = await import('cloudflare:workers');
@@ -27,6 +33,11 @@ export default async function AdminProfilePage() {
       // 2. If not found and not an owner, check staff table
       if (!profileName && !isOwner) {
         staffName = await getStaffMemberName(env.DB, userEmail);
+      }
+
+      // 3. If owner, load security status for administrator password management
+      if (isOwner) {
+        ownerSecurity = await getOwnerSecurityStatus(env.DB, userEmail);
       }
     } catch {}
   }
@@ -125,6 +136,14 @@ export default async function AdminProfilePage() {
               </div>
             </dl>
           </div>
+
+          {/* Administrator Password & Protection (Super Admin Only) */}
+          {isOwner && (
+            <ProfilePasswordEditor
+              initialHasPassword={ownerSecurity.hasPassword}
+              initialRequirePassword={ownerSecurity.requirePassword}
+            />
+          )}
 
           {/* Security & Access Notice */}
           <div className="rounded-xl border border-slate-200 bg-slate-100/70 p-4 text-xs leading-relaxed text-slate-700 flex items-start gap-3">

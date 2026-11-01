@@ -154,3 +154,58 @@ export function oauthStateCookieHeader(value: string, maxAge = 600, secure = tru
 export function clearOAuthStateCookieHeader(secure = true) {
   return `${OAUTH_STATE_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${cookieSuffix(secure)}`;
 }
+
+export type IntermediateOwnerPayload = {
+  email: string;
+  returnTo: string;
+  exp: number;
+  nonce: string;
+};
+
+export const INTERMEDIATE_OWNER_COOKIE = 'kh_owner_pending';
+
+export async function createIntermediateOwnerToken(
+  data: { email: string; returnTo: string },
+  secret: string,
+): Promise<string> {
+  const payload: IntermediateOwnerPayload = {
+    email: data.email.toLowerCase().trim(),
+    returnTo: data.returnTo || '/admin',
+    exp: Math.floor(Date.now() / 1000) + 600, // 10 minutes
+    nonce: crypto.randomUUID(),
+  };
+  const json = JSON.stringify(payload);
+  const sig = await signPayload(json, secret);
+  return `${bytesToBase64Url(new TextEncoder().encode(json))}.${sig}`;
+}
+
+export async function verifyIntermediateOwnerToken(
+  token: string | null | undefined,
+  secret: string,
+): Promise<IntermediateOwnerPayload | null> {
+  if (!token) return null;
+  const [dataB64, sig] = token.split('.');
+  if (!dataB64 || !sig) return null;
+  try {
+    const raw = new TextDecoder().decode(base64UrlToBytes(dataB64));
+    const valid = await verifyPayload(raw, sig, secret);
+    if (!valid) return null;
+    const payload = JSON.parse(raw) as IntermediateOwnerPayload;
+    if (payload.exp <= Math.floor(Date.now() / 1000)) return null;
+    return payload;
+  } catch {
+    return null;
+  }
+}
+
+export function intermediateOwnerCookieHeader(
+  token: string,
+  maxAge = 600,
+  secure = true,
+) {
+  return `${INTERMEDIATE_OWNER_COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${cookieSuffix(secure)}`;
+}
+
+export function clearIntermediateOwnerCookieHeader(secure = true) {
+  return `${INTERMEDIATE_OWNER_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${cookieSuffix(secure)}`;
+}

@@ -287,19 +287,213 @@ export async function setStaffPassword(db: any, email: string, password: string)
     .run();
 }
 
-export async function setOwnerPassword(db: any, email: string, password: string) {
+export const MIN_PASSWORD_LENGTH = 10;
+export const MAX_PASSWORD_LENGTH = 128;
+
+export function validateNewPassword(password: unknown): {
+  valid: boolean;
+  error?: string;
+} {
+  if (typeof password !== 'string') {
+    return { valid: false, error: 'Password must be a text value.' };
+  }
+
+  if (!password.trim()) {
+    return {
+      valid: false,
+      error: 'Password cannot be empty or only whitespace.',
+    };
+  }
+
+  if (password.length < MIN_PASSWORD_LENGTH) {
+    return {
+      valid: false,
+      error: `Password must be at least ${MIN_PASSWORD_LENGTH} characters long.`,
+    };
+  }
+
+  if (password.length > MAX_PASSWORD_LENGTH) {
+    return {
+      valid: false,
+      error: `Password must not exceed ${MAX_PASSWORD_LENGTH} characters.`,
+    };
+  }
+
+  return { valid: true };
+}
+
+export async function getOwnerSecurityStatus(
+  db: any,
+  email: string,
+): Promise<{ hasPassword: boolean; requirePassword: boolean }> {
+  const cleanEmail = email.trim().toLowerCase();
+  if (!isOwnerEmail(cleanEmail)) {
+    return { hasPassword: false, requirePassword: false };
+  }
+  await ensureAdminProfiles(db);
+  const row = (await db
+    .prepare(
+      'SELECT password_salt, password_hash, require_password FROM admin_profiles WHERE LOWER(email)=?',
+    )
+    .bind(cleanEmail)
+    .first()) as any;
+  const hasPassword = Boolean(row && row.password_salt && row.password_hash);
+  const requirePassword = Boolean(
+    hasPassword && row && Number(row.require_password) === 1,
+  );
+  return { hasPassword, requirePassword };
+}
+
+export async function isOwnerPasswordRequired(
+  db: any,
+  email: string,
+): Promise<boolean> {
+  const status = await getOwnerSecurityStatus(db, email);
+  return status.requirePassword;
+}
+
+export async function setOwnerPassword(
+  db: any,
+  email: string,
+  password: string,
+  requirePassword?: boolean,
+) {
+  const cleanEmail = email.trim().toLowerCase();
+  if (!isOwnerEmail(cleanEmail)) {
+    throw new Error('Email is not an authorized owner.');
+  }
+  const validation = validateNewPassword(password);
+  if (!validation.valid) {
+    throw new Error(validation.error || 'Invalid password.');
+  }
+  await ensureAdminProfiles(db);
+  const { salt, hash } = await createStaffPasswordCredentials(password);
+  const now = new Date().toISOString();
+
+  const existing = (await db
+    .prepare('SELECT require_password FROM admin_profiles WHERE LOWER(email)=?')
+    .bind(cleanEmail)
+    .first()) as any;
+
+  const enforcement =
+    requirePassword !== undefined
+      ? requirePassword
+        ? 1
+        : 0
+      : existing && existing.require_password
+        ? 1
+        : 0;
+
+  await db
+    .prepare(
+      'INSERT INTO admin_profiles (email, name, password_salt, password_hash, require_password, updated_at) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(email) DO UPDATE SET password_salt=excluded.password_salt, password_hash=excluded.password_hash, require_password=?, updated_at=excluded.updated_at',
+    )
+    .bind(cleanEmail, '', salt, hash, enforcement, now, enforcement)
+    .run();
+}
+
+export async function removeOwnerPassword(db: any, email: string) {
   const cleanEmail = email.trim().toLowerCase();
   if (!isOwnerEmail(cleanEmail)) {
     throw new Error('Email is not an authorized owner.');
   }
   await ensureAdminProfiles(db);
-  const { salt, hash } = await createStaffPasswordCredentials(password);
   const now = new Date().toISOString();
   await db
     .prepare(
-      'INSERT INTO admin_profiles (email, name, password_salt, password_hash, updated_at) VALUES (?, ?, ?, ?, ?) ON CONFLICT(email) DO UPDATE SET password_salt=excluded.password_salt, password_hash=excluded.password_hash, updated_at=excluded.updated_at',
+      "UPDATE admin_profiles SET password_salt='', password_hash='', require_password=0, updated_at=? WHERE LOWER(email)=?",
     )
-    .bind(cleanEmail, '', salt, hash, now)
+    .bind(now, cleanEmail)
+    .run();
+}
+
+export async function setOwnerPasswordEnforcement(
+  db: any,
+  email: string,
+  requirePassword: boolean,
+) {
+  const cleanEmail = email.trim().toLowerCase();
+  if (!isOwnerEmail(cleanEmail)) {
+    throw new Error('Email is not an authorized owner.');
+  }
+  await ensureAdminProfiles(db);
+
+  if (requirePassword) {
+    const status = await getOwnerSecurityStatus(db, cleanEmail);
+    if (!status.hasPassword) {
+      throw new Error(
+        'Cannot require password on Google login without a configured password.',
+      );
+    }
+  }
+
+  const now = new Date().toISOString();
+  await db
+    .prepare(
+      'UPDATE admin_profiles SET require_password=?, updated_at=? WHERE LOWER(email)=?',
+    )
+    .bind(requirePassword ? 1 : 0, now, cleanEmail)
+    .run();
+}
+
+export async function adminLoginAttemptAllowed(
+  db: any,
+  email: string,
+  ip = '127.0.0.1',
+) {
+  if (!db) return { key: '', allowed: true, blockedUntil: null };
+  await ensureAdminProfiles(db);
+  const hashBuffer = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(`${ip}|${email.trim().toLowerCase()}`),
+  );
+  const key = bytesToHex(new Uint8Array(hashBuffer));
+  const row = (await db
+    .prepare(
+      'SELECT blocked_until FROM admin_login_attempts WHERE attempt_key=?',
+    )
+    .bind(key)
+    .first()) as any;
+  const isBlocked = Boolean(
+    row?.blocked_until && String(row.blocked_until) > new Date().toISOString(),
+  );
+  return {
+    key,
+    allowed: !isBlocked,
+    blockedUntil: isBlocked ? String(row.blocked_until) : null,
+  };
+}
+
+export async function recordAdminLoginFailure(db: any, key: string) {
+  if (!db || !key) return;
+  await ensureAdminProfiles(db);
+  const now = new Date();
+  const row = (await db
+    .prepare(
+      'SELECT failures, updated_at FROM admin_login_attempts WHERE attempt_key=?',
+    )
+    .bind(key)
+    .first()) as any;
+  const recent =
+    row &&
+    Date.now() - new Date(String(row.updated_at)).getTime() < 15 * 60 * 1000;
+  const failures = recent ? Number(row.failures || 0) + 1 : 1;
+  const blocked =
+    failures >= 5 ? new Date(now.getTime() + 15 * 60 * 1000).toISOString() : '';
+  await db
+    .prepare(
+      'INSERT INTO admin_login_attempts (attempt_key, failures, blocked_until, updated_at) VALUES (?, ?, ?, ?) ON CONFLICT(attempt_key) DO UPDATE SET failures=excluded.failures, blocked_until=excluded.blocked_until, updated_at=excluded.updated_at',
+    )
+    .bind(key, failures, blocked, now.toISOString())
+    .run();
+}
+
+export async function clearAdminLoginFailures(db: any, key: string) {
+  if (!db || !key) return;
+  await ensureAdminProfiles(db);
+  await db
+    .prepare('DELETE FROM admin_login_attempts WHERE attempt_key=?')
+    .bind(key)
     .run();
 }
 

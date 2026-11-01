@@ -109,6 +109,16 @@ export const adminProfiles = sqliteTable('admin_profiles', {
   name: text('name').notNull().default(''),
   passwordSalt: text('password_salt').notNull().default(''),
   passwordHash: text('password_hash').notNull().default(''),
+  requirePassword: integer('require_password', { mode: 'boolean' })
+    .notNull()
+    .default(false),
+  updatedAt: text('updated_at').notNull(),
+});
+
+export const adminLoginAttempts = sqliteTable('admin_login_attempts', {
+  attemptKey: text('attempt_key').primaryKey(),
+  failures: integer('failures').notNull().default(0),
+  blockedUntil: text('blocked_until').notNull().default(''),
   updatedAt: text('updated_at').notNull(),
 });
 

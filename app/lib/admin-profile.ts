@@ -33,7 +33,13 @@ export async function ensureAdminProfiles(db: any): Promise<void> {
   if (!db) return;
   await db
     .prepare(
-      "CREATE TABLE IF NOT EXISTS admin_profiles (email TEXT PRIMARY KEY, name TEXT NOT NULL DEFAULT '', password_salt TEXT NOT NULL DEFAULT '', password_hash TEXT NOT NULL DEFAULT '', updated_at TEXT NOT NULL)",
+      "CREATE TABLE IF NOT EXISTS admin_profiles (email TEXT PRIMARY KEY, name TEXT NOT NULL DEFAULT '', password_salt TEXT NOT NULL DEFAULT '', password_hash TEXT NOT NULL DEFAULT '', require_password INTEGER NOT NULL DEFAULT 0, updated_at TEXT NOT NULL)",
+    )
+    .run();
+
+  await db
+    .prepare(
+      "CREATE TABLE IF NOT EXISTS admin_login_attempts (attempt_key TEXT PRIMARY KEY, failures INTEGER NOT NULL DEFAULT 0, blocked_until TEXT NOT NULL DEFAULT '', updated_at TEXT NOT NULL)",
     )
     .run();
 
@@ -47,6 +53,9 @@ export async function ensureAdminProfiles(db: any): Promise<void> {
       }
       if (!cols.has('password_hash')) {
         await db.prepare("ALTER TABLE admin_profiles ADD COLUMN password_hash TEXT NOT NULL DEFAULT ''").run();
+      }
+      if (!cols.has('require_password')) {
+        await db.prepare("ALTER TABLE admin_profiles ADD COLUMN require_password INTEGER NOT NULL DEFAULT 0").run();
       }
     }
   } catch (error) {
