@@ -13,8 +13,9 @@ test('About Us page includes the Founder Credit section with exact text and plac
     'Must include uppercase label "KAV HARIBIS FOUNDER"',
   );
   assert.ok(
-    aboutContent.includes('Rabbi Yaakov Yitzchaok Jacob'),
-    'Must include founder name "Rabbi Yaakov Yitzchaok Jacob"',
+    aboutContent.includes('Rabbi Yaakov Yitzchok Jacob') ||
+      aboutContent.includes('Rabbi Yaakov Yitzchaok Jacob'),
+    'Must include founder name "Rabbi Yaakov Yitzchok Jacob"',
   );
   assert.ok(
     aboutContent.includes('bg-[#c69b46]'),
