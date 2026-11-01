@@ -103,6 +103,8 @@ export async function parseSessionToken(
     const payload = JSON.parse(json) as SessionPayload;
     if (
       !payload?.email ||
+      (payload as any).type === 'intermediate_owner' ||
+      (payload as any).nonce ||
       typeof payload.exp !== 'number' ||
       payload.exp <= Math.floor(Date.now() / 1000)
     ) {
@@ -156,6 +158,7 @@ export function clearOAuthStateCookieHeader(secure = true) {
 }
 
 export type IntermediateOwnerPayload = {
+  type: 'intermediate_owner';
   email: string;
   returnTo: string;
   exp: number;
@@ -169,14 +172,17 @@ export async function createIntermediateOwnerToken(
   secret: string,
 ): Promise<string> {
   const payload: IntermediateOwnerPayload = {
+    type: 'intermediate_owner',
     email: data.email.toLowerCase().trim(),
     returnTo: data.returnTo || '/admin',
     exp: Math.floor(Date.now() / 1000) + 600, // 10 minutes
     nonce: crypto.randomUUID(),
   };
-  const json = JSON.stringify(payload);
-  const sig = await signPayload(json, secret);
-  return `${bytesToBase64Url(new TextEncoder().encode(json))}.${sig}`;
+  const payloadText = bytesToBase64Url(
+    new TextEncoder().encode(JSON.stringify(payload)),
+  );
+  const sig = await signPayload(payloadText, secret);
+  return `${payloadText}.${sig}`;
 }
 
 export async function verifyIntermediateOwnerToken(
@@ -184,15 +190,28 @@ export async function verifyIntermediateOwnerToken(
   secret: string,
 ): Promise<IntermediateOwnerPayload | null> {
   if (!token) return null;
-  const [dataB64, sig] = token.split('.');
-  if (!dataB64 || !sig) return null;
+  const [payloadText, sig] = token.split('.');
+  if (!payloadText || !sig) return null;
   try {
-    const raw = new TextDecoder().decode(base64UrlToBytes(dataB64));
-    const valid = await verifyPayload(raw, sig, secret);
+    const valid = await verifyPayload(payloadText, sig, secret);
     if (!valid) return null;
-    const payload = JSON.parse(raw) as IntermediateOwnerPayload;
-    if (payload.exp <= Math.floor(Date.now() / 1000)) return null;
-    return payload;
+    const json = new TextDecoder().decode(base64UrlToBytes(payloadText));
+    const payload = JSON.parse(json) as IntermediateOwnerPayload;
+    if (
+      !payload?.email ||
+      payload.type !== 'intermediate_owner' ||
+      typeof payload.exp !== 'number' ||
+      payload.exp <= Math.floor(Date.now() / 1000)
+    ) {
+      return null;
+    }
+    return {
+      type: 'intermediate_owner',
+      email: String(payload.email).toLowerCase().trim(),
+      returnTo: String(payload.returnTo || '/admin'),
+      exp: payload.exp,
+      nonce: String(payload.nonce || ''),
+    };
   } catch {
     return null;
   }

@@ -327,21 +327,41 @@ export async function getOwnerSecurityStatus(
   email: string,
 ): Promise<{ hasPassword: boolean; requirePassword: boolean }> {
   const cleanEmail = email.trim().toLowerCase();
-  if (!isOwnerEmail(cleanEmail)) {
+  if (!isOwnerEmail(cleanEmail) || !db) {
     return { hasPassword: false, requirePassword: false };
   }
-  await ensureAdminProfiles(db);
-  const row = (await db
-    .prepare(
-      'SELECT password_salt, password_hash, require_password FROM admin_profiles WHERE LOWER(email)=?',
-    )
-    .bind(cleanEmail)
-    .first()) as any;
-  const hasPassword = Boolean(row && row.password_salt && row.password_hash);
-  const requirePassword = Boolean(
-    hasPassword && row && Number(row.require_password) === 1,
-  );
-  return { hasPassword, requirePassword };
+  try {
+    await ensureAdminProfiles(db);
+    const row = (await db
+      .prepare(
+        'SELECT password_salt, password_hash, require_password FROM admin_profiles WHERE LOWER(email)=?',
+      )
+      .bind(cleanEmail)
+      .first()) as any;
+    const hasPassword = Boolean(row && row.password_salt && row.password_hash);
+    const requirePassword = Boolean(
+      hasPassword && row && Number(row.require_password) === 1,
+    );
+    return { hasPassword, requirePassword };
+  } catch (err: any) {
+    const msg = String(err?.message || err).toLowerCase();
+    if (msg.includes('no such column') || msg.includes('require_password')) {
+      try {
+        const fallbackRow = (await db
+          .prepare(
+            'SELECT password_salt, password_hash FROM admin_profiles WHERE LOWER(email)=?',
+          )
+          .bind(cleanEmail)
+          .first()) as any;
+        const hasPassword = Boolean(
+          fallbackRow && fallbackRow.password_salt && fallbackRow.password_hash,
+        );
+        return { hasPassword, requirePassword: false };
+      } catch {}
+    }
+    console.error('getOwnerSecurityStatus error:', err);
+    return { hasPassword: false, requirePassword: false };
+  }
 }
 
 export async function isOwnerPasswordRequired(

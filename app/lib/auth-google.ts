@@ -205,6 +205,7 @@ export async function buildGoogleCallbackResponse(
   }
 
   const email = profile.email.toLowerCase();
+  const { env } = await import('cloudflare:workers');
   const {
     isActiveStaffOrOwner,
     getPostLoginRedirect,
