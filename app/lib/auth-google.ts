@@ -205,8 +205,12 @@ export async function buildGoogleCallbackResponse(
   }
 
   const email = profile.email.toLowerCase();
-  const { env } = await import('cloudflare:workers');
-  const { isActiveStaffOrOwner, getPostLoginRedirect } = await import('./admin-access');
+  const {
+    isActiveStaffOrOwner,
+    getPostLoginRedirect,
+    isOwnerEmail,
+    isOwnerPasswordRequired,
+  } = await import('./admin-access');
   const allowed = await isActiveStaffOrOwner(env.DB, email);
 
   if (!allowed) {
@@ -223,6 +227,28 @@ export async function buildGoogleCallbackResponse(
     email,
     oauthState.returnTo,
   );
+
+  // If Super Admin has password enforcement enabled, require intermediate password verification
+  if (isOwnerEmail(email) && (await isOwnerPasswordRequired(env.DB, email))) {
+    const { createIntermediateOwnerToken, intermediateOwnerCookieHeader } =
+      await import('./auth-session');
+    const intermediateToken = await createIntermediateOwnerToken(
+      { email, returnTo: redirectTarget },
+      config.AUTH_SECRET,
+    );
+    const secureCookies = useSecureCookies(config.APP_URL);
+    const headers = new Headers();
+    headers.set('Location', `${config.APP_URL}/sign-in/admin-verify`);
+    headers.append(
+      'Set-Cookie',
+      intermediateOwnerCookieHeader(intermediateToken, 600, secureCookies),
+    );
+    headers.append('Set-Cookie', clearOAuthStateCookieHeader(secureCookies));
+    return new Response(null, {
+      status: 302,
+      headers,
+    });
+  }
 
   const sessionPayload: SessionPayload = {
     email,
