@@ -1,11 +1,21 @@
 import { isOwnerRequest } from '../../../lib/request-auth';
+import { isOwnerEmail } from '../../../lib/admin-access';
+import { getUserFromCookieHeader } from '../../../lib/auth';
 import { ensureBankPremium, passwordRecord } from '../../../lib/bank-premium';
 
 async function requirePremiumOwner(request: Request) {
-  return (
-    !request.headers.get('x-kh-staff-email') &&
-    (await isOwnerRequest(request))
-  );
+  const staffEmail = request.headers.get('x-kh-staff-email');
+  if (staffEmail && !isOwnerEmail(staffEmail)) {
+    return false;
+  }
+  const user = await getUserFromCookieHeader(request.headers.get('cookie'));
+  if (user?.email && isOwnerEmail(user.email)) {
+    return true;
+  }
+  if (await isOwnerRequest(request)) {
+    return !staffEmail || isOwnerEmail(staffEmail);
+  }
+  return false;
 }
 const clean = (value: unknown, max: number) =>
   String(value || '')

@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import { requireChatGPTUser } from '../../chatgpt-auth';
 import ProductBreadcrumb from '../../componnent/ProductBreadcrumb';
 import { ensureBankPremium } from '../../lib/bank-premium';
-import { canAccessSection } from "../../lib/admin-access";
+import { canAccessSection, isOwnerEmail } from "../../lib/admin-access";
 import { listBanksAdmin } from '../../lib/directories';
 import BankManager from './bank-manager';
 import PremiumMemberManager from './premium-member-manager';
@@ -28,7 +28,8 @@ export default async function Page() {
     );
   const banks = await listBanksAdmin(env.DB);
   await ensureBankPremium(env.DB);
-  const premiumMembers = !staffEmail
+  const isOwner = isOwnerEmail(user.email) && (!staffEmail || isOwnerEmail(staffEmail));
+  const premiumMembers = isOwner
     ? (
         await env.DB.prepare(
           'SELECT id,email,name,active,access_type,expires_at,notes,created_at,updated_at,last_login_at,login_count FROM bank_premium_members ORDER BY active DESC,name COLLATE NOCASE,email COLLATE NOCASE',
@@ -49,7 +50,7 @@ export default async function Page() {
           </div>
           <a href="/bank-directory">View public directory →</a>
         </div>
-        {!staffEmail && (
+        {isOwner && (
           <PremiumMemberManager initialMembers={premiumMembers as any} />
         )}
         <BankManager initialBanks={banks} />
