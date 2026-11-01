@@ -69,7 +69,7 @@ export async function proxy(request: NextRequest) {
   if (!email) return NextResponse.next();
   if (isOwnerEmail(email)) {
     const headers = new Headers(request.headers);
-    headers.set('x-kh-staff-email', email);
+    headers.delete('x-kh-staff-email');
     headers.set(ADMIN_ELEVATED_HEADER, '1');
     return NextResponse.next({ request: { headers } });
   }
