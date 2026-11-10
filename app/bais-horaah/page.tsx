@@ -325,7 +325,7 @@ export default function BaisHoraahPage() {
                 <p className="text-sm text-[#556980] leading-relaxed">
                   Rabbi Pinchos Vind has a branch in Brooklyn, NY, operated by
                   local Rabbonim Rabbi Pinchos Rotenberg and Rabbi Yaakov
-                  Weinfeld. The Heter Iska specialist is Rabbi Pinchos Slue.
+                  Weinfeld. The Heter Iska specialist is Rabbi Refoel Sliw.
                   Inquiries may be placed through the Brooklyn Bais Horaah office
                   at{' '}
                   <a
