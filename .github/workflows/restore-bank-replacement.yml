@@ -1,0 +1,63 @@
+name: Restore Production Banks Table (Emergency Recovery)
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_recovery:
+        description: 'Type "RESTORE-ORIGINAL-293" to confirm emergency restoration'
+        required: true
+        type: string
+
+concurrency:
+  group: cloudflare-production-replacement
+  cancel-in-progress: false
+
+jobs:
+  restore_banks:
+    name: Restore Original 293 Banks Records
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Verify Confirmation Input
+        run: |
+          if [ "${{ github.event.inputs.confirm_recovery }}" != "RESTORE-ORIGINAL-293" ]; then
+            echo "::error::Emergency recovery confirmation failed. Expected 'RESTORE-ORIGINAL-293'"
+            exit 1
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create production env file
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WORKER_NAME: ${{ secrets.WORKER_NAME }}
+          APP_URL: ${{ secrets.APP_URL }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          D1_DATABASE_NAME: ${{ secrets.D1_DATABASE_NAME }}
+          D1_DATABASE_ID: ${{ secrets.D1_DATABASE_ID }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          CARDKNOX_SETTINGS_KEY: ${{ secrets.CARDKNOX_SETTINGS_KEY }}
+        run: node scripts/write-env-from-ci.mjs
+
+      - name: Sync Wrangler config
+        run: node scripts/sync-wrangler-config.mjs --production
+
+      - name: Execute Banks Restoration
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node scripts/restore-banks-production.mjs --remote
